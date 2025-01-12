@@ -56,7 +56,7 @@
       cursor: pointer;
     }
 
-    .details-button {
+    .button {
       display: inline-block;
       background-color: #0071e3;
       color: white;
@@ -67,17 +67,73 @@
       text-align: center;
       text-transform: uppercase;
       cursor: pointer;
+      margin-bottom: 20px;
     }
 
-    .details-button:hover {
+    .button:hover {
       background-color: #005bb5;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      width: 400px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-content input,
+    .modal-content select {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .modal-content button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .modal-content button:hover {
+      background-color: #005bb5;
+    }
+
+    .close-button {
+      background-color: #ff3b30;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
   <div class="dashboard-orders">
     <h1>Pedidos</h1>
-    <table>
+    <button class="button" onclick="openModal()">Criar Novo Pedido</button>
+    <table id="orders-table">
       <thead>
         <tr>
           <th>ID do Pedido</th>
@@ -91,7 +147,7 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Pedido 1 -->
+        <!-- Exemplo de pedido -->
         <tr>
           <td>12345</td>
           <td>04/01/2024</td>
@@ -101,17 +157,85 @@
           <td>Pix</td>
           <td>Confirmado</td>
           <td>
-            <button class="details-button" onclick="openDetailsPage('12345')">Detalhes</button>
+            <button class="button" onclick="openDetailsPage('12345')">Detalhes</button>
           </td>
         </tr>
-        <!-- Outros pedidos podem ser adicionados aqui -->
       </tbody>
     </table>
   </div>
 
+  <!-- Modal para Criar Novo Pedido -->
+  <div class="modal" id="create-modal">
+    <div class="modal-content">
+      <h2>Criar Novo Pedido</h2>
+      <form id="create-order-form">
+        <input type="text" id="order-id" placeholder="ID do Pedido" required />
+        <input type="date" id="order-date" required />
+        <input type="text" id="order-client" placeholder="Cliente" required />
+        <input type="text" id="order-agent" placeholder="Agente" required />
+        <input type="text" id="order-value" placeholder="Valor (ex: R$ 100,00)" required />
+        <select id="order-payment" required>
+          <option value="">Selecione o pagamento</option>
+          <option value="Pix">Pix</option>
+          <option value="Cartão">Cartão</option>
+        </select>
+        <select id="order-status" required>
+          <option value="">Selecione o status</option>
+          <option value="Confirmado">Confirmado</option>
+          <option value="Pendente">Pendente</option>
+          <option value="Cancelado">Cancelado</option>
+        </select>
+        <button type="submit">Salvar Pedido</button>
+        <button type="button" class="close-button" onclick="closeModal()">Fechar</button>
+      </form>
+    </div>
+  </div>
+
   <script>
+    // Abre o modal
+    function openModal() {
+      document.getElementById('create-modal').style.display = 'flex';
+    }
+
+    // Fecha o modal
+    function closeModal() {
+      document.getElementById('create-modal').style.display = 'none';
+    }
+
+    // Salva o pedido e adiciona à tabela
+    document.getElementById('create-order-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      // Captura os valores do formulário
+      const id = document.getElementById('order-id').value;
+      const date = document.getElementById('order-date').value;
+      const client = document.getElementById('order-client').value;
+      const agent = document.getElementById('order-agent').value;
+      const value = document.getElementById('order-value').value;
+      const payment = document.getElementById('order-payment').value;
+      const status = document.getElementById('order-status').value;
+
+      // Adiciona uma nova linha na tabela
+      const table = document.getElementById('orders-table').querySelector('tbody');
+      const newRow = table.insertRow();
+      newRow.innerHTML = `
+        <td>${id}</td>
+        <td>${date}</td>
+        <td>${client}</td>
+        <td>${agent}</td>
+        <td>${value}</td>
+        <td>${payment}</td>
+        <td>${status}</td>
+        <td><button class="button" onclick="openDetailsPage('${id}')">Detalhes</button></td>
+      `;
+
+      // Fecha o modal e limpa o formulário
+      closeModal();
+      document.getElementById('create-order-form').reset();
+    });
+
+    // Abre a página de detalhes
     function openDetailsPage(orderId) {
-      // Abre a página de detalhes em uma nova aba
       window.open(`detalhes.html?pedido=${orderId}`, '_blank');
     }
   </script>
