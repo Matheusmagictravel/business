@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pedidos - Magic Travel</title>
+  <style>
+    body {
+      font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f5f5f7;
+      margin: 0;
+      padding: 0;
+      color: #1d1d1f;
+    }
+
+    .dashboard-orders {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #1d1d1f;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    th {
+      font-weight: 600;
+      color: #6e6e73;
+      background-color: #f9f9fa;
+    }
+
+    td {
+      color: #1d1d1f;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    tr:hover {
+      background-color: #f0f0f5;
+      cursor: pointer;
+    }
+
+    .details-button {
+      display: inline-block;
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-weight: 600;
+      text-align: center;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .details-button:hover {
+      background-color: #005bb5;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard-orders">
+    <h1>Pedidos</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>ID do Pedido</th>
+          <th>Data da Venda</th>
+          <th>Cliente</th>
+          <th>Agente</th>
+          <th>Valor</th>
+          <th>Pagamento</th>
+          <th>Status</th>
+          <th>Ação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Pedido 1 -->
+        <tr>
+          <td>12345</td>
+          <td>04/01/2024</td>
+          <td>Delma Machesi</td>
+          <td>Vanessa</td>
+          <td>R$ 18.409,66</td>
+          <td>Pix</td>
+          <td>Confirmado</td>
+          <td>
+            <button class="details-button" onclick="openDetailsPage('12345')">Detalhes</button>
+          </td>
+        </tr>
+        <!-- Outros pedidos podem ser adicionados aqui -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    function openDetailsPage(orderId) {
+      // Abre a página de detalhes em uma nova aba
+      window.open(`detalhes.html?pedido=${orderId}`, '_blank');
+    }
+  </script>
+</body>
+</html>
