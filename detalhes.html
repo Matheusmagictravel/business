@@ -29,6 +29,13 @@
       box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     }
 
+    .sidebar-loading {
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #aaa;
+    }
+
     /* Conteúdo principal */
     .order-details {
       margin-left: 260px;
@@ -92,8 +99,12 @@
   </style>
 </head>
 <body>
-  <div id="sidebar-container">Carregando...</div>
+  <!-- Sidebar -->
+  <div id="sidebar-container">
+    <div class="sidebar-loading">Carregando...</div>
+  </div>
 
+  <!-- Conteúdo principal -->
   <div class="order-details">
     <a href="pages-orders.html" class="back-button">Voltar para Página de Pedidos</a>
 
@@ -155,6 +166,20 @@
       return date ? new Date(date).toLocaleDateString('pt-BR') : 'N/A';
     }
 
+    // Função para carregar a sidebar
+    async function loadSidebar() {
+      try {
+        const response = await fetch('sidebar.html');
+        if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
+
+        const sidebarContent = await response.text();
+        document.getElementById('sidebar-container').innerHTML = sidebarContent;
+      } catch (error) {
+        console.error('Erro ao carregar a sidebar:', error);
+        document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
+      }
+    }
+
     // Função para carregar os detalhes do pedido
     async function loadOrderDetails() {
       const pedidoId = getPedidoId();
@@ -212,8 +237,11 @@
       }
     }
 
-    // Carrega os detalhes do pedido ao carregar a página
-    document.addEventListener('DOMContentLoaded', loadOrderDetails);
+    // Inicializa o carregamento da página
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSidebar();
+      loadOrderDetails();
+    });
   </script>
 </body>
 </html>
