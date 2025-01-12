@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Pedido - Magic Travel</title>
+  <style>
+    body {
+      font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f5f5f7;
+      margin: 0;
+      padding: 0;
+      color: #1d1d1f;
+    }
+
+    .order-details {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1, h3 {
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #1d1d1f;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section h3 {
+      font-size: 16px;
+      color: #0071e3;
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    th {
+      font-weight: 600;
+      color: #6e6e73;
+      background-color: #f9f9fa;
+    }
+
+    td {
+      color: #1d1d1f;
+      border-bottom: 1px solid #e5e5e5;
+    }
+
+    address {
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="order-details">
+    <h1>Detalhes do Pedido</h1>
+
+    <!-- Informações do Produto -->
+    <div class="section">
+      <h3>Informações do Produto</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Mês Venda</th>
+            <th>Data Venda</th>
+            <th>Fornecedor</th>
+            <th>Destino</th>
+            <th>Item</th>
+            <th>Data Utilização</th>
+            <th>Identificador</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Janeiro</td>
+            <td>04/01/2024</td>
+            <td>North America</td>
+            <td>Orlando</td>
+            <td>Ingressos</td>
+            <td>20/01/2024</td>
+            <td>NAD122684 | NAD122685</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Dados Passageiro Principal -->
+    <div class="section">
+      <h3>Dados Passageiro Principal</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Data Nascimento</th>
+            <th>UF</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Delma Machesi</td>
+            <td>11/08/1981</td>
+            <td>PR</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Planilha do Pedido -->
+    <div class="section">
+      <h3>Planilha do Pedido</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Categoria</th>
+            <th>NET Dollar</th>
+            <th>Quantidade</th>
+            <th>Total Dollar</th>
+            <th>NET Real</th>
+            <th>Margem</th>
+            <th>Total Pix</th>
+            <th>Gateway</th>
+            <th>Total 10x</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>DW - 02 Dias | 20/01</td>
+            <td>Adulto</td>
+            <td>U$ 271,49</td>
+            <td>3</td>
+            <td>U$ 814,47</td>
+            <td>R$ 5.083,24</td>
+            <td>18,00%</td>
+            <td>R$ 6.199,07</td>
+            <td>10,50%</td>
+            <td>R$ 6.926,34</td>
+          </tr>
+          <tr>
+            <td>DW - 02 Dias | 20/01</td>
+            <td>Criança</td>
+            <td>U$ 261,13</td>
+            <td>1</td>
+            <td>U$ 261,13</td>
+            <td>R$ 1.629,75</td>
+            <td>13,08%</td>
+            <td>R$ 1.874,94</td>
+            <td>10,50%</td>
+            <td>R$ 2.094,91</td>
+          </tr>
+          <tr>
+            <td>US - 14 Dias | 19/01</td>
+            <td>Adulto</td>
+            <td>U$ 372,61</td>
+            <td>3</td>
+            <td>U$ 1.117,83</td>
+            <td>R$ 6.976,56</td>
+            <td>10,00%</td>
+            <td>R$ 7.751,73</td>
+            <td>10,50%</td>
+            <td>R$ 8.661,15</td>
+          </tr>
+          <tr>
+            <td>US - 14 Dias | 19/01</td>
+            <td>Criança</td>
+            <td>U$ 372,61</td>
+            <td>1</td>
+            <td>U$ 372,61</td>
+            <td>R$ 2.325,52</td>
+            <td>10,00%</td>
+            <td>R$ 2.583,91</td>
+            <td>10,50%</td>
+            <td>R$ 2.887,05</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Resumo Financeiro -->
+    <div class="section">
+      <h3>Resumo Financeiro</h3>
+      <table>
+        <tbody>
+          <tr>
+            <td>Dólar Magic:</td>
+            <td>R$ 6,24</td>
+          </tr>
+          <tr>
+            <td>Valor Recebido:</td>
+            <td>R$ 18.409,66</td>
+          </tr>
+          <tr>
+            <td>Valor Pago ao Fornecedor:</td>
+            <td>R$ 16.015,07</td>
+          </tr>
+          <tr>
+            <td>Receita:</td>
+            <td>R$ 2.394,59</td>
+          </tr>
+          <tr>
+            <td>Margem de Lucro (%):</td>
+            <td>13,00%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Brindes -->
+    <div class="section">
+      <h3>Brindes</h3>
+      <p>Envio do Kit Magic Travel para:</p>
+      <address>
+        Rod Ib Gatto Marinho Falcão, 8023<br>
+        Condomínio Vista Lagoa - Barra Nova<br>
+        Marechal Deodoro<br>
+        CEP: 57160000
+      </address>
+    </div>
+  </div>
+</body>
+</html>
