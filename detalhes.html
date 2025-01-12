@@ -5,18 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalhes do Pedido - Magic Travel</title>
   <style>
+    /* Fonte padrão */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
     body {
-      font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      background-color: #f5f5f7;
+      font-family: 'Montserrat', sans-serif;
       margin: 0;
-      padding: 0;
+      background-color: #f5f5f7;
       color: #1d1d1f;
+      display: flex; /* Flexbox para acomodar a sidebar e o conteúdo */
     }
 
+    /* Sidebar container */
+    #sidebar-container {
+      width: 260px; /* Largura da sidebar */
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      z-index: 1000;
+    }
+
+    /* Conteúdo principal */
     .order-details {
-      max-width: 1200px;
-      margin: 40px auto;
+      margin-left: 260px; /* Espaço reservado para a sidebar */
       padding: 20px;
+      width: calc(100% - 260px);
       background-color: #ffffff;
       border-radius: 12px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
@@ -64,14 +78,41 @@
     address {
       line-height: 1.6;
     }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      #sidebar-container {
+        width: 220px;
+      }
+
+      .order-details {
+        margin-left: 220px;
+        width: calc(100% - 220px);
+      }
+    }
+
+    @media (max-width: 576px) {
+      #sidebar-container {
+        width: 100%;
+        position: fixed;
+        z-index: 1000;
+      }
+
+      .order-details {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- Container para carregar a sidebar -->
   <div id="sidebar-container"></div>
 
+  <!-- Conteúdo principal -->
   <div class="order-details">
     <h1>Detalhes do Pedido</h1>
+    <p>ID do Pedido: <span id="pedido-id">Carregando...</span></p>
 
     <!-- Informações do Produto -->
     <div class="section">
@@ -154,42 +195,6 @@
             <td>10,50%</td>
             <td>R$ 6.926,34</td>
           </tr>
-          <tr>
-            <td>DW - 02 Dias | 20/01</td>
-            <td>Criança</td>
-            <td>U$ 261,13</td>
-            <td>1</td>
-            <td>U$ 261,13</td>
-            <td>R$ 1.629,75</td>
-            <td>13,08%</td>
-            <td>R$ 1.874,94</td>
-            <td>10,50%</td>
-            <td>R$ 2.094,91</td>
-          </tr>
-          <tr>
-            <td>US - 14 Dias | 19/01</td>
-            <td>Adulto</td>
-            <td>U$ 372,61</td>
-            <td>3</td>
-            <td>U$ 1.117,83</td>
-            <td>R$ 6.976,56</td>
-            <td>10,00%</td>
-            <td>R$ 7.751,73</td>
-            <td>10,50%</td>
-            <td>R$ 8.661,15</td>
-          </tr>
-          <tr>
-            <td>US - 14 Dias | 19/01</td>
-            <td>Criança</td>
-            <td>U$ 372,61</td>
-            <td>1</td>
-            <td>U$ 372,61</td>
-            <td>R$ 2.325,52</td>
-            <td>10,00%</td>
-            <td>R$ 2.583,91</td>
-            <td>10,50%</td>
-            <td>R$ 2.887,05</td>
-          </tr>
         </tbody>
       </table>
     </div>
@@ -235,23 +240,30 @@
       </address>
     </div>
   </div>
+
   <script>
     // Função para capturar o ID do pedido na URL
     function getPedidoId() {
       const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('pedido');
+      return urlParams.get('pedido') || 'Não informado';
     }
 
-    // Exibe o ID do pedido na página
-    document.getElementById('pedido-id').textContent = getPedidoId();
-    
-    // Carregar a sidebar de um arquivo externo
-    fetch('sidebar.html')
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById('sidebar-container').innerHTML = data;
-      })
-      .catch(error => console.error('Erro ao carregar a sidebar:', error));
+    // Exibe o ID do pedido e carrega a sidebar
+    document.addEventListener('DOMContentLoaded', () => {
+      // Atualiza o ID do pedido na página
+      document.getElementById('pedido-id').textContent = getPedidoId();
+
+      // Carrega o conteúdo do arquivo sidebar.html
+      fetch('sidebar.html')
+        .then(response => {
+          if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
+          return response.text();
+        })
+        .then(html => {
+          document.getElementById('sidebar-container').innerHTML = html;
+        })
+        .catch(error => console.error(error));
+    });
   </script>
 </body>
 </html>
