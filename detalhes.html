@@ -157,17 +157,7 @@
             <th>Identificador</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>Janeiro</td>
-            <td>04/01/2024</td>
-            <td>North America</td>
-            <td>Orlando</td>
-            <td>Ingressos</td>
-            <td>20/01/2024</td>
-            <td>NAD122684 | NAD122685</td>
-          </tr>
-        </tbody>
+        <tbody id="product-info"></tbody>
       </table>
     </div>
 
@@ -182,60 +172,7 @@
             <th>UF</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>Delma Machesi</td>
-            <td>11/08/1981</td>
-            <td>PR</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Planilha do Pedido -->
-    <div class="section">
-      <h3>Planilha do Pedido</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Produto</th>
-            <th>Categoria</th>
-            <th>NET Dollar</th>
-            <th>Quantidade</th>
-            <th>Total Dollar</th>
-            <th>NET Real</th>
-            <th>Margem</th>
-            <th>Total Pix</th>
-            <th>Gateway</th>
-            <th>Total 10x</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>DW - 02 Dias | 20/01</td>
-            <td>Adulto</td>
-            <td>U$ 271,49</td>
-            <td>3</td>
-            <td>U$ 814,47</td>
-            <td>R$ 5.083,24</td>
-            <td>18,00%</td>
-            <td>R$ 6.199,07</td>
-            <td>10,50%</td>
-            <td>R$ 6.926,34</td>
-          </tr>
-          <tr>
-            <td>DW - 02 Dias | 20/01</td>
-            <td>Criança</td>
-            <td>U$ 261,13</td>
-            <td>1</td>
-            <td>U$ 261,13</td>
-            <td>R$ 1.629,75</td>
-            <td>13,08%</td>
-            <td>R$ 1.874,94</td>
-            <td>10,50%</td>
-            <td>R$ 2.094,91</td>
-          </tr>
-        </tbody>
+        <tbody id="passenger-info"></tbody>
       </table>
     </div>
 
@@ -243,41 +180,8 @@
     <div class="section">
       <h3>Resumo Financeiro</h3>
       <table>
-        <tbody>
-          <tr>
-            <td>Dólar Magic:</td>
-            <td>R$ 6,24</td>
-          </tr>
-          <tr>
-            <td>Valor Recebido:</td>
-            <td>R$ 18.409,66</td>
-          </tr>
-          <tr>
-            <td>Valor Pago ao Fornecedor:</td>
-            <td>R$ 16.015,07</td>
-          </tr>
-          <tr>
-            <td>Receita:</td>
-            <td>R$ 2.394,59</td>
-          </tr>
-          <tr>
-            <td>Margem de Lucro (%):</td>
-            <td>13,00%</td>
-          </tr>
-        </tbody>
+        <tbody id="finance-summary"></tbody>
       </table>
-    </div>
-
-    <!-- Brindes -->
-    <div class="section">
-      <h3>Brindes</h3>
-      <p>Envio do Kit Magic Travel para:</p>
-      <address>
-        Rod Ib Gatto Marinho Falcão, 8023<br>
-        Condomínio Vista Lagoa - Barra Nova<br>
-        Marechal Deodoro<br>
-        CEP: 57160000
-      </address>
     </div>
   </div>
 
@@ -288,10 +192,60 @@
       return urlParams.get('pedido') || 'Não informado';
     }
 
-    // Exibe o ID do pedido e carrega a sidebar
+    // Função para carregar os dados do pedido
+    async function loadOrderDetails() {
+      const pedidoId = getPedidoId();
+      if (pedidoId === 'Não informado') {
+        alert('ID do pedido não informado!');
+        return;
+      }
+
+      try {
+        // Chama a API para obter os dados do pedido com o ID
+        const response = await fetch(`https://www.magictraveltur.com/api_pedidos.php?pedido=${pedidoId}`);
+        if (!response.ok) throw new Error('Erro ao buscar os detalhes do pedido.');
+
+        const pedido = await response.json();
+
+        // Atualiza o ID do pedido na página
+        document.getElementById('pedido-id').textContent = pedidoId;
+
+        // Preenche as informações do produto
+        document.getElementById('product-info').innerHTML = `
+          <tr>
+            <td>${pedido.mes_venda}</td>
+            <td>${new Date(pedido.data_venda).toLocaleDateString()}</td>
+            <td>${pedido.fornecedor}</td>
+            <td>${pedido.destino}</td>
+            <td>${pedido.item}</td>
+            <td>${new Date(pedido.data_utilizacao).toLocaleDateString()}</td>
+            <td>${pedido.identificador}</td>
+          </tr>`;
+
+        // Preenche os dados do passageiro principal
+        document.getElementById('passenger-info').innerHTML = `
+          <tr>
+            <td>${pedido.nome}</td>
+            <td>${new Date(pedido.data_nascimento).toLocaleDateString()}</td>
+            <td>${pedido.uf}</td>
+          </tr>`;
+
+        // Preenche o resumo financeiro
+        document.getElementById('finance-summary').innerHTML = `
+          <tr><td>Dólar Magic:</td><td>${pedido.cambio_dia}</td></tr>
+          <tr><td>Valor Recebido:</td><td>R$ ${pedido.recebido.toFixed(2)}</td></tr>
+          <tr><td>Valor Pago ao Fornecedor:</td><td>R$ ${pedido.valor_repassado.toFixed(2)}</td></tr>
+          <tr><td>Receita:</td><td>R$ ${pedido.valor_comissao.toFixed(2)}</td></tr>
+          <tr><td>Margem de Lucro (%):</td><td>${pedido.margem_lucro}</td></tr>`;
+      } catch (error) {
+        console.error('Erro ao carregar os detalhes do pedido:', error);
+        alert('Não foi possível carregar os dados do pedido.');
+      }
+    }
+
+    // Carrega os detalhes do pedido e a sidebar ao carregar a página
     document.addEventListener('DOMContentLoaded', () => {
-      // Atualiza o ID do pedido na página
-      document.getElementById('pedido-id').textContent = getPedidoId();
+      loadOrderDetails();
 
       // Carrega o conteúdo do arquivo sidebar.html
       fetch('sidebar.html')
