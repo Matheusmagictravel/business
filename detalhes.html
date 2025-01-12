@@ -5,89 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Detalhes do Pedido - Magic Travel</title>
   <style>
-    /* Importando a fonte Montserrat */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
-
-    /* Estilo global */
     body {
-      font-family: 'Montserrat', sans-serif;
-      margin: 0;
-      display: flex; /* Flexbox para alinhar a sidebar e o conteúdo principal */
+      font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       background-color: #f5f5f7;
+      margin: 0;
+      padding: 0;
       color: #1d1d1f;
     }
 
-    /* Sidebar fixa */
-    #sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 260px; /* Largura fixa */
-      height: 100%; /* Ocupa toda a altura */
-      background-color: #0071e3; /* Cor de fundo azul */
-      color: #fff;
-      overflow-y: auto;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra leve */
-      z-index: 1000;
-    }
-
-    .sidebar-content {
-      padding: 20px;
-    }
-
-    .sidebar-brand img {
-      display: block;
-      margin: 0 auto 20px;
-      max-width: 100%;
-      height: auto;
-    }
-
-    .sidebar-header {
-      font-size: 0.9rem;
-      color: #f0f0f0;
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-top: 2rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .sidebar-nav {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    .sidebar-item {
-      margin-bottom: 1rem;
-    }
-
-    .sidebar-link {
-      color: #ffffff;
-      text-decoration: none;
-      font-size: 1rem;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 15px;
-      border-radius: 8px;
-      transition: all 0.3s ease;
-    }
-
-    .sidebar-link:hover {
-      background-color: #adb5bd;
-      color: #333;
-    }
-
-    .sidebar-item.active .sidebar-link {
-      background-color: #adb5bd;
-      color: #333;
-    }
-
-    /* Conteúdo principal */
     .order-details {
-      margin-left: 260px; /* Espaço reservado para a sidebar */
-      max-width: calc(100% - 260px);
+      max-width: 1200px;
+      margin: 40px auto;
       padding: 20px;
       background-color: #ffffff;
       border-radius: 12px;
@@ -136,57 +64,12 @@
     address {
       line-height: 1.6;
     }
-
-    @media (max-width: 768px) {
-      #sidebar {
-        width: 220px;
-      }
-
-      .order-details {
-        margin-left: 220px;
-        max-width: calc(100% - 220px);
-      }
-    }
-
-    @media (max-width: 576px) {
-      #sidebar {
-        position: absolute;
-        width: 100%;
-        height: auto;
-        z-index: 1000;
-      }
-
-      .order-details {
-        margin-left: 0;
-        max-width: 100%;
-      }
-    }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <nav id="sidebar" class="sidebar js-sidebar">
-    <div class="sidebar-content js-simplebar">
-      <a class="sidebar-brand" href="index.html">
-        <img src="https://www.magictraveltur.com/wp-content/uploads/2024/11/Escrita-_-Branco.png" alt="Magic Travel">
-      </a>
-      <ul class="sidebar-nav">
-        <li class="sidebar-header">Pages</li>
-        <li class="sidebar-item active">
-          <a class="sidebar-link" href="index.html">
-            <span class="align-middle">Dashboard</span>
-          </a>
-        </li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="pages-profile.html">
-            <span class="align-middle">Profile</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </nav>
+  <!-- Container para carregar a sidebar -->
+  <div id="sidebar-container"></div>
 
-  <!-- Conteúdo Principal -->
   <div class="order-details">
     <h1>Detalhes do Pedido</h1>
 
@@ -219,7 +102,7 @@
       </table>
     </div>
 
-    <!-- Outras seções (mantidas) -->
+    <!-- Dados Passageiro Principal -->
     <div class="section">
       <h3>Dados Passageiro Principal</h3>
       <table>
@@ -240,7 +123,135 @@
       </table>
     </div>
 
-    <!-- Outras tabelas continuam como no código original -->
+    <!-- Planilha do Pedido -->
+    <div class="section">
+      <h3>Planilha do Pedido</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Categoria</th>
+            <th>NET Dollar</th>
+            <th>Quantidade</th>
+            <th>Total Dollar</th>
+            <th>NET Real</th>
+            <th>Margem</th>
+            <th>Total Pix</th>
+            <th>Gateway</th>
+            <th>Total 10x</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>DW - 02 Dias | 20/01</td>
+            <td>Adulto</td>
+            <td>U$ 271,49</td>
+            <td>3</td>
+            <td>U$ 814,47</td>
+            <td>R$ 5.083,24</td>
+            <td>18,00%</td>
+            <td>R$ 6.199,07</td>
+            <td>10,50%</td>
+            <td>R$ 6.926,34</td>
+          </tr>
+          <tr>
+            <td>DW - 02 Dias | 20/01</td>
+            <td>Criança</td>
+            <td>U$ 261,13</td>
+            <td>1</td>
+            <td>U$ 261,13</td>
+            <td>R$ 1.629,75</td>
+            <td>13,08%</td>
+            <td>R$ 1.874,94</td>
+            <td>10,50%</td>
+            <td>R$ 2.094,91</td>
+          </tr>
+          <tr>
+            <td>US - 14 Dias | 19/01</td>
+            <td>Adulto</td>
+            <td>U$ 372,61</td>
+            <td>3</td>
+            <td>U$ 1.117,83</td>
+            <td>R$ 6.976,56</td>
+            <td>10,00%</td>
+            <td>R$ 7.751,73</td>
+            <td>10,50%</td>
+            <td>R$ 8.661,15</td>
+          </tr>
+          <tr>
+            <td>US - 14 Dias | 19/01</td>
+            <td>Criança</td>
+            <td>U$ 372,61</td>
+            <td>1</td>
+            <td>U$ 372,61</td>
+            <td>R$ 2.325,52</td>
+            <td>10,00%</td>
+            <td>R$ 2.583,91</td>
+            <td>10,50%</td>
+            <td>R$ 2.887,05</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Resumo Financeiro -->
+    <div class="section">
+      <h3>Resumo Financeiro</h3>
+      <table>
+        <tbody>
+          <tr>
+            <td>Dólar Magic:</td>
+            <td>R$ 6,24</td>
+          </tr>
+          <tr>
+            <td>Valor Recebido:</td>
+            <td>R$ 18.409,66</td>
+          </tr>
+          <tr>
+            <td>Valor Pago ao Fornecedor:</td>
+            <td>R$ 16.015,07</td>
+          </tr>
+          <tr>
+            <td>Receita:</td>
+            <td>R$ 2.394,59</td>
+          </tr>
+          <tr>
+            <td>Margem de Lucro (%):</td>
+            <td>13,00%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Brindes -->
+    <div class="section">
+      <h3>Brindes</h3>
+      <p>Envio do Kit Magic Travel para:</p>
+      <address>
+        Rod Ib Gatto Marinho Falcão, 8023<br>
+        Condomínio Vista Lagoa - Barra Nova<br>
+        Marechal Deodoro<br>
+        CEP: 57160000
+      </address>
+    </div>
   </div>
+  <script>
+    // Função para capturar o ID do pedido na URL
+    function getPedidoId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('pedido');
+    }
+
+    // Exibe o ID do pedido na página
+    document.getElementById('pedido-id').textContent = getPedidoId();
+    
+    // Carregar a sidebar de um arquivo externo
+    fetch('sidebar.html')
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById('sidebar-container').innerHTML = data;
+      })
+      .catch(error => console.error('Erro ao carregar a sidebar:', error));
+  </script>
 </body>
 </html>
