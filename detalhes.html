@@ -232,5 +232,15 @@
       </address>
     </div>
   </div>
+  <script>
+    // Função para capturar o ID do pedido na URL
+    function getPedidoId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('pedido');
+    }
+
+    // Exibe o ID do pedido na página
+    document.getElementById('pedido-id').textContent = getPedidoId();
+  </script>
 </body>
 </html>
