@@ -82,10 +82,6 @@
       background-color: #f9f9fa; /* Cor alternada */
     }
 
-    address {
-      line-height: 1.6;
-    }
-
     /* Botão de voltar */
     .back-button {
       display: inline-block;
@@ -192,6 +188,11 @@
       return urlParams.get('pedido') || 'Não informado';
     }
 
+    // Função para formatar datas
+    function formatDate(date) {
+      return date ? new Date(date).toLocaleDateString('pt-BR') : 'N/A';
+    }
+
     // Função para carregar os dados do pedido
     async function loadOrderDetails() {
       const pedidoId = getPedidoId();
@@ -203,7 +204,7 @@
       try {
         // Chama a API para obter os dados do pedido com o ID
         const response = await fetch(`https://www.magictraveltur.com/api_pedidos.php?pedido=${pedidoId}`);
-        if (!response.ok) throw new Error('Erro ao buscar os detalhes do pedido.');
+        if (!response.ok) throw new Error(`Erro ao buscar os detalhes do pedido. Status: ${response.status}`);
 
         const pedido = await response.json();
 
@@ -213,33 +214,33 @@
         // Preenche as informações do produto
         document.getElementById('product-info').innerHTML = `
           <tr>
-            <td>${pedido.mes_venda}</td>
-            <td>${new Date(pedido.data_venda).toLocaleDateString()}</td>
-            <td>${pedido.fornecedor}</td>
-            <td>${pedido.destino}</td>
-            <td>${pedido.item}</td>
-            <td>${new Date(pedido.data_utilizacao).toLocaleDateString()}</td>
-            <td>${pedido.identificador}</td>
+            <td>${pedido.mes_venda || 'N/A'}</td>
+            <td>${formatDate(pedido.data_venda)}</td>
+            <td>${pedido.fornecedor || 'N/A'}</td>
+            <td>${pedido.destino || 'N/A'}</td>
+            <td>${pedido.item || 'N/A'}</td>
+            <td>${formatDate(pedido.data_utilizacao)}</td>
+            <td>${pedido.identificador || 'N/A'}</td>
           </tr>`;
 
         // Preenche os dados do passageiro principal
         document.getElementById('passenger-info').innerHTML = `
           <tr>
-            <td>${pedido.nome}</td>
-            <td>${new Date(pedido.data_nascimento).toLocaleDateString()}</td>
-            <td>${pedido.uf}</td>
+            <td>${pedido.nome || 'N/A'}</td>
+            <td>${formatDate(pedido.data_nascimento)}</td>
+            <td>${pedido.uf || 'N/A'}</td>
           </tr>`;
 
         // Preenche o resumo financeiro
         document.getElementById('finance-summary').innerHTML = `
-          <tr><td>Dólar Magic:</td><td>${pedido.cambio_dia}</td></tr>
-          <tr><td>Valor Recebido:</td><td>R$ ${pedido.recebido.toFixed(2)}</td></tr>
-          <tr><td>Valor Pago ao Fornecedor:</td><td>R$ ${pedido.valor_repassado.toFixed(2)}</td></tr>
-          <tr><td>Receita:</td><td>R$ ${pedido.valor_comissao.toFixed(2)}</td></tr>
-          <tr><td>Margem de Lucro (%):</td><td>${pedido.margem_lucro}</td></tr>`;
+          <tr><td>Dólar Magic:</td><td>${pedido.cambio_dia || 'N/A'}</td></tr>
+          <tr><td>Valor Recebido:</td><td>R$ ${pedido.recebido?.toFixed(2) || 'N/A'}</td></tr>
+          <tr><td>Valor Pago ao Fornecedor:</td><td>R$ ${pedido.valor_repassado?.toFixed(2) || 'N/A'}</td></tr>
+          <tr><td>Receita:</td><td>R$ ${pedido.valor_comissao?.toFixed(2) || 'N/A'}</td></tr>
+          <tr><td>Margem de Lucro (%):</td><td>${pedido.margem_lucro || 'N/A'}</td></tr>`;
       } catch (error) {
         console.error('Erro ao carregar os detalhes do pedido:', error);
-        alert('Não foi possível carregar os dados do pedido.');
+        alert(`Não foi possível carregar os dados do pedido: ${error.message}`);
       }
     }
 
