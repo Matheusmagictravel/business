@@ -86,6 +86,24 @@
       line-height: 1.6;
     }
 
+    /* Botão de voltar */
+    .back-button {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 10px 15px;
+      background-color: #0071e3;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 500;
+      text-decoration: none;
+      border-radius: 5px;
+      transition: background-color 0.3s ease;
+    }
+
+    .back-button:hover {
+      background-color: #005bb5;
+    }
+
     /* Responsividade */
     @media (max-width: 768px) {
       #sidebar-container {
@@ -118,6 +136,9 @@
 
   <!-- Conteúdo principal -->
   <div class="order-details">
+    <!-- Botão de voltar -->
+    <a href="pagina-pedidos.html" class="back-button">Voltar para Página de Pedidos</a>
+
     <h1>Detalhes do Pedido</h1>
     <p>ID do Pedido: <span id="pedido-id">Carregando...</span></p>
 
@@ -169,6 +190,94 @@
           </tr>
         </tbody>
       </table>
+    </div>
+
+    <!-- Planilha do Pedido -->
+    <div class="section">
+      <h3>Planilha do Pedido</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Categoria</th>
+            <th>NET Dollar</th>
+            <th>Quantidade</th>
+            <th>Total Dollar</th>
+            <th>NET Real</th>
+            <th>Margem</th>
+            <th>Total Pix</th>
+            <th>Gateway</th>
+            <th>Total 10x</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>DW - 02 Dias | 20/01</td>
+            <td>Adulto</td>
+            <td>U$ 271,49</td>
+            <td>3</td>
+            <td>U$ 814,47</td>
+            <td>R$ 5.083,24</td>
+            <td>18,00%</td>
+            <td>R$ 6.199,07</td>
+            <td>10,50%</td>
+            <td>R$ 6.926,34</td>
+          </tr>
+          <tr>
+            <td>DW - 02 Dias | 20/01</td>
+            <td>Criança</td>
+            <td>U$ 261,13</td>
+            <td>1</td>
+            <td>U$ 261,13</td>
+            <td>R$ 1.629,75</td>
+            <td>13,08%</td>
+            <td>R$ 1.874,94</td>
+            <td>10,50%</td>
+            <td>R$ 2.094,91</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Resumo Financeiro -->
+    <div class="section">
+      <h3>Resumo Financeiro</h3>
+      <table>
+        <tbody>
+          <tr>
+            <td>Dólar Magic:</td>
+            <td>R$ 6,24</td>
+          </tr>
+          <tr>
+            <td>Valor Recebido:</td>
+            <td>R$ 18.409,66</td>
+          </tr>
+          <tr>
+            <td>Valor Pago ao Fornecedor:</td>
+            <td>R$ 16.015,07</td>
+          </tr>
+          <tr>
+            <td>Receita:</td>
+            <td>R$ 2.394,59</td>
+          </tr>
+          <tr>
+            <td>Margem de Lucro (%):</td>
+            <td>13,00%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Brindes -->
+    <div class="section">
+      <h3>Brindes</h3>
+      <p>Envio do Kit Magic Travel para:</p>
+      <address>
+        Rod Ib Gatto Marinho Falcão, 8023<br>
+        Condomínio Vista Lagoa - Barra Nova<br>
+        Marechal Deodoro<br>
+        CEP: 57160000
+      </address>
     </div>
   </div>
 
