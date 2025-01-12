@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sidebar</title>
+  <style>
+    /* Importando a fonte Montserrat */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+    /* Estilo global */
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      display: flex; /* Flexbox para alinhar a sidebar e o conteúdo principal */
+      background-color: #f5f5f7;
+      color: #333;
+    }
+
+    /* Sidebar fixa */
+    #sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 260px; /* Largura fixa */
+      height: 100%; /* Ocupa toda a altura */
+      background-color: #260651; /* Azul solicitado */
+      color: #fff; /* Cor do texto */
+      overflow-y: auto; /* Ativa rolagem vertical */
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra leve */
+      transition: all 0.3s ease; /* Transição suave */
+      z-index: 1000;
+    }
+
+    /* Conteúdo da sidebar */
+    .sidebar-content {
+      padding: 20px;
+    }
+
+    /* Marca ou título da sidebar */
+    .sidebar-brand img {
+      display: block;
+      margin: 0 auto 20px;
+      max-width: 70%;
+      height: auto;
+    }
+
+    /* Cabeçalhos da sidebar */
+    .sidebar-header {
+      font-size: 0.9rem;
+      color: #f0f0f0;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Lista de navegação */
+    .sidebar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* Itens da lista */
+    .sidebar-item {
+      margin-bottom: 1rem;
+    }
+
+    /* Links da lista */
+    .sidebar-link {
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px; /* Espaço entre ícone e texto */
+      padding: 12px 15px;
+      border-radius: 8px;
+      transition: all 0.3s ease; /* Transição suave no hover */
+    }
+
+    /* Hover nos links */
+    .sidebar-link:hover {
+      background-color: #0047AB; /* Azul no hover */
+      color: #ffffff; /* Texto branco */
+    }
+
+    /* Link ativo */
+    .sidebar-item.active .sidebar-link {
+      background-color: #0047AB; /* Azul para ativo */
+      color: #ffffff;
+    }
+
+    /* Ícones */
+    .sidebar-link svg {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+    }
+
+    /* Estilo do conteúdo principal */
+    .dashboard-orders {
+      margin-left: 260px; /* Espaço reservado para a sidebar */
+      padding: 20px;
+      width: calc(100% - 260px); /* Largura ajustada */
+      transition: margin-left 0.3s ease;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+      #sidebar {
+        width: 220px; /* Reduz largura em telas menores */
+      }
+
+      .dashboard-orders {
+        margin-left: 220px;
+        width: calc(100% - 220px);
+      }
+    }
+
+    @media (max-width: 576px) {
+      #sidebar {
+        position: absolute;
+        width: 100%; /* Ocupa toda a largura */
+        height: auto;
+        z-index: 1000;
+        box-shadow: none;
+      }
+
+      .dashboard-orders {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav id="sidebar" class="sidebar js-sidebar">
+    <div class="sidebar-content js-simplebar">
+      <a class="sidebar-brand" href="index.html">
+        <img src="https://www.magictraveltur.com/wp-content/uploads/2025/01/Logo-Branca.png" alt="Magic Travel">
+      </a>
+      <ul class="sidebar-nav">
+        <!-- Header Pages -->
+        <li class="sidebar-header">Pages</li>
+        <li class="sidebar-item active">
+          <a class="sidebar-link" href="index.html">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sliders align-middle">
+              <line x1="4" y1="21" x2="4" y2="14"></line>
+              <line x1="4" y1="10" x2="4" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12" y2="3"></line>
+              <line x1="20" y1="21" x2="20" y2="16"></line>
+              <line x1="20" y1="12" x2="20" y2="3"></line>
+              <line x1="1" y1="14" x2="7" y2="14"></line>
+              <line x1="9" y1="8" x2="15" y2="8"></line>
+              <line x1="17" y1="16" x2="23" y2="16"></line>
+            </svg>
+            <span class="align-middle">Dashboard</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="pages-profile.html">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-user align-middle">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="align-middle">Profile</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" href="pages-orders.html">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart align-middle">
+              <circle cx="9" cy="21" r="1"></circle>
+              <circle cx="20" cy="21" r="1"></circle>
+              <path d="M1 1h4l2 13h13"></path>
+              <path d="M16 16H7"></path>
+            </svg>
+            <span class="align-middle">Pedidos</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
+</body>
+</html>
