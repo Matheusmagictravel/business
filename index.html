@@ -87,6 +87,48 @@
       font-size: 12px;
       color: #6b7280;
     }
+
+    /* Chart and Project Containers */
+    .chart-container, .projects-container {
+      grid-column: span 6;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    .chart-container h5, .projects-container h5 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .card.small-card {
+      grid-column: span 3;
+    }
+
+    /* Table Styles */
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th, .table td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-top: 1px solid #e3e6f0;
+    }
+
+    .table th {
+      font-size: 0.875rem;
+      color: #858796;
+      font-weight: 600;
+      background-color: #f8f9fc;
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: #f8f9fc;
+    }
   </style>
 </head>
 <body>
@@ -100,30 +142,30 @@
       <div class="card-icon">💰</div>
       <h5>Receita</h5>
       <h1 id="sales-value">0</h1>
-      <small id="sales-description">Carregando...</small>
+      <small id="sales-description">Lucro Líquido</small>
     </div>
 
     <div class="card small-card">
       <div class="card-icon">📈</div>
       <h5>Faturamento</h5>
       <h1 id="earnings-value">0</h1>
-      <small id="earnings-description">Carregando...</small>
+      <small id="earnings-description">Valor das Vendas</small>
     </div>
 
     <div class="card small-card">
       <div class="card-icon">👥</div>
       <h5>Despesa</h5>
       <h1 id="expenses-value">0</h1>
-      <small id="expenses-description">Carregando...</small>
+      <small id="expenses-description">Custo Fornecedor</small>
     </div>
 
     <div class="card small-card">
       <div class="card-icon">🛒</div>
       <h5>Pedidos</h5>
       <h1 id="orders-value">0</h1>
-      <small id="orders-description">Carregando...</small>
+      <small id="orders-description">Total de Pedidos</small>
     </div>
-  </div>
+
     <!-- Últimos Pedidos -->
     <div class="projects-container">
       <h5>Últimos Pedidos</h5>
@@ -132,13 +174,16 @@
           <tr>
             <th>ID</th>
             <th>Data</th>
+            <th>Cliente</th>
+            <th>Agente</th>
             <th>Valor</th>
+            <th>Pagamento</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody id="latest-projects">
           <tr>
-            <td colspan="4">Carregando...</td>
+            <td colspan="7">Carregando...</td>
           </tr>
         </tbody>
       </table>
@@ -152,6 +197,20 @@
   </div>
 
   <script>
+    // Função para carregar o sidebar dinamicamente
+    async function loadSidebar() {
+      try {
+        const response = await fetch('sidebar.html');
+        if (!response.ok) throw new Error('Erro ao carregar o sidebar.');
+        const html = await response.text();
+        document.getElementById('sidebar-container').innerHTML = html;
+      } catch (error) {
+        console.error('Erro ao carregar o sidebar:', error);
+        document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar o sidebar.</p>';
+      }
+    }
+
+    // Função para carregar os dados do dashboard
     async function fetchDashboardData() {
       try {
         const response = await fetch('https://www.magictraveltur.com/api_pedidos.php');
@@ -159,20 +218,66 @@
         const data = await response.json();
 
         // Atualizar Cards
-        document.getElementById('sales-value').textContent = `R$ ${(data.valor_comissao || 0).toFixed(2)}`;
-        document.getElementById('sales-description').textContent = 'Receita (Lucro Líquido)';
+        document.getElementById('sales-value').textContent = `R$ ${(data.receita || 0).toFixed(2)}`;
         document.getElementById('earnings-value').textContent = `R$ ${(data.valor_venda || 0).toFixed(2)}`;
-        document.getElementById('earnings-description').textContent = 'Faturamento Bruto';
         document.getElementById('expenses-value').textContent = `R$ ${(data.custo || 0).toFixed(2)}`;
-        document.getElementById('expenses-description').textContent = 'Custo Operacional';
-        document.getElementById('orders-value').textContent = data.total_pedidos || 0;
-        document.getElementById('orders-description').textContent = 'Número de Pedidos';
+        document.getElementById('orders-value').textContent = data.pedidos || 0;
+
+        // Atualizar tabela de últimos pedidos
+        const latestProjects = document.getElementById('latest-projects');
+        latestProjects.innerHTML = '';
+        if (Array.isArray(data.latestProjects)) {
+          data.latestProjects.forEach(project => {
+            const row = `<tr>
+              <td>${project.id || 'N/A'}</td>
+              <td>${project.data_venda || 'N/A'}</td>
+              <td>${project.nome_comprador || 'N/A'}</td>
+              <td>${project.cliente_de || 'N/A'}</td>
+              <td>R$ ${(project.valor_venda || 0).toFixed(2)}</td>
+              <td>${project.meio_pgto || 'N/A'}</td>
+              <td>${project.status || 'N/A'}</td>
+            </tr>`;
+            latestProjects.innerHTML += row;
+          });
+        } else {
+          latestProjects.innerHTML = '<tr><td colspan="7">Nenhum pedido encontrado.</td></tr>';
+        }
+
+        // Atualizar gráfico
+        const ctx = document.getElementById('waveChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: (data.chart.labels || []),
+            datasets: [{
+              label: 'Receita por Dia',
+              data: (data.chart.values || []),
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              borderWidth: 3,
+              fill: true,
+              tension: 0.4,
+            }],
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { display: false } },
+              y: { grid: { color: '#e5e7eb' }, beginAtZero: true },
+            },
+          },
+        });
       } catch (error) {
         console.error('Erro ao carregar os dados do dashboard:', error);
       }
     }
 
-    document.addEventListener('DOMContentLoaded', fetchDashboardData);
+    // Inicializar o dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSidebar();
+      fetchDashboardData();
+    });
   </script>
 </body>
 </html>
