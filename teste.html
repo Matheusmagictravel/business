@@ -10,32 +10,33 @@
     body {
       font-family: 'Inter', sans-serif;
       background-color: #f8f9fa;
-      color: #333;
       margin: 0;
+      padding: 0;
     }
 
-    .container {
+    .dashboard-container {
       display: flex;
-      flex-wrap: nowrap;
-      margin-left: 260px;
+      gap: 20px;
       padding: 20px;
-      gap: 20px;
-      align-items: flex-start;
+      margin-left: 260px; /* Espaço para o sidebar */
     }
 
-    .sidebar-placeholder {
-      width: 260px;
-    }
-
-    .cards {
+    .column {
       display: flex;
-      flex-wrap: wrap;
+      flex-direction: column;
       gap: 20px;
-      flex: 0 0 50%;
+    }
+
+    .column-25 {
+      width: 25%;
+    }
+
+    .column-50 {
+      width: 50%;
     }
 
     .card {
-      background: #fff;
+      background-color: #fff;
       border-radius: 10px;
       padding: 20px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -44,28 +45,38 @@
     .card h5 {
       font-size: 14px;
       font-weight: 600;
+      color: #666;
       margin-bottom: 10px;
     }
 
     .card h1 {
-      font-size: 32px;
+      font-size: 28px;
       font-weight: 700;
       margin: 0;
+      color: #333;
     }
 
-    .card-small {
-      width: 100%; /* Cada cartão 25% dentro da seção */
+    .card p {
+      margin-top: 5px;
+      color: #888;
+      font-size: 12px;
     }
 
     .chart-container {
-      flex: 1;
       background: #fff;
       border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       padding: 20px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    .chart-container canvas {
+    .chart-container h5 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: #666;
+    }
+
+    #chartjs-dashboard-line {
       width: 100%;
       height: 300px;
     }
@@ -84,36 +95,42 @@
   <!-- Sidebar -->
   <div id="sidebar-container">Carregando...</div>
 
-  <!-- Main Content -->
-  <div class="container">
-    <!-- Blocos 25% (4 blocos) -->
-    <div class="cards">
-      <div class="card card-small">
+  <!-- Main Dashboard -->
+  <div class="dashboard-container">
+    <!-- Coluna 1 -->
+    <div class="column column-25">
+      <div class="card">
         <h5>Sales</h5>
         <h1 id="sales">R$ 0</h1>
         <p>Soma do Pix</p>
       </div>
-      <div class="card card-small">
-        <h5>Earnings</h5>
-        <h1 id="earnings">R$ 0</h1>
-        <p>Soma do "Vamos Pagar ao Fornecedor"</p>
-      </div>
-      <div class="card card-small">
+      <div class="card">
         <h5>Visitors</h5>
         <h1 id="visitors">0</h1>
         <p>Número de Pedidos</p>
       </div>
-      <div class="card card-small">
+    </div>
+
+    <!-- Coluna 2 -->
+    <div class="column column-25">
+      <div class="card">
+        <h5>Earnings</h5>
+        <h1 id="earnings">R$ 0</h1>
+        <p>Soma do "Vamos Pagar ao Fornecedor"</p>
+      </div>
+      <div class="card">
         <h5>Orders</h5>
         <h1 id="orders">0</h1>
         <p>Dólar Magic</p>
       </div>
     </div>
 
-    <!-- Gráfico 50% -->
-    <div class="chart-container">
-      <h5>Recent Movement</h5>
-      <canvas id="chartjs-dashboard-line"></canvas>
+    <!-- Coluna 3 -->
+    <div class="column column-50">
+      <div class="chart-container">
+        <h5>Recent Movement</h5>
+        <canvas id="chartjs-dashboard-line"></canvas>
+      </div>
     </div>
   </div>
 
