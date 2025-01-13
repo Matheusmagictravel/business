@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Analytics Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f8f9fc;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #sidebar-container {
+      flex-shrink: 0;
+      width: 260px;
+      background-color: #081135;
+      color: white;
+      height: 100%;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+
+    .dashboard-container {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 20px;
+      padding: 20px;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+    }
+
+    .chart-container, .projects-container {
+      grid-column: span 6;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .table th, .table td {
+      padding: 0.75rem 1rem;
+      text-align: left;
+      border-top: 1px solid #e3e6f0;
+    }
+
+    .table th {
+      font-size: 0.875rem;
+      color: #858796;
+      font-weight: 600;
+      background-color: #f8f9fc;
+    }
+
+    .table-hover tbody tr:hover {
+      background-color: #f8f9fc;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div id="sidebar-container"></div>
+
+  <!-- Dashboard -->
+  <div class="dashboard-container">
+    <div class="card small-card">
+      <h5>Receita</h5>
+      <h1 id="sales-value">0</h1>
+    </div>
+
+    <div class="card small-card">
+      <h5>Faturamento</h5>
+      <h1 id="earnings-value">0</h1>
+    </div>
+
+    <div class="card small-card">
+      <h5>Despesa</h5>
+      <h1 id="expenses-value">0</h1>
+    </div>
+
+    <div class="card small-card">
+      <h5>Pedidos</h5>
+      <h1 id="orders-value">0</h1>
+    </div>
+
+    <div class="projects-container">
+      <h5>Últimos Pedidos</h5>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Data</th>
+            <th>Cliente</th>
+            <th>Agente</th>
+            <th>Valor</th>
+            <th>Pagamento</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="latest-projects">
+          <tr>
+            <td colspan="7">Carregando...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="chart-container">
+      <h5>Receita por Dia</h5>
+      <canvas id="revenueChart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    // Função para carregar o sidebar
+    async function loadSidebar() {
+      try {
+        const response = await fetch('sidebar.html');
+        if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
+        const html = await response.text();
+        document.getElementById('sidebar-container').innerHTML = html;
+      } catch (error) {
+        console.error('Erro ao carregar a sidebar:', error);
+        document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
+      }
+    }
+
+    // Função para carregar dados do dashboard
+    async function fetchDashboardData() {
+      try {
+        const response = await fetch('https://www.magictraveltur.com/api_pedidos.php');
+        if (!response.ok) throw new Error(`Erro ao carregar os dados: ${response.status}`);
+
+        const data = await response.json();
+        console.log('Dados retornados pela API:', data);
+
+        // Atualiza os cards
+        document.getElementById('sales-value').textContent = `R$ ${(data.valor_comissao || 0).toFixed(2)}`;
+        document.getElementById('earnings-value').textContent = `R$ ${(data.valor_venda || 0).toFixed(2)}`;
+        document.getElementById('expenses-value').textContent = `R$ ${(data.custo || 0).toFixed(2)}`;
+        document.getElementById('orders-value').textContent = data.total_pedidos || 0;
+
+        // Atualiza a tabela de últimos pedidos
+        const latestProjects = document.getElementById('latest-projects');
+        latestProjects.innerHTML = '';
+        if (Array.isArray(data.ultimos_pedidos)) {
+          data.ultimos_pedidos.forEach(pedido => {
+            latestProjects.innerHTML += `
+              <tr>
+                <td>${pedido.id}</td>
+                <td>${pedido.data_venda}</td>
+                <td>${pedido.nome_comprador}</td>
+                <td>${pedido.cliente_de}</td>
+                <td>R$ ${(pedido.valor_venda).toFixed(2)}</td>
+                <td>${pedido.meio_pgto}</td>
+                <td>${pedido.status}</td>
+              </tr>`;
+          });
+        } else {
+          latestProjects.innerHTML = '<tr><td colspan="7">Nenhum pedido encontrado.</td></tr>';
+        }
+
+        // Atualiza o gráfico
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: data.receita_por_dia.labels || [],
+            datasets: [{
+              label: 'Receita (R$)',
+              data: data.receita_por_dia.values || [],
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              borderWidth: 3,
+              tension: 0.4,
+              fill: true,
+            }],
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { grid: { display: false } },
+              y: { grid: { color: '#e5e7eb' }, beginAtZero: true },
+            },
+          },
+        });
+      } catch (error) {
+        console.error('Erro ao carregar os dados do dashboard:', error);
+        alert('Erro ao carregar os dados do dashboard. Verifique o console para mais informações.');
+      }
+    }
+
+    // Inicializa o dashboard
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSidebar();
+      fetchDashboardData();
+    });
+  </script>
+</body>
+</html>
