@@ -15,20 +15,11 @@
     }
 
     .container {
-      padding: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .row {
       display: flex;
       flex-wrap: wrap;
-      margin: -10px;
-    }
-
-    .col-md-6 {
-      flex: 1 1 calc(50% - 20px);
-      margin: 10px;
+      gap: 20px;
+      margin-left: 260px;
+      padding: 20px;
     }
 
     .card {
@@ -50,97 +41,85 @@
       margin: 0;
     }
 
+    .card-small {
+      width: calc(25% - 20px);
+    }
+
+    .card-large {
+      width: calc(50% - 20px);
+    }
+
     .chart-container {
-      margin-top: 20px;
-      background: #fff;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      height: auto;
+    }
+
+    .chart-container canvas {
+      width: 100%;
+      height: 100%;
     }
 
     #sidebar-container {
-      width: 260px;
       position: fixed;
       top: 0;
       left: 0;
+      width: 260px;
       height: 100%;
       background-color: #081135;
-      color: #fff;
-      padding: 20px;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-    }
-
-    #sidebar-container h1 {
-      font-size: 18px;
-      margin-bottom: 20px;
-      color: #fff;
-    }
-
-    #sidebar-container a {
-      text-decoration: none;
-      color: #fff;
-      display: block;
-      margin: 10px 0;
-    }
-
-    @media (max-width: 768px) {
-      .col-md-6 {
-        flex: 1 1 100%;
-      }
     }
   </style>
 </head>
 <body>
   <!-- Sidebar -->
-  <div id="sidebar-container">
-    <h1>Magic Travel</h1>
-    <a href="#">Dashboard</a>
-    <a href="#">Profile</a>
-    <a href="#">Pedidos</a>
-  </div>
+  <div id="sidebar-container">Carregando...</div>
 
   <!-- Main Content -->
-  <div class="container" style="margin-left: 260px;">
-    <h1>Analytics Dashboard</h1>
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card">
-          <h5>Sales</h5>
-          <h1 id="sales">R$ 0</h1>
-          <p>Soma do Pix</p>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card">
-          <h5>Earnings</h5>
-          <h1 id="earnings">R$ 0</h1>
-          <p>Soma do "Vamos Pagar ao Fornecedor"</p>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card">
-          <h5>Visitors</h5>
-          <h1 id="visitors">0</h1>
-          <p>Número de Pedidos</p>
-        </div>
-      </div>
-      <div class="col-md-6">
-        <div class="card">
-          <h5>Orders</h5>
-          <h1 id="orders">0</h1>
-          <p>Dólar Magic</p>
-        </div>
-      </div>
+  <div class="container">
+    <!-- Blocos de 25% -->
+    <div class="card card-small">
+      <h5>Sales</h5>
+      <h1 id="sales">R$ 0</h1>
+      <p>Soma do Pix</p>
+    </div>
+    <div class="card card-small">
+      <h5>Earnings</h5>
+      <h1 id="earnings">R$ 0</h1>
+      <p>Soma do "Vamos Pagar ao Fornecedor"</p>
+    </div>
+    <div class="card card-small">
+      <h5>Visitors</h5>
+      <h1 id="visitors">0</h1>
+      <p>Número de Pedidos</p>
+    </div>
+    <div class="card card-small">
+      <h5>Orders</h5>
+      <h1 id="orders">0</h1>
+      <p>Dólar Magic</p>
     </div>
 
-    <!-- Chart Section -->
-    <div class="chart-container">
+    <!-- Gráfico 50% -->
+    <div class="card card-large">
       <h5>Recent Movement</h5>
-      <canvas id="chartjs-dashboard-line"></canvas>
+      <div class="chart-container">
+        <canvas id="chartjs-dashboard-line"></canvas>
+      </div>
     </div>
   </div>
 
   <script>
+    // Sidebar import
+    fetch('sidebar.html')
+      .then(response => {
+        if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
+        return response.text();
+      })
+      .then(html => {
+        document.getElementById('sidebar-container').innerHTML = html;
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
     // Simulated Data
     document.getElementById('sales').textContent = "R$ 18.408,67";
     document.getElementById('earnings').textContent = "R$ 18.408,67";
