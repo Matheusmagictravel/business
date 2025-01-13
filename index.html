@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -62,43 +62,12 @@
       font-size: 18px;
     }
 
-    .card h5 {
-      font-size: 16px;
-      font-weight: 500;
-      color: #6b7280;
-      margin: 0 0 8px;
-    }
-
-    .card h1 {
-      font-size: 32px;
-      font-weight: 700;
-      margin: 0;
-      color: #111827;
-    }
-
-    .card small {
-      font-size: 12px;
-      color: #6b7280;
-    }
-
-    .chart-container {
+    .chart-container, .projects-container {
       grid-column: span 6;
       background: #ffffff;
       border-radius: 12px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       padding: 20px;
-      margin-top: 0px;
-      margin-bottom: 0;
-    }
-
-    .projects-container {
-      grid-column: span 6;
-      background: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      margin-top: 0;
-      margin-bottom: 0;
     }
 
     .chart-container h5, .projects-container h5 {
@@ -140,8 +109,6 @@
       font-weight: 700;
       line-height: 1;
       text-align: center;
-      white-space: nowrap;
-      vertical-align: baseline;
       border-radius: 0.35rem;
     }
 
@@ -162,101 +129,94 @@
   </style>
 </head>
 <body>
-  <div id="sidebar-container">
-    Sidebar Content
-  </div>
+  <!-- Sidebar container -->
+  <div id="sidebar-container"></div>
 
   <div class="dashboard-container">
     <!-- Cards -->
     <div class="card small-card">
       <div class="card-icon">💰</div>
-      <h5>Sales</h5>
-      <h1>2,382</h1>
-      <small>-3.65% Since last week</small>
+      <h5>Vendas</h5>
+      <h1>2.382</h1>
+      <small>-3,65% Desde a última semana</small>
     </div>
 
     <div class="card small-card">
       <div class="card-icon">📈</div>
-      <h5>Earnings</h5>
-      <h1>$21,300</h1>
-      <small>+6.65% Since last week</small>
+      <h5>Ganhos</h5>
+      <h1>$21.300</h1>
+      <small>+6,65% Desde a última semana</small>
     </div>
 
     <div class="card small-card">
       <div class="card-icon">👥</div>
-      <h5>Visitors</h5>
-      <h1>14,212</h1>
-      <small>+5.25% Since last week</small>
+      <h5>Visitantes</h5>
+      <h1>14.212</h1>
+      <small>+5,25% Desde a última semana</small>
     </div>
 
     <div class="card small-card">
       <div class="card-icon">🛒</div>
-      <h5>Orders</h5>
+      <h5>Pedidos</h5>
       <h1>64</h1>
-      <small>-2.25% Since last week</small>
+      <small>-2,25% Desde a última semana</small>
     </div>
 
-    <!-- Projects and Chart (Inverted Order) -->
+    <!-- Projects and Chart -->
     <div class="projects-container">
-      <h5>Latest Projects</h5>
+      <h5>Últimos Projetos</h5>
       <table class="table table-hover">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
+            <th>Nome</th>
+            <th>Início</th>
+            <th>Fim</th>
             <th>Status</th>
-            <th>Assignee</th>
+            <th>Responsável</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Project Apollo</td>
+            <td>Projeto Apollo</td>
             <td>01/01/2021</td>
             <td>31/06/2021</td>
-            <td><span class="badge bg-success">Done</span></td>
+            <td><span class="badge bg-success">Concluído</span></td>
             <td>Vanessa Tucker</td>
           </tr>
           <tr>
-            <td>Project Fireball</td>
+            <td>Projeto Fireball</td>
             <td>01/01/2021</td>
             <td>31/06/2021</td>
-            <td><span class="badge bg-danger">Cancelled</span></td>
+            <td><span class="badge bg-danger">Cancelado</span></td>
             <td>William Harris</td>
-          </tr>
-          <tr>
-            <td>Project Hades</td>
-            <td>01/01/2021</td>
-            <td>31/06/2021</td>
-            <td><span class="badge bg-success">Done</span></td>
-            <td>Sharon Lessman</td>
-          </tr>
-          <tr>
-            <td>Project Nitro</td>
-            <td>01/01/2021</td>
-            <td>31/06/2021</td>
-            <td><span class="badge bg-warning">In progress</span></td>
-            <td>Vanessa Tucker</td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div class="chart-container">
-      <h5>Recent Movement</h5>
+      <h5>Movimento Recente</h5>
       <canvas id="waveChart"></canvas>
     </div>
   </div>
 
   <script>
+    // Carregar sidebar
+    fetch('sidebar.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('sidebar-container').innerHTML = html;
+      })
+      .catch(err => console.error('Erro ao carregar sidebar:', err));
+
     // Chart.js Configuration
     const ctx = document.getElementById('waveChart').getContext('2d');
     new Chart(ctx, {
       type: 'line',
       data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
         datasets: [{
-          label: 'Recent Movement',
+          label: 'Movimento Recente',
           data: [2000, 2200, 1800, 2500, 3000, 4000, 3200, 2900, 3100, 4200, 3800, 4500],
           borderColor: '#3b82f6',
           backgroundColor: 'rgba(59, 130, 246, 0.1)',
