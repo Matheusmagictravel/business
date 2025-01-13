@@ -13,27 +13,6 @@
       margin: 0;
       background-color: #f5f5f7;
       color: #1d1d1f;
-      display: flex;
-    }
-
-    /* Sidebar container */
-    #sidebar-container {
-      width: 260px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100%;
-      background-color: #081135;
-      color: #fff;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-      overflow-y: auto;
-    }
-
-    /* Conteúdo principal */
-    .content {
-      margin-left: 260px;
-      padding: 20px;
-      width: calc(100% - 260px);
     }
 
     .row {
@@ -90,75 +69,99 @@
     .text-danger {
       color: #dc3545;
     }
-
-    /* Responsividade */
-    @media (max-width: 768px) {
-      #sidebar-container {
-        width: 200px;
-      }
-      .content {
-        margin-left: 200px;
-        width: calc(100% - 200px);
-      }
-    }
-
-    @media (max-width: 576px) {
-      #sidebar-container {
-        width: 100%;
-        position: fixed;
-        z-index: 1000;
-      }
-      .content {
-        margin-left: 0;
-        width: 100%;
-      }
-    }
   </style>
 </head>
 <body>
-  <!-- Sidebar carregada dinamicamente -->
-  <div id="sidebar-container">Carregando...</div>
-
-  <!-- Conteúdo principal -->
-  <div class="content">
-    <div class="row">
-      <div class="col-sm-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Faturado (Sales)</h5>
-            <h1 id="sales-value" class="mt-1 mb-3">Carregando...</h1>
-            <div class="mb-0">
-              <span class="text-muted">Soma do Pix</span>
+  <div class="row">
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col mt-0">
+              <h5 class="card-title">Sales</h5>
+            </div>
+            <div class="col-auto">
+              <div class="stat text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-truck align-middle">
+                  <rect x="1" y="3" width="15" height="13"></rect>
+                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                </svg>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Pedidos (Visitors)</h5>
-            <h1 id="visitors-value" class="mt-1 mb-3">Carregando...</h1>
-            <div class="mb-0">
-              <span class="text-muted">Número de Pedidos</span>
-            </div>
+          <h1 id="sales-value" class="mt-1 mb-3">Carregando...</h1>
+          <div class="mb-0">
+            <span class="text-muted">Soma do Pix</span>
           </div>
         </div>
       </div>
-      <div class="col-sm-6">
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Despesa (Earnings)</h5>
-            <h1 id="earnings-value" class="mt-1 mb-3">Carregando...</h1>
-            <div class="mb-0">
-              <span class="text-muted">Soma do "Vamos Pagar ao Fornecedor"</span>
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col mt-0">
+              <h5 class="card-title">Visitors</h5>
+            </div>
+            <div class="col-auto">
+              <div class="stat text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-users align-middle">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
             </div>
           </div>
+          <h1 id="visitors-value" class="mt-1 mb-3">Carregando...</h1>
+          <div class="mb-0">
+            <span class="text-muted">Número de Pedidos</span>
+          </div>
         </div>
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Cotação US (Orders)</h5>
-            <h1 id="orders-value" class="mt-1 mb-3">Carregando...</h1>
-            <div class="mb-0">
-              <span class="text-muted">Dólar Magic</span>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col mt-0">
+              <h5 class="card-title">Earnings</h5>
             </div>
+            <div class="col-auto">
+              <div class="stat text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign align-middle">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <h1 id="earnings-value" class="mt-1 mb-3">Carregando...</h1>
+          <div class="mb-0">
+            <span class="text-muted">Soma do "Vamos Pagar ao Fornecedor"</span>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col mt-0">
+              <h5 class="card-title">Orders</h5>
+            </div>
+            <div class="col-auto">
+              <div class="stat text-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart align-middle">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <h1 id="orders-value" class="mt-1 mb-3">Carregando...</h1>
+          <div class="mb-0">
+            <span class="text-muted">Dólar Magic</span>
           </div>
         </div>
       </div>
@@ -166,64 +169,34 @@
   </div>
 
   <script>
-    // Carregar a sidebar
-    function loadSidebar() {
-      fetch('sidebar.html')
-        .then(response => {
-          if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
-          return response.text();
-        })
-        .then(html => {
-          document.getElementById('sidebar-container').innerHTML = html;
-        })
-        .catch(error => {
-          console.error('Erro ao carregar a sidebar:', error);
-          document.getElementById('sidebar-container').textContent = 'Erro ao carregar a sidebar.';
-        });
-    }
-
-    // Buscar dados da API e atualizar os valores
     async function fetchDashboardData() {
       try {
         const apiUrl = 'https://www.magictraveltur.com/api_pedidos.php';
         const response = await fetch(apiUrl);
-
-        if (!response.ok) {
-          throw new Error('Erro ao buscar os dados da API.');
-        }
+        if (!response.ok) throw new Error('Erro ao carregar a API.');
 
         const data = await response.json();
 
-        // Variáveis para cálculos
-        let totalPix = 0;
-        let totalFornecedor = 0;
-        let totalPedidos = 0;
-        let dolarMagic = '';
+        let totalPix = 0, totalFornecedor = 0, totalPedidos = 0, dolarMagic = '';
 
-        // Iterar pelos pedidos
         data.forEach(pedido => {
           totalPix += parseFloat(pedido.recebido);
           totalFornecedor += parseFloat(pedido.valor_repassado);
-          totalPedidos += 1;
+          totalPedidos++;
           dolarMagic = pedido.cambio_dia;
         });
 
-        // Atualizar valores no dashboard
         document.getElementById('sales-value').textContent = `R$ ${totalPix.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
         document.getElementById('earnings-value').textContent = `R$ ${totalFornecedor.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`;
         document.getElementById('visitors-value').textContent = totalPedidos;
         document.getElementById('orders-value').textContent = dolarMagic;
 
       } catch (error) {
-        console.error('Erro ao carregar os dados do dashboard:', error);
+        console.error('Erro ao carregar os dados:', error);
       }
     }
 
-    // Carregar a sidebar e os dados do dashboard
-    document.addEventListener('DOMContentLoaded', () => {
-      loadSidebar();
-      fetchDashboardData();
-    });
+    document.addEventListener('DOMContentLoaded', fetchDashboardData);
   </script>
 </body>
 </html>
