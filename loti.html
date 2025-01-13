@@ -172,28 +172,40 @@
           data.ultimos_pedidos.forEach(pedido => {
             latestProjects.innerHTML += `
               <tr>
-                <td>${pedido.id}</td>
-                <td>${pedido.data_venda}</td>
-                <td>${pedido.nome_comprador}</td>
-                <td>${pedido.cliente_de}</td>
-                <td>R$ ${(pedido.valor_venda).toFixed(2)}</td>
-                <td>${pedido.meio_pgto}</td>
-                <td>${pedido.status}</td>
+                <td>${pedido.id || 'N/A'}</td>
+                <td>${pedido.data_venda || 'N/A'}</td>
+                <td>${pedido.nome_comprador || 'N/A'}</td>
+                <td>${pedido.cliente_de || 'N/A'}</td>
+                <td>R$ ${(pedido.valor_venda || 0).toFixed(2)}</td>
+                <td>${pedido.meio_pgto || 'N/A'}</td>
+                <td>${pedido.status || 'N/A'}</td>
               </tr>`;
           });
         } else {
           latestProjects.innerHTML = '<tr><td colspan="7">Nenhum pedido encontrado.</td></tr>';
         }
 
-        // Atualiza o gráfico
+        // Atualiza o gráfico com validação
+        const labels = data?.receita_por_dia?.labels || [];
+        const values = data?.receita_por_dia?.values || [];
+        if (labels.length === 0 || values.length === 0) {
+          console.warn('Nenhum dado para o gráfico de receita.');
+          document.getElementById('revenueChart').getContext('2d').fillText(
+            'Sem dados para exibir',
+            150,
+            100
+          );
+          return;
+        }
+
         const ctx = document.getElementById('revenueChart').getContext('2d');
         new Chart(ctx, {
           type: 'line',
           data: {
-            labels: data.receita_por_dia.labels || [],
+            labels: labels,
             datasets: [{
               label: 'Receita (R$)',
-              data: data.receita_por_dia.values || [],
+              data: values,
               borderColor: '#3b82f6',
               backgroundColor: 'rgba(59, 130, 246, 0.1)',
               borderWidth: 3,
