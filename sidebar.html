@@ -243,6 +243,21 @@
         .toggle-sidebar:hover {
             color: var(--primary-color);
         }
+
+        form.d-flex input[type="date"] {
+            max-width: 180px;
+            padding: 0.4rem;
+            font-size: 0.9rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        form.d-flex button {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -273,6 +288,12 @@
         <a class="sidebar-toggle js-sidebar-toggle">
             <i class="fas fa-bars"></i>
         </a>
+        
+        <!-- Adicionando o campo de pesquisa com calendário -->
+        <form class="d-flex ms-auto" role="search">
+            <input type="date" class="form-control me-2" placeholder="Selecione a data" aria-label="Search">
+            <button class="btn btn-outline-primary" type="submit">Buscar</button>
+        </form>
 
         <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
