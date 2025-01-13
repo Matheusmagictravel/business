@@ -197,66 +197,63 @@
   </div>
 
   <script>
-    // Função para carregar o sidebar dinamicamente
+    // Função para carregar o sidebar
     async function loadSidebar() {
       try {
         const response = await fetch('sidebar.html');
-        if (!response.ok) throw new Error('Erro ao carregar o sidebar.');
+        if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
         const html = await response.text();
         document.getElementById('sidebar-container').innerHTML = html;
       } catch (error) {
-        console.error('Erro ao carregar o sidebar:', error);
-        document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar o sidebar.</p>';
+        console.error('Erro ao carregar a sidebar:', error);
+        document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
       }
     }
 
-    // Função para carregar os dados do dashboard
+    // Função para carregar dados do dashboard
     async function fetchDashboardData() {
       try {
         const response = await fetch('https://www.magictraveltur.com/api_pedidos.php');
-        if (!response.ok) throw new Error(`Erro ao carregar dados: ${response.status}`);
+        if (!response.ok) throw new Error(`Erro ao carregar os dados: ${response.status}`);
+
         const data = await response.json();
 
-        // Atualizar Cards
-        document.getElementById('sales-value').textContent = `R$ ${(data.receita || 0).toFixed(2)}`;
-        document.getElementById('earnings-value').textContent = `R$ ${(data.valor_venda || 0).toFixed(2)}`;
-        document.getElementById('expenses-value').textContent = `R$ ${(data.custo || 0).toFixed(2)}`;
-        document.getElementById('orders-value').textContent = data.pedidos || 0;
+        // Atualiza os cards
+        document.getElementById('sales-value').textContent = `R$ ${(data.valor_comissao || 0).toFixed(2)}`;
+        document.getElementById('revenue-value').textContent = `R$ ${(data.valor_venda || 0).toFixed(2)}`;
+        document.getElementById('expense-value').textContent = `R$ ${(data.custo || 0).toFixed(2)}`;
+        document.getElementById('orders-value').textContent = data.total_pedidos || 0;
 
-        // Atualizar tabela de últimos pedidos
+        // Atualiza a tabela de últimos pedidos
         const latestProjects = document.getElementById('latest-projects');
         latestProjects.innerHTML = '';
-        if (Array.isArray(data.latestProjects)) {
-          data.latestProjects.forEach(project => {
-            const row = `<tr>
-              <td>${project.id || 'N/A'}</td>
-              <td>${project.data_venda || 'N/A'}</td>
-              <td>${project.nome_comprador || 'N/A'}</td>
-              <td>${project.cliente_de || 'N/A'}</td>
-              <td>R$ ${(project.valor_venda || 0).toFixed(2)}</td>
-              <td>${project.meio_pgto || 'N/A'}</td>
-              <td>${project.status || 'N/A'}</td>
+        data.ultimos_pedidos.forEach(pedido => {
+          latestProjects.innerHTML += `
+            <tr>
+              <td>${pedido.id || 'N/A'}</td>
+              <td>${pedido.data_venda || 'N/A'}</td>
+              <td>${pedido.nome_comprador || 'N/A'}</td>
+              <td>${pedido.cliente_de || 'N/A'}</td>
+              <td>R$ ${(pedido.valor_venda || 0).toFixed(2)}</td>
+              <td>${pedido.meio_pgto || 'N/A'}</td>
+              <td>${pedido.status || 'N/A'}</td>
             </tr>`;
-            latestProjects.innerHTML += row;
-          });
-        } else {
-          latestProjects.innerHTML = '<tr><td colspan="7">Nenhum pedido encontrado.</td></tr>';
-        }
+        });
 
-        // Atualizar gráfico
-        const ctx = document.getElementById('waveChart').getContext('2d');
+        // Atualiza o gráfico
+        const ctx = document.getElementById('revenueChart').getContext('2d');
         new Chart(ctx, {
           type: 'line',
           data: {
-            labels: (data.chart.labels || []),
+            labels: data.receita_por_dia.labels,
             datasets: [{
-              label: 'Receita por Dia',
-              data: (data.chart.values || []),
+              label: 'Receita (R$)',
+              data: data.receita_por_dia.values,
               borderColor: '#3b82f6',
               backgroundColor: 'rgba(59, 130, 246, 0.1)',
               borderWidth: 3,
-              fill: true,
               tension: 0.4,
+              fill: true,
             }],
           },
           options: {
@@ -273,7 +270,7 @@
       }
     }
 
-    // Inicializar o dashboard
+    // Inicializa o dashboard
     document.addEventListener('DOMContentLoaded', () => {
       loadSidebar();
       fetchDashboardData();
