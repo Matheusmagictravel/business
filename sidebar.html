@@ -1,135 +1,279 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sidebar</title>
-  <style>
-    /* Importando a fonte Montserrat */
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar and Navbar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3b7ddd;
+            --secondary-color: #6c757d;
+            --background-color: #f8f9fa;
+            --navbar-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-    /* Sidebar fixa */
-    #sidebar {
-      width: 260px; /* Largura fixa */
-      height: 100vh; /* Altura completa da tela */
-      background-color: #07042f; /* Azul solicitado */
-      color: #fff; /* Cor do texto */
-      overflow-y: auto; /* Ativa rolagem vertical */
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra leve */
-      padding: 20px;
-    }
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            display: flex;
+        }
 
-    /* Marca ou título da sidebar */
-    .sidebar-brand img {
-      display: block;
-      margin: 0 auto 20px;
-      max-width: 70%;
-      height: auto;
-    }
+        /* Sidebar */
+        #sidebar {
+            width: 240px;
+            height: 100vh;
+            background-color: #07042f;
+            color: #fff;
+            overflow-y: auto;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            position: fixed;
+            transition: transform 0.3s ease-in-out;
+        }
 
-    /* Cabeçalhos da sidebar */
-    .sidebar-header {
-      font-size: 0.9rem;
-      color: #f0f0f0;
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-top: 2rem;
-      margin-bottom: 0.5rem;
-    }
+        .sidebar-brand img {
+            display: block;
+            margin: 0 auto 20px;
+            max-width: 70%;
+            height: auto;
+        }
 
-    /* Lista de navegação */
-    .sidebar-nav {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
+        .sidebar-header {
+            font-size: 0.9rem;
+            color: #f0f0f0;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 0.5rem;
+        }
 
-    /* Itens da lista */
-    .sidebar-item {
-      margin-bottom: 1rem;
-    }
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
-    /* Links da lista */
-    .sidebar-link {
-      color: #ffffff;
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      gap: 10px; /* Espaço entre ícone e texto */
-      padding: 12px 15px;
-      border-radius: 8px;
-      transition: all 0.3s ease; /* Transição suave no hover */
-    }
+        .sidebar-item {
+            margin-bottom: 1rem;
+        }
 
-    /* Hover nos links */
-    .sidebar-link:hover {
-      background-color: linear-gradient(135deg, #013f6e, #0071e3)
-      color: #ffffff; /* Texto branco */
-    }
+        .sidebar-link {
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
 
-    /* Link ativo */
-    .sidebar-item.active .sidebar-link {
-      background-color: #0071e3; /* Azul para ativo */
-      color: #ffffff;
-    }
+        .sidebar-link:hover {
+            background-color: #0071e3;
+            color: #ffffff;
+        }
 
-    /* Ícones */
-    .sidebar-link svg {
-      flex-shrink: 0;
-      width: 20px;
-      height: 20px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2;
-    }
-  </style>
+        .sidebar-item.active .sidebar-link {
+            background-color: #0071e3;
+            color: #ffffff;
+        }
+
+        .sidebar-link svg {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        /* Navbar */
+        .navbar {
+            margin-left: 240px;
+            width: calc(100% - 240px);
+            background-color: #ffffff;
+            box-shadow: var(--navbar-shadow);
+            padding: 0.8rem 1.2rem;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .navbar-nav {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar-nav .nav-item {
+            margin-right: 2rem;
+        }
+
+        .nav-icon {
+            position: relative;
+            color: var(--secondary-color);
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .nav-icon:hover {
+            color: var(--primary-color);
+        }
+
+        .nav-icon .indicator {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: var(--primary-color);
+            color: #ffffff;
+            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            margin-right: 0.75rem;
+        }
+
+        .profile span {
+            color: var(--secondary-color);
+            font-weight: 500;
+            font-size: 1rem;
+        }
+
+        main {
+            margin-top: 56px;
+            margin-left: 240px;
+            padding: 20px;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            #sidebar {
+                transform: translateX(-240px);
+            }
+
+            #sidebar.active {
+                transform: translateX(0);
+            }
+
+            .navbar {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            main {
+                margin-left: 0;
+            }
+
+            .toggle-sidebar {
+                display: inline-block;
+            }
+        }
+
+        .toggle-sidebar {
+            display: none;
+            cursor: pointer;
+            color: var(--secondary-color);
+            font-size: 1.5rem;
+        }
+
+        .toggle-sidebar:hover {
+            color: var(--primary-color);
+        }
+    </style>
 </head>
 <body>
-  <nav id="sidebar">
+
+<nav id="sidebar">
     <a class="sidebar-brand" href="index.html">
-      <img src="https://www.magictraveltur.com/wp-content/uploads/2025/01/Logo-Branca.png" alt="Magic Travel">
+        <img src="https://www.magictraveltur.com/wp-content/uploads/2025/01/Logo-Branca.png" alt="Magic Travel">
     </a>
     <ul class="sidebar-nav">
-      <li class="sidebar-header">Pages</li>
-      <li class="sidebar-item">
-        <a class="sidebar-link" href="index.html">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="4" y1="21" x2="4" y2="14"></line>
-            <line x1="4" y1="10" x2="4" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="12"></line>
-            <line x1="12" y1="8" x2="12" y2="3"></line>
-            <line x1="20" y1="21" x2="20" y2="16"></line>
-            <line x1="20" y1="12" x2="20" y2="3"></line>
-            <line x1="1" y1="14" x2="7" y2="14"></line>
-            <line x1="9" y1="8" x2="15" y2="8"></line>
-            <line x1="17" y1="16" x2="23" y2="16"></line>
-          </svg>
-          <span>Dashboard</span>
-        </a>
-      </li>
-      <li class="sidebar-item">
-        <a class="sidebar-link" href="pages-profile.html">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-            <circle cx="12" cy="7" r="4"></circle>
-          </svg>
-          <span>Profile</span>
-        </a>
-      </li>
-      <li class="sidebar-item active">
-        <a class="sidebar-link" href="pages-orders.html">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="9" cy="21" r="1"></circle>
-            <circle cx="20" cy="21" r="1"></circle>
-            <path d="M1 1h4l2 13h13"></path>
-            <path d="M16 16H7"></path>
-          </svg>
-          <span>Pedidos</span>
-        </a>
-      </li>
+        <li class="sidebar-header">Pages</li>
+        <li class="sidebar-item">
+            <a class="sidebar-link" href="index.html">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+        </li>
+        <li class="sidebar-item active">
+            <a class="sidebar-link" href="#">
+                <i class="fas fa-shopping-cart"></i>
+                <span>Pedidos</span>
+            </a>
+        </li>
     </ul>
-  </nav>
+</nav>
+
+<nav class="navbar navbar-expand">
+    <div class="container-fluid">
+        <span class="toggle-sidebar" onclick="toggleSidebar()"><i class="fas fa-bars"></i></span>
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-icon" href="#" id="alertsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="position-relative">
+                        <i class="far fa-bell"></i>
+                        <span class="indicator">4</span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown">
+                    <li><a class="dropdown-item" href="#">Alert 1</a></li>
+                    <li><a class="dropdown-item" href="#">Alert 2</a></li>
+                    <li><a class="dropdown-item" href="#">Alert 3</a></li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-icon" href="#" id="messagesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="position-relative">
+                        <i class="far fa-envelope"></i>
+                        <span class="indicator">4</span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="messagesDropdown">
+                    <li><a class="dropdown-item" href="#">Message 1</a></li>
+                    <li><a class="dropdown-item" href="#">Message 2</a></li>
+                    <li><a class="dropdown-item" href="#">Message 3</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <div class="profile">
+                    <img src="https://www.magictraveltur.com/wp-content/uploads/2024/12/Achismos.jpg" alt="Profile Picture">
+                    <span>Matheus Alvarenga</span>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<main>
+    <h1>Welcome to the Dashboard</h1>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('active');
+    }
+</script>
 </body>
 </html>
