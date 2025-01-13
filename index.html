@@ -237,12 +237,10 @@
           latestProjects.innerHTML += `
             <tr>
               <td>${pedido.id || 'N/A'}</td>
-              <td>${pedido.data_venda || 'N/A'}</td>
               <td>${pedido.nome_comprador || 'N/A'}</td>
               <td>${pedido.cliente_de || 'N/A'}</td>
               <td>R$ ${valorVenda.toFixed(2)}</td>
               <td>${pedido.meio_pgto || 'N/A'}</td>
-              <td>${pedido.status || 'Confirmado'}</td>
             </tr>`;
         });
 
