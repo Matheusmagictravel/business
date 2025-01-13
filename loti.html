@@ -175,21 +175,22 @@
         const latestProjects = document.getElementById('latest-projects');
         latestProjects.innerHTML = '';
         data.forEach(pedido => {
+          const valorVenda = parseFloat(pedido.valor_venda || 0);
           latestProjects.innerHTML += `
             <tr>
               <td>${pedido.id || 'N/A'}</td>
               <td>${pedido.data_venda || 'N/A'}</td>
               <td>${pedido.nome_comprador || 'N/A'}</td>
               <td>${pedido.cliente_de || 'N/A'}</td>
-              <td>R$ ${(pedido.valor_venda || 0).toFixed(2)}</td>
+              <td>R$ ${valorVenda.toFixed(2)}</td>
               <td>${pedido.meio_pgto || 'N/A'}</td>
               <td>${pedido.status || 'Confirmado'}</td>
             </tr>`;
         });
 
-        // Gera o gráfico de receita (usando 7 dias anteriores como exemplo)
+        // Gera o gráfico de receita
         const labels = data.map(pedido => pedido.data_venda).slice(0, 7).reverse();
-        const values = data.map(pedido => parseFloat(pedido.valor_comissao)).slice(0, 7).reverse();
+        const values = data.map(pedido => parseFloat(pedido.valor_comissao || 0)).slice(0, 7).reverse();
 
         const ctx = document.getElementById('revenueChart').getContext('2d');
         new Chart(ctx, {
