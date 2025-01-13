@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Analytics Dashboard - Magic Travel</title>
   <style>
-    /* Fonte padrão */
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
 
     body {
@@ -25,8 +24,8 @@
       height: 100%;
       background-color: #081135;
       color: #fff;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
       overflow-y: auto;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
       padding: 20px;
     }
 
@@ -35,6 +34,12 @@
       margin-left: 260px;
       padding: 40px;
       width: calc(100% - 260px);
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #1d1d1f;
     }
 
     .row {
@@ -75,28 +80,22 @@
       margin: 10px 0;
     }
 
-    .card .mb-0 {
-      font-size: 14px;
+    .chart-container {
+      flex: 1 1 100%;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+
+    .chart-container h5 {
+      font-size: 18px;
       color: #6c757d;
-    }
-
-    .text-primary {
-      color: #3b7ddd;
-    }
-
-    .text-success {
-      color: #1cbb8c;
-    }
-
-    .text-danger {
-      color: #dc3545;
-    }
-
-    /* Título principal */
-    h2 {
-      font-size: 28px;
       margin-bottom: 20px;
-      color: #1d1d1f;
+    }
+
+    canvas {
+      max-width: 100%;
     }
 
     /* Responsividade */
@@ -134,57 +133,35 @@
     <h2>Analytics Dashboard</h2>
     <div class="row">
       <div class="card">
-        <h5 class="card-title">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <rect x="1" y="3" width="15" height="13"></rect>
-            <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-            <circle cx="5.5" cy="18.5" r="2.5"></circle>
-            <circle cx="18.5" cy="18.5" r="2.5"></circle>
-          </svg>
-          Sales
-        </h5>
+        <h5 class="card-title">Sales</h5>
         <h1 id="sales-value">Carregando...</h1>
         <div class="mb-0">Soma do Pix</div>
       </div>
       <div class="card">
-        <h5 class="card-title">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-            <circle cx="9" cy="7" r="4"></circle>
-            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-          </svg>
-          Visitors
-        </h5>
-        <h1 id="visitors-value">Carregando...</h1>
-        <div class="mb-0">Número de Pedidos</div>
-      </div>
-      <div class="card">
-        <h5 class="card-title">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <line x1="12" y1="1" x2="12" y2="23"></line>
-            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-          </svg>
-          Earnings
-        </h5>
+        <h5 class="card-title">Earnings</h5>
         <h1 id="earnings-value">Carregando...</h1>
         <div class="mb-0">Soma do "Vamos Pagar ao Fornecedor"</div>
       </div>
       <div class="card">
-        <h5 class="card-title">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <circle cx="9" cy="21" r="1"></circle>
-            <circle cx="20" cy="21" r="1"></circle>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-          </svg>
-          Orders
-        </h5>
+        <h5 class="card-title">Visitors</h5>
+        <h1 id="visitors-value">Carregando...</h1>
+        <div class="mb-0">Número de Pedidos</div>
+      </div>
+      <div class="card">
+        <h5 class="card-title">Orders</h5>
         <h1 id="orders-value">Carregando...</h1>
         <div class="mb-0">Dólar Magic</div>
       </div>
     </div>
+    <div class="row">
+      <div class="chart-container">
+        <h5 class="card-title">Recent Movement</h5>
+        <canvas id="chartjs-dashboard-line"></canvas>
+      </div>
+    </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     // Carregar sidebar
     async function loadSidebar() {
@@ -216,6 +193,31 @@
         document.getElementById('earnings-value').textContent = `R$ ${totalFornecedor.toLocaleString('pt-BR')}`;
         document.getElementById('visitors-value').textContent = totalPedidos;
         document.getElementById('orders-value').textContent = dolarMagic;
+
+        // Gráfico
+        const ctx = document.getElementById('chartjs-dashboard-line').getContext('2d');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            datasets: [{
+              label: 'Sales Movement',
+              data: data.map(p => parseFloat(p.recebido)),
+              borderColor: '#3b7ddd',
+              backgroundColor: 'rgba(59, 125, 221, 0.2)',
+              fill: true,
+              tension: 0.4
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false
+              }
+            }
+          }
+        });
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
       }
