@@ -12,6 +12,7 @@
             --secondary-color: #6c757d;
             --background-color: #f8f9fa;
             --navbar-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --indicator-size: 16px;
         }
 
         body {
@@ -95,8 +96,8 @@
 
         /* Navbar */
         .navbar {
-            margin-left: 240px;
-            width: calc(100% - 240px);
+            margin-left: 260px;
+            width: calc(100% - 260px);
             background-color: #ffffff;
             box-shadow: var(--navbar-shadow);
             padding: 0.8rem 1.2rem;
@@ -104,6 +105,12 @@
             top: 0;
             z-index: 1000;
             transition: margin-left 0.3s ease-in-out;
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.25rem;
         }
 
         .navbar-nav {
@@ -161,14 +168,51 @@
 
         main {
             margin-top: 56px;
-            margin-left: 240px;
+            margin-left: 260px;
             padding: 20px;
+        }
+
+        .dropdown-menu {
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .dropdown-menu-header {
+            background-color: #f1f1f1;
+            font-weight: bold;
+            padding: 0.5rem 1rem;
+        }
+
+        .list-group-item {
+            border: none;
+            padding: 0.6rem 1rem;
+            transition: background-color 0.2s;
+        }
+
+        .list-group-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .dropdown-menu-footer {
+            background-color: #f1f1f1;
+            text-align: center;
+            padding: 0.5rem;
+        }
+
+        .dropdown-menu-footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .dropdown-menu-footer a:hover {
+            text-decoration: underline;
         }
 
         /* Responsiveness */
         @media (max-width: 768px) {
             #sidebar {
-                transform: translateX(-240px);
+                transform: translateX(-260px);
             }
 
             #sidebar.active {
@@ -222,6 +266,51 @@
             </a>
         </li>
     </ul>
+</nav>
+
+<nav class="navbar navbar-expand">
+    <div class="container-fluid">
+        <a class="sidebar-toggle js-sidebar-toggle">
+            <i class="fas fa-bars"></i>
+        </a>
+
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-icon" href="#" id="alertsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="position-relative">
+                        <i class="far fa-bell"></i>
+                        <span class="indicator">4</span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown">
+                    <li class="dropdown-menu-header">Notifications</li>
+                    <li><a class="dropdown-item" href="#">Alert 1</a></li>
+                    <li><a class="dropdown-item" href="#">Alert 2</a></li>
+                    <li class="dropdown-menu-footer"><a href="#">View All</a></li>
+                </ul>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-icon" href="#" id="messagesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <div class="position-relative">
+                        <i class="far fa-envelope"></i>
+                        <span class="indicator">4</span>
+                    </div>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="messagesDropdown">
+                    <li class="dropdown-menu-header">Messages</li>
+                    <li><a class="dropdown-item" href="#">Message 1</a></li>
+                    <li><a class="dropdown-item" href="#">Message 2</a></li>
+                    <li class="dropdown-menu-footer"><a href="#">View All</a></li>
+                </ul>
+            </li>
+            <li class="nav-item">
+                <div class="profile">
+                    <img src="https://www.magictraveltur.com/wp-content/uploads/2024/12/Achismos.jpg" alt="Profile Picture">
+                    <span>Matheus Alvarenga</span>
+                </div>
+            </li>
+        </ul>
+    </div>
 </nav>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
