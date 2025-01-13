@@ -159,44 +159,37 @@
         const data = await response.json();
         console.log('Dados retornados pela API:', data);
 
+        // Calcula métricas a partir dos dados
+        const totalReceita = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_comissao || 0), 0);
+        const totalFaturamento = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_venda || 0), 0);
+        const totalDespesa = data.reduce((acc, pedido) => acc + parseFloat(pedido.custo || 0), 0);
+        const totalPedidos = data.length;
+
         // Atualiza os cards
-        document.getElementById('sales-value').textContent = `R$ ${(data.valor_comissao || 0).toFixed(2)}`;
-        document.getElementById('earnings-value').textContent = `R$ ${(data.valor_venda || 0).toFixed(2)}`;
-        document.getElementById('expenses-value').textContent = `R$ ${(data.custo || 0).toFixed(2)}`;
-        document.getElementById('orders-value').textContent = data.total_pedidos || 0;
+        document.getElementById('sales-value').textContent = `R$ ${totalReceita.toFixed(2)}`;
+        document.getElementById('earnings-value').textContent = `R$ ${totalFaturamento.toFixed(2)}`;
+        document.getElementById('expenses-value').textContent = `R$ ${totalDespesa.toFixed(2)}`;
+        document.getElementById('orders-value').textContent = totalPedidos;
 
         // Atualiza a tabela de últimos pedidos
         const latestProjects = document.getElementById('latest-projects');
         latestProjects.innerHTML = '';
-        if (Array.isArray(data.ultimos_pedidos)) {
-          data.ultimos_pedidos.forEach(pedido => {
-            latestProjects.innerHTML += `
-              <tr>
-                <td>${pedido.id || 'N/A'}</td>
-                <td>${pedido.data_venda || 'N/A'}</td>
-                <td>${pedido.nome_comprador || 'N/A'}</td>
-                <td>${pedido.cliente_de || 'N/A'}</td>
-                <td>R$ ${(pedido.valor_venda || 0).toFixed(2)}</td>
-                <td>${pedido.meio_pgto || 'N/A'}</td>
-                <td>${pedido.status || 'N/A'}</td>
-              </tr>`;
-          });
-        } else {
-          latestProjects.innerHTML = '<tr><td colspan="7">Nenhum pedido encontrado.</td></tr>';
-        }
+        data.forEach(pedido => {
+          latestProjects.innerHTML += `
+            <tr>
+              <td>${pedido.id || 'N/A'}</td>
+              <td>${pedido.data_venda || 'N/A'}</td>
+              <td>${pedido.nome_comprador || 'N/A'}</td>
+              <td>${pedido.cliente_de || 'N/A'}</td>
+              <td>R$ ${(pedido.valor_venda || 0).toFixed(2)}</td>
+              <td>${pedido.meio_pgto || 'N/A'}</td>
+              <td>${pedido.status || 'Confirmado'}</td>
+            </tr>`;
+        });
 
-        // Atualiza o gráfico com validação
-        const labels = data?.receita_por_dia?.labels || [];
-        const values = data?.receita_por_dia?.values || [];
-        if (labels.length === 0 || values.length === 0) {
-          console.warn('Nenhum dado para o gráfico de receita.');
-          document.getElementById('revenueChart').getContext('2d').fillText(
-            'Sem dados para exibir',
-            150,
-            100
-          );
-          return;
-        }
+        // Gera o gráfico de receita (usando 7 dias anteriores como exemplo)
+        const labels = data.map(pedido => pedido.data_venda).slice(0, 7).reverse();
+        const values = data.map(pedido => parseFloat(pedido.valor_comissao)).slice(0, 7).reverse();
 
         const ctx = document.getElementById('revenueChart').getContext('2d');
         new Chart(ctx, {
