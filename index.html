@@ -163,130 +163,142 @@
 </head>
 <body>
   <div id="sidebar-container">
-    Sidebar Content
+    <iframe src="sidebar.html" frameborder="0" style="width: 100%; height: 100%;"></iframe>
   </div>
 
   <div class="dashboard-container">
     <!-- Cards -->
     <div class="card small-card">
       <div class="card-icon">💰</div>
-      <h5>Sales</h5>
-      <h1>2,382</h1>
-      <small>-3.65% Since last week</small>
+      <h5>Receita</h5>
+      <h1 id="sales-value">0</h1>
+      <small id="sales-description">Carregando...</small>
     </div>
 
     <div class="card small-card">
       <div class="card-icon">📈</div>
-      <h5>Earnings</h5>
-      <h1>$21,300</h1>
-      <small>+6.65% Since last week</small>
+      <h5>Faturamento</h5>
+      <h1 id="earnings-value">0</h1>
+      <small id="earnings-description">Carregando...</small>
     </div>
 
     <div class="card small-card">
       <div class="card-icon">👥</div>
-      <h5>Visitors</h5>
-      <h1>14,212</h1>
-      <small>+5.25% Since last week</small>
+      <h5>Despesa</h5>
+      <h1 id="visitors-value">0</h1>
+      <small id="visitors-description">Carregando...</small>
     </div>
 
     <div class="card small-card">
       <div class="card-icon">🛒</div>
-      <h5>Orders</h5>
-      <h1>64</h1>
-      <small>-2.25% Since last week</small>
+      <h5>Pedidos</h5>
+      <h1 id="orders-value">0</h1>
+      <small id="orders-description">Carregando...</small>
     </div>
 
-    <!-- Projects and Chart (Inverted Order) -->
+    <!-- Últimos Pedidos -->
     <div class="projects-container">
-      <h5>Latest Projects</h5>
+      <h5>Últimos Pedidos</h5>
       <table class="table table-hover">
         <thead>
           <tr>
-            <th>Name</th>
-            <th>Start Date</th>
-            <th>End Date</th>
+            <th>ID</th>
+            <th>Data</th>
+            <th>Valor</th>
             <th>Status</th>
-            <th>Assignee</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id="latest-projects">
           <tr>
-            <td>Project Apollo</td>
-            <td>01/01/2021</td>
-            <td>31/06/2021</td>
-            <td><span class="badge bg-success">Done</span></td>
-            <td>Vanessa Tucker</td>
-          </tr>
-          <tr>
-            <td>Project Fireball</td>
-            <td>01/01/2021</td>
-            <td>31/06/2021</td>
-            <td><span class="badge bg-danger">Cancelled</span></td>
-            <td>William Harris</td>
-          </tr>
-          <tr>
-            <td>Project Hades</td>
-            <td>01/01/2021</td>
-            <td>31/06/2021</td>
-            <td><span class="badge bg-success">Done</span></td>
-            <td>Sharon Lessman</td>
-          </tr>
-          <tr>
-            <td>Project Nitro</td>
-            <td>01/01/2021</td>
-            <td>31/06/2021</td>
-            <td><span class="badge bg-warning">In progress</span></td>
-            <td>Vanessa Tucker</td>
+            <td colspan="4">Carregando...</td>
           </tr>
         </tbody>
       </table>
     </div>
 
+    <!-- Gráfico -->
     <div class="chart-container">
-      <h5>Recent Movement</h5>
+      <h5>Faturamento por Dia</h5>
       <canvas id="waveChart"></canvas>
     </div>
   </div>
 
   <script>
-    // Chart.js Configuration
-    const ctx = document.getElementById('waveChart').getContext('2d');
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [{
-          label: 'Recent Movement',
-          data: [2000, 2200, 1800, 2500, 3000, 4000, 3200, 2900, 3100, 4200, 3800, 4500],
-          borderColor: '#3b82f6',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          borderWidth: 3,
-          fill: true,
-          tension: 0.4,
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: false,
+    async function fetchDashboardData() {
+      try {
+        const response = await fetch('/api/dashboard-data'); // Ajuste a URL para sua API
+        const data = await response.json();
+
+        // Atualizar cards
+        document.getElementById('sales-value').textContent = `R$ ${data.sales.toFixed(2)}`;
+        document.getElementById('sales-description').textContent = 'Lucro Líquido';
+
+        document.getElementById('earnings-value').textContent = `R$ ${data.earnings.toFixed(2)}`;
+        document.getElementById('earnings-description').textContent = 'Valor recebido no PIX';
+
+        document.getElementById('visitors-value').textContent = `R$ ${data.expenses.toFixed(2)}`;
+        document.getElementById('visitors-description').textContent = 'Valor a pagar ao fornecedor';
+
+        document.getElementById('orders-value').textContent = data.orders;
+        document.getElementById('orders-description').textContent = 'Número de pedidos';
+
+        // Atualizar tabela de últimos pedidos
+        const latestProjects = document.getElementById('latest-projects');
+        latestProjects.innerHTML = '';
+        data.latestProjects.forEach(project => {
+          const row = `<tr>
+            <td>${project.id}</td>
+            <td>${project.date}</td>
+            <td>R$ ${project.value.toFixed(2)}</td>
+            <td>${project.status}</td>
+          </tr>`;
+          latestProjects.innerHTML += row;
+        });
+
+        // Atualizar gráfico
+        const ctx = document.getElementById('waveChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: data.chart.labels,
+            datasets: [{
+              label: 'Faturamento por Dia',
+              data: data.chart.values,
+              borderColor: '#3b82f6',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+              borderWidth: 3,
+              fill: true,
+              tension: 0.4,
+            }]
           },
-        },
-        scales: {
-          x: {
-            grid: {
-              display: false,
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                display: false,
+              },
+            },
+            scales: {
+              x: {
+                grid: {
+                  display: false,
+                },
+              },
+              y: {
+                grid: {
+                  color: '#e5e7eb',
+                },
+                beginAtZero: true,
+              },
             },
           },
-          y: {
-            grid: {
-              color: '#e5e7eb',
-            },
-            beginAtZero: true,
-          },
-        },
-      },
-    });
+        });
+      } catch (error) {
+        console.error('Erro ao carregar os dados do dashboard:', error);
+      }
+    }
+
+    fetchDashboardData();
   </script>
 </body>
 </html>
