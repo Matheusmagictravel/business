@@ -26,7 +26,25 @@
       color: #fff;
       overflow-y: auto;
       box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-      padding: 20px;
+    }
+
+    #sidebar-container ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    #sidebar-container ul li {
+      padding: 15px 20px;
+    }
+
+    #sidebar-container ul li a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    #sidebar-container ul li a:hover {
+      color: #007bff;
     }
 
     /* Conteúdo principal */
@@ -53,8 +71,7 @@
       border-radius: 12px;
       box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
       padding: 20px;
-      flex: 1 1 calc(50% - 20px);
-      min-width: 280px;
+      flex: 1 1 calc(25% - 20px);
       text-align: center;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
@@ -167,6 +184,7 @@
     async function loadSidebar() {
       try {
         const response = await fetch('sidebar.html');
+        if (!response.ok) throw new Error('Erro ao carregar o sidebar');
         const html = await response.text();
         document.getElementById('sidebar-container').innerHTML = html;
       } catch (error) {
