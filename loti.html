@@ -27,30 +27,31 @@
         .container {
             width: 100%;
             max-width: 800px;
-            background: #fff;
-            border-radius: 12px;
+            background: #ffffff;
+            border-radius: 16px;
             padding: 30px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
             animation: fadeIn 0.8s ease-in-out;
         }
         
         h1 {
-            font-size: 2rem;
-            font-weight: 600;
+            font-size: 2.2rem;
+            font-weight: 700;
             color: #222;
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             letter-spacing: 1px;
+            text-transform: uppercase;
         }
         
         h2 {
-            font-size: 1.25rem;
+            font-size: 1.5rem;
             color: #007aff;
-            margin-bottom: 10px;
-            border-left: 4px solid #007aff;
+            margin-bottom: 15px;
+            border-left: 5px solid #007aff;
             padding-left: 10px;
             text-transform: uppercase;
-            font-weight: 500;
+            font-weight: 600;
         }
         
         .form-group {
@@ -59,10 +60,10 @@
         
         .form-group label {
             display: block;
-            font-weight: 500;
-            margin-bottom: 8px;
+            font-weight: 600;
+            margin-bottom: 10px;
             color: #555;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
         
         .form-group input,
@@ -82,28 +83,28 @@
         .form-group textarea:focus {
             border-color: #007aff;
             background-color: #fff;
-            box-shadow: 0 4px 10px rgba(0, 122, 255, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
             outline: none;
         }
         
         .row {
             display: flex;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 20px;
         }
         
         .col-25 {
-            flex: 1 1 calc(25% - 16px);
+            flex: 1 1 calc(25% - 20px);
             min-width: 180px;
         }
         
         .col-33 {
-            flex: 1 1 calc(33.333% - 16px);
+            flex: 1 1 calc(33.333% - 20px);
             min-width: 250px;
         }
         
         .col-50 {
-            flex: 1 1 calc(50% - 16px);
+            flex: 1 1 calc(50% - 20px);
             min-width: 300px;
         }
         
@@ -120,7 +121,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s ease-in-out;
-            margin-top: 20px;
+            margin-top: 25px;
         }
         
         .btn:hover {
@@ -162,6 +163,8 @@
     <div class="container">
         <h1>Cadastro de Vendas</h1>
         <form id="salesForm">
+            <!-- Informações Gerais -->
+            <form id="salesForm">
             <!-- Informações Gerais -->
             <div>
                 <h2>Informações Gerais</h2>
@@ -292,6 +295,192 @@
 
             <button id="submitButton" type="button" class="btn">Salvar</button>
         </form>
+    </div>
+
+
+    <div class="container">
+    <h1>Cadastro de Vendas</h1>
+    <form id="salesForm">
+        <!-- Informações Gerais -->
+        <div>
+            <h2>Informações Gerais</h2>
+            <div class="row">
+                <div class="form-group col-50">
+                    <label for="data_venda">Data da Venda:</label>
+                    <input type="date" id="data_venda" name="data_venda" required>
+                </div>
+                <div class="form-group col-50">
+                    <label for="nome">Nome do Passageiro:</label>
+                    <input type="text" id="nome" name="nome" placeholder="Nome do Passageiro" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-50">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" placeholder="E-mail" required>
+                </div>
+                <div class="form-group col-50">
+                    <label for="telefone">Telefone:</label>
+                    <input type="tel" id="telefone" name="telefone" placeholder="Telefone" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-50">
+                    <label for="data_nascimento">Data de Nascimento:</label>
+                    <input type="date" id="data_nascimento" name="data_nascimento" required>
+                </div>
+                <div class="form-group col-50">
+                    <label for="cpf">CPF:</label>
+                    <input type="text" id="cpf" name="cpf" placeholder="CPF" required>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emissão -->
+        <div>
+            <h2>Emissão</h2>
+            <div class="row">
+                <div class="form-group col-50">
+                    <label for="fornecedor">Fornecedor:</label>
+                    <input type="text" id="fornecedor" name="fornecedor" required>
+                </div>
+                <div class="form-group col-50">
+                    <label for="identificador">Identificador:</label>
+                    <input type="text" id="identificador" name="identificador" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-50">
+                    <label for="data_utilizacao">Data de Utilização do Primeiro Ingresso:</label>
+                    <input type="date" id="data_utilizacao" name="data_utilizacao" required>
+                </div>
+                <div class="form-group col-50">
+                    <label for="destino">Destino:</label>
+                    <input type="text" id="destino" name="destino" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="item">Categoria:</label>
+                <select id="item" name="item" class="col-100" multiple required>
+                    <option value="Ingressos">Ingressos</option>
+                    <option value="Hospedagem">Hospedagem</option>
+                    <option value="Aluguel de Carro">Aluguel de Carro</option>
+                    <option value="Passagem Aérea">Passagem Aérea</option>
+                    <option value="Cruzeiro">Cruzeiro</option>
+                    <option value="Guiamento Remoto">Guiamento Remoto</option>
+                    <option value="Seguro Viagem">Seguro Viagem</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Financeiro -->
+        <div>
+            <h2>Financeiro</h2>
+            <div class="row">
+                <div class="form-group col-33">
+                    <label for="nome_comprador">Nome do Pagador:</label>
+                    <input type="text" id="nome_comprador" name="nome_comprador" required>
+                </div>
+                <div class="form-group col-33">
+                    <label for="gateway">Gateway:</label>
+                    <select id="gateway" name="gateway" required>
+                        <option value="ValePay">ValePay</option>
+                        <option value="PagBank">PagBank</option>
+                        <option value="Pix Direto">Pix Direto</option>
+                    </select>
+                </div>
+                <div class="form-group col-33">
+                    <label for="meio_pgto">Meio de Pagamento:</label>
+                    <select id="meio_pgto" name="meio_pgto" required>
+                        <option value="Pix">Pix</option>
+                        <option value="Cartão">Cartão</option>
+                        <option value="Boleto">Boleto</option>
+                        <option value="Split">Split</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-25">
+                    <label for="bandeira_cartao">Bandeira do Cartão:</label>
+                    <input type="text" id="bandeira_cartao" name="bandeira_cartao">
+                </div>
+                <div class="form-group col-25">
+                    <label for="parcelas">Parcelas:</label>
+                    <input type="number" id="parcelas" name="parcelas" min="1" max="12">
+                </div>
+                <div class="form-group col-25">
+                    <label for="valor_venda">Valor da Venda:</label>
+                    <input type="number" id="valor_venda" name="valor_venda" step="0.01" required>
+                </div>
+                <div class="form-group col-25">
+                    <label for="valor_repassado">Valor Repassado:</label>
+                    <input type="number" id="valor_repassado" name="valor_repassado" step="0.01" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-50">
+                    <label for="custo">Custo:</label>
+                    <input type="number" id="custo" name="custo" step="0.01" required>
+                </div>
+                <div class="form-group col-50">
+                    <label for="cambio_dia">Câmbio do Dia:</label>
+                    <input type="number" id="cambio_dia" name="cambio_dia" step="0.01">
+                </div>
+            </div>
+        </div>
+
+        <!-- Comercial -->
+        <div>
+            <h2>Comercial</h2>
+            <div class="row">
+                <div class="form-group col-50">
+                    <label for="origem_cliente">Origem do Cliente:</label>
+                    <select id="origem_cliente" name="origem_cliente">
+                        <option value="Indicação">Indicação</option>
+                        <option value="Blog">Blog</option>
+                        <option value="Site">Site</option>
+                        <option value="Anúncio">Anúncio</option>
+                        <option value="Direct do Instagram">Direct do Instagram</option>
+                    </select>
+                </div>
+                <div class="form-group col-50">
+                    <label for="cliente_de">Cliente Atendido Por:</label>
+                    <input type="text" id="cliente_de" name="cliente_de">
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-50">
+                    <label for="efetivado_por">Venda Finalizada Por:</label>
+                    <input type="text" id="efetivado_por" name="efetivado_por">
+                </div>
+                <div class="form-group col-50">
+                    <label for="nf">Nota Fiscal:</label>
+                    <input type="text" id="nf" name="nf">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="observacoes_operacionais">Observações Operacionais:</label>
+                <input type="text" id="observacoes_operacionais" name="observacoes_operacionais">
+            </div>
+            <div class="form-group">
+                <label for="observacoes_financeiras">Observações Financeiras:</label>
+                <input type="text" id="observacoes_financeiras" name="observacoes_financeiras">
+            </div>
+        </div>
+
+        <!-- Campos Ocultos -->
+        <input type="hidden" id="id" name="id">
+        <input type="hidden" id="mes_venda" name="mes_venda">
+        <input type="hidden" id="uf" name="uf">
+        <input type="hidden" id="valor_comissao" name="valor_comissao">
+        <input type="hidden" id="markup" name="markup">
+        <input type="hidden" id="comissao_do_agente" name="comissao_do_agente">
+        <input type="hidden" id="data_pgto" name="data_pgto">
+        <input type="hidden" id="recebido" name="recebido">
+        <input type="hidden" id="data_repasse" name="data_repasse">
+
+        <button id="submitButton" type="button" class="btn">Salvar</button>
+    </form>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
