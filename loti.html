@@ -20,6 +20,11 @@
             display: flex;
         }
 
+        #sidebar {
+            width: 250px;
+            margin-right: 20px;
+        }
+
         .container {
             flex: 1;
             background: #ffffff;
@@ -102,15 +107,13 @@
     </style>
 </head>
 <body>
-    <!-- Incluindo o sidebar através do arquivo externo -->
-    <div class="sidebar">
-        <object type="text/html" data="sidebar.html" style="width: 250px; height: 100%; border: none;"></object>
-    </div>
+    <!-- Sidebar será carregado dinamicamente -->
+    <div id="sidebar"></div>
 
+    <!-- Formulário principal -->
     <div class="container">
         <h1>Cadastro de Vendas</h1>
-
-        <form action="process_form.php" method="POST">
+        <form id="salesForm">
             <div class="section">
                 <div class="section-title">Detalhes do Pedido</div>
                 <div class="form-group">
@@ -173,38 +176,64 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn">Salvar</button>
+            <button id="submitButton" type="button" class="btn">Salvar</button>
         </form>
     </div>
+
+    <script>
+        // Carregar o sidebar dinamicamente
+        fetch('sidebar.html')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar o sidebar.');
+                }
+                return response.text();
+            })
+            .then(html => {
+                document.getElementById('sidebar').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Erro ao carregar o sidebar:', error);
+            });
+
+        // Enviar os dados do formulário via fetch
+        document.getElementById('submitButton').addEventListener('click', function () {
+            const form = document.getElementById('salesForm');
+            const formData = new FormData(form);
+
+            // Convertendo os dados do formulário para JSON
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value;
+            });
+
+            // Enviando os dados via fetch
+            fetch('process_form.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(result => {
+                console.log('Sucesso:', result);
+                alert('Dados salvos com sucesso!');
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Ocorreu um erro ao salvar os dados.');
+            });
+        });
+
+        // Máscaras para valores monetários
+        document.querySelectorAll('input[type="text"]').forEach(input => {
+            input.addEventListener('input', function () {
+                if (this.id === 'valor_recebido' || this.id === 'valor_pago' || this.id === 'receita') {
+                    this.value = this.value.replace(/[^\d,]/g, '').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                }
+            });
+        });
+    </script>
 </body>
-<script>
-    document.getElementById('submitButton').addEventListener('click', function () {
-        const form = document.getElementById('salesForm');
-        const formData = new FormData(form);
-
-        // Convertendo os dados do formulário para JSON
-        const data = {};
-        formData.forEach((value, key) => {
-            data[key] = value;
-        });
-
-        // Enviando os dados via fetch
-        fetch('process_form.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(result => {
-            console.log('Success:', result);
-            alert('Dados salvos com sucesso!');
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('Ocorreu um erro ao salvar os dados.');
-        });
-    });
-</script>
 </html>
