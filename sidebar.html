@@ -264,6 +264,78 @@
             font-size: 0.9rem;
             font-weight: 500;
         }
+
+        .calendar-popup {
+            position: relative;
+        }
+
+        .calendar-container {
+            display: none;
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 16px;
+            z-index: 1000;
+        }
+
+        .calendar-container.show {
+            display: block;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .calendar-header select {
+            padding: 4px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .calendar-dates {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            text-align: center;
+        }
+
+        .calendar-dates div {
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .calendar-dates div:hover {
+            background-color: #e0e0e0;
+        }
+
+        .calendar-dates .selected {
+            background-color: #ff5757;
+            color: #fff;
+        }
+
+        .calendar-dates .range {
+            background-color: #ffdede;
+        }
+
+        button {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -296,17 +368,22 @@
         </a>
         
         <!-- Campos de data para selecionar início e fim -->
-        <form class="d-flex ms-auto align-items-center" role="search">
-            <label for="start-date" class="me-2">De:</label>
-            <input type="date" id="start-date" class="form-control me-2" placeholder="Início" aria-label="Start Date">
-
-            <label for="end-date" class="me-2">Até:</label>
-            <input type="date" id="end-date" class="form-control me-2" placeholder="Fim" aria-label="End Date">
-
-            <button class="btn btn-outline-primary" type="submit">Buscar</button>
-        </form>
-
-        <ul class="navbar-nav ms-auto">
+         <div style="width: 100%; display: flex; justify-content: center;">
+             <div class="calendar-popup">
+                 <button id="openCalendar">Selecionar Datas</button>
+                 
+                 <div class="calendar-container" id="calendar">
+                     <div class="calendar-header">
+                         <select id="monthSelector"></select>
+                         <select id="yearSelector"></select>
+                        </div>
+                        <div class="calendar-dates" id="datesGrid"></div>
+                        <button id="applyDates">Aplicar</button>
+                    </div>
+                </div>
+            </div>
+                
+                <ul class="navbar-nav ms-auto">
             <li class="nav-item dropdown">
                 <a class="nav-icon" href="#" id="alertsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                     <div class="position-relative">
@@ -370,6 +447,98 @@
     }
 });
     
+</script>
+<script>
+    const openCalendarButton = document.getElementById('openCalendar');
+    const calendar = document.getElementById('calendar');
+    const datesGrid = document.getElementById('datesGrid');
+    const monthSelector = document.getElementById('monthSelector');
+    const yearSelector = document.getElementById('yearSelector');
+
+    const today = new Date();
+    let startDate = null;
+    let endDate = null;
+
+    const renderCalendar = (month, year) => {
+        datesGrid.innerHTML = '';
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        for (let i = 0; i < firstDay; i++) {
+            datesGrid.innerHTML += '<div></div>';
+        }
+
+        for (let i = 1; i <= daysInMonth; i++) {
+            const dateDiv = document.createElement('div');
+            dateDiv.textContent = i;
+            const date = new Date(year, month, i);
+            dateDiv.dataset.date = date.toISOString().split('T')[0];
+            dateDiv.classList.add('date');
+
+            if (startDate && date.toISOString().split('T')[0] === startDate) {
+                dateDiv.classList.add('selected');
+            }
+            if (endDate && date.toISOString().split('T')[0] === endDate) {
+                dateDiv.classList.add('selected');
+            }
+            if (startDate && endDate && date >= new Date(startDate) && date <= new Date(endDate)) {
+                dateDiv.classList.add('range');
+            }
+
+            dateDiv.addEventListener('click', () => {
+                if (!startDate || (startDate && endDate)) {
+                    startDate = date.toISOString().split('T')[0];
+                    endDate = null;
+                } else if (!endDate && date > new Date(startDate)) {
+                    endDate = date.toISOString().split('T')[0];
+                } else {
+                    startDate = date.toISOString().split('T')[0];
+                    endDate = null;
+                }
+                renderCalendar(month, year);
+            });
+
+            datesGrid.appendChild(dateDiv);
+        }
+    };
+
+    const populateSelectors = () => {
+        for (let i = 0; i < 12; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = new Date(0, i).toLocaleString('default', { month: 'long' });
+            monthSelector.appendChild(option);
+        }
+        for (let i = today.getFullYear() - 10; i <= today.getFullYear() + 10; i++) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.textContent = i;
+            yearSelector.appendChild(option);
+        }
+    };
+
+    openCalendarButton.addEventListener('click', () => {
+        calendar.classList.toggle('show');
+    });
+
+    monthSelector.addEventListener('change', () => {
+        renderCalendar(+monthSelector.value, +yearSelector.value);
+    });
+
+    yearSelector.addEventListener('change', () => {
+        renderCalendar(+monthSelector.value, +yearSelector.value);
+    });
+
+    document.getElementById('applyDates').addEventListener('click', () => {
+        calendar.classList.remove('show');
+        console.log('Start Date:', startDate);
+        console.log('End Date:', endDate);
+    });
+
+    populateSelectors();
+    monthSelector.value = today.getMonth();
+    yearSelector.value = today.getFullYear();
+    renderCalendar(today.getMonth(), today.getFullYear());
 </script>
 </body>
 </html>
