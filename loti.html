@@ -225,15 +225,6 @@
                 </div>
             </div>
 
-            <!-- Dados não exibidos no front-end -->
-            <input type="hidden" id="mes_venda" name="mes_venda">
-            <input type="hidden" id="uf" name="uf">
-            <input type="hidden" id="valor_comissao" name="valor_comissao">
-            <input type="hidden" id="markup" name="markup">
-            <input type="hidden" id="data_pgto" name="data_pgto">
-            <input type="hidden" id="recebido" name="recebido">
-            <input type="hidden" id="data_repasse" name="data_repasse">
-
             <!-- Financeiro -->
             <div class="section-title">Financeiro</div>
             <div class="row">
@@ -277,114 +268,61 @@
                     <input type="number" id="valor_repassado" name="valor_repassado" step="0.01" required>
                 </div>
             </div>
-            <div class="row">
-                <div class="form-group col-33">
-                    <label for="custo">Custo</label>
-                    <input type="number" id="custo" name="custo" step="0.01" required>
-                </div>
-                <div class="form-group col-33">
-                    <label for="cambio_dia">Câmbio do Dia</label>
-                    <input type="number" id="cambio_dia" name="cambio_dia" step="0.01" required>
-                </div>
-            </div>
 
-            <!-- Botão de Submissão -->
+            <!-- Dados Ocultos -->
+            <input type="hidden" id="mes_venda" name="mes_venda">
+            <input type="hidden" id="uf" name="uf">
+            <input type="hidden" id="valor_comissao" name="valor_comissao">
+            <input type="hidden" id="markup" name="markup">
+            <input type="hidden" id="data_pgto" name="data_pgto">
+            <input type="hidden" id="recebido" name="recebido">
+            <input type="hidden" id="data_repasse" name="data_repasse">
+
             <button id="submitButton" type="button" class="btn">Salvar</button>
         </form>
     </div>
 
     <script>
-        // Gerar ID automaticamente
         document.addEventListener('DOMContentLoaded', function () {
+            // Gerar ID automaticamente
             fetch('https://magictraveltur.com/get_next_id.php')
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('id').value = data.next_id;
                 })
-                .catch(error => console.error('Erro ao gerar ID:', error));
-        });
+                .catch(console.error);
 
-        // Atualizar campos ocultos automaticamente
-        document.getElementById('data_venda').addEventListener('change', function () {
-            const dataVenda = new Date(this.value);
-            const mesVenda = dataVenda.toLocaleString('default', { month: 'long' });
-            document.getElementById('mes_venda').value = mesVenda;
-            document.getElementById('data_pgto').value = this.value;
-        });
-
-        document.getElementById('telefone').addEventListener('blur', function () {
-            const ddd = this.value.slice(0, 2);
-            const estados = { '11': 'SP', '21': 'RJ', '31': 'MG', '41': 'PR', '61': 'DF' }; // Expansão de DDDs
-            document.getElementById('uf').value = estados[ddd] || '';
-        });
-
-        // Submissão do formulário
-        document.getElementById('submitButton').addEventListener('click', function () {
-            const form = document.getElementById('salesForm');
-            const formData = new FormData(form);
-        
-            // Transformar FormData em Objeto JSON
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value || null; // Garantir que valores vazios sejam enviados como null
+            // Atualizar campos ocultos automaticamente
+            document.getElementById('data_venda').addEventListener('change', function () {
+                const dataVenda = new Date(this.value);
+                const mesVenda = dataVenda.toLocaleString('default', { month: 'long' });
+                document.getElementById('mes_venda').value = mesVenda;
+                document.getElementById('data_pgto').value = this.value;
             });
-        
-            // Adicionar cálculos adicionais
-            const valorRepassado = parseFloat(data.valor_repassado) || 0;
-            const custo = parseFloat(data.custo) || 0;
-            const categoria = data.item;
-            const comissaoPercent = {
-                "Ingressos": 0.003,
-                "Hospedagem": 0.003,
-                "Passagem Aérea": 0.01,
-                "Seguro Viagem": 0.1,
-                "Guiamento Remoto": 0.12,
-                "Aluguel de Carro": 0.01,
-                "Cruzeiro": 0.01
-            };
-        
-            data.valor_comissao = (valorRepassado - custo).toFixed(2);
-            data.markup = ((valorRepassado - custo) / valorRepassado * 100).toFixed(2);
-        
-            let comissaoDoAgente = 0;
-            if (categoria) {
-                comissaoDoAgente = (valorRepassado * (comissaoPercent[categoria] || 0));
-            }
-            data.comissao_do_agente = comissaoDoAgente.toFixed(2);
-        
-            // Configurar data de repasse
-            const meioPgto = data.meio_pgto;
-            const dataVenda = new Date(data.data_venda);
-            let dataRepasse = new Date(dataVenda);
-            if (meioPgto === 'Cartão') {
-                dataRepasse.setDate(dataVenda.getDate() + 2);
-            }
-            data.data_repasse = dataRepasse.toISOString().split('T')[0];
-        
-            // Campos opcionais padrão
-            data.observacoes_operacionais = data.observacoes_operacionais || 'nada';
-            data.observacoes_financeiras = data.observacoes_financeiras || 'nada';
-        
-            // Enviar requisição
-            fetch('https://magictraveltur.com/process_form.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro na requisição: ' + response.status);
-                }
-                return response.json();
-            })
-            .then(result => {
-                alert(result.success ? 'Dados salvos com sucesso!' : result.error || 'Erro ao salvar os dados.');
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Ocorreu um erro ao salvar os dados.');
+
+            document.getElementById('telefone').addEventListener('blur', function () {
+                const ddd = this.value.slice(0, 2);
+                const estados = { '11': 'SP', '21': 'RJ', '31': 'MG' };
+                document.getElementById('uf').value = estados[ddd] || '';
+            });
+
+            // Submissão do formulário
+            document.getElementById('submitButton').addEventListener('click', function () {
+                const form = document.getElementById('salesForm');
+                const formData = new FormData(form);
+                const data = Object.fromEntries(formData.entries());
+
+                fetch('https://magictraveltur.com/process_form.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
+                        return response.json();
+                    })
+                    .then(result => alert(result.success ? 'Dados salvos com sucesso!' : result.error || 'Erro ao salvar os dados.'))
+                    .catch(error => alert('Erro ao processar os dados: ' + error.message));
             });
         });
     </script>
