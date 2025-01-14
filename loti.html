@@ -251,140 +251,110 @@
     </script>
 </body>
 </html>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Gerar ID automaticamente
-            fetch('https://magictraveltur.com/get_next_id.php')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('id').value = data.next_id;
-                })
-                .catch(console.error);
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    // Gerar ID automaticamente
+    fetch('https://magictraveltur.com/get_next_id.php')
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('id').value = data.next_id || 2501; // Começa no 2501 se não houver próximo ID
+        })
+        .catch(console.error);
 
-            document.addEventListener('DOMContentLoaded', function () {
-            
-            // Gerar ID do Pedido automaticamente
-            fetch('https://magictraveltur.com/get_next_id.php')
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('id').value = data.next_id || 2501; // Começa no 2501 se não houver próximo ID
-                })
-                .catch(console.error);
-        
-            // Preencher Mês da Venda automaticamente com base na Data da Venda
-            document.getElementById('data_venda').addEventListener('change', function () {
-                const dataVenda = new Date(this.value);
-                const mesVenda = dataVenda.toLocaleString('default', { month: 'long' });
-                document.getElementById('mes_venda').value = mesVenda; // Preencher mês
-                document.getElementById('data_pgto').value = this.value; // Data de pagamento é a mesma
-            });
-        
-            // Preencher UF automaticamente com base no DDD do Telefone
-            document.getElementById('telefone').addEventListener('blur', function () {
-                const ddd = this.value.slice(0, 2);
-                const estados = {
-                    // Região Norte
-                    '91': 'PA', '92': 'AM', '93': 'PA', '94': 'PA', '95': 'RR', '96': 'AP', '97': 'AM', 
-                    '98': 'MA', '99': 'MA',
-                    // Região Nordeste
-                    '71': 'BA', '73': 'BA', '74': 'BA', '75': 'BA', '77': 'BA',
-                    '81': 'PE', '82': 'AL', '83': 'PB', '84': 'RN', '85': 'CE', '86': 'PI', 
-                    '87': 'PE', '88': 'CE', '89': 'PI',
-                    // Região Centro-Oeste
-                    '61': 'DF', '62': 'GO', '63': 'TO', '64': 'GO', '65': 'MT', '66': 'MT', '67': 'MS',
-                    // Região Sudeste
-                    '11': 'SP', '12': 'SP', '13': 'SP', '14': 'SP', '15': 'SP', '16': 'SP', 
-                    '17': 'SP', '18': 'SP', '19': 'SP',
-                    '21': 'RJ', '22': 'RJ', '24': 'RJ',
-                    '27': 'ES', '28': 'ES',
-                    '31': 'MG', '32': 'MG', '33': 'MG', '34': 'MG', '35': 'MG', 
-                    '37': 'MG', '38': 'MG',
-                    // Região Sul
-                    '41': 'PR', '42': 'PR', '43': 'PR', '44': 'PR', '45': 'PR', '46': 'PR',
-                    '47': 'SC', '48': 'SC', '49': 'SC',
-                    '51': 'RS', '53': 'RS', '54': 'RS', '55': 'RS'
-                };
-                document.getElementById('uf').value = estados[ddd] || ''; // Preencher UF com base no DDD
-            });
-        
-            // Atualizar Campos Automáticos do Financeiro
-            document.getElementById('submitButton').addEventListener('click', function () {
-                const valorVenda = parseFloat(document.getElementById('valor_venda').value) || 0;
-                const valorRepassado = parseFloat(document.getElementById('valor_repassado').value) || 0;
-                const custo = parseFloat(document.getElementById('custo').value) || 0;
-                const categoria = document.getElementById('item').value;
-        
-                // Calcular Receita Agência (Valor Repassado - Custo)
-                const receitaAgencia = valorRepassado - custo;
-                document.getElementById('valor_comissao').value = receitaAgencia.toFixed(2);
-        
-                // Calcular Markup (Receita como % do Valor Repassado)
-                const markup = receitaAgencia > 0 ? (receitaAgencia / valorRepassado) * 100 : 0;
-                document.getElementById('markup').value = markup.toFixed(2);
-        
-                // Determinar Comissão do Agente com base na Categoria
-                const comissoes = {
-                    "Ingressos": 0.003,
-                    "Hospedagem": 0.003,
-                    "Passagem Aérea": 0.01,
-                    "Seguro Viagem": 0.1,
-                    "Guiamento Remoto": 0.12,
-                    "Aluguel de Carro": 0.01,
-                    "Cruzeiro": 0.01
-                };
-                const comissaoDoAgente = valorRepassado * (comissoes[categoria] || 0);
-                document.getElementById('comissao_do_agente').value = comissaoDoAgente.toFixed(2);
-        
-                // Preencher Data de Repasse (Pix: Mesmo dia, Cartão: D+2)
-                const dataVenda = new Date(document.getElementById('data_venda').value);
-                const meioPagamento = document.getElementById('meio_pgto').value;
-                const dataRepasse = new Date(dataVenda);
-                if (meioPagamento === 'Pix') {
-                    dataRepasse.setDate(dataRepasse.getDate()); // Mesmo dia
-                } else if (meioPagamento === 'Cartão') {
-                    dataRepasse.setDate(dataRepasse.getDate() + 2); // D+2
-                }
-                document.getElementById('data_repasse').value = dataRepasse.toISOString().split('T')[0];
-        
-                // Atualizar Bandeira do Cartão e Parcelas automaticamente
-                if (['Pix', 'Boleto', 'Split'].includes(meioPagamento)) {
-                    document.getElementById('bandeira_cartao').value = '-';
-                    document.getElementById('parcelas').value = '-';
-                }
-        
-                // Preencher Campos de Observações como 'Nada' se estiverem vazios
-                const observacoesOperacionais = document.getElementById('observacoes_operacionais');
-                const observacoesFinanceiras = document.getElementById('observacoes_financeiras');
-                if (!observacoesOperacionais.value) {
-                    observacoesOperacionais.value = 'Nada';
-                }
-                if (!observacoesFinanceiras.value) {
-                    observacoesFinanceiras.value = 'Nada';
-                }
-        
-                // Valor Recebido é o mesmo Valor da Venda
-                document.getElementById('recebido').value = valorVenda.toFixed(2);
-        
-                // Preparar os Dados para Envio
-                const form = document.getElementById('salesForm');
-                const formData = new FormData(form);
-                const data = Object.fromEntries(formData.entries());
-        
-                // Enviar Dados para o Back-End
-                fetch('https://magictraveltur.com/process_form.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                })
-                    .then(response => {
-                        if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
-                        return response.json();
-                    })
-                    .then(result => alert(result.success ? 'Dados salvos com sucesso!' : result.error || 'Erro ao salvar os dados.'))
-                    .catch(error => alert('Erro ao processar os dados: ' + error.message));
-            });
-        });
+    // Preencher Mês da Venda automaticamente com base na Data da Venda
+    document.getElementById('data_venda').addEventListener('change', function () {
+        const dataVenda = new Date(this.value);
+        const mesVenda = dataVenda.toLocaleString('default', { month: 'long' });
+        document.getElementById('mes_venda').value = mesVenda; // Preencher mês
+        document.getElementById('data_pgto').value = this.value; // Data de pagamento é a mesma
+    });
 
-    </script>
+    // Preencher UF automaticamente com base no DDD do Telefone
+    document.getElementById('telefone').addEventListener('blur', function () {
+        const ddd = this.value.slice(0, 2);
+        const estados = {
+            // Região Norte
+            '91': 'PA', '92': 'AM', '93': 'PA', '94': 'PA', '95': 'RR', '96': 'AP', '97': 'AM',
+            '98': 'MA', '99': 'MA',
+            // Região Nordeste
+            '71': 'BA', '73': 'BA', '74': 'BA', '75': 'BA', '77': 'BA',
+            '81': 'PE', '82': 'AL', '83': 'PB', '84': 'RN', '85': 'CE', '86': 'PI',
+            '87': 'PE', '88': 'CE', '89': 'PI',
+            // Região Centro-Oeste
+            '61': 'DF', '62': 'GO', '63': 'TO', '64': 'GO', '65': 'MT', '66': 'MT', '67': 'MS',
+            // Região Sudeste
+            '11': 'SP', '12': 'SP', '13': 'SP', '14': 'SP', '15': 'SP', '16': 'SP',
+            '17': 'SP', '18': 'SP', '19': 'SP',
+            '21': 'RJ', '22': 'RJ', '24': 'RJ',
+            '27': 'ES', '28': 'ES',
+            '31': 'MG', '32': 'MG', '33': 'MG', '34': 'MG', '35': 'MG',
+            '37': 'MG', '38': 'MG',
+            // Região Sul
+            '41': 'PR', '42': 'PR', '43': 'PR', '44': 'PR', '45': 'PR', '46': 'PR',
+            '47': 'SC', '48': 'SC', '49': 'SC',
+            '51': 'RS', '53': 'RS', '54': 'RS', '55': 'RS'
+        };
+        document.getElementById('uf').value = estados[ddd] || ''; // Preencher UF com base no DDD
+    });
+
+    // Atualizar Campos Automáticos do Financeiro
+    document.getElementById('submitButton').addEventListener('click', function () {
+        const valorVenda = parseFloat(document.getElementById('valor_venda').value) || 0;
+        const valorRepassado = parseFloat(document.getElementById('valor_repassado').value) || 0;
+        const custo = parseFloat(document.getElementById('custo').value) || 0;
+        const categoria = document.getElementById('item').value;
+
+        // Calcular Receita Agência
+        const receitaAgencia = valorRepassado - custo;
+        document.getElementById('valor_comissao').value = receitaAgencia.toFixed(2);
+
+        // Calcular Markup
+        const markup = receitaAgencia > 0 ? (receitaAgencia / valorRepassado) * 100 : 0;
+        document.getElementById('markup').value = markup.toFixed(2);
+
+        // Determinar Comissão do Agente
+        const comissoes = {
+            "Ingressos": 0.003,
+            "Hospedagem": 0.003,
+            "Passagem Aérea": 0.01,
+            "Seguro Viagem": 0.1,
+            "Guiamento Remoto": 0.12,
+            "Aluguel de Carro": 0.01,
+            "Cruzeiro": 0.01
+        };
+        const comissaoDoAgente = valorRepassado * (comissoes[categoria] || 0);
+        document.getElementById('comissao_do_agente').value = comissaoDoAgente.toFixed(2);
+
+        // Preencher Data de Repasse
+        const dataVenda = new Date(document.getElementById('data_venda').value);
+        const meioPagamento = document.getElementById('meio_pgto').value;
+        const dataRepasse = new Date(dataVenda);
+        if (meioPagamento === 'Pix') {
+            dataRepasse.setDate(dataRepasse.getDate());
+        } else if (meioPagamento === 'Cartão') {
+            dataRepasse.setDate(dataRepasse.getDate() + 2);
+        }
+        document.getElementById('data_repasse').value = dataRepasse.toISOString().split('T')[0];
+
+        // Preparar Dados para Envio
+        const form = document.getElementById('salesForm');
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
+
+        // Enviar Dados para o Back-End
+        fetch('https://magictraveltur.com/process_form.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        })
+            .then(response => {
+                if (!response.ok) throw new Error('Erro na requisição: ' + response.status);
+                return response.json();
+            })
+            .then(result => alert(result.success ? 'Dados salvos com sucesso!' : result.error || 'Erro ao salvar os dados.'))
+            .catch(error => alert('Erro ao processar os dados: ' + error.message));
+    });
+});
+</script>
 </body>
 </html>
