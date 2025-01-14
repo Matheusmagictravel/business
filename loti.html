@@ -95,13 +95,13 @@
             background: #0056b3;
         }
 
-        @media (min-width: 768px) {
+        @media (max-width: 768px) {
             .form-group label {
-                flex: 1 1 25%;
+                flex: 1 1 100%;
             }
 
             .form-group input, .form-group select, .form-group textarea {
-                flex: 1 1 70%;
+                flex: 1 1 100%;
             }
         }
     </style>
@@ -118,61 +118,104 @@
                 <div class="section-title">Detalhes do Pedido</div>
                 <div class="form-group">
                     <label for="id">ID do Pedido:</label>
-                    <input type="text" id="id" name="id" placeholder="Ex: 12346" required>
-                </div>
-            </div>
+                    <input type="text" id="id" name="id" required>
 
-            <div class="section">
-                <div class="section-title">Informações do Produto</div>
-                <div class="form-group">
                     <label for="mes_venda">Mês Venda:</label>
-                    <input type="text" id="mes_venda" name="mes_venda" placeholder="Ex: Janeiro" required>
+                    <input type="text" id="mes_venda" name="mes_venda" required>
 
                     <label for="data_venda">Data Venda:</label>
                     <input type="date" id="data_venda" name="data_venda" required>
 
                     <label for="fornecedor">Fornecedor:</label>
-                    <input type="text" id="fornecedor" name="fornecedor" placeholder="Ex: North America" required>
+                    <input type="text" id="fornecedor" name="fornecedor" required>
 
                     <label for="destino">Destino:</label>
-                    <input type="text" id="destino" name="destino" placeholder="Ex: Orlando" required>
+                    <input type="text" id="destino" name="destino" required>
 
                     <label for="item">Item:</label>
-                    <input type="text" id="item" name="item" placeholder="Ex: Ingressos" required>
+                    <input type="text" id="item" name="item" required>
 
                     <label for="data_utilizacao">Data Utilização:</label>
                     <input type="date" id="data_utilizacao" name="data_utilizacao" required>
 
                     <label for="identificador">Identificador:</label>
-                    <input type="text" id="identificador" name="identificador" placeholder="Ex: NAD122684" required>
+                    <input type="text" id="identificador" name="identificador" required>
                 </div>
             </div>
 
             <div class="section">
-                <div class="section-title">Dados do Passageiro Principal</div>
+                <div class="section-title">Dados do Passageiro</div>
                 <div class="form-group">
                     <label for="nome">Nome:</label>
-                    <input type="text" id="nome" name="nome" placeholder="Ex: Delma Machesi" required>
+                    <input type="text" id="nome" name="nome" required>
 
                     <label for="data_nascimento">Data Nascimento:</label>
                     <input type="date" id="data_nascimento" name="data_nascimento" required>
 
                     <label for="uf">UF:</label>
-                    <input type="text" id="uf" name="uf" placeholder="Ex: PR" required>
+                    <input type="text" id="uf" name="uf" required>
+
+                    <label for="nome_comprador">Nome do Comprador:</label>
+                    <input type="text" id="nome_comprador" name="nome_comprador" required>
+
+                    <label for="meio_pgto">Meio de Pagamento:</label>
+                    <input type="text" id="meio_pgto" name="meio_pgto" required>
+
+                    <label for="bandeira_cartao">Bandeira do Cartão:</label>
+                    <input type="text" id="bandeira_cartao" name="bandeira_cartao" required>
+
+                    <label for="parcelas">Parcelas:</label>
+                    <input type="number" id="parcelas" name="parcelas" required>
                 </div>
             </div>
 
             <div class="section">
                 <div class="section-title">Resumo Financeiro</div>
                 <div class="form-group">
-                    <label for="valor_recebido">Valor Recebido:</label>
-                    <input type="text" id="valor_recebido" name="valor_recebido" placeholder="Ex: R$ 18408.67" required>
+                    <label for="valor_venda">Valor Venda:</label>
+                    <input type="text" id="valor_venda" name="valor_venda" required>
 
-                    <label for="valor_pago">Valor Pago ao Fornecedor:</label>
-                    <input type="text" id="valor_pago" name="valor_pago" placeholder="Ex: R$ 18408.67" required>
+                    <label for="custo">Custo:</label>
+                    <input type="text" id="custo" name="custo" required>
 
-                    <label for="receita">Receita:</label>
-                    <input type="text" id="receita" name="receita" placeholder="Ex: R$ 2394.58" required>
+                    <label for="valor_comissao">Valor Comissão:</label>
+                    <input type="text" id="valor_comissao" name="valor_comissao" required>
+
+                    <label for="cambio_dia">Câmbio do Dia:</label>
+                    <input type="text" id="cambio_dia" name="cambio_dia" required>
+
+                    <label for="origem_cliente">Origem Cliente:</label>
+                    <input type="text" id="origem_cliente" name="origem_cliente" required>
+
+                    <label for="cliente_de">Cliente de:</label>
+                    <input type="text" id="cliente_de" name="cliente_de" required>
+
+                    <label for="efetivado_por">Efetivado Por:</label>
+                    <input type="text" id="efetivado_por" name="efetivado_por" required>
+
+                    <label for="observacoes_operacionais">Observações Operacionais:</label>
+                    <textarea id="observacoes_operacionais" name="observacoes_operacionais" required></textarea>
+
+                    <label for="observacoes_financeiras">Observações Financeiras:</label>
+                    <textarea id="observacoes_financeiras" name="observacoes_financeiras" required></textarea>
+
+                    <label for="nf">Nota Fiscal:</label>
+                    <input type="text" id="nf" name="nf" required>
+
+                    <label for="gateway">Gateway:</label>
+                    <input type="text" id="gateway" name="gateway" required>
+
+                    <label for="data_pgto">Data do Pagamento:</label>
+                    <input type="date" id="data_pgto" name="data_pgto" required>
+
+                    <label for="recebido">Valor Recebido:</label>
+                    <input type="text" id="recebido" name="recebido" required>
+
+                    <label for="valor_repassado">Valor Repassado:</label>
+                    <input type="text" id="valor_repassado" name="valor_repassado" required>
+
+                    <label for="data_repasse">Data do Repasse:</label>
+                    <input type="date" id="data_repasse" name="data_repasse" required>
                 </div>
             </div>
 
@@ -181,71 +224,23 @@
     </div>
 
     <script>
-        // Carregar o sidebar dinamicamente
-        fetch('sidebar.html')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro ao carregar o sidebar.');
-                }
-                return response.text();
-            })
-            .then(html => {
-                document.getElementById('sidebar').innerHTML = html;
-            })
-            .catch(error => {
-                console.error('Erro ao carregar o sidebar:', error);
-            });
-
-        // Enviar os dados do formulário via fetch
         document.getElementById('submitButton').addEventListener('click', function () {
             const form = document.getElementById('salesForm');
             const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
 
-            // Convertendo os dados do formulário para JSON
-            const data = {};
-            formData.forEach((value, key) => {
-                data[key] = value;
-            });
-
-            // Enviando os dados via fetch
-            fetch('process_form.php', {
+            fetch('https://magictraveltur.com/process_form.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             })
             .then(response => response.json())
             .then(result => {
-                console.log('Sucesso:', result);
-                alert('Dados salvos com sucesso!');
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Ocorreu um erro ao salvar os dados.');
-            });
-        });
-
-        // Máscaras para valores monetários
-        document.querySelectorAll('input[type="text"]').forEach(input => {
-            input.addEventListener('input', function () {
-                if (this.id === 'valor_recebido' || this.id === 'valor_pago' || this.id === 'receita') {
-                    this.value = this.value.replace(/[^\d,]/g, '').replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.');
+                if (result.success) {
+                    alert('Dados salvos com sucesso!');
+                } else {
+                    alert(result.error || 'Erro ao salvar os dados.');
                 }
-            });
-        });
-        document.getElementById('submitButton').addEventListener('click', function (event) {
-            event.preventDefault();
-            const form = document.getElementById('salesForm');
-            const formData = new FormData(form);
-
-            fetch('https://magictraveltur.com/process_form.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(result => {
-                alert('Dados salvos com sucesso!');
             })
             .catch(error => {
                 console.error('Erro:', error);
