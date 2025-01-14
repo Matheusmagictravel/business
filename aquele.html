@@ -22,15 +22,9 @@
             overflow-x: hidden;
         }
 
-        /* Sidebar Container */
         #sidebar-container {
-          flex-shrink: 0;
-          width: 260px;
-          background-color: #081135;
-          color: white;
-          height: 100%;
-          overflow-y: auto;
-          box-sizing: border-box;
+            flex-shrink: 0;
+            width: 260px;
         }
 
         .container {
@@ -39,10 +33,8 @@
             background: #ffffff;
             border-radius: 16px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            max-width: flex;
-            padding: 140px 40px 40px; /* Aumentei o padding superior para 40px */
-            box-sizing: border-box;
-            overflow-y: auto;
+            margin: 80px auto; /* Margem superior aumentada */
+            max-width: 680px; /* Largura reduzida */
         }
 
         h1 {
@@ -109,9 +101,8 @@
                 flex-direction: column;
             }
 
-            #sidebar {
+            #sidebar-container {
                 width: 100%;
-                padding: 15px;
             }
 
             .container {
@@ -130,8 +121,8 @@
     </style>
 </head>
 <body>
-  <!-- Sidebar -->
-  <div id="sidebar-container"></div>
+    <!-- Container para carregar o sidebar -->
+    <div id="sidebar-container"></div>
     
     <div class="container">
         <h1>Cadastro de Vendas</h1>
@@ -263,16 +254,21 @@
     <script>
         // Função para carregar o sidebar
         async function loadSidebar() {
-          try {
-            const response = await fetch('sidebar.html');
-            if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
-            const html = await response.text();
-            document.getElementById('sidebar-container').innerHTML = html;
-          } catch (error) {
-            console.error('Erro ao carregar a sidebar:', error);
-            document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
-          }
+            try {
+                const response = await fetch('sidebar.html');
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar o sidebar.');
+                }
+                const html = await response.text();
+                document.getElementById('sidebar-container').innerHTML = html;
+            } catch (error) {
+                console.error('Erro ao carregar o sidebar:', error);
+                document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar o sidebar.</p>';
+            }
         }
+
+        // Carregar sidebar ao carregar a página
+        document.addEventListener('DOMContentLoaded', loadSidebar);
         
         document.getElementById('submitButton').addEventListener('click', function () {
             const form = document.getElementById('salesForm');
@@ -301,10 +297,6 @@
                 alert('Ocorreu um erro ao salvar os dados.');
             });
         });
-            // Inicializa o dashboard
-            document.addEventListener('DOMContentLoaded', () => {
-              loadSidebar();
-            });
     </script>
 </body>
 </html>
