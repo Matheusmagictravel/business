@@ -322,11 +322,17 @@
         document.getElementById('submitButton').addEventListener('click', function () {
             const form = document.getElementById('salesForm');
             const formData = new FormData(form);
-
-            // Calcular campos adicionais
-            const valorRepassado = parseFloat(formData.get('valor_repassado')) || 0;
-            const custo = parseFloat(formData.get('custo')) || 0;
-            const categoria = formData.get('item');
+        
+            // Transformar FormData em Objeto JSON
+            const data = {};
+            formData.forEach((value, key) => {
+                data[key] = value || null; // Garantir que valores vazios sejam enviados como null
+            });
+        
+            // Adicionar cálculos adicionais
+            const valorRepassado = parseFloat(data.valor_repassado) || 0;
+            const custo = parseFloat(data.custo) || 0;
+            const categoria = data.item;
             const comissaoPercent = {
                 "Ingressos": 0.003,
                 "Hospedagem": 0.003,
@@ -336,42 +342,36 @@
                 "Aluguel de Carro": 0.01,
                 "Cruzeiro": 0.01
             };
-
-            formData.set('valor_comissao', (valorRepassado - custo).toFixed(2));
-            formData.set('markup', ((valorRepassado - custo) / valorRepassado * 100).toFixed(2));
-
+        
+            data.valor_comissao = (valorRepassado - custo).toFixed(2);
+            data.markup = ((valorRepassado - custo) / valorRepassado * 100).toFixed(2);
+        
             let comissaoDoAgente = 0;
             if (categoria) {
                 comissaoDoAgente = (valorRepassado * (comissaoPercent[categoria] || 0));
             }
-            formData.set('comissao_do_agente', comissaoDoAgente.toFixed(2));
-
+            data.comissao_do_agente = comissaoDoAgente.toFixed(2);
+        
             // Configurar data de repasse
-            const meioPgto = formData.get('meio_pgto');
-            const dataVenda = new Date(formData.get('data_venda'));
-            let dataRepasse = dataVenda;
-            if (meioPgto === 'Pix') {
-                dataRepasse = dataVenda;
-            } else if (meioPgto === 'Cartão') {
+            const meioPgto = data.meio_pgto;
+            const dataVenda = new Date(data.data_venda);
+            let dataRepasse = new Date(dataVenda);
+            if (meioPgto === 'Cartão') {
                 dataRepasse.setDate(dataVenda.getDate() + 2);
             }
-            formData.set('data_repasse', dataRepasse.toISOString().split('T')[0]);
-
-            // Tratar campos opcionais
-            if (!formData.get('observacoes_operacionais')) {
-                formData.set('observacoes_operacionais', 'nada');
-            }
-            if (!formData.get('observacoes_financeiras')) {
-                formData.set('observacoes_financeiras', 'nada');
-            }
-
-            // Enviar formulário
+            data.data_repasse = dataRepasse.toISOString().split('T')[0];
+        
+            // Campos opcionais padrão
+            data.observacoes_operacionais = data.observacoes_operacionais || 'nada';
+            data.observacoes_financeiras = data.observacoes_financeiras || 'nada';
+        
+            // Enviar requisição
             fetch('https://magictraveltur.com/process_form.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(Object.fromEntries(formData))
+                body: JSON.stringify(data)
             })
             .then(response => {
                 if (!response.ok) {
