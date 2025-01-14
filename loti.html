@@ -402,22 +402,24 @@
     </form>
     </div>
     <script>
-        async function loadSidebar() {
-            try {
-                const response = await fetch('sidebar.html'); // Carrega o arquivo do servidor
-                if (!response.ok) {
-                    throw new Error('Erro ao carregar o sidebar. Verifique o arquivo e o caminho.');
+        document.addEventListener('DOMContentLoaded', function () {
+            // Função para carregar o sidebar
+            async function loadSidebar() {
+                try {
+                    const response = await fetch('sidebar.html');
+                    if (!response.ok) {
+                        throw new Error('Erro ao carregar o sidebar. Verifique o caminho ou o arquivo.');
+                    }
+                    const html = await response.text();
+                    document.getElementById('sidebar-container').innerHTML = html;
+                } catch (error) {
+                    console.error('Erro ao carregar o sidebar:', error);
+                    document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar o sidebar.</p>';
                 }
-                const html = await response.text();
-                document.getElementById('sidebar-container').innerHTML = html;
-            } catch (error) {
-                console.error('Erro ao carregar o sidebar:', error);
-                document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar o sidebar.</p>';
             }
-        }
 
-        // Carregar sidebar após o DOM estar pronto
-        document.addEventListener('DOMContentLoaded', loadSidebar);
+            // Chamar a função para carregar o sidebar
+            loadSidebar();
 
         document.addEventListener('DOMContentLoaded', function () {
         // Gerar ID automaticamente
