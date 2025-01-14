@@ -4,61 +4,80 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Vendas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* Estilo Global */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Montserrat', sans-serif;
         }
-        
+
         body {
-            background-color: #f5f7fa;
-            color: #333;
-            line-height: 1.6;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: row;
+            background-color: #f5f5f5;
+            color: #333;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        #sidebar {
+            width: 250px;
+            background-color: #1c1c1e;
+            color: #fff;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
-        
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background: #ffffff;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-            padding: 30px;
-            transition: all 0.3s ease-in-out;
-        }
-        
-        .container:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-        }
-        
-        h1 {
-            text-align: center;
+
+        #sidebar h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
             margin-bottom: 20px;
-            color: #007bff;
-            font-size: 2rem;
         }
-        
+
+        #sidebar nav a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            display: block;
+            transition: color 0.3s ease;
+        }
+
+        #sidebar nav a:hover {
+            color: #007bff;
+        }
+
+        .container {
+            flex-grow: 1;
+            padding: 40px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            margin: 40px auto;
+            max-width: 900px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
         .form-group {
             margin-bottom: 20px;
-            position: relative;
         }
-        
+
         .form-group label {
-            font-weight: bold;
-            color: #555;
-            margin-bottom: 8px;
+            font-weight: 600;
             display: block;
-            font-size: 0.9rem;
+            margin-bottom: 8px;
         }
-        
+
         .form-group input, 
         .form-group select, 
         .form-group textarea {
@@ -67,129 +86,200 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             font-size: 1rem;
-            transition: border-color 0.3s ease-in-out;
             background: #f9f9f9;
+            transition: border-color 0.3s;
         }
-        
+
         .form-group input:focus, 
         .form-group select:focus, 
         .form-group textarea:focus {
             border-color: #007bff;
-            background: #fff;
+            background: #ffffff;
             outline: none;
         }
-        
-        textarea {
+
+        .form-group textarea {
             resize: vertical;
             min-height: 100px;
         }
-        
+
         .btn {
             width: 100%;
-            padding: 12px;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #ffffff;
             background: linear-gradient(90deg, #007bff, #0056b3);
-            color: #fff;
             border: none;
             border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
             cursor: pointer;
-            transition: background 0.3s ease-in-out;
-            text-align: center;
+            transition: background 0.3s ease;
         }
-        
+
         .btn:hover {
             background: linear-gradient(90deg, #0056b3, #004080);
         }
-        
-        /* Responsividade */
+
         @media (max-width: 768px) {
             body {
-                padding: 10px;
+                flex-direction: column;
             }
-        
+
+            #sidebar {
+                width: 100%;
+                padding: 15px;
+            }
+
             .container {
+                margin: 20px;
                 padding: 20px;
-                box-shadow: none;
             }
-        
+
             h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
-        
+
             .btn {
-                font-size: 0.9rem;
-                padding: 10px;
-            }
-        
-            .form-group {
-                margin-bottom: 15px;
-            }
-        
-            .form-group input, 
-            .form-group select, 
-            .form-group textarea {
-                font-size: 0.9rem;
-                padding: 10px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.5rem;
-            }
-        
-            .btn {
-                font-size: 0.8rem;
-                padding: 8px;
-            }
-        
-            .form-group input, 
-            .form-group select, 
-            .form-group textarea {
-                font-size: 0.8rem;
-                padding: 8px;
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div id="sidebar"></div>
+    <div id="sidebar">
+        <h2>Magic Travel</h2>
+        <nav>
+            <a href="#">Dashboard</a>
+            <a href="#">Vendas</a>
+            <a href="#">Relatórios</a>
+            <a href="#">Configurações</a>
+        </nav>
+    </div>
+
     <div class="container">
         <h1>Cadastro de Vendas</h1>
         <form id="salesForm">
-            <!-- Todos os campos do formulário -->
-            <input type="text" id="id" name="id" placeholder="ID do Pedido" required>
-            <input type="text" id="mes_venda" name="mes_venda" placeholder="Mês Venda" required>
-            <input type="date" id="data_venda" name="data_venda" required>
-            <input type="text" id="fornecedor" name="fornecedor" placeholder="Fornecedor" required>
-            <input type="text" id="destino" name="destino" placeholder="Destino" required>
-            <input type="text" id="item" name="item" placeholder="Item" required>
-            <input type="date" id="data_utilizacao" name="data_utilizacao" required>
-            <input type="text" id="identificador" name="identificador" placeholder="Identificador" required>
-            <input type="text" id="nome" name="nome" placeholder="Nome do Passageiro" required>
-            <input type="date" id="data_nascimento" name="data_nascimento" required>
-            <input type="text" id="uf" name="uf" placeholder="UF" required>
-            <input type="text" id="nome_comprador" name="nome_comprador" placeholder="Nome do Comprador" required>
-            <input type="text" id="meio_pgto" name="meio_pgto" placeholder="Meio de Pagamento" required>
-            <input type="text" id="bandeira_cartao" name="bandeira_cartao" placeholder="Bandeira do Cartão" required>
-            <input type="number" id="parcelas" name="parcelas" placeholder="Parcelas" required>
-            <input type="number" id="valor_venda" name="valor_venda" placeholder="Valor da Venda" required>
-            <input type="number" id="custo" name="custo" placeholder="Custo" required>
-            <input type="number" id="valor_comissao" name="valor_comissao" placeholder="Valor da Comissão" required>
-            <input type="text" id="cambio_dia" name="cambio_dia" placeholder="Câmbio do Dia" required>
-            <input type="text" id="origem_cliente" name="origem_cliente" placeholder="Origem do Cliente" required>
-            <input type="text" id="cliente_de" name="cliente_de" placeholder="Cliente de" required>
-            <input type="text" id="efetivado_por" name="efetivado_por" placeholder="Efetivado Por" required>
-            <textarea id="observacoes_operacionais" name="observacoes_operacionais" placeholder="Observações Operacionais"></textarea>
-            <textarea id="observacoes_financeiras" name="observacoes_financeiras" placeholder="Observações Financeiras"></textarea>
-            <input type="text" id="nf" name="nf" placeholder="Nota Fiscal" required>
-            <input type="text" id="gateway" name="gateway" placeholder="Gateway" required>
-            <input type="date" id="data_pgto" name="data_pgto" required>
-            <input type="number" id="recebido" name="recebido" placeholder="Valor Recebido" required>
-            <input type="number" id="valor_repassado" name="valor_repassado" placeholder="Valor Repassado" required>
-            <input type="date" id="data_repasse" name="data_repasse" required>
-            <button id="submitButton" type="button">Salvar</button>
+            <div class="form-group">
+                <label for="id">ID do Pedido</label>
+                <input type="text" id="id" name="id" placeholder="ID do Pedido" required>
+            </div>
+            <div class="form-group">
+                <label for="mes_venda">Mês Venda</label>
+                <input type="text" id="mes_venda" name="mes_venda" placeholder="Mês Venda" required>
+            </div>
+            <div class="form-group">
+                <label for="data_venda">Data da Venda</label>
+                <input type="date" id="data_venda" name="data_venda" required>
+            </div>
+            <div class="form-group">
+                <label for="fornecedor">Fornecedor</label>
+                <input type="text" id="fornecedor" name="fornecedor" placeholder="Fornecedor" required>
+            </div>
+            <div class="form-group">
+                <label for="destino">Destino</label>
+                <input type="text" id="destino" name="destino" placeholder="Destino" required>
+            </div>
+            <div class="form-group">
+                <label for="item">Item</label>
+                <input type="text" id="item" name="item" placeholder="Item" required>
+            </div>
+            <div class="form-group">
+                <label for="data_utilizacao">Data de Utilização</label>
+                <input type="date" id="data_utilizacao" name="data_utilizacao" required>
+            </div>
+            <div class="form-group">
+                <label for="identificador">Identificador</label>
+                <input type="text" id="identificador" name="identificador" placeholder="Identificador" required>
+            </div>
+            <div class="form-group">
+                <label for="nome">Nome do Passageiro</label>
+                <input type="text" id="nome" name="nome" placeholder="Nome do Passageiro" required>
+            </div>
+            <div class="form-group">
+                <label for="data_nascimento">Data de Nascimento</label>
+                <input type="date" id="data_nascimento" name="data_nascimento" required>
+            </div>
+            <div class="form-group">
+                <label for="uf">UF</label>
+                <input type="text" id="uf" name="uf" placeholder="UF" required>
+            </div>
+            <div class="form-group">
+                <label for="nome_comprador">Nome do Comprador</label>
+                <input type="text" id="nome_comprador" name="nome_comprador" placeholder="Nome do Comprador" required>
+            </div>
+            <div class="form-group">
+                <label for="meio_pgto">Meio de Pagamento</label>
+                <input type="text" id="meio_pgto" name="meio_pgto" placeholder="Meio de Pagamento" required>
+            </div>
+            <div class="form-group">
+                <label for="bandeira_cartao">Bandeira do Cartão</label>
+                <input type="text" id="bandeira_cartao" name="bandeira_cartao" placeholder="Bandeira do Cartão" required>
+            </div>
+            <div class="form-group">
+                <label for="parcelas">Parcelas</label>
+                <input type="number" id="parcelas" name="parcelas" placeholder="Parcelas" required>
+            </div>
+            <div class="form-group">
+                <label for="valor_venda">Valor da Venda</label>
+                <input type="number" id="valor_venda" name="valor_venda" placeholder="Valor da Venda" required>
+            </div>
+            <div class="form-group">
+                <label for="custo">Custo</label>
+                <input type="number" id="custo" name="custo" placeholder="Custo" required>
+            </div>
+            <div class="form-group">
+                <label for="valor_comissao">Valor da Comissão</label>
+                <input type="number" id="valor_comissao" name="valor_comissao" placeholder="Valor da Comissão" required>
+            </div>
+            <div class="form-group">
+                <label for="cambio_dia">Câmbio do Dia</label>
+                <input type="text" id="cambio_dia" name="cambio_dia" placeholder="Câmbio do Dia" required>
+            </div>
+            <div class="form-group">
+                <label for="origem_cliente">Origem do Cliente</label>
+                <input type="text" id="origem_cliente" name="origem_cliente" placeholder="Origem do Cliente" required>
+            </div>
+            <div class="form-group">
+                <label for="cliente_de">Cliente de</label>
+                <input type="text" id="cliente_de" name="cliente_de" placeholder="Cliente de" required>
+            </div>
+            <div class="form-group">
+                <label for="efetivado_por">Efetivado Por</label>
+                <input type="text" id="efetivado_por" name="efetivado_por" placeholder="Efetivado Por" required>
+            </div>
+            <div class="form-group">
+                <label for="observacoes_operacionais">Observações Operacionais</label>
+                <textarea id="observacoes_operacionais" name="observacoes_operacionais" placeholder="Observações Operacionais"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="observacoes_financeiras">Observações Financeiras</label>
+                <textarea id="observacoes_financeiras" name="observacoes_financeiras" placeholder="Observações Financeiras"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="nf">Nota Fiscal</label>
+                <input type="text" id="nf" name="nf" placeholder="Nota Fiscal" required>
+            </div>
+            <div class="form-group">
+                <label for="gateway">Gateway</label>
+                <input type="text" id="gateway" name="gateway" placeholder="Gateway" required>
+            </div>
+            <div class="form-group">
+                <label for="data_pgto">Data de Pagamento</label>
+                <input type="date" id="data_pgto" name="data_pgto" required>
+            </div>
+            <div class="form-group">
+                <label for="recebido">Valor Recebido</label>
+                <input type="number" id="recebido" name="recebido" placeholder="Valor Recebido" required>
+            </div>
+            <div class="form-group">
+                <label for="valor_repassado">Valor Repassado</label>
+                <input type="number" id="valor_repassado" name="valor_repassado" placeholder="Valor Repassado" required>
+            </div>
+            <div class="form-group">
+                <label for="data_repasse">Data do Repasse</label>
+                <input type="date" id="data_repasse" name="data_repasse" required>
+            </div>
+            <button id="submitButton" type="button" class="btn">Salvar</button>
         </form>
     </div>
 
@@ -198,17 +288,14 @@
             const form = document.getElementById('salesForm');
             const formData = new FormData(form);
 
-            // Converte os dados para JSON
             const data = Object.fromEntries(formData.entries());
-
-            console.log('Enviando os dados:', data); // Debug para verificar os dados enviados
 
             fetch('https://magictraveltur.com/process_form.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data) // Envia como JSON
+                body: JSON.stringify(data)
             })
             .then(response => {
                 if (!response.ok) {
@@ -217,12 +304,7 @@
                 return response.json();
             })
             .then(result => {
-                console.log('Resposta do servidor:', result); // Debug para verificar a resposta
-                if (result.success) {
-                    alert('Dados salvos com sucesso!');
-                } else {
-                    alert(result.error || 'Erro ao salvar os dados.');
-                }
+                alert(result.success ? 'Dados salvos com sucesso!' : result.error || 'Erro ao salvar os dados.');
             })
             .catch(error => {
                 console.error('Erro:', error);
