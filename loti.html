@@ -234,6 +234,24 @@
                 }
             });
         });
+        document.getElementById('submitButton').addEventListener('click', function (event) {
+            event.preventDefault();
+            const form = document.getElementById('salesForm');
+            const formData = new FormData(form);
+
+            fetch('https://magictraveltur.com/process_form.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(result => {
+                alert('Dados salvos com sucesso!');
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao salvar os dados.');
+            });
+        });
     </script>
 </body>
 </html>
