@@ -33,7 +33,6 @@
             color: white;
             z-index: 1000; /* Sidebar acima de outros elementos */
             overflow-y: auto; /* Adicionar rolagem se necessário */
-            padding: 20px;
             box-shadow: 4px 0 8px rgba(0, 0, 0, 0.1); /* Sombra para o sidebar */
         }
         
@@ -43,7 +42,7 @@
             background: #ffffff;
             border-radius: 16px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            flex-grow: 1; /* Faz o conteúdo ocupar o restante do espaço */
+            flex-grow: 0,75; /* Faz o conteúdo ocupar o restante do espaço */
             max-width: calc(100% - 260px); /* Garante que o conteúdo respeite o sidebar */
             min-height: 100vh; /* Altura mínima para cobrir a tela inteira */
         }
