@@ -13,7 +13,67 @@
             box-sizing: border-box;
             font-family: 'Montserrat', sans-serif;
         }
+        /* Estilo do Sidebar */
+        .sidebar {
+            width: 260px;
+            height: 100%;
+            background: linear-gradient(135deg, #007aff, #0056b3);
+            color: white;
+            padding: 20px;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+        }
         
+        .sidebar h2 {
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: white;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 10px;
+        }
+        
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar ul li {
+            margin: 15px 0;
+        }
+        
+        .sidebar ul li a {
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar ul li a:hover {
+            color: #ffeb3b;
+            text-decoration: underline;
+        }
+        
+        /* Responsividade do Sidebar */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                box-shadow: none;
+            }
+        
+            .sidebar ul li {
+                margin: 10px 0;
+            }
+        }
+
         body {
             display: flex;
             justify-content: center;
@@ -157,9 +217,13 @@
                 padding: 12px;
             }
         }
+        
     </style>
 </head>
 <body>
+       <!-- Container para carregar o sidebar -->
+    <div id="sidebar-container"></div>
+
     <div class="container">
     <h1>Cadastro de Vendas</h1>
     <form id="salesForm">
@@ -342,9 +406,27 @@
         <input type="hidden" id="data_repasse" name="data_repasse">
 
         <button id="submitButton" type="button" class="btn">Salvar</button>
+        
+        <!-- Script para carregar o sidebar -->
+        <script src="sidebar.js"></script>
     </form>
     </div>
     <script>
+        // Função para carregar o sidebar
+        async function loadSidebar() {
+            try {
+                const response = await fetch('sidebar.html');
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar o sidebar.');
+                }
+                const html = await response.text();
+                document.getElementById('sidebar-container').innerHTML = html;
+            } catch (error) {
+                console.error('Erro ao carregar o sidebar:', error);
+                document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar o sidebar.</p>';
+            }
+        }
+        
         document.addEventListener('DOMContentLoaded', function () {
         // Gerar ID automaticamente
         const idField = document.getElementById('id');
@@ -471,6 +553,10 @@
             console.error("Botão 'submitButton' não encontrado.");
         }
     });
+
+    // Carregar sidebar ao carregar a página
+    document.addEventListener('DOMContentLoaded', loadSidebar);
+    
     </script>
 </body>
 </html>
