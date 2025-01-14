@@ -14,32 +14,38 @@
         }
 
         body {
-            display: flex;
-            flex-direction: row;
+            display: flex; /* Define o layout em linha para body */
+            flex-direction: row; /* Faz os filhos ficarem lado a lado */
+            min-height: 100vh; /* Altura total da tela */
+            margin: 0;
             background-color: #f5f5f5;
             color: #333;
-            min-height: 100vh;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Evita rolagem horizontal */
         }
-
+        
         #sidebar-container {
-            flex-shrink: 0;
-            width: 260px;
-            z-index: 10000;
-            top: 0;
-            overflow-y: auto; /* Adiciona rolagem, caso necessário */
-            padding: 0px; /* Espaçamento interno */
-
+            width: 260px; /* Largura fixa do sidebar */
+            position: fixed; /* Fixa na lateral da tela */
+            top: 0; /* Começa no topo */
+            bottom: 0; /* Estende até o fim da página */
+            left: 0; /* Fixa na lateral esquerda */
+            background: linear-gradient(135deg, #007aff, #0056b3);
+            color: white;
+            z-index: 10; /* Garantia que fique acima de outros elementos */
+            overflow-y: auto; /* Adiciona rolagem para conteúdo longo */
+            padding: 20px; /* Espaçamento interno */
+            box-shadow: 4px 0 8px rgba(0, 0, 0, 0.1); /* Adiciona sombra */
         }
-
+        
         .container {
-            flex-grow: 1;
+            margin-left: 260px; /* Espaço reservado para o sidebar */
             padding: 40px;
             background: #ffffff;
             border-radius: 16px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            margin: 100px auto; /* Margem superior aumentada */
-            max-width: 680px; /* Largura reduzida */
+            flex-grow: 1; /* Faz o conteúdo crescer conforme necessário */
+            max-width: calc(100% - 260px); /* Garante que o conteúdo não ultrapasse */
+            min-height: 100vh; /* Altura mínima para ocupar a tela */
         }
 
         h1 {
