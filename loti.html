@@ -6,7 +6,7 @@
     <title>Cadastro de Vendas</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* Reset Básico */
+        /* Reset e Fonte Global */
         * {
             margin: 0;
             padding: 0;
@@ -15,42 +15,42 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1e90ff, #ff7eb3);
-            color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
             padding: 20px;
+            min-height: 100vh;
+            background-color: #f5f5f5;
+            color: #333;
         }
         
         .container {
-            background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-            padding: 40px;
-            max-width: 1000px;
             width: 100%;
-            animation: fadeIn 1s ease-in-out;
+            max-width: 800px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.8s ease-in-out;
         }
         
         h1 {
-            font-size: 2.5rem;
+            font-size: 2rem;
+            font-weight: 600;
+            color: #222;
             text-align: center;
             margin-bottom: 20px;
-            color: #333;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: 1px;
         }
         
         h2 {
-            font-size: 1.5rem;
-            color: #007bff;
-            margin-bottom: 20px;
-            border-left: 5px solid #007bff;
+            font-size: 1.25rem;
+            color: #007aff;
+            margin-bottom: 10px;
+            border-left: 4px solid #007aff;
             padding-left: 10px;
             text-transform: uppercase;
+            font-weight: 500;
         }
         
         .form-group {
@@ -58,57 +58,43 @@
         }
         
         .form-group label {
-            font-weight: 600;
             display: block;
+            font-weight: 500;
             margin-bottom: 8px;
             color: #555;
+            font-size: 0.95rem;
         }
         
-        .form-group input, .form-group select, .form-group textarea {
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
             padding: 12px 15px;
             font-size: 1rem;
             border: 1px solid #ddd;
             border-radius: 8px;
-            background: #f9f9f9;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
         
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            border-color: #007bff;
-            background: #fff;
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #007aff;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 122, 255, 0.2);
             outline: none;
-            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
-        }
-        
-        .btn {
-            display: inline-block;
-            background: linear-gradient(90deg, #007bff, #004080);
-            color: #fff;
-            padding: 15px 20px;
-            border: none;
-            border-radius: 8px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            width: 100%;
-            margin-top: 20px;
-        }
-        
-        .btn:hover {
-            background: linear-gradient(90deg, #0056b3, #002d6e);
-            box-shadow: 0 6px 14px rgba(0, 123, 255, 0.4);
         }
         
         .row {
             display: flex;
             flex-wrap: wrap;
             gap: 16px;
-            margin-bottom: 20px;
+        }
+        
+        .col-25 {
+            flex: 1 1 calc(25% - 16px);
+            min-width: 180px;
         }
         
         .col-33 {
@@ -121,12 +107,32 @@
             min-width: 300px;
         }
         
-        .col-25 {
-            flex: 1 1 calc(25% - 16px);
-            min-width: 200px;
+        .btn {
+            display: inline-block;
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: #fff;
+            background: linear-gradient(135deg, #007aff, #0056b3);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            margin-top: 20px;
         }
         
-        /* Transição de Fade-in */
+        .btn:hover {
+            background: linear-gradient(135deg, #0056b3, #003f82);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn:active {
+            transform: scale(0.98);
+        }
+        
+        /* Fade-in Animation */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -138,63 +144,16 @@
             }
         }
         
-        /* Estilo para o Sidebar */
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 250px;
-            background: linear-gradient(135deg, #ff7eb3, #1e90ff);
-            padding: 20px;
-            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            color: #fff;
-            font-size: 1.1rem;
-        }
-        
-        .sidebar h2 {
-            font-size: 1.5rem;
-            margin-bottom: 20px;
-            color: #fff;
-            text-transform: uppercase;
-        }
-        
-        .sidebar ul {
-            list-style: none;
-        }
-        
-        .sidebar ul li {
-            margin: 15px 0;
-        }
-        
-        .sidebar ul li a {
-            color: #fff;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-weight: bold;
-        }
-        
-        .sidebar ul li a:hover {
-            color: #ff7eb3;
-            text-decoration: underline;
-        }
-        
-        /* Responsivo */
+        /* Responsividade */
         @media (max-width: 768px) {
-            body {
+            .row {
                 flex-direction: column;
+                gap: 12px;
             }
         
-            .container {
-                padding: 20px;
-            }
-        
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                box-shadow: none;
+            .btn {
+                font-size: 0.95rem;
+                padding: 12px;
             }
         }
     </style>
