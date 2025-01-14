@@ -22,33 +22,15 @@
             overflow-x: hidden;
         }
 
-        #sidebar {
-            width: 250px;
-            background-color: #1c1c1e;
-            color: #fff;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        #sidebar h2 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        #sidebar nav a {
-            text-decoration: none;
-            color: #fff;
-            font-size: 1rem;
-            margin-bottom: 15px;
-            display: block;
-            transition: color 0.3s ease;
-        }
-
-        #sidebar nav a:hover {
-            color: #007bff;
+        /* Sidebar Container */
+        #sidebar-container {
+          flex-shrink: 0;
+          width: 260px;
+          background-color: #081135;
+          color: white;
+          height: 100%;
+          overflow-y: auto;
+          box-sizing: border-box;
         }
 
         .container {
@@ -146,16 +128,9 @@
     </style>
 </head>
 <body>
-    <div id="sidebar">
-        <h2>Magic Travel</h2>
-        <nav>
-            <a href="#">Dashboard</a>
-            <a href="#">Vendas</a>
-            <a href="#">Relatórios</a>
-            <a href="#">Configurações</a>
-        </nav>
-    </div>
-
+  <!-- Sidebar -->
+  <div id="sidebar-container"></div>
+    
     <div class="container">
         <h1>Cadastro de Vendas</h1>
         <form id="salesForm">
@@ -284,6 +259,19 @@
     </div>
 
     <script>
+        // Função para carregar o sidebar
+        async function loadSidebar() {
+          try {
+            const response = await fetch('sidebar.html');
+            if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
+            const html = await response.text();
+            document.getElementById('sidebar-container').innerHTML = html;
+          } catch (error) {
+            console.error('Erro ao carregar a sidebar:', error);
+            document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
+          }
+        }
+        
         document.getElementById('submitButton').addEventListener('click', function () {
             const form = document.getElementById('salesForm');
             const formData = new FormData(form);
