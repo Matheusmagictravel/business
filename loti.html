@@ -6,14 +6,7 @@
     <title>Cadastro de Vendas</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* Reset e Fonte Global */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
-        }
-        /* Estilo Básico */
+        /* Reset e Estilo Global */
         * {
             margin: 0;
             padding: 0;
@@ -24,18 +17,18 @@
         body {
             display: flex;
             flex-direction: row;
-            min-height: 100vh;
             background-color: #f5f5f5;
             color: #333;
+            min-height: 100vh;
+            overflow-x: hidden;
         }
 
         #sidebar-container {
-            width: 260px;
             flex-shrink: 0;
+            width: 260px;
             background: linear-gradient(135deg, #007aff, #0056b3);
-            color: white;
-            padding: 20px;
-            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            box-shadow: 4px 0 8px rgba(0, 0, 0, 0.1);
         }
 
         .container {
@@ -43,8 +36,9 @@
             padding: 40px;
             background: #ffffff;
             border-radius: 16px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-            margin: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            margin: 20px auto;
+            max-width: 680px;
         }
 
         h1 {
@@ -213,7 +207,7 @@
     </style>
 </head>
 <body>
-       <!-- Container para carregar o sidebar -->
+    <!-- Container para carregar o sidebar -->
     <div id="sidebar-container"></div>
 
     <div class="container">
@@ -402,24 +396,22 @@
     </form>
     </div>
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Função para carregar o sidebar
-            async function loadSidebar() {
-                try {
-                    const response = await fetch('sidebar.html');
-                    if (!response.ok) {
-                        throw new Error('Erro ao carregar o sidebar. Verifique o caminho ou o arquivo.');
-                    }
-                    const html = await response.text();
-                    document.getElementById('sidebar-container').innerHTML = html;
-                } catch (error) {
-                    console.error('Erro ao carregar o sidebar:', error);
-                    document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar o sidebar.</p>';
+                // Carregar o sidebar
+        async function loadSidebar() {
+            try {
+                const response = await fetch('sidebar.html');
+                if (!response.ok) {
+                    throw new Error('Erro ao carregar o sidebar.');
                 }
+                const html = await response.text();
+                document.getElementById('sidebar-container').innerHTML = html;
+            } catch (error) {
+                console.error('Erro ao carregar o sidebar:', error);
+                document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar o sidebar.</p>';
             }
+        }
 
-            // Chamar a função para carregar o sidebar
-            loadSidebar();
+        document.addEventListener('DOMContentLoaded', loadSidebar);
 
         document.addEventListener('DOMContentLoaded', function () {
         // Gerar ID automaticamente
