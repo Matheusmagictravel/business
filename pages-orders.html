@@ -37,10 +37,34 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
     h1 {
       font-weight: 600;
-      margin-bottom: 20px;
       color: #1d1d1f;
+    }
+
+    .add-order-button {
+      display: inline-block;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-weight: 600;
+      text-align: center;
+      text-transform: uppercase;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .add-order-button:hover {
+      background-color: #218838;
     }
 
     table {
@@ -82,6 +106,7 @@
       text-align: center;
       text-transform: uppercase;
       cursor: pointer;
+      font-size: 14px;
     }
 
     .details-button:hover {
@@ -96,7 +121,10 @@
   <!-- Conteúdo principal -->
   <div class="dashboard-orders">
     <div class="dashboard-orders-container">
-      <h1>Pedidos</h1>
+      <div class="dashboard-header">
+        <h1>Pedidos</h1>
+        <button class="add-order-button" onclick="addNewOrder()">Adicionar Pedido</button>
+      </div>
       <table>
         <thead>
           <tr>
@@ -174,6 +202,11 @@
     // Função para abrir detalhes
     function openDetailsPage(orderId) {
       window.open(`detalhes.html?pedido=${orderId}`, '_blank');
+    }
+
+    // Função para adicionar novo pedido
+    function addNewOrder() {
+      window.location.href = 'https://business.magictraveltur.com/loti.html';
     }
 
     // Carregar o sidebar e os pedidos ao carregar a página
