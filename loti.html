@@ -12,14 +12,13 @@
             box-sizing: border-box;
             font-family: 'Montserrat', sans-serif;
         }
-
+        
         body {
             display: flex;
             flex-direction: row;
             background-color: #f5f5f5;
             color: #333;
             min-height: 100vh;
-            margin: 0;
             overflow-x: hidden; /* Evitar rolagem horizontal */
         }
         
@@ -38,12 +37,15 @@
         
         .container {
             flex-grow: 1;
+            margin-left: 260px; /* Garante que o conteúdo não fique atrás do sidebar */
+            margin: 80px auto; /* Margem superior e centralização */
             padding: 40px;
             background: #ffffff;
             border-radius: 16px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            margin: 80px auto; /* Margem superior aumentada */
-            max-width: 680px; /* Largura reduzida */
+            max-width: 1200px; /* Largura máxima para o conteúdo */
+            position: relative;
+            z-index: 1;
         }
         
         /* Responsividade */
@@ -59,46 +61,6 @@
                 margin-left: 0; /* Remove margem lateral */
                 max-width: 100%; /* O conteúdo ocupa toda a largura */
             }
-        }
-
-
-        h1 {
-            font-size: 1rem;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        /* Responsividade do Sidebar */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                box-shadow: none;
-            }
-        
-            .sidebar ul li {
-                margin: 10px 0;
-            }
-        }
-
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            min-height: 100vh;
-            background-color: #f5f5f5;
-            color: #333;
-        }
-        
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background: #ffffff;
-            border-radius: 16px;
-            padding: 30px;
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-            animation: fadeIn 0.8s ease-in-out;
         }
         
         h1 {
@@ -223,8 +185,7 @@
                 font-size: 0.95rem;
                 padding: 12px;
             }
-        }
-        
+        }        
     </style>
 </head>
 <body>
