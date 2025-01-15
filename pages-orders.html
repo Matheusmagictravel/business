@@ -85,13 +85,21 @@
       background-color: #f9f9fa;
     }
 
+    tr:nth-child(odd) {
+      background-color: #ffffff;
+    }
+
+    tr:nth-child(even) {
+      background-color: #e6f7ff;
+    }
+
     td {
       color: #1d1d1f;
       border-bottom: 1px solid #e5e5e5;
     }
 
     tr:hover {
-      background-color: #f0f0f5;
+      background-color: #cceeff;
       cursor: pointer;
     }
 
@@ -111,6 +119,32 @@
 
     .details-button:hover {
       background-color: #005bb5;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .pagination button {
+      background-color: #0071e3;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin: 0 5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .pagination button:hover {
+      background-color: #005bb5;
+    }
+
+    .pagination button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
     }
   </style>
 </head>
@@ -142,10 +176,17 @@
           <!-- Os pedidos serão carregados dinamicamente aqui -->
         </tbody>
       </table>
+      <div class="pagination" id="pagination-controls">
+        <!-- Controles de paginação serão inseridos dinamicamente aqui -->
+      </div>
     </div>
   </div>
 
   <script>
+    let currentPage = 1;
+    const rowsPerPage = 10;
+    let totalOrders = [];
+
     // Função para carregar o sidebar
     function loadSidebar() {
       fetch('sidebar.html')
@@ -171,24 +212,10 @@
           throw new Error(`Erro ao carregar pedidos: ${response.status}`);
         }
 
-        const pedidos = await response.json();
-        console.log('Pedidos retornados pela API:', pedidos);
-
-        const ordersTable = document.getElementById('orders-table');
-        ordersTable.innerHTML = pedidos.map(pedido => `
-          <tr>
-            <td>${pedido.id}</td>
-            <td>${new Date(pedido.data_venda).toLocaleDateString('pt-BR')}</td>
-            <td>${pedido.nome}</td>
-            <td>${pedido.efetivado_por || 'N/A'}</td>
-            <td>R$ ${parseFloat(pedido.valor_venda).toFixed(2)}</td>
-            <td>${pedido.meio_pgto}</td>
-            <td>${pedido.status || 'Confirmado'}</td>
-            <td>
-              <button class="details-button" onclick="openDetailsPage('${pedido.id}')">Detalhes</button>
-            </td>
-          </tr>
-        `).join('');
+        totalOrders = await response.json();
+        console.log('Pedidos retornados pela API:', totalOrders);
+        renderTable();
+        renderPagination();
       } catch (error) {
         console.error('Erro ao carregar os pedidos:', error);
         document.getElementById('orders-table').innerHTML = `
@@ -196,6 +223,48 @@
             <td colspan="8" style="text-align: center; color: red;">Erro ao carregar os pedidos.</td>
           </tr>
         `;
+      }
+    }
+
+    // Função para renderizar a tabela com paginação
+    function renderTable() {
+      const ordersTable = document.getElementById('orders-table');
+      const start = (currentPage - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      const ordersToDisplay = totalOrders.slice(start, end);
+
+      ordersTable.innerHTML = ordersToDisplay.map(pedido => `
+        <tr>
+          <td>${pedido.id}</td>
+          <td>${new Date(pedido.data_venda).toLocaleDateString('pt-BR')}</td>
+          <td>${pedido.nome}</td>
+          <td>${pedido.efetivado_por || 'N/A'}</td>
+          <td>R$ ${parseFloat(pedido.valor_venda).toFixed(2)}</td>
+          <td>${pedido.meio_pgto}</td>
+          <td>${pedido.status || 'Confirmado'}</td>
+          <td>
+            <button class="details-button" onclick="openDetailsPage('${pedido.id}')">Detalhes</button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Função para renderizar os controles de paginação
+    function renderPagination() {
+      const paginationControls = document.getElementById('pagination-controls');
+      const totalPages = Math.ceil(totalOrders.length / rowsPerPage);
+
+      paginationControls.innerHTML = '';
+      for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement('button');
+        button.textContent = i;
+        button.disabled = i === currentPage;
+        button.onclick = () => {
+          currentPage = i;
+          renderTable();
+          renderPagination();
+        };
+        paginationControls.appendChild(button);
       }
     }
 
