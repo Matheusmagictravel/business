@@ -249,22 +249,8 @@
                 }
             }
 
-            async function loadNavbar() {
-                try {
-                    const response = await fetch('navbar.html'); // Verifique se o arquivo navbar.html existe
-                    if (!response.ok) throw new Error('Erro ao carregar a navbar.');
-                    const html = await response.text();
-                    document.getElementById('navbar-container').innerHTML = html;
-                } catch (error) {
-                    console.error('Erro ao carregar a navbar:', error);
-                    document.getElementById('navbar-container').innerHTML = '<p>Erro ao carregar a navbar.</p>';
-                }
-            }
-
             // Chama as funções de carregamento separadamente
             loadSidebar();
-            loadNavbar();
-
 
             // Função para carregar dados do dashboard
             async function fetchDashboardData() {
