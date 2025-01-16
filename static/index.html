@@ -37,15 +37,17 @@
       color: #ccc;
     }
 
-    body .row {
-        position: relative;
-        z-index: auto;
-        margin: 0 auto;
-        padding: 20px;
-        overflow: visible;
-        background-color: #fff; /* Ajuste se necessário */
+    #dashboard-container .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
     }
-
+    
+    #dashboard-container .row > [class*='col-'] {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
         
     </style>
 </head>
