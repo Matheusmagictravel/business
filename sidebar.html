@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -547,7 +548,8 @@
             const openCalendarBtn = document.getElementById("open-calendar-btn");
             const backBtn = document.getElementById("back-btn");
             const applyBtn = document.getElementById("apply-btn");
-            const calendarModal = new bootstrap.Modal(document.getElementById("calendarModal"));
+            const calendarModal = document.getElementById("calendarModal");
+            const bootstrapModal = new bootstrap.Modal(calendarModal);
             const calendarDatesContainer = document.querySelector(".calendar__dates");
             const monthSelect = document.getElementById("calendar__month");
             const yearSelect = document.getElementById("calendar__year");
@@ -639,18 +641,23 @@
             renderCalendar(); // Initialize the calendar
 
             openCalendarBtn.addEventListener("click", function () {
-                calendarModal.show();
+                calendarModal.removeAttribute('inert');
+                bootstrapModal.show();
             });
 
             backBtn.addEventListener("click", function () {
-                calendarModal.hide();
+                bootstrapModal.hide();
             });
 
             applyBtn.addEventListener("click", function () {
                 console.log("Selected Start Date:", selectedStartDate);
                 console.log("Selected End Date:", selectedEndDate);
                 updateSelectedDateDisplay();
-                calendarModal.hide();
+                bootstrapModal.hide();
+            });
+
+            calendarModal.addEventListener('hidden.bs.modal', function () {
+                calendarModal.setAttribute('inert', 'true');
             });
         });
     </script>
