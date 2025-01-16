@@ -534,7 +534,13 @@
                 document.getElementById('sidebar-container').innerHTML = sidebarHtml;
 
                 feather.replace(); // Substitui os ícones Feather após o carregamento
-                initializeCalendar(); // Inicializa o calendário após o sidebar ser carregado
+
+                // Verifica se initializeCalendar está definida antes de chamá-la
+                if (typeof initializeCalendar === "function") {
+                    initializeCalendar();
+                } else {
+                    console.warn("A função initializeCalendar não está definida. Verifique se o sidebar.html contém essa função.");
+                }
             } catch (error) {
                 console.error('Erro ao carregar a sidebar e navbar:', error);
             }
