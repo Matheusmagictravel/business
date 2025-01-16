@@ -22,13 +22,10 @@
 
 <body>
     <div class="wrapper" id="sidebar-container">
-        <!-- Sidebar will be loaded here -->
+        <!-- Sidebar and Navbar will be loaded here -->
     </div>
 
     <div class="main">
-        <div id="navbar-container">
-            <!-- Navbar will be loaded here -->
-        </div>
         <main class="content">
             <div class="container-fluid p-0">
                 <h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
@@ -70,7 +67,7 @@
                                             </div>
                                             <h1 id="visitors-value" class="mt-1 mb-3">0</h1>
                                             <div class="mb-0">
-                                                <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 5.25% </span>
+                                                <span class="text-success"> < i class="mdi mdi-arrow-bottom-right"></i> 5.25% </span>
                                                 <span class="text-muted">Since last week</span>
                                             </div>
                                         </div>
@@ -534,11 +531,6 @@
                 const sidebarHtml = await sidebarResponse.text();
                 document.getElementById('sidebar-container').innerHTML = sidebarHtml;
 
-                const navbarResponse = await fetch('https://business.magictraveltur.com/navbar.html');
-                if (!navbarResponse.ok) throw new Error(`Erro ao carregar o navbar: ${navbarResponse.status}`);
-                const navbarHtml = await navbarResponse.text();
-                document.getElementById('navbar-container').innerHTML = navbarHtml;
-
                 feather.replace();  // Ensure Feather icons are replaced after loading new HTML
 
             } catch (error) {
@@ -551,7 +543,3 @@
 </body>
 
 </html>
-
-
-
-                             
