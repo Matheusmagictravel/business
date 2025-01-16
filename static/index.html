@@ -498,29 +498,29 @@
             </div>
 
             <div class="row">
-                        <div class="col-12 col-lg-8 col-xxl-9 d-flex">
-                            <div class="card flex-fill">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Pedidos Recentes</h5>
-                                </div>
-                                <table class="table table-hover my-0">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th class="d-none d-xl-table-cell">Start Date</th>
-                                            <th class="d-none d-xl-table-cell">End Date</th>
-                                            <th>Status</th>
-                                            <th class="d-none d-md-table-cell">Assignee</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="latest-projects">
-                                        <tr>
-                                            <td colspan="5">Carregando...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                <div class="col-12 col-lg-8 col-xxl-9 d-flex">
+                    <div class="card flex-fill">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Pedidos Recentes</h5>
                         </div>
+                        <table class="table table-hover my-0">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th class="d-none d-xl-table-cell">Start Date</th>
+                                    <th class="d-none d-xl-table-cell">End Date</th>
+                                    <th>Status</th>
+                                    <th class="d-none d-md-table-cell">Assignee</th>
+                                </tr>
+                            </thead>
+                            <tbody id="latest-projects">
+                                <tr>
+                                    <td colspan="5">Carregando...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
                         <div class="col-12 col-lg-4 col-xxl-3 d-flex">
                             <div class="card flex-fill w-100">
                                 <div class="card-header">
@@ -534,7 +534,6 @@
                             </div>
                         </div>
                     </div>
-                </div>
             </main>
         
             <footer class="footer">
@@ -575,7 +574,7 @@
             <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
         
             <script>
-                document.addEventListener("DOMContentLoaded", async function () {
+                document.addEventListener("DOMContentLoaded", function () {
                     const openCalendarBtn = document.getElementById("open-calendar-btn");
                     const backBtn = document.getElementById("back-btn");
                     const applyBtn = document.getElementById("apply-btn");
@@ -692,8 +691,6 @@
                         calendarModal.setAttribute('inert', 'true'); // Re-add the `inert` attribute after closing
                     });
         
-                    let chartInstance = null;
-        
                     async function fetchDashboardData() {
                         try {
                             const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
@@ -753,12 +750,7 @@
                         const values = data.map(pedido => parseFloat(pedido.valor_comissao || 0)).slice(0, 7).reverse();
         
                         const ctx = document.getElementById('chartjs-dashboard-line').getContext('2d');
-                        
-                        if (chartInstance) {
-                            chartInstance.destroy();
-                        }
-                        
-                        chartInstance = new Chart(ctx, {
+                        new Chart(ctx, {
                             type: 'line',
                             data: {
                                 labels: labels,
@@ -943,37 +935,22 @@
                                 },
                                 scales: {
                                     y: {
-                            grid: { display: false },
-                            stacked: false,
-                            ticks: { stepSize: 1 }
-                        },
-                        x: {
-                            stacked: false,
-                            grid: { color: "transparent" }
-                        }
+                                        grid: { display: false },
+                                        stacked: false,
+                                        ticks: { stepSize: 1 }
+                                    },
+                                    x: {
+                                        stacked: false,
+                                        grid: { color: "transparent" }
+                                    }
+                                }
+                            }
+                        });
                     }
+        
+                    await fetchDashboardData();
                 });
-            }
-
-            // Load sidebar content
-            async function loadSidebar() {
-                try {
-                    const response = await fetch('https://business.magictraveltur.com/sidebar.html');
-                    if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
-
-                    const sidebarContent = await response.text();
-                    document.getElementById('sidebar-container').innerHTML = sidebarContent;
-                } catch (error) {
-                    console.error('Erro ao carregar a sidebar:', error);
-                    document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
-                }
-            }
-
-            // Fetch dashboard data initially
-            await loadSidebar();
-            await fetchDashboardData();
-        });
-    </script>
-</body>
-
-</html>
+            </script>
+        </body>
+        
+        </html>
