@@ -216,6 +216,10 @@
         .date-selector-container {
             display: flex;
             align-items: center;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050; /* Ensure it is above other content */
         }
 
         .selected-date-display {
@@ -232,7 +236,7 @@
 
         /* Sidebar */
         #sidebar-container {
-            width: 100%;
+            width: 260px;
             position: fixed;
             top: 0;
             left: 0;
@@ -284,7 +288,7 @@
     </div>
 
     <main class="content">
-        <div class="date-selector-container" style="position: absolute; top: 20px; right: 20px;">
+        <div class="date-selector-container">
             <span id="datas-selecionadas" class="selected-date-display"></span>
             <button id="open-calendar-btn" class="btn btn-primary">Selecionar Data</button>
         </div>
@@ -517,436 +521,436 @@
                         </table>
                     </div>
                 </div>
-                <div class="col-12 col-lg-4 col-xxl-3 d-flex">
-                    <div class="card flex-fill w-100">
-                        <div class="card-header">
-                            <h5 class="card-title mb-0">Ranking de Vendedores</h5>
-                        </div>
-                        <div class="card-body d-flex w-100">
-                            <div class="align-self-center chart chart-lg">
-                                <canvas id="chartjs-dashboard-bar"></canvas>
+                        <div class="col-12 col-lg-4 col-xxl-3 d-flex">
+                            <div class="card flex-fill w-100">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Ranking de Vendedores</h5>
+                                </div>
+                                <div class="card-body d-flex w-100">
+                                    <div class="align-self-center chart chart-lg">
+                                        <canvas id="chartjs-dashboard-bar"></canvas>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+            </main>
+        
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row text-muted">
+                        <div class="col-6 text-start">
+                            <p class="mb-0">
+                                <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a> -
+                                <a class="text-muted" href="https://adminkit.io/" target="_blank">
+                                    <strong>Bootstrap Admin Template</strong>
+                                </a> &copy;
+                            </p>
+                        </div>
+                        <div class="col-6 text-end">
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            </div>
-    </main>
-
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row text-muted">
-                <div class="col-6 text-start">
-                    <p class="mb-0">
-                        <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a> -
-                        <a class="text-muted" href="https://adminkit.io/" target="_blank">
-                            <strong>Bootstrap Admin Template</strong>
-                        </a> &copy;
-                    </p>
-                </div>
-                <div class="col-6 text-end">
-                    <ul class="list-inline">
-                        <li class="list-inline-item">
-                            <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a class="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
-                        </li>
-                        <li class="list-inline-item">
-                            <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="https://business.magictraveltur.com/dist/js/app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@2.0.3/dist/js/jsvectormap.min.js"></script>
-    <script src="https://business.magictraveltur.com/dist/js/brasil.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const openCalendarBtn = document.getElementById("open-calendar-btn");
-            const backBtn = document.getElementById("back-btn");
-            const applyBtn = document.getElementById("apply-btn");
-            const calendarModal = document.getElementById("calendarModal");
-            const bootstrapModal = new bootstrap.Modal(calendarModal);
-            const calendarDatesContainer = document.querySelector(".calendar__dates");
-            const monthSelect = document.getElementById("calendar__month");
-            const yearSelect = document.getElementById("calendar__year");
-            const selectedDateDisplay = document.getElementById("datas-selecionadas");
-
-            let selectedStartDate = null;
-            let selectedEndDate = null;
-
-            function renderCalendar() {
-                const month = parseInt(monthSelect.value);
-                const year = parseInt(yearSelect.value);
-
-                const firstDayOfMonth = new Date(year, month, 1).getDay();
-                const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-                calendarDatesContainer.innerHTML = '';
-
-                // Render empty days for the first week
-                let firstWeekDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
-                for (let i = 0; i < firstWeekDay; i++) {
-                    const emptyDateElement = document.createElement('div');
-                    emptyDateElement.classList.add('calendar__date', 'calendar__date--grey');
-                    calendarDatesContainer.appendChild(emptyDateElement);
-                }
-
-                // Render days of the month
-                for (let i = 1; i <= daysInMonth; i++) {
-                    const dateElement = document.createElement('div');
-                    dateElement.classList.add('calendar__date');
-                    dateElement.innerHTML = `<span>${i}</span>`;
-                    calendarDatesContainer.appendChild(dateElement);
-
-                    dateElement.addEventListener('click', function () {
-                        if (!selectedStartDate || selectedEndDate) {
-                            // Start a new range selection
-                            selectedStartDate = new Date(year, month, i);
-                            selectedEndDate = null;
-                            clearSelection();
-                            dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+            </footer>
+        
+            <script src="https://business.magictraveltur.com/dist/js/app.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/jsvectormap@2.0.3/dist/js/jsvectormap.min.js"></script>
+            <script src="https://business.magictraveltur.com/dist/js/brasil.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+        
+            <script>
+                document.addEventListener("DOMContentLoaded", function () {
+                    const openCalendarBtn = document.getElementById("open-calendar-btn");
+                    const backBtn = document.getElementById("back-btn");
+                    const applyBtn = document.getElementById("apply-btn");
+                    const calendarModal = document.getElementById("calendarModal");
+                    const bootstrapModal = new bootstrap.Modal(calendarModal);
+                    const calendarDatesContainer = document.querySelector(".calendar__dates");
+                    const monthSelect = document.getElementById("calendar__month");
+                    const yearSelect = document.getElementById("calendar__year");
+                    const selectedDateDisplay = document.getElementById("datas-selecionadas");
+        
+                    let selectedStartDate = null;
+                    let selectedEndDate = null;
+        
+                    function renderCalendar() {
+                        const month = parseInt(monthSelect.value);
+                        const year = parseInt(yearSelect.value);
+        
+                        const firstDayOfMonth = new Date(year, month, 1).getDay();
+                        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        
+                        calendarDatesContainer.innerHTML = '';
+        
+                        // Render empty days for the first week
+                        let firstWeekDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+                        for (let i = 0; i < firstWeekDay; i++) {
+                            const emptyDateElement = document.createElement('div');
+                            emptyDateElement.classList.add('calendar__date', 'calendar__date--grey');
+                            calendarDatesContainer.appendChild(emptyDateElement);
+                        }
+        
+                        // Render days of the month
+                        for (let i = 1; i <= daysInMonth; i++) {
+                            const dateElement = document.createElement('div');
+                            dateElement.classList.add('calendar__date');
+                            dateElement.innerHTML = `<span>${i}</span>`;
+                            calendarDatesContainer.appendChild(dateElement);
+        
+                            dateElement.addEventListener('click', function () {
+                                if (!selectedStartDate || selectedEndDate) {
+                                    // Start a new range selection
+                                    selectedStartDate = new Date(year, month, i);
+                                    selectedEndDate = null;
+                                    clearSelection();
+                                    dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+                                } else {
+                                    // Select the end date
+                                    selectedEndDate = new Date(year, month, i);
+                                    if (selectedEndDate < selectedStartDate) {
+                                        alert('Data de término não pode ser anterior à data de início.');
+                                        selectedEndDate = null;
+                                        return;
+                                    }
+                                    clearSelection();
+                                    highlightRange(selectedStartDate, selectedEndDate);
+                                }
+                            });
+                        }
+                    }
+        
+                    function clearSelection() {
+                        document.querySelectorAll('.calendar__date--selected').forEach(el => {
+                            el.classList.remove('calendar__date--selected', 'calendar__date--range-start', 'calendar__date--range-end');
+                        });
+                    }
+        
+                    function highlightRange(start, end) {
+                        document.querySelectorAll('.calendar__date').forEach(el => {
+                            const day = parseInt(el.textContent);
+                            const elDate = new Date(yearSelect.value, monthSelect.value, day);
+                            if (elDate >= start && elDate <= end) {
+                                el.classList.add('calendar__date--selected');
+                                if (elDate.getTime() === start.getTime()) el.classList.add('calendar__date--range-start');
+                                if (elDate.getTime() === end.getTime()) el.classList.add('calendar__date--range-end');
+                            }
+                        });
+                    }
+        
+                    function updateSelectedDateDisplay() {
+                        if (selectedStartDate && selectedEndDate) {
+                            const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                            const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                            selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
+                        } else if (selectedStartDate) {
+                            const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                            selectedDateDisplay.textContent = `Data selecionada: ${startDateStr}`;
                         } else {
-                            // Select the end date
-                            selectedEndDate = new Date(year, month, i);
-                            if (selectedEndDate < selectedStartDate) {
-                                alert('Data de término não pode ser anterior à data de início.');
-                                selectedEndDate = null;
-                                return;
-                            }
-                            clearSelection();
-                            highlightRange(selectedStartDate, selectedEndDate);
+                            selectedDateDisplay.textContent = '';
                         }
+                    }
+        
+                    monthSelect.addEventListener('change', renderCalendar);
+                    yearSelect.addEventListener('change', renderCalendar);
+        
+                    renderCalendar(); // Initialize the calendar
+        
+                    openCalendarBtn.addEventListener("click", function () {
+                        calendarModal.removeAttribute('inert'); // Remove the `inert` attribute
+                        bootstrapModal.show();
                     });
-                }
-            }
-
-            function clearSelection() {
-                document.querySelectorAll('.calendar__date--selected').forEach(el => {
-                    el.classList.remove('calendar__date--selected', 'calendar__date--range-start', 'calendar__date--range-end');
-                });
-            }
-
-            function highlightRange(start, end) {
-                document.querySelectorAll('.calendar__date').forEach(el => {
-                    const day = parseInt(el.textContent);
-                    const elDate = new Date(yearSelect.value, monthSelect.value, day);
-                    if (elDate >= start && elDate <= end) {
-                        el.classList.add('calendar__date--selected');
-                        if (elDate.getTime() === start.getTime()) el.classList.add('calendar__date--range-start');
-                        if (elDate.getTime() === end.getTime()) el.classList.add('calendar__date--range-end');
-                    }
-                });
-            }
-
-            function updateSelectedDateDisplay() {
-                if (selectedStartDate && selectedEndDate) {
-                    const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
-                    const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}`;
-                    selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
-                } else if (selectedStartDate) {
-                    const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
-                    selectedDateDisplay.textContent = `Data selecionada: ${startDateStr}`;
-                } else {
-                    selectedDateDisplay.textContent = '';
-                }
-            }
-
-            monthSelect.addEventListener('change', renderCalendar);
-            yearSelect.addEventListener('change', renderCalendar);
-
-            renderCalendar(); // Initialize the calendar
-
-            openCalendarBtn.addEventListener("click", function () {
-                calendarModal.removeAttribute('inert'); // Remove the `inert` attribute
-                bootstrapModal.show();
-            });
-
-            backBtn.addEventListener("click", function () {
-                bootstrapModal.hide();
-            });
-
-            applyBtn.addEventListener("click", function () {
-                console.log("Selected Start Date:", selectedStartDate);
-                console.log("Selected End Date:", selectedEndDate);
-                updateSelectedDateDisplay();
-                bootstrapModal.hide();
-                fetchDashboardData(); // Fetch data with the selected date range
-            });
-
-            calendarModal.addEventListener('hidden.bs.modal', function () {
-                calendarModal.setAttribute('inert', 'true'); // Re-add the `inert` attribute after closing
-            });
-
-            async function fetchDashboardData() {
-                try {
-                    const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
-                    const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
-                    const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?start_date=${startDate}&end_date=${endDate}`;
-                    const response = await fetch(apiUrl);
-                    if (!response.ok) throw new Error(`Erro ao carregar os dados: ${response.status}`);
-
-                    const data = await response.json();
-
-                    // Calcula métricas a partir dos dados
-                    const totalReceita = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_comissao || 0), 0);
-                    const totalFaturamento = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_venda || 0), 0);
-                    const totalDespesa = data.reduce((acc, pedido) => acc + parseFloat(pedido.custo || 0), 0);
-                    const totalPedidos = data.length;
-
-                    // Atualiza os cards
-                    document.getElementById('sales-value').textContent = `R$ ${totalReceita.toFixed(2)}`;
-                    document.getElementById('visitors-value').textContent = `R$ ${totalDespesa.toFixed(2)}`;
-                    document.getElementById('earnings-value').textContent = `R$ ${totalFaturamento.toFixed(2)}`;
-                    document.getElementById('orders-value').textContent = totalPedidos;
-
-                    // Atualiza a tabela de últimos pedidos
-                    const latestProjects = document.getElementById('latest-projects');
-                    latestProjects.innerHTML = '';
-                    data.forEach(pedido => {
-                        latestProjects.innerHTML += `
-                            <tr>
-                                <td>${pedido.nome || 'N/A'}</td>
-                                <td>${pedido.data_venda || 'N/A'}</td>
-                                <td>R$ ${parseFloat(pedido.valor_venda || 0).toFixed(2)}</td>
-                                <td>${pedido.meio_pgto || 'N/A'}</td>
-                                <td>${pedido.efetivado_por || 'N/A'}</td>
-                            </tr>`;
+        
+                    backBtn.addEventListener("click", function () {
+                        bootstrapModal.hide();
                     });
-
-                    // Gera o gráfico de receita
-                    updateRecentMovementChart(data);
-
-                    // Atualiza dados de Real-Time por UF (Estado do Brasil)
-                    updateRealTimeMap(data);
-
-                    // Atualiza Browser Usage
-                    updateBrowserUsage(data);
-
-                    // Atualiza Monthly Sales
-                    updateMonthlySales(data);
-
-                } catch (error) {
-                    console.error('Erro ao carregar os dados do dashboard:', error);
-                    alert('Erro ao carregar os dados do dashboard. Verifique o console para mais informações.');
-                }
-            }
-
-            function updateRecentMovementChart(data) {
-                const labels = data.map(pedido => pedido.data_venda).slice(0, 7).reverse();
-                const values = data.map(pedido => parseFloat(pedido.valor_comissao || 0)).slice(0, 7).reverse();
-
-                const ctx = document.getElementById('chartjs-dashboard-line').getContext('2d');
-                new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Receita (R$)',
-                            data: values,
-                            borderColor: '#3b82f6',
-                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                            borderWidth: 3,
-                            tension: 0.4,
-                            fill: true,
-                        }],
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            x: { grid: { display: false } },
-                            y: { grid: { color: '#e5e7eb' }, beginAtZero: true },
-                        },
-                    },
-                });
-            }
-
-            function updateRealTimeMap(data) {
-                const estados = {};
-                data.forEach(pedido => {
-                    const uf = pedido.uf;
-                    if (uf) {
-                        if (!estados[uf]) {
-                            estados[uf] = 0;
+        
+                    applyBtn.addEventListener("click", function () {
+                        console.log("Selected Start Date:", selectedStartDate);
+                        console.log("Selected End Date:", selectedEndDate);
+                        updateSelectedDateDisplay();
+                        bootstrapModal.hide();
+                        fetchDashboardData(); // Fetch data with the selected date range
+                    });
+        
+                    calendarModal.addEventListener('hidden.bs.modal', function () {
+                        calendarModal.setAttribute('inert', 'true'); // Re-add the `inert` attribute after closing
+                    });
+        
+                    async function fetchDashboardData() {
+                        try {
+                            const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
+                            const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
+                            const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?start_date=${startDate}&end_date=${endDate}`;
+                            const response = await fetch(apiUrl);
+                            if (!response.ok) throw new Error(`Erro ao carregar os dados: ${response.status}`);
+        
+                            const data = await response.json();
+        
+                            // Calcula métricas a partir dos dados
+                            const totalReceita = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_comissao || 0), 0);
+                            const totalFaturamento = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_venda || 0), 0);
+                            const totalDespesa = data.reduce((acc, pedido) => acc + parseFloat(pedido.custo || 0), 0);
+                            const totalPedidos = data.length;
+        
+                            // Atualiza os cards
+                            document.getElementById('sales-value').textContent = `R$ ${totalReceita.toFixed(2)}`;
+                            document.getElementById('visitors-value').textContent = `R$ ${totalDespesa.toFixed(2)}`;
+                            document.getElementById('earnings-value').textContent = `R$ ${totalFaturamento.toFixed(2)}`;
+                            document.getElementById('orders-value').textContent = totalPedidos;
+        
+                            // Atualiza a tabela de últimos pedidos
+                            const latestProjects = document.getElementById('latest-projects');
+                            latestProjects.innerHTML = '';
+                            data.forEach(pedido => {
+                                latestProjects.innerHTML += `
+                                    <tr>
+                                        <td>${pedido.nome || 'N/A'}</td>
+                                        <td>${pedido.data_venda || 'N/A'}</td>
+                                        <td>R$ ${parseFloat(pedido.valor_venda || 0).toFixed(2)}</td>
+                                        <td>${pedido.meio_pgto || 'N/A'}</td>
+                                        <td>${pedido.efetivado_por || 'N/A'}</td>
+                                    </tr>`;
+                            });
+        
+                            // Gera o gráfico de receita
+                            updateRecentMovementChart(data);
+        
+                            // Atualiza dados de Real-Time por UF (Estado do Brasil)
+                            updateRealTimeMap(data);
+        
+                            // Atualiza Browser Usage
+                            updateBrowserUsage(data);
+        
+                            // Atualiza Monthly Sales
+                            updateMonthlySales(data);
+        
+                        } catch (error) {
+                            console.error('Erro ao carregar os dados do dashboard:', error);
+                            alert('Erro ao carregar os dados do dashboard. Verifique o console para mais informações.');
                         }
-                        estados[uf]++;
                     }
-                });
-
-                const markers = Object.keys(estados).map(uf => ({
-                    coords: getCoordinatesForUF(uf),
-                    name: `${uf} - ${estados[uf]} pedidos`,
-                }));
-
-                const map = new jsVectorMap({
-                    map: "brasil",
-                    selector: "#world_map",
-                    zoomButtons: true,
-                    markers: markers,
-                    markerStyle: {
-                        initial: {
-                            r: 9,
-                            strokeWidth: 7,
-                            strokeOpacity: 0.4,
-                            fill: "#3b82f6"
-                        },
-                        hover: {
-                            fill: "#2563eb",
-                            stroke: "#2563eb"
-                        }
-                    },
-                    zoomOnScroll: false
-                });
-
-                window.addEventListener("resize", () => {
-                    map.updateSize();
-                });
-            }
-
-            function getCoordinatesForUF(uf) {
-                const coordinates = {
-                    "AC": [-9.97499, -67.8243],
-                    "AL": [-9.66599, -35.735],
-                    "AM": [-3.11703, -60.025],
-                    "AP": [0.038, -51.05],
-                    "BA": [-12.9714, -38.5014],
-                    "CE": [-3.71722, -38.543],
-                    "DF": [-15.7797, -47.9297],
-                    "ES": [-20.3155, -40.3128],
-                    "GO": [-16.6869, -49.2648],
-                    "MA": [-2.53073, -44.305],
-                    "MT": [-15.601, -56.097],
-                    "MS": [-20.4697, -54.6201],
-                    "MG": [-19.9167, -43.9345],
-                    "PA": [-1.45583, -48.5044],
-                    "PB": [-7.115, -34.8631],
-                    "PR": [-25.4284, -49.2733],
-                    "PE": [-8.04756, -34.877],
-                    "PI": [-5.08921, -42.8019],
-                    "RJ": [-22.9068, -43.1729],
-                    "RN": [-5.79448, -35.211],
-                    "RO": [-8.76077, -63.9004],
-                    "RS": [-30.0346, -51.2177],
-                    "RR": [2.8193, -60.671],
-                    "SC": [-27.5954, -48.548],
-                    "SE": [-10.9472, -37.0731],
-                    "SP": [-23.5505, -46.6333],
-                    "TO": [-10.25, -48.325]
-                };
-                return coordinates[uf] || [0, 0];
-            }
-
-            function updateBrowserUsage(data) {
-                const meioPgtoCounts = {};
-                data.forEach(pedido => {
-                    const meioPgto = pedido.meio_pgto;
-                    if (meioPgto) {
-                        if (!meioPgtoCounts[meioPgto]) {
-                            meioPgtoCounts[meioPgto] = 0;
-                        }
-                        meioPgtoCounts[meioPgto]++;
-                    }
-                });
-
-                const browserUsage = document.getElementById('browser-usage');
-                browserUsage.innerHTML = '';
-                Object.keys(meioPgtoCounts).forEach(meioPgto => {
-                    browserUsage.innerHTML += `
-                        <tr>
-                            <td>${meioPgto}</td>
-                            <td class="text-end">${meioPgtoCounts[meioPgto]}</td>
-                        </tr>`;
-                });
-
-                const ctx = document.getElementById('chartjs-dashboard-pie').getContext('2d');
-                new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: Object.keys(meioPgtoCounts),
-                        datasets: [{
-                            data: Object.values(meioPgtoCounts),
-                            backgroundColor: [
-                                window.theme.primary,
-                                window.theme.warning,
-                                window.theme.danger,
-                                window.theme.success,
-                                window.theme.info
-                            ],
-                            borderWidth: 5
-                        }]
-                    },
-                    options: {
-                        responsive: !window.MSInputMethodContext,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false }
-                        },
-                        cutout: '75%'
-                    }
-                });
-            }
-
-            function updateMonthlySales(data) {
-                const salesCounts = {};
-                data.forEach(pedido => {
-                    const efetivadoPor = pedido.efetivado_por;
-                    if (efetivadoPor) {
-                        if (!salesCounts[efetivadoPor]) {
-                            salesCounts[efetivadoPor] = 0;
-                        }
-                        salesCounts[efetivadoPor]++;
-                    }
-                });
-
-                const ctx = document.getElementById('chartjs-dashboard-bar').getContext('2d');
-                new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: Object.keys(salesCounts),
-                        datasets: [{
-                            label: 'Vendas por Agente',
-                            backgroundColor: window.theme.primary,
-                            borderColor: window.theme.primary,
-                            hoverBackgroundColor: window.theme.primary,
-                            hoverBorderColor: window.theme.primary,
-                            data: Object.values(salesCounts),
-                            barPercentage: .75,
-                            categoryPercentage: .5
-                        }]
-                    },
-                    options: {
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { display: false }
-                        },
-                        scales: {
-                            y: {
-                                grid: { display: false },
-                                stacked: false,
-                                ticks: { stepSize: 1 }
+        
+                    function updateRecentMovementChart(data) {
+                        const labels = data.map(pedido => pedido.data_venda).slice(0, 7).reverse();
+                        const values = data.map(pedido => parseFloat(pedido.valor_comissao || 0)).slice(0, 7).reverse();
+        
+                        const ctx = document.getElementById('chartjs-dashboard-line').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: labels,
+                                datasets: [{
+                                    label: 'Receita (R$)',
+                                    data: values,
+                                    borderColor: '#3b82f6',
+                                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                    borderWidth: 3,
+                                    tension: 0.4,
+                                    fill: true,
+                                }],
                             },
-                            x: {
-                                stacked: false,
-                                grid: { color: "transparent" }
-                            }
-                        }
+                            options: {
+                                responsive: true,
+                                plugins: { legend: { display: false } },
+                                scales: {
+                                    x: { grid: { display: false } },
+                                    y: { grid: { color: '#e5e7eb' }, beginAtZero: true },
+                                },
+                            },
+                        });
                     }
+        
+                    function updateRealTimeMap(data) {
+                        const estados = {};
+                        data.forEach(pedido => {
+                            const uf = pedido.uf;
+                            if (uf) {
+                                if (!estados[uf]) {
+                                    estados[uf] = 0;
+                                }
+                                estados[uf]++;
+                            }
+                        });
+        
+                        const markers = Object.keys(estados).map(uf => ({
+                            coords: getCoordinatesForUF(uf),
+                            name: `${uf} - ${estados[uf]} pedidos`,
+                        }));
+        
+                        const map = new jsVectorMap({
+                            map: "brasil",
+                            selector: "#world_map",
+                            zoomButtons: true,
+                            markers: markers,
+                            markerStyle: {
+                                initial: {
+                                    r: 9,
+                                    strokeWidth: 7,
+                                    strokeOpacity: 0.4,
+                                    fill: "#3b82f6"
+                                },
+                                hover: {
+                                    fill: "#2563eb",
+                                    stroke: "#2563eb"
+                                }
+                            },
+                            zoomOnScroll: false
+                        });
+        
+                        window.addEventListener("resize", () => {
+                            map.updateSize();
+                        });
+                    }
+        
+                    function getCoordinatesForUF(uf) {
+                        const coordinates = {
+                            "AC": [-9.97499, -67.8243],
+                            "AL": [-9.66599, -35.735],
+                            "AM": [-3.11703, -60.025],
+                            "AP": [0.038, -51.05],
+                            "BA": [-12.9714, -38.5014],
+                            "CE": [-3.71722, -38.543],
+                            "DF": [-15.7797, -47.9297],
+                            "ES": [-20.3155, -40.3128],
+                            "GO": [-16.6869, -49.2648],
+                            "MA": [-2.53073, -44.305],
+                            "MT": [-15.601, -56.097],
+                            "MS": [-20.4697, -54.6201],
+                            "MG": [-19.9167, -43.9345],
+                            "PA": [-1.45583, -48.5044],
+                            "PB": [-7.115, -34.8631],
+                            "PR": [-25.4284, -49.2733],
+                            "PE": [-8.04756, -34.877],
+                            "PI": [-5.08921, -42.8019],
+                            "RJ": [-22.9068, -43.1729],
+                            "RN": [-5.79448, -35.211],
+                            "RO": [-8.76077, -63.9004],
+                            "RS": [-30.0346, -51.2177],
+                            "RR": [2.8193, -60.671],
+                            "SC": [-27.5954, -48.548],
+                            "SE": [-10.9472, -37.0731],
+                            "SP": [-23.5505, -46.6333],
+                            "TO": [-10.25, -48.325]
+                        };
+                        return coordinates[uf] || [0, 0];
+                    }
+        
+                    function updateBrowserUsage(data) {
+                        const meioPgtoCounts = {};
+                        data.forEach(pedido => {
+                            const meioPgto = pedido.meio_pgto;
+                            if (meioPgto) {
+                                if (!meioPgtoCounts[meioPgto]) {
+                                    meioPgtoCounts[meioPgto] = 0;
+                                }
+                                meioPgtoCounts[meioPgto]++;
+                            }
+                        });
+        
+                        const browserUsage = document.getElementById('browser-usage');
+                        browserUsage.innerHTML = '';
+                        Object.keys(meioPgtoCounts).forEach(meioPgto => {
+                            browserUsage.innerHTML += `
+                                <tr>
+                                    <td>${meioPgto}</td>
+                                    <td class="text-end">${meioPgtoCounts[meioPgto]}</td>
+                                </tr>`;
+                        });
+        
+                        const ctx = document.getElementById('chartjs-dashboard-pie').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: Object.keys(meioPgtoCounts),
+                                datasets: [{
+                                    data: Object.values(meioPgtoCounts),
+                                    backgroundColor: [
+                                        window.theme.primary,
+                                        window.theme.warning,
+                                        window.theme.danger,
+                                        window.theme.success,
+                                        window.theme.info
+                                    ],
+                                    borderWidth: 5
+                                }]
+                            },
+                            options: {
+                                responsive: !window.MSInputMethodContext,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { display: false }
+                                },
+                                cutout: '75%'
+                            }
+                        });
+                    }
+        
+                    function updateMonthlySales(data) {
+                        const salesCounts = {};
+                        data.forEach(pedido => {
+                            const efetivadoPor = pedido.efetivado_por;
+                            if (efetivadoPor) {
+                                if (!salesCounts[efetivadoPor]) {
+                                    salesCounts[efetivadoPor] = 0;
+                                }
+                                salesCounts[efetivadoPor]++;
+                            }
+                        });
+        
+                        const ctx = document.getElementById('chartjs-dashboard-bar').getContext('2d');
+                        new Chart(ctx, {
+                            type: 'bar',
+                            data: {
+                                labels: Object.keys(salesCounts),
+                                datasets: [{
+                                    label: 'Vendas por Agente',
+                                    backgroundColor: window.theme.primary,
+                                    borderColor: window.theme.primary,
+                                    hoverBackgroundColor: window.theme.primary,
+                                    hoverBorderColor: window.theme.primary,
+                                    data: Object.values(salesCounts),
+                                    barPercentage: .75,
+                                    categoryPercentage: .5
+                                }]
+                            },
+                            options: {
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: { display: false }
+                                },
+                                scales: {
+                                    y: {
+                                        grid: { display: false },
+                                        stacked: false,
+                                        ticks: { stepSize: 1 }
+                                    },
+                                    x: {
+                                        stacked: false,
+                                        grid: { color: "transparent" }
+                                    }
+                                }
+                            }
+                        });
+                    }
+        
+                    await fetchDashboardData();
                 });
-            }
-
-            await fetchDashboardData();
-        });
-    </script>
-</body>
-
-</html>
+            </script>
+        </body>
+        
+        </html>
