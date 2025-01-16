@@ -1,3 +1,5 @@
+INDEX
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -528,18 +530,15 @@
         // Certifique-se de que está no index.html
         async function loadSidebarAndNavbar() {
             try {
-                // Carrega o conteúdo do arquivo sidebar.html
-                const response = await fetch("sidebar.html");
+                const response = await fetch("/novo_caminho_para_sidebar/sidebar.html"); // Caminho atualizado
                 if (!response.ok) {
                     throw new Error(`Erro ao carregar sidebar: ${response.statusText}`);
                 }
 
-                // Insere o conteúdo no container da sidebar
                 const sidebarHtml = await response.text();
                 document.getElementById("sidebar-container").innerHTML = sidebarHtml;
 
-                // Após o carregamento, inicializa o calendário
-                initializeCalendar(); // Certifique-se de que initializeCalendar existe!
+                initializeCalendar();
             } catch (error) {
                 console.error("Erro ao carregar a sidebar e a navbar:", error);
             }
