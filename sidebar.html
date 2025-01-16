@@ -641,7 +641,7 @@
             renderCalendar(); // Initialize the calendar
 
             openCalendarBtn.addEventListener("click", function () {
-                calendarModal.removeAttribute('inert');
+                calendarModal.removeAttribute('inert'); // Remove the `inert` attribute
                 bootstrapModal.show();
             });
 
@@ -657,7 +657,7 @@
             });
 
             calendarModal.addEventListener('hidden.bs.modal', function () {
-                calendarModal.setAttribute('inert', 'true');
+                calendarModal.setAttribute('inert', 'true'); // Re-add the `inert` attribute after closing
             });
         });
     </script>
