@@ -529,11 +529,12 @@
             try {
                 const sidebarResponse = await fetch('https://business.magictraveltur.com/sidebar.html');
                 if (!sidebarResponse.ok) throw new Error(`Erro ao carregar o sidebar: ${sidebarResponse.status}`);
+                
                 const sidebarHtml = await sidebarResponse.text();
                 document.getElementById('sidebar-container').innerHTML = sidebarHtml;
 
-                feather.replace();  // Ensure Feather icons are replaced after loading new HTML
-
+                feather.replace(); // Substitui os ícones Feather após o carregamento
+                initializeCalendar(); // Inicializa o calendário após o sidebar ser carregado
             } catch (error) {
                 console.error('Erro ao carregar a sidebar e navbar:', error);
             }
