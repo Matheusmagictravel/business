@@ -22,16 +22,122 @@
 
     <style>
     /* Sidebar */
-    #dashboard-container .row {
-        display: flex;
-        flex-wrap: wrap;
-        margin-left: -0.75rem;
-        margin-right: -0.75rem;
+    /* Ajustes gerais para .row */
+    .row {
+        display: flex; /* Ativa o comportamento flexbox */
+        flex-wrap: wrap; /* Permite que os itens se reorganizem em várias linhas */
+        gap: 1rem; /* Espaçamento uniforme entre os itens */
+        margin-left: 0; /* Remove margens negativas */
+        margin-right: 0; /* Remove margens negativas */
     }
     
-    #dashboard-container .row > [class*='col-'] {
-        padding-left: 0.75rem;
-        padding-right: 0.75rem;
+    /* Ajustes para colunas dentro da .row */
+    .row > [class*='col-'] {
+        padding: 0.5rem; /* Espaçamento interno das colunas */
+        flex: 1 1 auto; /* As colunas ocupam espaço proporcional */
+        max-width: 100%; /* Limita o tamanho máximo ao container */
+        min-width: 0; /* Evita estouro lateral */
+        box-sizing: border-box; /* Inclui bordas e padding no cálculo do tamanho */
+    }
+    
+    /* Estilização do dashboard */
+    #dashboard-container {
+        padding: 1rem; /* Espaçamento interno geral */
+        background-color: #f8f9fa; /* Fundo claro para contraste */
+    }
+    
+    #dashboard-container .card {
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Sombra suave para destaque */
+        border-radius: 8px; /* Bordas arredondadas */
+        overflow: hidden; /* Garante que o conteúdo fique dentro do card */
+        background-color: #fff; /* Fundo branco para os cards */
+    }
+    
+    /* Títulos dos cards */
+    #dashboard-container .card-title {
+        font-weight: 600;
+        font-size: 1rem;
+        color: #333; /* Cor do título */
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Valores nos cards (como R$ e números) */
+    #dashboard-container h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #212529; /* Cor do texto principal */
+    }
+    
+    /* Gráficos */
+    #dashboard-container .chart {
+        position: relative;
+        height: 200px; /* Altura padrão dos gráficos */
+        max-height: 100%; /* Evita estouro */
+    }
+    
+    /* Ajustes para o mapa em Real-Time */
+    #dashboard-container #world_map {
+        height: 350px;
+        border-radius: 8px; /* Bordas arredondadas */
+        background-color: #f5f5f5; /* Fundo para o mapa */
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Sombra leve */
+    }
+    
+    /* Ajustes para tabelas */
+    #dashboard-container .table {
+        width: 100%; /* Ocupa toda a largura disponível */
+        margin-bottom: 1rem; /* Espaçamento inferior */
+        color: #333; /* Cor do texto */
+        border-collapse: collapse; /* Remove espaços entre as células */
+    }
+    
+    #dashboard-container .table th,
+    #dashboard-container .table td {
+        padding: 0.75rem;
+        vertical-align: middle;
+        border-top: 1px solid #dee2e6; /* Linhas entre as células */
+    }
+    
+    #dashboard-container .table-hover tbody tr:hover {
+        background-color: #f8f9fa; /* Fundo mais claro ao passar o mouse */
+    }
+    
+    /* Navegação lateral */
+    #sidebar-container {
+        width: 250px; /* Largura da sidebar */
+        background-color: #1e1e2d; /* Cor de fundo escura */
+        color: #fff; /* Texto claro */
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        padding: 1rem;
+    }
+    
+    #sidebar-container a {
+        color: #fff; /* Links claros */
+        text-decoration: none;
+        font-size: 0.9rem;
+        margin: 0.5rem 0;
+        display: block;
+    }
+    
+    #sidebar-container a:hover {
+        color: #007bff; /* Cor de destaque ao passar o mouse */
+    }
+    
+    /* Botão de selecionar data */
+    #dashboard-container .btn {
+        background-color: #007bff; /* Fundo azul */
+        color: #fff; /* Texto branco */
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    
+    #dashboard-container .btn:hover {
+        background-color: #0056b3; /* Azul mais escuro ao passar o mouse */
     }
         
     </style>
