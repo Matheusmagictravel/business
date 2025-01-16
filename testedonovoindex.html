@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
     <meta name="author" content="AdminKit">
@@ -236,16 +236,18 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Função para carregar o sidebar
-            async function loadSidebar() {
+            // Função para carregar o sidebar e a navbar
+            async function loadSidebarAndNavbar() {
                 try {
                     const response = await fetch('sidebar.html');
                     if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
                     const html = await response.text();
                     document.getElementById('sidebar-container').innerHTML = html;
+                    document.getElementById('navbar-container').innerHTML = html;
                 } catch (error) {
                     console.error('Erro ao carregar a sidebar:', error);
                     document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
+                    document.getElementById('navbar-container').innerHTML = '<p>Erro ao carregar a navbar.</p>';
                 }
             }
 
@@ -401,7 +403,7 @@
             }
 
             // Inicializa o dashboard
-            loadSidebar();
+            loadSidebarAndNavbar();
             fetchDashboardData();
         });
     </script>
