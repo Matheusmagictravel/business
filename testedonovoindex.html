@@ -156,7 +156,7 @@
                         <div class="col-12 col-lg-8 col-xxl-9 d-flex">
                             <div class="card flex-fill">
                                 <div class="card-header">
-                                    <h5 class="card-title mb-0">Latest Projects</h5>
+                                    <h5 class="card-title mb-0">Últimos Pedidos</h5>
                                 </div>
                                 <table class="table table-hover my-0">
                                     <thead>
@@ -164,12 +164,14 @@
                                             <th>Nome</th>
                                             <th class="d-none d-xl-table-cell">Venda</th>
                                             <th class="d-none d-xl-table-cell">Valor</th>
+                                            <th>Status</th>
                                             <th>Agente</th>
+                                            <th>Pagamento</th>
                                         </tr>
                                     </thead>
                                     <tbody id="latest-projects">
                                         <tr>
-                                            <td colspan="4">Carregando...</td>
+                                            <td colspan="6">Carregando...</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -273,7 +275,9 @@
                                 <td>${pedido.nome_comprador || 'N/A'}</td>
                                 <td>${pedido.data_venda || 'N/A'}</td>
                                 <td>R$ ${parseFloat(pedido.recebido || 0).toFixed(2)}</td>
+                                <td>${pedido.status || 'N/A'}</td>
                                 <td>${pedido.efetivado_por || 'N/A'}</td>
+                                <td>${pedido.meio_pgto || 'N/A'}</td>
                             </tr>`;
                     });
 
