@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,6 +19,33 @@
 
     <link href="https://business.magictraveltur.com/dist/css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+    /* Sidebar */
+    #sidebar-container {
+      width: 260px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background-color: #0d112d;
+      color: #fff;
+      overflow-y: auto;
+      box-shadow: 3px 0 6px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s;
+    }
+    
+    #sidebar-container:hover {
+      background-color: #101740;
+    }
+    
+    .sidebar-loading {
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #ccc;
+    }
+    </style>
 </head>
 
 <body>
@@ -261,7 +289,7 @@
         // Função para carregar a sidebar
         async function loadSidebar() {
         try {
-            const response = await fetch('sidebar.html');
+            const response = await fetch('https://business.magictraveltur.com/sidebar.html');
             if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
 
             const sidebarContent = await response.text();
