@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Responsive Admin & Dashboard Template based on Bootstrap 5">
+    <meta name="author" content="AdminKit">
+    <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="shortcut icon" href="img/icons/icon-48x48.png" />
+
+    <link rel="canonical" href="https://demo-basic.adminkit.io/" />
+
+    <title>AdminKit Demo - Bootstrap 5 Admin Template</title>
+
+    <link href="https://business.magictraveltur.com/dist/css/app.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="wrapper">
+        <nav id="sidebar" class="sidebar js-sidebar">
+            <div class="sidebar-content js-simplebar">
+                <a class="sidebar-brand" href="index.html">
+                    <span class="align-middle">AdminKit</span>
+                </a>
+                <!-- Add more sidebar items here if needed -->
+            </div>
+        </nav>
+
+        <div class="main">
+            <nav class="navbar navbar-expand navbar-light navbar-bg">
+                <a class="sidebar-toggle js-sidebar-toggle">
+                    <i class="hamburger align-self-center"></i>
+                </a>
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav navbar-align">
+                        <!-- Add more navbar items here if needed -->
+                    </ul>
+                </div>
+            </nav>
+            <main class="content">
+                <div class="container-fluid p-0">
+                    <h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
+                    <div class="row">
+                        <div class="col-xl-6 col-xxl-5 d-flex">
+                            <div class="w-100">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col mt-0">
+                                                        <h5 class="card-title">Sales</h5>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="stat text-primary">
+                                                            <i class="align-middle" data-feather="truck"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <h1 id="sales-value" class="mt-1 mb-3">0</h1>
+                                                <div class="mb-0">
+                                                    <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span>
+                                                    <span class="text-muted">Since last week</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col mt-0">
+                                                        <h5 class="card-title">Visitors</h5>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="stat text-primary">
+                                                            <i class="align-middle" data-feather="users"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <h1 id="visitors-value" class="mt-1 mb-3">0</h1>
+                                                <div class="mb-0">
+                                                    <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 5.25% </span>
+                                                    <span class="text-muted">Since last week</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col mt-0">
+                                                        <h5 class="card-title">Earnings</h5>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="stat text-primary">
+                                                            <i class="align-middle" data-feather="dollar-sign"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <h1 id="earnings-value" class="mt-1 mb-3">0</h1>
+                                                <div class="mb-0">
+                                                    <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 6.65% </span>
+                                                    <span class="text-muted">Since last week</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col mt-0">
+                                                        <h5 class="card-title">Orders</h5>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <div class="stat text-primary">
+                                                            <i class="align-middle" data-feather="shopping-cart"></i>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <h1 id="orders-value" class="mt-1 mb-3">0</h1>
+                                                <div class="mb-0">
+                                                    <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -2.25% </span>
+                                                    <span class="text-muted">Since last week</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-xl-6 col-xxl-7">
+                            <div class="card flex-fill w-100">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Recent Movement</h5>
+                                </div>
+                                <div class="card-body py-3">
+                                    <div class="chart chart-sm">
+                                        <canvas id="chartjs-dashboard-line"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-md-12 col-xxl-9 d-flex order-2 order-xxl-1">
+                            <div class="card flex-fill w-100">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Real-Time</h5>
+                                </div>
+                                <div class="card-body px-4">
+                                    <div id="world_map" style="height: 350px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-xxl-3 d-flex order-3 order-xxl-2">
+                            <div class="card flex-fill w-100">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Browser Usage</h5>
+                                </div>
+                                <div class="card-body d-flex">
+                                    <div class="align-self-center w-100">
+                                        <div class="py-3">
+                                            <div class="chart chart-xs">
+                                                <canvas id="chartjs-dashboard-pie"></canvas>
+                                            </div>
+                                        </div>
+                                        <table class="table mb-0">
+                                            <tbody id="browser-usage">
+                                                <tr>
+                                                    <td>Chrome</td>
+                                                    <td class="text-end">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Firefox</td>
+                                                    <td class="text-end">0</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>IE</td>
+                                                    <td class="text-end">0</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-lg-8 col-xxl-9 d-flex">
+                            <div class="card flex-fill">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Latest Projects</h5>
+                                </div>
+                                <table class="table table-hover my-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th class="d-none d-xl-table-cell">Start Date</th>
+                                            <th class="d-none d-xl-table-cell">End Date</th>
+                                            <th>Status</th>
+                                            <th class="d-none d-md-table-cell">Assignee</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="latest-projects">
+                                        <tr>
+                                            <td colspan="5">Carregando...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-4 col-xxl-3 d-flex">
+                            <div class="card flex-fill w-100">
+                                <div class="card-header">
+                                    <h5 class="card-title mb-0">Monthly Sales</h5>
+                                </div>
+                                <div class="card-body d-flex w-100">
+                                    <div class="align-self-center chart chart-lg">
+                                        <canvas id="chartjs-dashboard-bar"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+
+            <footer class="footer">
+                <div class="container-fluid">
+                    <div class="row text-muted">
+                        <div class="col-6 text-start">
+                            <p class="mb-0">
+                                <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a> - 
+                                <a class="text-muted" href="https://adminkit.io/" target="_blank">
+                                    <strong>Bootstrap Admin Template</strong>
+                                </a> &copy;
+                            </p>
+                        </div>
+                        <div class="col-6 text-end">
+                            <ul class="list-inline">
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://business.magictraveltur.com/dist/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@2.0.3/dist/js/jsvectormap.min.js"></script>
+    <script src="https://business.magictraveltur.com/dist/js/brasil.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            async function fetchDashboardData() {
+                try {
+                    const response = await fetch('https://www.magictraveltur.com/api_pedidos.php');
+                    if (!response.ok) throw new Error(`Erro ao carregar os dados: ${response.status}`);
+
+                    const data = await response.json();
+
+                    // Calcula métricas a partir dos dados
+                    const totalReceita = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_comissao || 0), 0);
+                    const totalFaturamento = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_venda || 0), 0);
+                    const totalDespesa = data.reduce((acc, pedido) => acc + parseFloat(pedido.custo || 0), 0);
+                    const totalPedidos = data.length;
+
+                    // Atualiza os cards
+                    document.getElementById('sales-value').textContent = `R$ ${totalReceita.toFixed(2)}`;
+                    document.getElementById('visitors-value').textContent = `R$ ${totalDespesa.toFixed(2)}`;
+                    document.getElementById('earnings-value').textContent = `R$ ${totalFaturamento.toFixed(2)}`;
+                    document.getElementById('orders-value').textContent = totalPedidos;
+
+                    // Atualiza a tabela de últimos pedidos
+                    const latestProjects = document.getElementById('latest-projects');
+                    latestProjects.innerHTML = '';
+                    data.forEach(pedido => {
+                        latestProjects.innerHTML += `
+                            <tr>
+                                <td>${pedido.nome || 'N/A'}</td>
+                                <td>${pedido.data_venda || 'N/A'}</td>
+                                <td>R$ ${parseFloat(pedido.valor_venda || 0).toFixed(2)}</td>
+                                <td>${pedido.meio_pgto || 'N/A'}</td>
+                                <td>${pedido.efetivado_por || 'N/A'}</td>
+                            </tr>`;
+                    });
+
+                    // Gera o gráfico de receita
+                    updateRecentMovementChart(data);
+
+                    // Atualiza dados de Real-Time por UF (Estado do Brasil)
+                    updateRealTimeMap(data);
+
+                    // Atualiza Browser Usage
+                    updateBrowserUsage(data);
+
+                    // Atualiza Monthly Sales
+                    updateMonthlySales(data);
+
+                } catch (error) {
+                    console.error('Erro ao carregar os dados do dashboard:', error);
+                    alert('Erro ao carregar os dados do dashboard. Verifique o console para mais informações.');
+                }
+            }
+
+            function updateRecentMovementChart(data) {
+                const labels = data.map(pedido => pedido.data_venda).slice(0, 7).reverse();
+                const values = data.map(pedido => parseFloat(pedido.valor_comissao || 0)).slice(0, 7).reverse();
+
+                const ctx = document.getElementById('chartjs-dashboard-line').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Receita (R$)',
+                            data: values,
+                            borderColor: '#3b82f6',
+                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { grid: { display: false } },
+                            y: { grid: { color: '#e5e7eb' }, beginAtZero: true },
+                        },
+                    },
+                });
+            }
+
+            function updateRealTimeMap(data) {
+                const estados = {};
+                data.forEach(pedido => {
+                    const uf = pedido.uf;
+                    if (uf) {
+                        if (!estados[uf]) {
+                            estados[uf] = 0;
+                        }
+                        estados[uf]++;
+                    }
+                });
+
+                const markers = Object.keys(estados).map(uf => ({
+                    coords: getCoordinatesForUF(uf),
+                    name: `${uf} - ${estados[uf]} pedidos`,
+                }));
+
+                const map = new jsVectorMap({
+                    map: "brasil",
+                    selector: "#world_map",
+                    zoomButtons: true,
+                    markers: markers,
+                    markerStyle: {
+                        initial: {
+                            r: 9,
+                            strokeWidth: 7,
+                            strokeOpacity: 0.4,
+                            fill: "#3b82f6"
+                        },
+                        hover: {
+                            fill: "#2563eb",
+                            stroke: "#2563eb"
+                        }
+                    },
+                    zoomOnScroll: false
+                });
+
+                window.addEventListener("resize", () => {
+                    map.updateSize();
+                });
+            }
+
+            function getCoordinatesForUF(uf) {
+                const coordinates = {
+                    "AC": [-9.97499, -67.8243],
+                    "AL": [-9.66599, -35.735],
+                    "AM": [-3.11703, -60.025],
+                    "AP": [0.038, -51.05],
+                    "BA": [-12.9714, -38.5014],
+                    "CE": [-3.71722, -38.543],
+                    "DF": [-15.7797, -47.9297],
+                    "ES": [-20.3155, -40.3128],
+                    "GO": [-16.6869, -49.2648],
+                    "MA": [-2.53073, -44.305],
+                    "MT": [-15.601, -56.097],
+                    "MS": [-20.4697, -54.6201],
+                    "MG": [-19.9167, -43.9345],
+                    "PA": [-1.45583, -48.5044],
+                    "PB": [-7.115, -34.8631],
+                    "PR": [-25.4284, -49.2733],
+                    "PE": [-8.04756, -34.877],
+                    "PI": [-5.08921, -42.8019],
+                    "RJ": [-22.9068, -43.1729],
+                    "RN": [-5.79448, -35.211],
+                    "RO": [-8.76077, -63.9004],
+                    "RS": [-30.0346, -51.2177],
+                    "RR": [2.8193, -60.671],
+                    "SC": [-27.5954, -48.548],
+                    "SE": [-10.9472, -37.0731],
+                    "SP": [-23.5505, -46.6333],
+                    "TO": [-10.25, -48.325]
+                };
+                return coordinates[uf] || [0, 0];
+            }
+
+            function updateBrowserUsage(data) {
+                const meioPgtoCounts = {};
+                data.forEach(pedido => {
+                    const meioPgto = pedido.meio_pgto;
+                    if (meioPgto) {
+                        if (!meioPgtoCounts[meioPgto]) {
+                            meioPgtoCounts[meioPgto] = 0;
+                        }
+                        meioPgtoCounts[meioPgto]++;
+                    }
+                });
+
+                const browserUsage = document.getElementById('browser-usage');
+                browserUsage.innerHTML = '';
+                Object.keys(meioPgtoCounts).forEach(meioPgto => {
+                    browserUsage.innerHTML += `
+                        <tr>
+                            <td>${meioPgto}</td>
+                            <td class="text-end">${meioPgtoCounts[meioPgto]}</td>
+                        </tr>`;
+                });
+
+                const ctx = document.getElementById('chartjs-dashboard-pie').getContext('2d');
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: Object.keys(meioPgtoCounts),
+                        datasets: [{
+                            data: Object.values(meioPgtoCounts),
+                            backgroundColor: [
+                                window.theme.primary,
+                                window.theme.warning,
+                                window.theme.danger,
+                                window.theme.success,
+                                window.theme.info
+                            ],
+                            borderWidth: 5
+                        }]
+                    },
+                    options: {
+                        responsive: !window.MSInputMethodContext,
+                        maintainAspectRatio: false,
+                        legend: {
+                            display: false
+                        },
+                        cutoutPercentage: 75
+                    }
+                });
+            }
+
+            function updateMonthlySales(data) {
+                const salesCounts = {};
+                data.forEach(pedido => {
+                    const efetivadoPor = pedido.efetivado_por;
+                    if (efetivadoPor) {
+                        if (!salesCounts[efetivadoPor]) {
+                            salesCounts[efetivadoPor] = 0;
+                        }
+                        salesCounts[efetivadoPor]++;
+                    }
+                });
+
+                const ctx = document.getElementById('chartjs-dashboard-bar').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(salesCounts),
+                        datasets: [{
+                            label: 'Vendas por Agente',
+                            backgroundColor: window.theme.primary,
+                            borderColor: window.theme.primary,
+                            hoverBackgroundColor: window.theme.primary,
+                            hoverBorderColor: window.theme.primary,
+                            data: Object.values(salesCounts),
+                            barPercentage: .75,
+                            categoryPercentage: .5
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        legend: {
+                            display: false
+                        },
+                        scales: {
+                            yAxes: [{
+                                gridLines: {
+                                    display: false
+                                },
+                                stacked: false,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }],
+                            xAxes: [{
+                                stacked: false,
+                                gridLines: {
+                                    color: "transparent"
+                                }
+                            }]
+                        }
+                    }
+                });
+            }
+
+            await fetchDashboardData();
+        });
+    </script>
+
+</body>
+
+</html>
