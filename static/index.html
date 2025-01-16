@@ -526,25 +526,28 @@
             await fetchDashboardData();
         });
 
-        // Load the sidebar and navbar
+        // Função corrigida para carregar apenas o sidebar.html
         async function loadSidebarAndNavbar() {
             try {
+                // Carregar o conteúdo de sidebar.html, que contém também a navbar
                 const sidebarResponse = await fetch('https://business.magictraveltur.com/sidebar.html');
                 if (!sidebarResponse.ok) throw new Error(`Erro ao carregar o sidebar: ${sidebarResponse.status}`);
+                
                 const sidebarHtml = await sidebarResponse.text();
                 document.getElementById('sidebar-container').innerHTML = sidebarHtml;
 
-                const navbarResponse = await fetch('https://business.magictraveltur.com/navbar.html');
-                if (!navbarResponse.ok) throw new Error(`Erro ao carregar o navbar: ${navbarResponse.status}`);
-                const navbarHtml = await navbarResponse.text();
-                document.getElementById('navbar-container').innerHTML = navbarHtml;
-
-                feather.replace();  // Ensure Feather icons are replaced after loading new HTML
+                // Inicializar Feather Icons (se necessário)
+                if (typeof feather !== 'undefined') feather.replace();
 
             } catch (error) {
                 console.error('Erro ao carregar a sidebar e navbar:', error);
             }
         }
+
+        // Chamar a função no evento DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', function () {
+            loadSidebarAndNavbar();
+        }); 
 
         loadSidebarAndNavbar();
     </script>
