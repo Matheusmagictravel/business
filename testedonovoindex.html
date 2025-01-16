@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
     <meta name="author" content="AdminKit">
@@ -21,9 +21,9 @@
 <body>
     <div class="wrapper">
         <div id="sidebar-container"></div>
+        <div id="navbar-container"></div>
 
         <div class="main">
-            <div id="navbar-container"></div>
             <main class="content">
                 <div class="container-fluid p-0">
                     <h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
@@ -237,20 +237,19 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Função para carregar o sidebar e a navbar
-            async function loadSidebar() {
+            async function loadSidebarAndNavbar() {
                 try {
                     const response = await fetch('sidebar.html');
                     if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
                     const html = await response.text();
                     document.getElementById('sidebar-container').innerHTML = html;
+                    document.getElementById('navbar-container').innerHTML = html;
                 } catch (error) {
                     console.error('Erro ao carregar a sidebar:', error);
                     document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
+                    document.getElementById('navbar-container').innerHTML = '<p>Erro ao carregar a navbar.</p>';
                 }
             }
-
-            // Chama as funções de carregamento separadamente
-            loadSidebar();
 
             // Função para carregar dados do dashboard
             async function fetchDashboardData() {
@@ -353,7 +352,7 @@
                             r: 9,
                             strokeWidth: 7,
                             strokeOpacity: 0.4,
-                            fill: "#3b82f6" // Certifique-se de usar uma cor válida
+                            fill: "#3b82f6"
                         },
                         hover: {
                             fill: "#2563eb",
@@ -368,10 +367,42 @@
                 });
             }
 
+            function getCoordinatesForUF(uf) {
+                const coordinates = {
+                    "AC": [-9.97499, -67.8243],
+                    "AL": [-9.66599, -35.735],
+                    "AM": [-3.11703, -60.025],
+                    "AP": [0.038, -51.050],
+                    "BA": [-12.9714, -38.5014],
+                    "CE": [-3.71722, -38.543],
+                    "DF": [-15.7797, -47.9297],
+                    "ES": [-20.3155, -40.3128],
+                    "GO": [-16.6869, -49.2648],
+                    "MA": [-2.53073, -44.305],
+                    "MT": [-15.601, -56.097],
+                    "MS": [-20.4697, -54.6201],
+                    "MG": [-19.9167, -43.9345],
+                    "PA": [-1.45583, -48.5044],
+                    "PB": [-7.115, -34.8631],
+                    "PR": [-25.4284, -49.2733],
+                    "PE": [-8.04756, -34.877],
+                    "PI": [-5.08921, -42.8019],
+                    "RJ": [-22.9068, -43.1729],
+                    "RN": [-5.79448, -35.211],
+                    "RO": [-8.76077, -63.9004],
+                    "RS": [-30.0346, -51.2177],
+                    "RR": [2.8193, -60.671],
+                    "SC": [-27.5954, -48.548],
+                    "SE": [-10.9472, -37.0731],
+                    "SP": [-23.5505, -46.6333],
+                    "TO": [-10.250, -48.325],
+                };
+                return coordinates[uf] || [0, 0];
+            }
 
             // Inicializa o dashboard
-            loadSidebarAndNavbar();
-            fetchDashboardData();
+            await loadSidebarAndNavbar();
+            await fetchDashboardData();
         });
     </script>
 </body>
