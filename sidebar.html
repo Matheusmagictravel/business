@@ -900,5 +900,125 @@
         }
         // ]]>
     </script>
+    <script>
+    function initializeCalendar() {
+        const openCalendarBtn = document.getElementById("open-calendar-btn");
+        const backBtn = document.getElementById("back-btn");
+        const applyBtn = document.getElementById("apply-btn");
+        const calendarModal = document.getElementById("calendarModal");
+        const bootstrapModal = new bootstrap.Modal(calendarModal);
+        const calendarDatesContainer = document.querySelector(".calendar__dates");
+        const monthSelect = document.getElementById("calendar__month");
+        const yearSelect = document.getElementById("calendar__year");
+        const selectedDateDisplay = document.getElementById("datas-selecionadas");
+
+        let selectedStartDate = null;
+        let selectedEndDate = null;
+
+        // Função para renderizar o calendário
+        function renderCalendar() {
+            const month = parseInt(monthSelect.value);
+            const year = parseInt(yearSelect.value);
+
+            const firstDayOfMonth = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            calendarDatesContainer.innerHTML = '';
+
+            // Adiciona dias vazios para alinhar o primeiro dia do mês
+            let firstWeekDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+            for (let i = 0; i < firstWeekDay; i++) {
+                const emptyDateElement = document.createElement('div');
+                emptyDateElement.classList.add('calendar__date', 'calendar__date--grey');
+                calendarDatesContainer.appendChild(emptyDateElement);
+            }
+
+            // Adiciona os dias do mês
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dateElement = document.createElement('div');
+                dateElement.classList.add('calendar__date');
+                dateElement.innerHTML = `<span>${i}</span>`;
+                calendarDatesContainer.appendChild(dateElement);
+
+                // Evento de clique para selecionar as datas
+                dateElement.addEventListener('click', function () {
+                    if (!selectedStartDate || selectedEndDate) {
+                        selectedStartDate = new Date(year, month, i);
+                        selectedEndDate = null;
+                        clearSelection();
+                        dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+                    } else {
+                        selectedEndDate = new Date(year, month, i);
+                        if (selectedEndDate < selectedStartDate) {
+                            alert('Data de término não pode ser anterior à data de início.');
+                            selectedEndDate = null;
+                            return;
+                        }
+                        clearSelection();
+                        highlightRange(selectedStartDate, selectedEndDate);
+                    }
+                });
+            }
+        }
+
+        // Limpa a seleção de datas
+        function clearSelection() {
+            document.querySelectorAll('.calendar__date--selected').forEach(el => {
+                el.classList.remove('calendar__date--selected', 'calendar__date--range-start', 'calendar__date--range-end');
+            });
+        }
+
+        // Destaque as datas selecionadas
+        function highlightRange(start, end) {
+            document.querySelectorAll('.calendar__date').forEach(el => {
+                const day = parseInt(el.textContent);
+                const elDate = new Date(yearSelect.value, monthSelect.value, day);
+                if (elDate >= start && elDate <= end) {
+                    el.classList.add('calendar__date--selected');
+                    if (elDate.getTime() === start.getTime()) el.classList.add('calendar__date--range-start');
+                    if (elDate.getTime() === end.getTime()) el.classList.add('calendar__date--range-end');
+                }
+            });
+        }
+
+        // Atualiza o display das datas selecionadas
+        function updateSelectedDateDisplay() {
+            if (selectedStartDate && selectedEndDate) {
+                const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
+            } else if (selectedStartDate) {
+                const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                selectedDateDisplay.textContent = `Data selecionada: ${startDateStr}`;
+            } else {
+                selectedDateDisplay.textContent = '';
+            }
+        }
+
+        // Listeners para eventos do calendário
+        monthSelect.addEventListener('change', renderCalendar);
+        yearSelect.addEventListener('change', renderCalendar);
+
+        renderCalendar(); // Inicializa o calendário
+
+        openCalendarBtn.addEventListener("click", function () {
+            calendarModal.removeAttribute('inert');
+            bootstrapModal.show();
+        });
+
+        backBtn.addEventListener("click", function () {
+            bootstrapModal.hide();
+        });
+
+        applyBtn.addEventListener("click", function () {
+            updateSelectedDateDisplay();
+            bootstrapModal.hide();
+        });
+
+        calendarModal.addEventListener('hidden.bs.modal', function () {
+            calendarModal.setAttribute('inert', 'true');
+        });
+    }
+</script>
 </body>
 </html>
