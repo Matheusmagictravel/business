@@ -346,6 +346,17 @@
                 calendarModal.removeAttribute('inert');
                 bootstrapModal.show();
             }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Inicializando o Flatpickr no botão ou campo de data
+            flatpickr("#calendarModal", {
+                inline: true, // Exibe o calendário diretamente
+                dateFormat: "d-m-Y", // Formato de exibição
+                defaultDate: new Date(), // Define a data padrão para hoje
+                locale: "pt", // Define o idioma para português
+                minDate: "today", // Bloqueia datas passadas
+            });
+        });
         
         document.addEventListener('DOMContentLoaded', async function () {
             async function fetchDashboardData() {
