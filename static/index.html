@@ -16,257 +16,243 @@
 
     <title>AdminKit Demo - Bootstrap 5 Admin Template</title>
 
-    <link href="https://business.magictraveltur.com/css/app.css" rel="stylesheet">
+    <link href="https://business.magictraveltur.com/dist/css/app.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div class="wrapper">
-        <nav id="sidebar" class="sidebar js-sidebar">
-            <div class="sidebar-content js-simplebar">
-                <a class="sidebar-brand" href="index.html">
-                    <span class="align-middle">AdminKit</span>
-                </a>
-                <!-- Add more sidebar items here if needed -->
-            </div>
-        </nav>
-
-        <div class="main">
-            <nav class="navbar navbar-expand navbar-light navbar-bg">
-                <a class="sidebar-toggle js-sidebar-toggle">
-                    <i class="hamburger align-self-center"></i>
-                </a>
-                <div class="navbar-collapse collapse">
-                    <ul class="navbar-nav navbar-align">
-                        <!-- Add more navbar items here if needed -->
-                    </ul>
-                </div>
-            </nav>
-            <main class="content">
-                <div class="container-fluid p-0">
-                    <h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
-                    <div class="row">
-                        <div class="col-xl-6 col-xxl-5 d-flex">
-                            <div class="w-100">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col mt-0">
-                                                        <h5 class="card-title">Sales</h5>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <div class="stat text-primary">
-                                                            <i class="align-middle" data-feather="truck"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <h1 id="sales-value" class="mt-1 mb-3">0</h1>
-                                                <div class="mb-0">
-                                                    <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span>
-                                                    <span class="text-muted">Since last week</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col mt-0">
-                                                        <h5 class="card-title">Visitors</h5>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <div class="stat text-primary">
-                                                            <i class="align-middle" data-feather="users"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <h1 id="visitors-value" class="mt-1 mb-3">0</h1>
-                                                <div class="mb-0">
-                                                    <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 5.25% </span>
-                                                    <span class="text-muted">Since last week</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-6">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col mt-0">
-                                                        <h5 class="card-title">Earnings</h5>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <div class="stat text-primary">
-                                                            <i class="align-middle" data-feather="dollar-sign"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <h1 id="earnings-value" class="mt-1 mb-3">0</h1>
-                                                <div class="mb-0">
-                                                    <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 6.65% </span>
-                                                    <span class="text-muted">Since last week</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div class="row">
-                                                    <div class="col mt-0">
-                                                        <h5 class="card-title">Orders</h5>
-                                                    </div>
-                                                    <div class="col-auto">
-                                                        <div class="stat text-primary">
-                                                            <i class="align-middle" data-feather="shopping-cart"></i>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <h1 id="orders-value" class="mt-1 mb-3">0</h1>
-                                                <div class="mb-0">
-                                                    <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -2.25% </span>
-                                                    <span class="text-muted">Since last week</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-6 col-xxl-7">
-                            <div class="card flex-fill w-100">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Recent Movement</h5>
-                                </div>
-                                <div class="card-body py-3">
-                                    <div class="chart chart-sm">
-                                        <canvas id="chartjs-dashboard-line"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12 col-md-12 col-xxl-9 d-flex order-2 order-xxl-1">
-                            <div class="card flex-fill w-100">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Real-Time</h5>
-                                </div>
-                                <div class="card-body px-4">
-                                    <div id="world_map" style="height: 350px;"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6 col-xxl-3 d-flex order-3 order-xxl-2">
-                            <div class="card flex-fill w-100">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Browser Usage</h5>
-                                </div>
-                                <div class="card-body d-flex">
-                                    <div class="align-self-center w-100">
-                                        <div class="py-3">
-                                            <div class="chart chart-xs">
-                                                <canvas id="chartjs-dashboard-pie"></canvas>
-                                            </div>
-                                        </div>
-                                        <table class="table mb-0">
-                                            <tbody id="browser-usage">
-                                                <tr>
-                                                    <td>Chrome</td>
-                                                    <td class="text-end">0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Firefox</td>
-                                                    <td class="text-end">0</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>IE</td>
-                                                    <td class="text-end">0</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12 col-lg-8 col-xxl-9 d-flex">
-                            <div class="card flex-fill">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Latest Projects</h5>
-                                </div>
-                                <table class="table table-hover my-0">
-                                    <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th class="d-none d-xl-table-cell">Start Date</th>
-                                            <th class="d-none d-xl-table-cell">End Date</th>
-                                            <th>Status</th>
-                                            <th class="d-none d-md-table-cell">Assignee</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="latest-projects">
-                                        <tr>
-                                            <td colspan="5">Carregando...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div class="col-12 col-lg-4 col-xxl-3 d-flex">
-                            <div class="card flex-fill w-100">
-                                <div class="card-header">
-                                    <h5 class="card-title mb-0">Monthly Sales</h5>
-                                </div>
-                                <div class="card-body d-flex w-100">
-                                    <div class="align-self-center chart chart-lg">
-                                        <canvas id="chartjs-dashboard-bar"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </main>
-
-            <footer class="footer">
-                <div class="container-fluid">
-                    <div class="row text-muted">
-                        <div class="col-6 text-start">
-                            <p class="mb-0">
-                                <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a> - 
-                                <a class="text-muted" href="https://adminkit.io/" target="_blank">
-                                    <strong>Bootstrap Admin Template</strong>
-                                </a> &copy;
-                            </p>
-                        </div>
-                        <div class="col-6 text-end">
-                            <ul class="list-inline">
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </footer>
-        </div>
+    <div class="wrapper" id="sidebar-container">
+        <!-- Sidebar will be loaded here -->
     </div>
 
-    <script src="https://business.magictraveltur.com/js/app.js"></script>
+    <div class="main">
+        <div id="navbar-container">
+            <!-- Navbar will be loaded here -->
+        </div>
+        <main class="content">
+            <div class="container-fluid p-0">
+                <h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
+                <div class="row">
+                    <div class="col-xl-6 col-xxl-5 d-flex">
+                        <div class="w-100">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col mt-0">
+                                                    <h5 class="card-title">Receita</h5>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="stat text-primary">
+                                                        <i class="align-middle" data-feather="truck"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h1 id="sales-value" class="mt-1 mb-3">0</h1>
+                                            <div class="mb-0">
+                                                <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span>
+                                                <span class="text-muted">Since last week</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col mt-0">
+                                                    <h5 class="card-title">Faturado</h5>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="stat text-primary">
+                                                        <i class="align-middle" data-feather="users"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h1 id="visitors-value" class="mt-1 mb-3">0</h1>
+                                            <div class="mb-0">
+                                                <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 5.25% </span>
+                                                <span class="text-muted">Since last week</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col mt-0">
+                                                    <h5 class="card-title">Fornecedor</h5>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="stat text-primary">
+                                                        <i class="align-middle" data-feather="dollar-sign"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h1 id="earnings-value" class="mt-1 mb-3">0</h1>
+                                            <div class="mb-0">
+                                                <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 6.65% </span>
+                                                <span class="text-muted">Since last week</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col mt-0">
+                                                    <h5 class="card-title">Pedidos</h5>
+                                                </div>
+                                                <div class="col-auto">
+                                                    <div class="stat text-primary">
+                                                        <i class="align-middle" data-feather="shopping-cart"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h1 id="orders-value" class="mt-1 mb-3">0</h1>
+                                            <div class="mb-0">
+                                                <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -2.25% </span>
+                                                <span class="text-muted">Since last week</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6 col-xxl-7">
+                        <div class="card flex-fill w-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Receita Recente</h5>
+                            </div>
+                            <div class="card-body py-3">
+                                <div class="chart chart-sm">
+                                    <canvas id="chartjs-dashboard-line"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-md-12 col-xxl-9 d-flex order-2 order-xxl-1">
+                        <div class="card flex-fill w-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Venda por Estado</h5>
+                            </div>
+                            <div class="card-body px-4">
+                                <div id="world_map" style="height: 350px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-xxl-3 d-flex order-3 order-xxl-2">
+                        <div class="card flex-fill w-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Método de Pagamento</h5>
+                            </div>
+                            <div class="card-body d-flex">
+                                <div class="align-self-center w-100">
+                                    <div class="py-3">
+                                        <div class="chart chart-xs">
+                                            <canvas id="chartjs-dashboard-pie"></canvas>
+                                        </div>
+                                    </div>
+                                    <table class="table mb-0">
+                                        <tbody id="browser-usage">
+                                            <tr>
+                                                <td>Chrome</td>
+                                                <td class="text-end">0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Firefox</td>
+                                                <td class="text-end">0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>IE</td>
+                                                <td class="text-end">0</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 col-lg-8 col-xxl-9 d-flex">
+                        <div class="card flex-fill">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Ultimos Pedidos</h5>
+                            </div>
+                            <table class="table table-hover my-0">
+                                <thead>
+                                    <tr>
+                                        <th>Nome</th>
+                                        <th class="d-none d-xl-table-cell">Data da Venda</th>
+                                        <th class="d-none d-xl-table-cell">Valor</th>
+                                        <th>Método</th>
+                                        <th class="d-none d-md-table-cell">Agente</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="latest-projects">
+                                    <tr>
+                                        <td colspan="5">Carregando...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4 col-xxl-3 d-flex">
+                        <div class="card flex-fill w-100">
+                            <div class="card-header">
+                                <h5 class="card-title mb-0">Melhores Vendedores</h5>
+                            </div>
+                            <div class="card-body d-flex w-100">
+                                <div class="align-self-center chart chart-lg">
+                                    <canvas id="chartjs-dashboard-bar"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row text-muted">
+                    <div class="col-6 text-start">
+                        <p class="mb-0">
+                            <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a> - 
+                            <a class="text-muted" href="https://adminkit.io/" target="_blank">
+                                <strong>Bootstrap Admin Template</strong>
+                            </a> &copy;
+                        </p>
+                    </div>
+                    <div class="col-6 text-end">
+                        <ul class="list-inline">
+                            <li class="list-inline-item">
+                                <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a class="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://business.magictraveltur.com/dist/js/app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@2.0.3/dist/js/jsvectormap.min.js"></script>
     <script src="https://business.magictraveltur.com/dist/js/brasil.js"></script>
@@ -349,7 +335,7 @@
                         plugins: { legend: { display: false } },
                         scales: {
                             x: { grid: { display: false } },
-                            y: { grid: { color: '#e5e7eb' }, beginAtZero: true },
+                            y: { beginAtZero: true, grid: { color: '#e5e7eb' } },
                         },
                     },
                 });
@@ -470,12 +456,14 @@
                         }]
                     },
                     options: {
-                        responsive: !window.MSInputMethodContext,
+                        responsive: true,
                         maintainAspectRatio: false,
-                        legend: {
-                            display: false
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
                         },
-                        cutoutPercentage: 75
+                        cutout: '75%'
                     }
                 });
             }
@@ -510,25 +498,26 @@
                     },
                     options: {
                         maintainAspectRatio: false,
-                        legend: {
-                            display: false
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
                         },
                         scales: {
-                            yAxes: [{
-                                gridLines: {
+                            y: {
+                                beginAtZero: true,
+                                grid: {
                                     display: false
                                 },
-                                stacked: false,
                                 ticks: {
                                     stepSize: 1
                                 }
-                            }],
-                            xAxes: [{
-                                stacked: false,
-                                gridLines: {
+                            },
+                            x: {
+                                grid: {
                                     color: "transparent"
                                 }
-                            }]
+                            }
                         }
                     }
                 });
@@ -536,8 +525,29 @@
 
             await fetchDashboardData();
         });
-    </script>
 
+        // Load the sidebar and navbar
+        async function loadSidebarAndNavbar() {
+            try {
+                const sidebarResponse = await fetch('https://business.magictraveltur.com/sidebar.html');
+                if (!sidebarResponse.ok) throw new Error(`Erro ao carregar o sidebar: ${sidebarResponse.status}`);
+                const sidebarHtml = await sidebarResponse.text();
+                document.getElementById('sidebar-container').innerHTML = sidebarHtml;
+
+                const navbarResponse = await fetch('https://business.magictraveltur.com/navbar.html');
+                if (!navbarResponse.ok) throw new Error(`Erro ao carregar o navbar: ${navbarResponse.status}`);
+                const navbarHtml = await navbarResponse.text();
+                document.getElementById('navbar-container').innerHTML = navbarHtml;
+
+                feather.replace();  // Ensure Feather icons are replaced after loading new HTML
+
+            } catch (error) {
+                console.error('Erro ao carregar a sidebar e navbar:', error);
+            }
+        }
+
+        loadSidebarAndNavbar();
+    </script>
 </body>
 
 </html>
