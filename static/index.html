@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -35,6 +37,19 @@
       font-size: 14px;
       color: #ccc;
     }
+
+    #dashboard-container .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-left: -0.75rem;
+        margin-right: -0.75rem;
+    }
+    
+    #dashboard-container .row > [class*='col-'] {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+        
     </style>
 </head>
 
@@ -292,7 +307,7 @@
             async function fetchDashboardData() {
                 try {
                     const response = await fetch('https://www.magictraveltur.com/api_pedidos.php');
-                    if (!response.ok) throw new Error(Erro ao carregar os dados: ${response.status});
+                    if (!response.ok) throw new Error(`Erro ao carregar os dados: ${response.status}`);
 
                     const data = await response.json();
 
@@ -303,23 +318,23 @@
                     const totalPedidos = data.length;
 
                     // Atualiza os cards
-                    document.getElementById('sales-value').textContent = R$ ${totalReceita.toFixed(2)};
-                    document.getElementById('visitors-value').textContent = R$ ${totalDespesa.toFixed(2)};
-                    document.getElementById('earnings-value').textContent = R$ ${totalFaturamento.toFixed(2)};
+                    document.getElementById('sales-value').textContent = `R$ ${totalReceita.toFixed(2)}`;
+                    document.getElementById('visitors-value').textContent = `R$ ${totalDespesa.toFixed(2)}`;
+                    document.getElementById('earnings-value').textContent = `R$ ${totalFaturamento.toFixed(2)}`;
                     document.getElementById('orders-value').textContent = totalPedidos;
 
                     // Atualiza a tabela de últimos pedidos
                     const latestProjects = document.getElementById('latest-projects');
                     latestProjects.innerHTML = '';
                     data.forEach(pedido => {
-                        latestProjects.innerHTML += 
+                        latestProjects.innerHTML += `
                             <tr>
                                 <td>${pedido.nome || 'N/A'}</td>
                                 <td>${pedido.data_venda || 'N/A'}</td>
                                 <td>R$ ${parseFloat(pedido.valor_venda || 0).toFixed(2)}</td>
                                 <td>${pedido.meio_pgto || 'N/A'}</td>
                                 <td>${pedido.efetivado_por || 'N/A'}</td>
-                            </tr>;
+                            </tr>`;
                     });
 
                     // Gera o gráfico de receita
@@ -384,7 +399,7 @@
 
                 const markers = Object.keys(estados).map(uf => ({
                     coords: getCoordinatesForUF(uf),
-                    name: ${uf} - ${estados[uf]} pedidos,
+                    name: `${uf} - ${estados[uf]} pedidos`,
                 }));
 
                 const map = new jsVectorMap({
@@ -460,11 +475,11 @@
                 const browserUsage = document.getElementById('browser-usage');
                 browserUsage.innerHTML = '';
                 Object.keys(meioPgtoCounts).forEach(meioPgto => {
-                    browserUsage.innerHTML += 
+                    browserUsage.innerHTML += `
                         <tr>
                             <td>${meioPgto}</td>
                             <td class="text-end">${meioPgtoCounts[meioPgto]}</td>
-                        </tr>;
+                        </tr>`;
                 });
 
                 const ctx = document.getElementById('chartjs-dashboard-pie').getContext('2d');
