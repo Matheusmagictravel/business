@@ -1,544 +1,914 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidebar and Navbar</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>AdminKit Demo - Bootstrap 5 Admin Template</title>
+    <link href="https://business.magictraveltur.com/css/app.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #3b7ddd;
-            --secondary-color: #6c757d;
-            --background-color: #f8f9fa;
-            --navbar-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            --indicator-size: 16px;
+        .calendar {
+            --side-padding: 20px; 
+            --border-radius: 34px; 
+            --accent-br: 15px; 
+
+            width: 400px;
+            margin: auto;
+        }
+
+        .calendar select {
+            background-color: #f3f4f6;
+            padding: 15px 20px;
+        }
+
+        .calendar__opts,
+        .calendar__buttons {
+            background-color: #fff;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 15px;
+        }
+
+        .calendar__opts {
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+            padding: 20px var(--side-padding);
+        }
+
+        .calendar__body {
+            background-image: linear-gradient(to bottom, #f3f4f6, #fff);
+        }
+
+        .calendar__days {
+            background-color: #fff;
+            padding: 0 var(--side-padding) 10px;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+
+        .calendar__days > div {
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.02rem;
+            color: #c5c8ca;
+        }
+
+        .calendar__dates {
+            padding: 10px var(--side-padding);
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+
+        .calendar__date {
+            --height: calc(400px / 6 - var(--side-padding));
+
+            text-align: center;
+            height: var(--height);
+            line-height: var(--height);
+            font-weight: 600;
+            font-size: 1.02rem;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .calendar__date::before {
+            content: "";
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0);
+            width: 100%;
+            height: calc(var(--height) * 0.9);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: var(--accent-br);
+            transition: background-color 0.3s ease;
+        }
+
+        .calendar__date:not(.calendar__date--selected):not(.calendar__date--grey):hover::before {
+            background-color: #ededed;
+        }
+
+        .calendar__date--grey {
+            color: #c5c8ca;
+            cursor: not-allowed;
+        }
+
+        .calendar__date--selected {
+            color: #4b37ff;
+        }
+
+        .calendar__date--selected::before {
+            background-color: #eceaff;
+            border-radius: 0px;
+        }
+
+        .calendar__date--first-date::before {
+            border-top-left-radius: var(--accent-br);
+            border-bottom-left-radius: var(--accent-br);
+        }
+
+        .calendar__date--last-date::before {
+            border-top-right-radius: var(--accent-br);
+            border-bottom-right-radius: var(--accent-br);
+        }
+
+        .calendar__date--range-start::after {
+            content: "";
+            position: absolute;
+            bottom: 3px;
+            border-radius: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4b37ff;
+            width: 10px;
+            height: 4px;
+        }
+
+        .calendar__date--range-end {
+            color: #fff;
+        }
+
+        .calendar__date--range-end::before {
+            box-shadow: 0 15px 20px -3px rgba(72, 55, 255, 0.35);
+            background-color: #4b37ff;
+            border-radius: var(--accent-br);
+            z-index: 1;
+        }
+
+        .calendar__date--range-end::after {
+            content: "";
+            position: absolute;
+            height: calc(var(--height) * 0.9);
+            background-color: #eeeaff;
+            width: 50px;
+            top: 50%;
+            right: 50%;
+            transform: translateY(-50%);
+        }
+
+        .calendar__date span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .calendar__buttons {
+            padding: 10px var(--side-padding) 20px;
+            border-bottom-left-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+        }
+
+        .calendar__button {
+            cursor: pointer;
+        }
+
+        .calendar__button--grey {
+            background-color: #f3f4f6;
+        }
+
+        .calendar__button--primary {
+            background-color: #1752ff;
+            color: #fff;
+            transition: box-shadow 0.3s cubic-bezier(0.21, 0.68, 0.09, 0.27), transform 0.2s linear;
+        }
+
+        .calendar__button--primary:hover {
+            box-shadow: 0 20px 30px -13px rgba(23, 82, 255, 0.45);
+            transform: translateY(-3px);
+        }
+
+        .calendar__button--primary:active {
+            box-shadow: 0 10px 10px -6px rgba(23, 82, 255, 0.45);
+            transform: translateY(-1px);
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--background-color);
-            display: flex;
-        }
-
-        /* Sidebar */
-        #sidebar {
-            width: 260px;
-            height: 100vh;
-            background-color: #07042f;
-            color: #fff;
-            overflow-y: auto;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            position: fixed;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .sidebar-brand img {
-            display: block;
-            margin: 0 auto 20px;
-            max-width: 70%;
-            height: auto;
-        }
-
-        .sidebar-header {
-            font-size: 0.9rem;
-            color: #f0f0f0;
-            text-transform: uppercase;
-            font-weight: 600;
-            margin-top: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .sidebar-nav {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .sidebar-item {
-            margin-bottom: 1rem;
-        }
-
-        .sidebar-link {
-            color: #ffffff;
-            text-decoration: none;
-            font-size: 0.8rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 15px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .sidebar-link:hover {
-            background-color: #0071e3;
-            color: #ffffff;
-        }
-
-        .sidebar-item.active .sidebar-link {
-            background-color: #0071e3;
-            color: #ffffff;
-        }
-
-        .sidebar-link svg {
-            flex-shrink: 0;
-            width: 20px;
-            height: 20px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2;
-        }
-
-        /* Navbar */
-        .navbar {
-            margin-left: 260px;
-            width: calc(100% - 260px);
-            background-color: #ffffff;
-            box-shadow: var(--navbar-shadow);
-            padding: 0.8rem 1.2rem;
-            position: fixed;
-            top: 0;
-            z-index: 1000;
-            transition: margin-left 0.3s ease-in-out;
-        }
-
-        .navbar-brand {
-            font-weight: bold;
-            color: var(--primary-color);
-            font-size: 1.25rem;
-        }
-
-        .navbar-nav {
-            display: flex;
-            align-items: center;
-        }
-
-        .navbar-nav .nav-item {
-            margin-right: 2rem;
-        }
-
-        .nav-icon {
-            position: relative;
-            color: var(--secondary-color);
-            font-size: 1.6rem;
-            cursor: pointer;
-            transition: color 0.3s;
-        }
-
-        .nav-icon:hover {
-            color: var(--primary-color);
-        }
-
-        .nav-icon .indicator {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: var(--primary-color);
-            color: #ffffff;
-            font-size: 12px;
-            padding: 2px 6px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .profile {
-            display: flex;
-            align-items: center;
-        }
-
-        .profile img {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            margin-right: 0.75rem;
-        }
-
-        .profile span {
-            color: var(--secondary-color);
-            font-weight: 500;
-            font-size: 1rem;
-        }
-
-        main {
-            margin-top: 56px;
-            margin-left: 260px;
-            padding: 20px;
-        }
-
-        .dropdown-menu {
-            border-radius: 8px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .dropdown-menu-header {
-            background-color: #f1f1f1;
-            font-weight: bold;
-            padding: 0.5rem 1rem;
-        }
-
-        .list-group-item {
-            border: none;
-            padding: 0.6rem 1rem;
-            transition: background-color 0.2s;
-        }
-
-        .list-group-item:hover {
-            background-color: #f8f9fa;
-        }
-
-        .dropdown-menu-footer {
-            background-color: #f1f1f1;
-            text-align: center;
-            padding: 0.5rem;
-        }
-
-        .dropdown-menu-footer a {
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .dropdown-menu-footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Responsiveness */
-        @media (max-width: 768px) {
-            #sidebar {
-                transform: translateX(-260px);
-            }
-
-            #sidebar.active {
-                transform: translateX(0);
-            }
-
-            .navbar {
-                margin-left: 0;
-                width: 100%;
-            }
-
-            main {
-                margin-left: 0;
-            }
-
-            .toggle-sidebar {
-                display: inline-block;
-            }
-        }
-
-        .toggle-sidebar {
-            display: none;
-            cursor: pointer;
-            color: var(--secondary-color);
-            font-size: 1.5rem;
-        }
-
-        .toggle-sidebar:hover {
-            color: var(--primary-color);
-        }
-
-        form.d-flex input[type="date"] {
-            max-width: 160px;
-            padding: 0.4rem;
-            font-size: 0.9rem;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-        
-        form.d-flex label {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: #333;
-        }
-        
-        form.d-flex button {
-            padding: 0.4rem 0.8rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .calendar-popup {
-            position: relative;
-        }
-
-        .calendar-container {
-            display: none;
-            position: absolute;
-            top: 50px;
-            left: 0;
-            background: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 16px;
-            z-index: 1000;
-        }
-
-        .calendar-container.show {
-            display: block;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .calendar-header select {
-            padding: 4px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-        }
-
-        .calendar-dates {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 4px;
-            text-align: center;
+            place-items: center;
+            background-color: #eaedf2;
+            height: 100vh;
+            font-family: "Nunito", sans-serif;
+            font-size: 14px;
         }
 
-        .calendar-dates div {
-            padding: 8px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .calendar-dates div:hover {
-            background-color: #e0e0e0;
-        }
-
-        .calendar-dates .selected {
-            background-color: #ff5757;
-            color: #fff;
-        }
-
-        .calendar-dates .range {
-            background-color: #ffdede;
-        }
-
+        select,
         button {
-            padding: 10px 16px;
-            border: none;
-            border-radius: 4px;
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 1.02rem;
+            border-radius: 20px;
+            outline: none;
+            border: 0;
+            padding: 15px 20px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
 
-        button:hover {
-            background-color: #0056b3;
+        select {
+            background-size: 24px;
+            background-repeat: no-repeat;
+            background-position: calc(100% - var (--side-padding)) center;
+        }
+
+        .date-selector-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .selected-date-display {
+            margin-right: 10px;
+            padding: 8px 12px;
+            background-color: #f3f4f6;
+            border-radius: 4px;
+            font-weight: 400;
+            color: #333;
+            display: flex;
+            align-items: center;
+            height: 95%;
         }
     </style>
 </head>
 <body>
-
-<nav id="sidebar">
-    <a class="sidebar-brand" href="https://business.magictraveltur.com/dashboard">
-        <img src="https://www.magictraveltur.com/wp-content/uploads/2025/01/Logo-Branca.png" alt="Magic Travel">
-    </a>
-    <ul class="sidebar-nav">
-        <li class="sidebar-header">Pages</li>
-        <li class="sidebar-item" data-path="/dashboard">
-            <a class="sidebar-link" href="https://business.magictraveltur.com/index.html">
-                <i class="fas fa-home"></i>
-                <span>Dashboard</span>
-            </a>
-        </li>
-        <li class="sidebar-item" data-path="/pages-orders">
-            <a class="sidebar-link" href="https://business.magictraveltur.com/pages-orders.html">
-                <i class="fas fa-shopping-cart"></i>
-                <span>Pedidos</span>
-            </a>
-        </li>
-    </ul>
-</nav>
-
-<nav class="navbar navbar-expand">
-    <div class="container-fluid">
-        <a class="sidebar-toggle js-sidebar-toggle">
-            <i class="fas fa-bars"></i>
-        </a>
-        
-        <!-- Campos de data para selecionar início e fim -->
-         <div style="width: 100%; display: flex; justify-content: center;">
-             <div class="calendar-popup">
-                 <button id="openCalendar">Selecionar Datas</button>
-                 
-                 <div class="calendar-container" id="calendar">
-                     <div class="calendar-header">
-                         <select id="monthSelector"></select>
-                         <select id="yearSelector"></select>
+    <div class="wrapper">
+        <nav id="sidebar" class="sidebar js-sidebar">
+            <div class="sidebar-content js-simplebar">
+                <a class="sidebar-brand" href="index.html">					
+                    <img src="https://www.magictraveltur.com/wp-content/uploads/2024/11/Escrita-_-Branco.png" 
+                    alt="Avatar 5" 
+                    class="align-middle" 
+                    style="width: 125px; height: auto;">
+                </a>
+                <ul class="sidebar-nav">
+                    <li class="sidebar-header">Pages</li>
+                    <li class="sidebar-item active">
+                        <a class="sidebar-link" href="index.html">
+                            <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="pages-orders.html">
+                            <i class="align-middle" data-feather="user"></i> <span class="align-middle">Pedidos</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="pages-sign-in.html">
+                            <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Relatórios</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="pages-sign-up.html">
+                            <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Sign Up</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="pages-blank.html">
+                            <i class="align-middle" data-feather="book"></i> <span class="align-middle">Blank</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-header">Tools & Components</li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="ui-buttons.html">
+                            <i class="align-middle" data-feather="square"></i> <span class="align-middle">Buttons</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="ui-forms.html">
+                            <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Forms</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="ui-cards.html">
+                            <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Cards</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="ui-typography.html">
+                            <i class="align-middle" data-feather="align-left"></i> <span class="align-middle">Typography</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="icons-feather.html">
+                            <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">Icons</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-header">Plugins & Addons</li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="charts-chartjs.html">
+                            <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Charts</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="maps-google.html">
+                            <i class="align-middle" data-feather="map"></i> <span class="align-middle">Maps</span>
+                        </a>
+                    </li>
+                </ul>
+                <div class="sidebar-cta">
+                    <div class="sidebar-cta-content">
+                        <strong class="d-inline-block mb-2">Upgrade to Pro</strong>
+                        <div class="mb-3 text-sm">
+                            Are you looking for more components? Check out our premium version.
                         </div>
-                        <div class="calendar-dates" id="datesGrid"></div>
-                        <button id="applyDates">Aplicar</button>
+                        <div class="d-grid">
+                            <a href="upgrade-to-pro.html" class="btn btn-primary">Upgrade to Pro</a>
+                        </div>
                     </div>
                 </div>
             </div>
-                
-                <ul class="navbar-nav ms-auto">
-            <li class="nav-item dropdown">
-                <a class="nav-icon" href="#" id="alertsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="position-relative">
-                        <i class="far fa-bell"></i>
-                        <span class="indicator">4</span>
-                    </div>
+        </nav>
+
+        <div class="main">
+            <nav class="navbar navbar-expand navbar-light navbar-bg">
+                <a class="sidebar-toggle js-sidebar-toggle">
+                    <i class="hamburger align-self-center"></i>
                 </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="alertsDropdown">
-                    <li class="dropdown-menu-header">Notifications</li>
-                    <li><a class="dropdown-item" href="#">Alert 1</a></li>
-                    <li><a class="dropdown-item" href="#">Alert 2</a></li>
-                    <li class="dropdown-menu-footer"><a href="#">View All</a></li>
-                </ul>
-            </li>
-            <li class="nav-item dropdown">
-                <a class="nav-icon" href="#" id="messagesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                    <div class="position-relative">
-                        <i class="far fa-envelope"></i>
-                        <span class="indicator">4</span>
-                    </div>
-                </a>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="messagesDropdown">
-                    <li class="dropdown-menu-header">Messages</li>
-                    <li><a class="dropdown-item" href="#">Message 1</a></li>
-                    <li><a class="dropdown-item" href="#">Message 2</a></li>
-                    <li class="dropdown-menu-footer"><a href="#">View All</a></li>
-                </ul>
-            </li>
-            <li class="nav-item">
-                <div class="profile">
-                    <img src="https://www.magictraveltur.com/wp-content/uploads/2024/12/Achismos.jpg" alt="Profile Picture">
-                    <span>Matheus Alvarenga</span>
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav navbar-align">
+                        <li class="nav-item date-selector-container">
+                            <span id="datas-selecionadas" class="selected-date-display"></span>
+                            <button id="open-calendar-btn" class="btn btn-primary">Selecionar Data</button>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-icon dropdown-toggle" href="#" id="alertsDropdown" data-bs-toggle="dropdown">
+                                <div class="position-relative">
+                                    <i class="align-middle" data-feather="bell"></i>
+                                    <span class="indicator">4</span>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0" aria-labelledby="alertsDropdown">
+                                <div class="dropdown-menu-header">
+                                    4 New Notifications
+                                </div>
+                                <div class="list-group">
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <i class="text-danger" data-feather="alert-circle"></i>
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="text-dark">Update completed</div>
+                                                <div class="text-muted small mt-1">Restart server 12 to complete the update.</div>
+                                                <div class="text-muted small mt-1">30m ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <i class="text-warning" data-feather="bell"></i>
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="text-dark">Lorem ipsum</div>
+                                                <div class="text-muted small mt-1">Aliquam ex eros, imperdiet vulputate hendrerit et.</div>
+                                                <div class="text-muted small mt-1">2h ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <i class="text-primary" data-feather="home"></i>
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="text-dark">Login from 192.186.1.8</div>
+                                                <div class="text-muted small mt-1">5h ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <i class="text-success" data-feather="user-plus"></i>
+                                            </div>
+                                            <div class="col-10">
+                                                <div class="text-dark">New connection</div>
+                                                <div class="text-muted small mt-1">Christina accepted your request.</div>
+                                                <div class="text-muted small mt-1">14h ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="dropdown-menu-footer">
+                                    <a href="#" class="text-muted">Show all notifications</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-icon dropdown-toggle" href="#" id="messagesDropdown" data-bs-toggle="dropdown">
+                                <div class="position-relative">
+                                    <i class="align-middle" data-feather="message-square"></i>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0" aria-labelledby="messagesDropdown">
+                                <div class="dropdown-menu-header">
+                                    <div class="position-relative">
+                                        4 New Messages
+                                    </div>
+                                </div>
+                                <div class="list-group">
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <img src="img/avatars/avatar-5.jpg" class="avatar img-fluid rounded-circle" alt="Vanessa Tucker">
+                                            </div>
+                                            <div class="col-10 ps-2">
+                                                <div class="text-dark">Vanessa Tucker</div>
+                                                <div class="text-muted small mt-1">Nam pretium turpis et arcu. Duis arcu tortor.</div>
+                                                <div class="text-muted small mt-1">15m ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <img src="img/avatars/avatar-2.jpg" class="avatar img-fluid rounded-circle" alt="William Harris">
+                                            </div>
+                                            <div class="col-10 ps-2">
+                                                <div class="text-dark">William Harris</div>
+                                                <div class="text-muted small mt-1">Curabitur ligula sapien euismod vitae.</div>
+                                                <div class="text-muted small mt-1">2h ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <img src="img/avatars/avatar-4.jpg" class="avatar img-fluid rounded-circle" alt="Christina Mason">
+                                            </div>
+                                            <div class="col-10 ps-2">
+                                                <div class="text-dark">Christina Mason</div>
+                                                <div class="text-muted small mt-1">Pellentesque auctor neque nec urna.</div>
+                                                <div class="text-muted small mt-1">4h ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="list-group-item">
+                                        <div class="row g-0 align-items-center">
+                                            <div class="col-2">
+                                                <img src="img/avatars/avatar-3.jpg" class="avatar img-fluid rounded-circle" alt="Sharon Lessman">
+                                            </div>
+                                            <div class="col-10 ps-2">
+                                                <div class="text-dark">Sharon Lessman</div>
+                                                <div class="text-muted small mt-1">Aenean tellus metus, bibendum sed, posuere ac, mattis non.</div>
+                                                <div class="text-muted small mt-1">5h ago</div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="dropdown-menu-footer">
+                                    <a href="#" class="text-muted">Show all messages</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
+                                <i class="align-middle" data-feather="settings"></i>
+                            </a>
+                            <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
+                                <img src="img/avatars/avatar.jpg" class="avatar img-fluid rounded me-1" alt="Charles Hall" /> <span class="text-dark">Charles Hall</span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                                <a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1" data-feather="user"></i> Profile</a>
+                                <a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="pie-chart"></i> Analytics</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="index.html"><i class="align-middle me-1" data-feather="settings"></i> Settings & Privacy</a>
+                                <a class="dropdown-item" href="#"><i class="align-middle me-1" data-feather="help-circle"></i> Help Center</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Log out</a>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-            </li>
-        </ul>
+            </nav>
+
+            <!-- Calendar Modal -->
+            <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="calendar">
+                                <div class="calendar__opts">
+                                    <select name="calendar__month" id="calendar__month">
+                                        <option value="0">Jan</option>
+                                        <option value="1">Feb</option>
+                                        <option value="2">Mar</option>
+                                        <option value="3">Apr</option>
+                                        <option value="4">May</option>
+                                        <option value="5">Jun</option>
+                                        <option value="6">Jul</option>
+                                        <option value="7">Aug</option>
+                                        <option value="8">Sep</option>
+                                        <option value="9">Oct</option>
+                                        <option value="10">Nov</option>
+                                        <option value="11">Dec</option>
+                                    </select>
+
+                                    <select name="calendar__year" id="calendar__year">
+                                        <option value="2025">2025</option>
+                                        <option value="2026">2026</option>
+                                        <option value="2027">2027</option>
+                                        <option value="2028">2028</option>
+                                    </select>
+                                </div>
+
+                                <div class="calendar__body">
+                                    <div class="calendar__days">
+                                        <div>M</div>
+                                        <div>T</div>
+                                        <div>W</div>
+                                        <div>T</div>
+                                        <div>F</div>
+                                        <div>S</div>
+                                        <div>S</div>
+                                    </div>
+
+                                    <div class="calendar__dates">
+                                        <!-- Date elements will be dynamically generated here -->
+                                    </div>
+                                </div>
+
+                                <div class="calendar__buttons">
+                                    <button class="calendar__button calendar__button--grey" id="back-btn">Back</button>
+                                    <button class="calendar__button calendar__button--primary" id="apply-btn">Apply</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</nav>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const sidebarItems = document.querySelectorAll(".sidebar-item");
-        const currentPath = window.location.pathname;
+    <script src="https://business.magictraveltur.com/js/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const openCalendarBtn = document.getElementById("open-calendar-btn");
+            const backBtn = document.getElementById("back-btn");
+            const applyBtn = document.getElementById("apply-btn");
+            const calendarModal = new bootstrap.Modal(document.getElementById("calendarModal"));
+            const calendarDatesContainer = document.querySelector(".calendar__dates");
+            const monthSelect = document.getElementById("calendar__month");
+            const yearSelect = document.getElementById("calendar__year");
+            const selectedDateDisplay = document.getElementById("datas-selecionadas");
 
-        sidebarItems.forEach(item => {
-            if (currentPath.startsWith(item.getAttribute("data-path"))) {
-                item.classList.add("active");
-            } else {
-                item.classList.remove("active");
-            }
-        });
-    });
+            let selectedStartDate = null;
+            let selectedEndDate = null;
 
-    document.querySelector("form").addEventListener("submit", function (event) {
-    const startDate = document.getElementById("start-date").value;
-    const endDate = document.getElementById("end-date").value;
+            function renderCalendar() {
+                const month = parseInt(monthSelect.value);
+                const year = parseInt(yearSelect.value);
 
-    if (new Date(startDate) > new Date(endDate)) {
-        event.preventDefault();
-        alert("A data de início não pode ser maior que a data de fim.");
-    }
-});
-    
-</script>
-<script>
-    const openCalendarButton = document.getElementById('openCalendar');
-    const calendar = document.getElementById('calendar');
-    const datesGrid = document.getElementById('datesGrid');
-    const monthSelector = document.getElementById('monthSelector');
-    const yearSelector = document.getElementById('yearSelector');
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    const today = new Date();
-    let startDate = null;
-    let endDate = null;
+                calendarDatesContainer.innerHTML = '';
 
-    const renderCalendar = (month, year) => {
-        datesGrid.innerHTML = '';
-        const firstDay = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-        for (let i = 0; i < firstDay; i++) {
-            datesGrid.innerHTML += '<div></div>';
-        }
-
-        for (let i = 1; i <= daysInMonth; i++) {
-            const dateDiv = document.createElement('div');
-            dateDiv.textContent = i;
-            const date = new Date(year, month, i);
-            dateDiv.dataset.date = date.toISOString().split('T')[0];
-            dateDiv.classList.add('date');
-
-            if (startDate && date.toISOString().split('T')[0] === startDate) {
-                dateDiv.classList.add('selected');
-            }
-            if (endDate && date.toISOString().split('T')[0] === endDate) {
-                dateDiv.classList.add('selected');
-            }
-            if (startDate && endDate && date >= new Date(startDate) && date <= new Date(endDate)) {
-                dateDiv.classList.add('range');
-            }
-
-            dateDiv.addEventListener('click', () => {
-                if (!startDate || (startDate && endDate)) {
-                    startDate = date.toISOString().split('T')[0];
-                    endDate = null;
-                } else if (!endDate && date > new Date(startDate)) {
-                    endDate = date.toISOString().split('T')[0];
-                } else {
-                    startDate = date.toISOString().split('T')[0];
-                    endDate = null;
+                // Render empty days for the first week
+                let firstWeekDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+                for (let i = 0; i < firstWeekDay; i++) {
+                    const emptyDateElement = document.createElement('div');
+                    emptyDateElement.classList.add('calendar__date', 'calendar__date--grey');
+                    calendarDatesContainer.appendChild(emptyDateElement);
                 }
-                renderCalendar(month, year);
+
+                // Render days of the month
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const dateElement = document.createElement('div');
+                    dateElement.classList.add('calendar__date');
+                    dateElement.innerHTML = `<span>${i}</span>`;
+                    calendarDatesContainer.appendChild(dateElement);
+
+                    dateElement.addEventListener('click', function () {
+                        if (!selectedStartDate || selectedEndDate) {
+                            // Start a new range selection
+                            selectedStartDate = new Date(year, month, i);
+                            selectedEndDate = null;
+                            clearSelection();
+                            dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+                        } else {
+                            // Select the end date
+                            selectedEndDate = new Date(year, month, i);
+                            clearSelection();
+                            highlightRange(selectedStartDate, selectedEndDate);
+                        }
+                    });
+                }
+            }
+
+            function clearSelection() {
+                document.querySelectorAll('.calendar__date--selected').forEach(el => {
+                    el.classList.remove('calendar__date--selected', 'calendar__date--range-start', 'calendar__date--range-end');
+                });
+            }
+
+            function highlightRange(start, end) {
+                document.querySelectorAll('.calendar__date').forEach(el => {
+                    const day = parseInt(el.textContent);
+                    const elDate = new Date(yearSelect.value, monthSelect.value, day);
+                    if (elDate >= start && elDate <= end) {
+                        el.classList.add('calendar__date--selected');
+                        if (elDate.getTime() === start.getTime()) el.classList.add('calendar__date--range-start');
+                        if (elDate.getTime() === end.getTime()) el.classList.add('calendar__date--range-end');
+                    }
+                });
+            }
+
+            function updateSelectedDateDisplay() {
+                if (selectedStartDate && selectedEndDate) {
+                    const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                    const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                    selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
+                } else if (selectedStartDate) {
+                    const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                    selectedDateDisplay.textContent = `Data selecionada: ${startDateStr}`;
+                } else {
+                    selectedDateDisplay.textContent = '';
+                }
+            }
+
+            monthSelect.addEventListener('change', renderCalendar);
+            yearSelect.addEventListener('change', renderCalendar);
+
+            renderCalendar(); // Initialize the calendar
+
+            openCalendarBtn.addEventListener("click", function () {
+                calendarModal.show();
             });
 
-            datesGrid.appendChild(dateDiv);
-        }
-    };
+            backBtn.addEventListener("click", function () {
+                calendarModal.hide();
+            });
 
-    const populateSelectors = () => {
-        for (let i = 0; i < 12; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = new Date(0, i).toLocaleString('default', { month: 'long' });
-            monthSelector.appendChild(option);
-        }
-        for (let i = today.getFullYear() - 10; i <= today.getFullYear() + 10; i++) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.textContent = i;
-            yearSelector.appendChild(option);
-        }
-    };
+            applyBtn.addEventListener("click", function () {
+                console.log("Selected Start Date:", selectedStartDate);
+                console.log("Selected End Date:", selectedEndDate);
+                updateSelectedDateDisplay();
+                calendarModal.hide();
+            });
+        });
+    </script>
+    <script src="js/app.js"></script>
 
-    openCalendarButton.addEventListener('click', () => {
-        calendar.classList.toggle('show');
-    });
-
-    monthSelector.addEventListener('change', () => {
-        renderCalendar(+monthSelector.value, +yearSelector.value);
-    });
-
-    yearSelector.addEventListener('change', () => {
-        renderCalendar(+monthSelector.value, +yearSelector.value);
-    });
-
-    document.getElementById('applyDates').addEventListener('click', () => {
-        calendar.classList.remove('show');
-        console.log('Start Date:', startDate);
-        console.log('End Date:', endDate);
-    });
-
-    populateSelectors();
-    monthSelector.value = today.getMonth();
-    yearSelector.value = today.getFullYear();
-    renderCalendar(today.getMonth(), today.getFullYear());
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
+            var gradient = ctx.createLinearGradient(0, 0, 0, 225);
+            gradient.addColorStop(0, "rgba(215, 227, 244, 1)");
+            gradient.addColorStop(1, "rgba(215, 227, 244, 0)");
+            // Line chart
+            new Chart(document.getElementById("chartjs-dashboard-line"), {
+                type: "line",
+                data: {
+                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    datasets: [{
+                        label: "Sales ($)",
+                        fill: true,
+                        backgroundColor: gradient,
+                        borderColor: window.theme.primary,
+                        data: [
+                            2115,
+                            1562,
+                            1584,
+                            1892,
+                            1587,
+                            1923,
+                            2566,
+                            2448,
+                            2805,
+                            3438,
+                            2917,
+                            3327
+                        ]
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        intersect: false
+                    },
+                    hover: {
+                        intersect: true
+                    },
+                    plugins: {
+                        filler: {
+                            propagate: false
+                        }
+                    },
+                    scales: {
+                        xAxes: [{
+                            reverse: true,
+                            gridLines: {
+                                color: "rgba(0,0,0,0.0)"
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                stepSize: 1000
+                            },
+                            display: true,
+                            borderDash: [3, 3],
+                            gridLines: {
+                                color: "rgba(0,0,0,0.0)"
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Pie chart
+            new Chart(document.getElementById("chartjs-dashboard-pie"), {
+                type: "pie",
+                data: {
+                    labels: ["Chrome", "Firefox", "IE"],
+                    datasets: [{
+                        data: [4306, 3801, 1689],
+                        backgroundColor: [
+                            window.theme.primary,
+                            window.theme.warning,
+                            window.theme.danger
+                        ],
+                        borderWidth: 5
+                    }]
+                },
+                options: {
+                    responsive: !window.MSInputMethodContext,
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    cutoutPercentage: 75
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Bar chart
+            new Chart(document.getElementById("chartjs-dashboard-bar"), {
+                type: "bar",
+                data: {
+                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    datasets: [{
+                        label: "This year",
+                        backgroundColor: window.theme.primary,
+                        borderColor: window.theme.primary,
+                        hoverBackgroundColor: window.theme.primary,
+                        hoverBorderColor: window.theme.primary,
+                        data: [54, 67, 41, 55, 62, 45, 55, 73, 60, 76, 48, 79],
+                        barPercentage: .75,
+                        categoryPercentage: .5
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            gridLines: {
+                                display: false
+                            },
+                            stacked: false,
+                            ticks: {
+                                stepSize: 20
+                            }
+                        }],
+                        xAxes: [{
+                            stacked: false,
+                            gridLines: {
+                                color: "transparent"
+                            }
+                        }]
+                    }
+                }
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var markers = [{
+                    coords: [31.230391, 121.473701],
+                    name: "Shanghai"
+                },
+                {
+                    coords: [28.704060, 77.102493],
+                    name: "Delhi"
+                },
+                {
+                    coords: [6.524379, 3.379206],
+                    name: "Lagos"
+                },
+                {
+                    coords: [35.689487, 139.691711],
+                    name: "Tokyo"
+                },
+                {
+                    coords: [23.129110, 113.264381],
+                    name: "Guangzhou"
+                },
+                {
+                    coords: [40.7127837, -74.0059413],
+                    name: "New York"
+                },
+                {
+                    coords: [34.052235, -118.243683],
+                    name: "Los Angeles"
+                },
+                {
+                    coords: [41.878113, -87.629799],
+                    name: "Chicago"
+                },
+                {
+                    coords: [51.507351, -0.127758],
+                    name: "London"
+                },
+                {
+                    coords: [40.416775, -3.703790],
+                    name: "Madrid "
+                }
+            ];
+            var map = new jsVectorMap({
+                map: "world",
+                selector: "#world_map",
+                zoomButtons: true,
+                markers: markers,
+                markerStyle: {
+                    initial: {
+                        r: 9,
+                        strokeWidth: 7,
+                        stokeOpacity: .4,
+                        fill: window.theme.primary
+                    },
+                    hover: {
+                        fill: window.theme.primary,
+                        stroke: window.theme.primary
+                    }
+                },
+                zoomOnScroll: false
+            });
+            window.addEventListener("resize", () => {
+                map.updateSize();
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
+            var defaultDate = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
+            document.getElementById("datetimepicker-dashboard").flatpickr({
+                inline: true,
+                prevArrow: "<span title=\"Previous month\">&laquo;</span>",
+                nextArrow: "<span title=\"Next month\">&raquo;</span>",
+                defaultDate: defaultDate
+            });
+        });
+    </script>
+<!-- Code injected by live-server -->
+<script>
+    // <![CDATA[  <-- For SVG support
+    if ('WebSocket' in window) {
+        (function () {
+            function refreshCSS() {
+                var sheets = [].slice.call(document.getElementsByTagName("link"));
+                var head = document.getElementsByTagName("head")[0];
+                for (var i = 0; i < sheets.length; ++i) {
+                    var elem = sheets[i];
+                    var parent = elem.parentElement || head;
+                    parent.removeChild(elem);
+                    var rel = elem.rel;
+                    if (elem.href && (typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet")) {
+                        var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+                        elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+                    }
+                    parent.appendChild(elem);
+                }
+            }
+            var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+            var address = protocol + window.location.host + window.location.pathname + '/ws';
+            var socket = new WebSocket(address);
+            socket.onmessage = function (msg) {
+                if (msg.data == 'reload') window.location.reload();
+                else if (msg.data == 'refreshcss') refreshCSS();
+            };
+            if (!sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+                console.log('Live reload enabled.');
+                sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+            }
+        })();
+    }
+    else {
+        console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+    }
+    // ]]>
 </script>
 </body>
 </html>
