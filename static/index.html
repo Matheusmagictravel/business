@@ -1,3 +1,5 @@
+
+
     <!DOCTYPE html>
     <html lang="en">
 
@@ -33,7 +35,6 @@
         padding: 20px;
         text-align: center;
         font-size: 14px;
-        color: #ccc;
         }
 
         #dashboard-container .row {
@@ -47,7 +48,23 @@
             padding-left: 0.75rem;
             padding-right: 0.75rem;
         }
-            
+
+        .content {
+            color: var(--bs-body-color);
+            font-family: var(--bs-body-font-family);
+            font-size: var(--bs-body-font-size);
+            font-weight: var(--bs-body-font-weight);
+            line-height: var(--bs-body-line-height);
+            text-align: var(--bs-body-text-align);
+            box-sizing: border-box;
+            direction: ltr;
+            flex: 1;
+            max-width: 100vw;
+            width: auto;
+            padding: 3rem 3rem 1.5rem;
+            margin-left: 260px;
+        }
+      
         </style>
     </head>
 
@@ -57,7 +74,7 @@
             <div id="sidebar-container"></div>
                 <div class="sidebar-loading">Carregando...</div>
             </div>
-            <h1 class="h3 mb-3"><strong>Analytics</strong> Dashboard</h1>
+            
                 <main class="content">
                     <div class="container-fluid p-0">
                         <div class="row">
@@ -69,7 +86,7 @@
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <div class="col mt-0">
-                                                            <h5 class="card-title">Sales</h5>
+                                                            <h5 class="card-title">Receita</h5>
                                                         </div>
                                                         <div class="col-auto">
                                                             <div class="stat text-primary">
@@ -88,7 +105,7 @@
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <div class="col mt-0">
-                                                            <h5 class="card-title">Visitors</h5>
+                                                            <h5 class="card-title">Faturamento</h5>
                                                         </div>
                                                         <div class="col-auto">
                                                             <div class="stat text-primary">
@@ -109,7 +126,7 @@
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <div class="col mt-0">
-                                                            <h5 class="card-title">Earnings</h5>
+                                                            <h5 class="card-title">Fornecedor</h5>
                                                         </div>
                                                         <div class="col-auto">
                                                             <div class="stat text-primary">
@@ -128,7 +145,7 @@
                                                 <div class="card-body">
                                                     <div class="row">
                                                         <div class="col mt-0">
-                                                            <h5 class="card-title">Orders</h5>
+                                                            <h5 class="card-title">Pedidos</h5>
                                                         </div>
                                                         <div class="col-auto">
                                                             <div class="stat text-primary">
@@ -151,7 +168,7 @@
                             <div class="col-xl-6 col-xxl-7">
                                 <div class="card flex-fill w-100">
                                     <div class="card-header">
-                                        <h5 class="card-title mb-0">Recent Movement</h5>
+                                        <h5 class="card-title mb-0">Receita Recente</h5>
                                     </div>
                                     <div class="card-body py-3">
                                         <div class="chart chart-sm">
@@ -166,7 +183,7 @@
                             <div class="col-12 col-md-12 col-xxl-9 d-flex order-2 order-xxl-1">
                                 <div class="card flex-fill w-100">
                                     <div class="card-header">
-                                        <h5 class="card-title mb-0">Real-Time</h5>
+                                        <h5 class="card-title mb-0">Venda por Estado</h5>
                                     </div>
                                     <div class="card-body px-4">
                                         <div id="world_map" style="height: 350px;"></div>
@@ -176,7 +193,7 @@
                             <div class="col-12 col-md-6 col-xxl-3 d-flex order-3 order-xxl-2">
                                 <div class="card flex-fill w-100">
                                     <div class="card-header">
-                                        <h5 class="card-title mb-0">Browser Usage</h5>
+                                        <h5 class="card-title mb-0">Meio de Pagamento</h5>
                                     </div>
                                     <div class="card-body d-flex">
                                         <div class="align-self-center w-100">
@@ -211,7 +228,7 @@
                             <div class="col-12 col-lg-8 col-xxl-9 d-flex">
                                 <div class="card flex-fill">
                                     <div class="card-header">
-                                        <h5 class="card-title mb-0">Latest Projects</h5>
+                                        <h5 class="card-title mb-0">Pedidos Recentes</h5>
                                     </div>
                                     <table class="table table-hover my-0">
                                         <thead>
@@ -234,7 +251,7 @@
                             <div class="col-12 col-lg-4 col-xxl-3 d-flex">
                                 <div class="card flex-fill w-100">
                                     <div class="card-header">
-                                        <h5 class="card-title mb-0">Monthly Sales</h5>
+                                        <h5 class="card-title mb-0">Ranking de Vendedores</h5>
                                     </div>
                                     <div class="card-body d-flex w-100">
                                         <div class="align-self-center chart chart-lg">
@@ -286,16 +303,16 @@
         <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
         <script>
-            // Função para carregar a sidebar
+            <script>
             // Função para carregar a sidebar
             async function loadSidebar() {
                 try {
                     const response = await fetch('https://business.magictraveltur.com/sidebar.html');
                     if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
-
+        
                     const sidebarContent = await response.text();
                     document.getElementById('sidebar-container').innerHTML = sidebarContent;
-
+        
                     // Chama a função de inicialização do calendário após o carregamento da sidebar
                     initializeCalendar();
                 } catch (error) {
@@ -303,147 +320,146 @@
                     document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
                 }
             }
-
-            // Função para inicializar o calendário (já definida no sidebar.html)
+        
+            // Função para inicializar o calendário
             function initializeCalendar() {
-                document.addEventListener("DOMContentLoaded", function () {
-                    const openCalendarBtn = document.getElementById("open-calendar-btn");
-                    const backBtn = document.getElementById("back-btn");
-                    const applyBtn = document.getElementById("apply-btn");
-                    const calendarModal = document.getElementById("calendarModal");
-                    const bootstrapModal = new bootstrap.Modal(calendarModal);
-                    const calendarDatesContainer = document.querySelector(".calendar__dates");
-                    const monthSelect = document.getElementById("calendar__month");
-                    const yearSelect = document.getElementById("calendar__year");
-                    const selectedDateDisplay = document.getElementById("datas-selecionadas");
-
-                    let selectedStartDate = null;
-                    let selectedEndDate = null;
-
-                    function renderCalendar() {
-                        const month = parseInt(monthSelect.value);
-                        const year = parseInt(yearSelect.value);
-
-                        const firstDayOfMonth = new Date(year, month, 1).getDay();
-                        const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-                        calendarDatesContainer.innerHTML = '';
-
-                        let firstWeekDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
-                        for (let i = 0; i < firstWeekDay; i++) {
-                            const emptyDateElement = document.createElement('div');
-                            emptyDateElement.classList.add('calendar__date', 'calendar__date--grey');
-                            calendarDatesContainer.appendChild(emptyDateElement);
-                        }
-
-                        for (let i = 1; i <= daysInMonth; i++) {
-                            const dateElement = document.createElement('div');
-                            dateElement.classList.add('calendar__date');
-                            dateElement.innerHTML = `<span>${i}</span>`;
-                            calendarDatesContainer.appendChild(dateElement);
-
-                            dateElement.addEventListener('click', function () {
-                                if (!selectedStartDate || selectedEndDate) {
-                                    selectedStartDate = new Date(year, month, i);
+                const openCalendarBtn = document.getElementById("open-calendar-btn");
+                const backBtn = document.getElementById("back-btn");
+                const applyBtn = document.getElementById("apply-btn");
+                const calendarModal = document.getElementById("calendarModal");
+                const bootstrapModal = new bootstrap.Modal(calendarModal);
+                const calendarDatesContainer = document.querySelector(".calendar__dates");
+                const monthSelect = document.getElementById("calendar__month");
+                const yearSelect = document.getElementById("calendar__year");
+                const selectedDateDisplay = document.getElementById("datas-selecionadas");
+        
+                let selectedStartDate = null;
+                let selectedEndDate = null;
+        
+                function renderCalendar() {
+                    const month = parseInt(monthSelect.value);
+                    const year = parseInt(yearSelect.value);
+        
+                    const firstDayOfMonth = new Date(year, month, 1).getDay();
+                    const daysInMonth = new Date(year, month + 1, 0).getDate();
+        
+                    calendarDatesContainer.innerHTML = '';
+        
+                    let firstWeekDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+                    for (let i = 0; i < firstWeekDay; i++) {
+                        const emptyDateElement = document.createElement('div');
+                        emptyDateElement.classList.add('calendar__date', 'calendar__date--grey');
+                        calendarDatesContainer.appendChild(emptyDateElement);
+                    }
+        
+                    for (let i = 1; i <= daysInMonth; i++) {
+                        const dateElement = document.createElement('div');
+                        dateElement.classList.add('calendar__date');
+                        dateElement.innerHTML = `<span>${i}</span>`;
+                        calendarDatesContainer.appendChild(dateElement);
+        
+                        dateElement.addEventListener('click', function () {
+                            if (!selectedStartDate || selectedEndDate) {
+                                selectedStartDate = new Date(year, month, i);
+                                selectedEndDate = null;
+                                clearSelection();
+                                dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+                            } else {
+                                selectedEndDate = new Date(year, month, i);
+                                if (selectedEndDate < selectedStartDate) {
+                                    alert('Data de término não pode ser anterior à data de início.');
                                     selectedEndDate = null;
-                                    clearSelection();
-                                    dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
-                                } else {
-                                    selectedEndDate = new Date(year, month, i);
-                                    if (selectedEndDate < selectedStartDate) {
-                                        alert('Data de término não pode ser anterior à data de início.');
-                                        selectedEndDate = null;
-                                        return;
-                                    }
-                                    clearSelection();
-                                    highlightRange(selectedStartDate, selectedEndDate);
+                                    return;
                                 }
-                            });
-                        }
-                    }
-
-                    function clearSelection() {
-                        document.querySelectorAll('.calendar__date--selected').forEach(el => {
-                            el.classList.remove('calendar__date--selected', 'calendar__date--range-start', 'calendar__date--range-end');
-                        });
-                    }
-
-                    function highlightRange(start, end) {
-                        document.querySelectorAll('.calendar__date').forEach(el => {
-                            const day = parseInt(el.textContent);
-                            const elDate = new Date(yearSelect.value, monthSelect.value, day);
-                            if (elDate >= start && elDate <= end) {
-                                el.classList.add('calendar__date--selected');
-                                if (elDate.getTime() === start.getTime()) el.classList.add('calendar__date--range-start');
-                                if (elDate.getTime() === end.getTime()) el.classList.add('calendar__date--range-end');
+                                clearSelection();
+                                highlightRange(selectedStartDate, selectedEndDate);
                             }
                         });
                     }
-
-                    function updateSelectedDateDisplay() {
-                        if (selectedStartDate && selectedEndDate) {
-                            const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
-                            const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}`;
-                            selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
-                        } else if (selectedStartDate) {
-                            const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
-                            selectedDateDisplay.textContent = `Data selecionada: ${startDateStr}`;
-                        } else {
-                            selectedDateDisplay.textContent = '';
+                }
+        
+                function clearSelection() {
+                    document.querySelectorAll('.calendar__date--selected').forEach(el => {
+                        el.classList.remove('calendar__date--selected', 'calendar__date--range-start', 'calendar__date--range-end');
+                    });
+                }
+        
+                function highlightRange(start, end) {
+                    document.querySelectorAll('.calendar__date').forEach(el => {
+                        const day = parseInt(el.textContent);
+                        const elDate = new Date(yearSelect.value, monthSelect.value, day);
+                        if (elDate >= start && elDate <= end) {
+                            el.classList.add('calendar__date--selected');
+                            if (elDate.getTime() === start.getTime()) el.classList.add('calendar__date--range-start');
+                            if (elDate.getTime() === end.getTime()) el.classList.add('calendar__date--range-end');
                         }
+                    });
+                }
+        
+                function updateSelectedDateDisplay() {
+                    if (selectedStartDate && selectedEndDate) {
+                        const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                        const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                        selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
+                    } else if (selectedStartDate) {
+                        const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
+                        selectedDateDisplay.textContent = `Data selecionada: ${startDateStr}`;
+                    } else {
+                        selectedDateDisplay.textContent = '';
                     }
-
-                    monthSelect.addEventListener('change', renderCalendar);
-                    yearSelect.addEventListener('change', renderCalendar);
-
-                    renderCalendar(); // Initialize the calendar
-
-                    openCalendarBtn.addEventListener("click", function () {
-                        calendarModal.removeAttribute('inert'); // Remove the `inert` attribute
-                        bootstrapModal.show();
-                    });
-
-                    backBtn.addEventListener("click", function () {
-                        bootstrapModal.hide();
-                    });
-
-                    applyBtn.addEventListener("click", function () {
-                        console.log("Selected Start Date:", selectedStartDate);
-                        console.log("Selected End Date:", selectedEndDate);
-                        updateSelectedDateDisplay();
-                        bootstrapModal.hide();
-                    });
-
-                    calendarModal.addEventListener('hidden.bs.modal', function () {
-                        calendarModal.setAttribute('inert', 'true'); // Re-add the `inert` attribute after closing
-                    });
+                }
+        
+                monthSelect.addEventListener('change', renderCalendar);
+                yearSelect.addEventListener('change', renderCalendar);
+        
+                renderCalendar(); // Initialize the calendar
+        
+                openCalendarBtn.addEventListener("click", function () {
+                    calendarModal.removeAttribute('inert'); // Remove the `inert` attribute
+                    bootstrapModal.show();
+                });
+        
+                backBtn.addEventListener("click", function () {
+                    bootstrapModal.hide();
+                });
+        
+                applyBtn.addEventListener("click", function () {
+                    console.log("Selected Start Date:", selectedStartDate);
+                    console.log("Selected End Date:", selectedEndDate);
+                    updateSelectedDateDisplay();
+                    bootstrapModal.hide();
+                });
+        
+                calendarModal.addEventListener('hidden.bs.modal', function () {
+                    calendarModal.setAttribute('inert', 'true'); // Re-add the `inert` attribute after closing
                 });
             }
-
+        
             // Inicializa o carregamento da página
             document.addEventListener('DOMContentLoaded', () => {
                 loadSidebar();
             });
+        
             document.addEventListener('DOMContentLoaded', async function () {
                 async function fetchDashboardData() {
                     try {
                         const response = await fetch('https://www.magictraveltur.com/api_pedidos.php');
                         if (!response.ok) throw new Error(`Erro ao carregar os dados: ${response.status}`);
-
+        
                         const data = await response.json();
-
+        
                         // Calcula métricas a partir dos dados
                         const totalReceita = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_comissao || 0), 0);
                         const totalFaturamento = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_venda || 0), 0);
                         const totalDespesa = data.reduce((acc, pedido) => acc + parseFloat(pedido.custo || 0), 0);
                         const totalPedidos = data.length;
-
+        
                         // Atualiza os cards
                         document.getElementById('sales-value').textContent = `R$ ${totalReceita.toFixed(2)}`;
                         document.getElementById('visitors-value').textContent = `R$ ${totalDespesa.toFixed(2)}`;
                         document.getElementById('earnings-value').textContent = `R$ ${totalFaturamento.toFixed(2)}`;
                         document.getElementById('orders-value').textContent = totalPedidos;
-
+        
                         // Atualiza a tabela de últimos pedidos
                         const latestProjects = document.getElementById('latest-projects');
                         latestProjects.innerHTML = '';
@@ -457,29 +473,29 @@
                                     <td>${pedido.efetivado_por || 'N/A'}</td>
                                 </tr>`;
                         });
-
+        
                         // Gera o gráfico de receita
                         updateRecentMovementChart(data);
-
+        
                         // Atualiza dados de Real-Time por UF (Estado do Brasil)
                         updateRealTimeMap(data);
-
+        
                         // Atualiza Browser Usage
                         updateBrowserUsage(data);
-
+        
                         // Atualiza Monthly Sales
                         updateMonthlySales(data);
-
+        
                     } catch (error) {
                         console.error('Erro ao carregar os dados do dashboard:', error);
                         alert('Erro ao carregar os dados do dashboard. Verifique o console para mais informações.');
                     }
                 }
-
+        
                 function updateRecentMovementChart(data) {
                     const labels = data.map(pedido => pedido.data_venda).slice(0, 7).reverse();
                     const values = data.map(pedido => parseFloat(pedido.valor_comissao || 0)).slice(0, 7).reverse();
-
+        
                     const ctx = document.getElementById('chartjs-dashboard-line').getContext('2d');
                     new Chart(ctx, {
                         type: 'line',
@@ -505,7 +521,7 @@
                         },
                     });
                 }
-
+        
                 function updateRealTimeMap(data) {
                     const estados = {};
                     data.forEach(pedido => {
@@ -517,12 +533,12 @@
                             estados[uf]++;
                         }
                     });
-
+        
                     const markers = Object.keys(estados).map(uf => ({
                         coords: getCoordinatesForUF(uf),
                         name: `${uf} - ${estados[uf]} pedidos`,
                     }));
-
+        
                     const map = new jsVectorMap({
                         map: "brasil",
                         selector: "#world_map",
@@ -542,12 +558,12 @@
                         },
                         zoomOnScroll: false
                     });
-
+        
                     window.addEventListener("resize", () => {
                         map.updateSize();
                     });
                 }
-
+        
                 function getCoordinatesForUF(uf) {
                     const coordinates = {
                         "AC": [-9.97499, -67.8243],
@@ -580,7 +596,7 @@
                     };
                     return coordinates[uf] || [0, 0];
                 }
-
+        
                 function updateBrowserUsage(data) {
                     const meioPgtoCounts = {};
                     data.forEach(pedido => {
@@ -592,7 +608,7 @@
                             meioPgtoCounts[meioPgto]++;
                         }
                     });
-
+        
                     const browserUsage = document.getElementById('browser-usage');
                     browserUsage.innerHTML = '';
                     Object.keys(meioPgtoCounts).forEach(meioPgto => {
@@ -602,7 +618,7 @@
                                 <td class="text-end">${meioPgtoCounts[meioPgto]}</td>
                             </tr>`;
                     });
-
+        
                     const ctx = document.getElementById('chartjs-dashboard-pie').getContext('2d');
                     new Chart(ctx, {
                         type: 'pie',
@@ -623,14 +639,14 @@
                         options: {
                             responsive: !window.MSInputMethodContext,
                             maintainAspectRatio: false,
-                            legend: {
-                                display: false
+                            plugins: {
+                                legend: { display: false }
                             },
-                            cutoutPercentage: 75
+                            cutout: '75%'
                         }
                     });
                 }
-
+        
                 function updateMonthlySales(data) {
                     const salesCounts = {};
                     data.forEach(pedido => {
@@ -642,7 +658,7 @@
                             salesCounts[efetivadoPor]++;
                         }
                     });
-
+        
                     const ctx = document.getElementById('chartjs-dashboard-bar').getContext('2d');
                     new Chart(ctx, {
                         type: 'bar',
@@ -661,30 +677,24 @@
                         },
                         options: {
                             maintainAspectRatio: false,
-                            legend: {
-                                display: false
+                            plugins: {
+                                legend: { display: false }
                             },
                             scales: {
-                                yAxes: [{
-                                    gridLines: {
-                                        display: false
-                                    },
+                                y: {
+                                    grid: { display: false },
                                     stacked: false,
-                                    ticks: {
-                                        stepSize: 1
-                                    }
-                                }],
-                                xAxes: [{
+                                    ticks: { stepSize: 1 }
+                                },
+                                x: {
                                     stacked: false,
-                                    gridLines: {
-                                        color: "transparent"
-                                    }
-                                }]
+                                    grid: { color: "transparent" }
+                                }
                             }
                         }
                     });
                 }
-
+        
                 await fetchDashboardData();
             });
         
