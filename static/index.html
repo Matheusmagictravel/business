@@ -20,32 +20,72 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
     <style>
-    .row {
-        gap: 1rem;
-    }
+        .row {
+            margin-right: -15px;
+            margin-left: -15px;
+            display: flex;
+            flex-wrap: wrap;
+        }
 
-    #sidebar-container {
-        width: 250px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100%;
-        background-color: #343a40;
-    }
+        #sidebar-container {
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: #343a40;
+        }
 
-    .main {
-        margin-left: 250px;
-        padding: 1rem;
-        overflow: auto;
-        min-height: 100vh;
-    }
+        .main {
+            margin-left: 250px;
+            padding: 1rem;
+            overflow: hidden;
+            min-height: 100vh;
+        }
 
-    .card {
-        flex: 1 1 auto;
-        min-width: 0;
-    }
-</style>
+        .card {
+            background-color: #fff;
+            border: 1px solid #e3e6f0;
+            border-radius: 0.35rem;
+        }
 
+        .card-body {
+            padding: 1rem;
+        }
+
+        .col-auto {
+            flex: 0 0 auto;
+            width: auto;
+        }
+
+        .col {
+            flex: 1 0 0%;
+        }
+
+        .align-middle {
+            vertical-align: middle;
+        }
+
+        .text-primary {
+            color: #4e73df !important;
+        }
+
+        .text-success {
+            color: #1cc88a !important;
+        }
+
+        .text-danger {
+            color: #e74a3b !important;
+        }
+
+        .mt-1 {
+            margin-top: 0.25rem !important;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -211,15 +251,15 @@
                     <div class="col-12 col-lg-8 col-xxl-9 d-flex">
                         <div class="card flex-fill">
                             <div class="card-header">
-                                <h5 class="card-title mb-0">Ultimos Pedidos</h5>
+                                <h5 class="card-title mb-0">Últimos Pedidos</h5>
                             </div>
                             <table class="table table-hover my-0">
                                 <thead>
                                     <tr>
                                         <th>Nome</th>
-                                        <th class="d-none d-xl-table-cell">Data da Venda</th>
+                                        <th class="d-none d-xl-table-cell">Data</th>
                                         <th class="d-none d-xl-table-cell">Valor</th>
-                                        <th>Método</th>
+                                        <th>Status</th>
                                         <th class="d-none d-md-table-cell">Agente</th>
                                     </tr>
                                 </thead>
@@ -244,40 +284,8 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </main>
-
-        <footer class="footer">
-            <div class="container-fluid">
-                <div class="row text-muted">
-                    <div class="col-6 text-start">
-                        <p class="mb-0">
-                            <a class="text-muted" href="https://adminkit.io/" target="_blank"><strong>AdminKit</strong></a> - 
-                            <a class="text-muted" href="https://adminkit.io/" target="_blank">
-                                <strong>Bootstrap Admin Template</strong>
-                            </a> &copy;
-                        </p>
-                    </div>
-                    <div class="col-6 text-end">
-                        <ul class="list-inline">
-                            <li class="list-inline-item">
-                                <a class="text-muted" href="https://adminkit.io/" target="_blank">Support</a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a class="text-muted" href="https://adminkit.io/" target="_blank">Help Center</a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a class="text-muted" href="https://adminkit.io/" target="_blank">Privacy</a>
-                            </li>
-                            <li class="list-inline-item">
-                                <a class="text-muted" href="https://adminkit.io/" target="_blank">Terms</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </footer>
     </div>
 
     <script src="https://business.magictraveltur.com/dist/js/app.js"></script>
