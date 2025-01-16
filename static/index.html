@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Responsive Admin &amp; Dashboard Template based on Bootstrap 5">
+    <meta name="description" content="Responsive Admin & Dashboard Template based on Bootstrap 5">
     <meta name="author" content="AdminKit">
     <meta name="keywords" content="adminkit, bootstrap, bootstrap 5, admin, dashboard, template, responsive, css, sass, html, theme, front-end, ui kit, web">
 
@@ -269,7 +269,7 @@
     <script src="https://business.magictraveltur.com/js/app.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsvectormap@2.0.3/dist/js/jsvectormap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jsvectormap@2.0.3/dist/maps/brazil.js"></script>
+    <script src="https://business.magictraveltur.com/js/brasil.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
@@ -299,7 +299,7 @@
                     data.forEach(pedido => {
                         latestProjects.innerHTML += `
                             <tr>
-                                <td>${pedido.nome_comprador || 'N/A'}</td>
+                                <td>${pedido.nome || 'N/A'}</td>
                                 <td>${pedido.data_venda || 'N/A'}</td>
                                 <td>R$ ${parseFloat(pedido.valor_venda || 0).toFixed(2)}</td>
                                 <td>${pedido.meio_pgto || 'N/A'}</td>
@@ -402,7 +402,7 @@
                     "AC": [-9.97499, -67.8243],
                     "AL": [-9.66599, -35.735],
                     "AM": [-3.11703, -60.025],
-                    "AP": [0.038, -51.050],
+                    "AP": [0.038, -51.05],
                     "BA": [-12.9714, -38.5014],
                     "CE": [-3.71722, -38.543],
                     "DF": [-15.7797, -47.9297],
@@ -425,7 +425,7 @@
                     "SC": [-27.5954, -48.548],
                     "SE": [-10.9472, -37.0731],
                     "SP": [-23.5505, -46.6333],
-                    "TO": [-10.250, -48.325],
+                    "TO": [-10.25, -48.325]
                 };
                 return coordinates[uf] || [0, 0];
             }
