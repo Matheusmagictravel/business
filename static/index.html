@@ -21,6 +21,7 @@
 
     <style>
         /* CSS do Calendário */
+            /* Estilos do calendário */
         .calendar {
             --side-padding: 20px;
             --border-radius: 34px;
@@ -28,11 +29,30 @@
             width: 400px;
             margin: auto;
         }
-
+    
+        /* Estilos do Modal */
+        .modal {
+            z-index: 1055 !important; /* Garante que esteja acima de todos os elementos */
+        }
+    
+        .modal-backdrop {
+            z-index: 1050; /* Ajusta o fundo escuro para acompanhar o modal */
+        }
+    
+        .modal-dialog {
+            position: absolute;
+            top: auto !important; /* Remove qualquer alinhamento automático */
+            left: 50%;
+            transform: translateX(-50%) translateY(0); /* Centraliza horizontalmente */
+            margin-top: 10px; /* Ajusta o deslocamento vertical */
+        }
+    
+        /* Outros estilos do calendário que você já tinha */
         .calendar select {
             background-color: #f3f4f6;
             padding: 15px 20px;
         }
+
 
         .calendar__opts,
         .calendar__buttons {
@@ -644,10 +664,22 @@
         updateSelectedDateDisplay(); // Atualiza a exibição inicial das datas selecionadas
 
 
-        openCalendarBtn.addEventListener("click", function () {
-            calendarModal.removeAttribute('inert'); // Remove the `inert` attribute
+        openCalendarBtn.addEventListener("click", function (event) {
+            // Obtém as coordenadas do botão clicado
+            const buttonRect = openCalendarBtn.getBoundingClientRect();
+        
+            // Garante que o modal abra posicionado abaixo do botão
+            calendarModal.style.position = "absolute";
+            calendarModal.style.top = `${buttonRect.bottom + window.scrollY}px`; // Calcula a posição abaixo do botão
+            calendarModal.style.left = `${buttonRect.left + window.scrollX}px`; // Alinha com o lado esquerdo do botão
+            calendarModal.style.transform = "translateX(0)"; // Remove a centralização horizontal
+            calendarModal.style.zIndex = "1055"; // Garante que o modal esteja acima de outros elementos
+        
+            // Remove o atributo 'inert' para interatividade e exibe o modal
+            calendarModal.removeAttribute("inert");
             bootstrapModal.show();
         });
+
 
         backBtn.addEventListener("click", function () {
             bootstrapModal.hide();
