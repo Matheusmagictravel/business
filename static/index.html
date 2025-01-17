@@ -23,12 +23,15 @@
         /* CSS do Calendário */
             /* Estilos do calendário */
         .calendar {
-            --side-padding: 20px;
-            --border-radius: 34px;
-            --accent-br: 15px;
-            width: 400px;
+            --side-padding: 10px; /* Reduza o padding lateral */
+            --border-radius: 20px; /* Ajuste o raio das bordas */
+            --accent-br: 10px; /* Ajuste o raio de destaque */
+            width: 300px; /* Diminua a largura total */
             margin: auto;
+            transform: scale(0.9); /* Ajusta a escala geral */
+            transform-origin: top; /* Define o ponto de origem do redimensionamento */
         }
+
     
         /* Estilos do Modal */
         .modal {
@@ -93,12 +96,12 @@
         }
 
         .calendar__date {
-            --height: calc(400px / 6 - var(--side-padding));
+            --height: calc(300px / 6 - var(--side-padding));
             text-align: center;
             height: var(--height);
             line-height: var(--height);
             font-weight: 600;
-            font-size: 1.02rem;
+            font-size: 0.9rem;
             cursor: pointer;
             position: relative;
         }
@@ -181,6 +184,8 @@
         .calendar__date span {
             position: relative;
             z-index: 1;
+            font-size: 0.9rem; /* Reduza o tamanho da fonte */
+            padding: 10px 15px; /* Ajuste o padding interno */
         }
 
         .calendar__buttons {
@@ -191,6 +196,13 @@
 
         .calendar__button {
             cursor: pointer;
+            padding: 10px 15px; /* Diminua o padding dos botões */
+            font-size: 0.9rem; /* Ajuste o tamanho da fonte dos botões */
+        }
+        
+        .calendar__opts select {
+            padding: 8px 12px; /* Diminua o tamanho do padding dos selects */
+            font-size: 0.9rem; /* Ajuste o tamanho da fonte dos selects */
         }
 
         .calendar__button--grey {
@@ -295,7 +307,6 @@
             width: auto;
             padding: 3rem 3rem 1.5rem;
             margin-left: 260px;
-            margin-top: -420px;
         }
 
         .h1, h1 {
