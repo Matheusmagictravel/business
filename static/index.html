@@ -695,11 +695,19 @@
                 const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
                 const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
                 const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?start_date=${startDate}&end_date=${endDate}`;
+        
+                // Logs de depuração para verificar as datas e a URL da API
+                console.log('Start Date:', startDate); 
+                console.log('End Date:', endDate);
+                console.log('API URL:', apiUrl); 
+        
                 const response = await fetch(apiUrl);
                 if (!response.ok) throw new Error(`Erro ao carregar os dados: ${response.status}`);
-
+        
                 const data = await response.json();
-
+        
+                console.log('Dados recebidos:', data); // Exibe os dados retornados pela API
+        
                 if (data.length === 0) {
                     const latestProjects = document.getElementById('latest-projects');
                     latestProjects.innerHTML = `
@@ -710,26 +718,26 @@
                     document.getElementById('visitors-value').textContent = 'R$ 0.00';
                     document.getElementById('earnings-value').textContent = 'R$ 0.00';
                     document.getElementById('orders-value').textContent = '0';
-
+        
                     // Limpa os gráficos se necessário
                     if (window.recentMovementChart) window.recentMovementChart.destroy();
                     if (window.browserUsageChart) window.browserUsageChart.destroy();
                     if (window.monthlySalesChart) window.monthlySalesChart.destroy();
                     return;
                 }
-
+        
                 // Calcula métricas a partir dos dados
                 const totalReceita = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_comissao || 0), 0);
                 const totalFaturamento = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_venda || 0), 0);
                 const totalDespesa = data.reduce((acc, pedido) => acc + parseFloat(pedido.custo || 0), 0);
                 const totalPedidos = data.length;
-
+        
                 // Atualiza os cards
                 document.getElementById('sales-value').textContent = `R$ ${totalReceita.toFixed(2)}`;
                 document.getElementById('visitors-value').textContent = `R$ ${totalDespesa.toFixed(2)}`;
                 document.getElementById('earnings-value').textContent = `R$ ${totalFaturamento.toFixed(2)}`;
                 document.getElementById('orders-value').textContent = totalPedidos;
-
+        
                 // Atualiza a tabela de últimos pedidos
                 const latestProjects = document.getElementById('latest-projects');
                 latestProjects.innerHTML = '';
@@ -743,19 +751,19 @@
                             <td>${pedido.efetivado_por || 'N/A'}</td>
                         </tr>`;
                 });
-
+        
                 // Gera o gráfico de receita
                 updateRecentMovementChart(data);
-
+        
                 // Atualiza dados de Real-Time por UF (Estado do Brasil)
                 updateRealTimeMap(data);
-
+        
                 // Atualiza Browser Usage
                 updateBrowserUsage(data);
-
+        
                 // Atualiza Monthly Sales
                 updateMonthlySales(data);
-
+        
             } catch (error) {
                 console.error('Erro ao carregar os dados do dashboard:', error);
                 alert('Erro ao carregar os dados do dashboard. Verifique o console para mais informações.');
