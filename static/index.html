@@ -280,40 +280,41 @@
             font-size: 1.3rem !important;
         }
 
-        /* Garante que todas as cards em uma linha tenham a mesma altura */
+        /* Garante o alinhamento e largura consistente das cards */
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem; /* Espaço entre os elementos */
+        }
+        
+        .row > .col-sm-6 {
+            flex: 1 1 calc(50% - 1rem); /* Define largura de 50% menos o gap */
+            max-width: calc(50% - 1rem);
+            box-sizing: border-box; /* Inclui padding/margem no cálculo da largura */
+        }
+        
+        /* Ajusta para colunas maiores */
+        .row > .col-xl-6.col-xxl-5 {
+            flex: 1 1 calc(50% - 1rem); /* 50% para XL */
+            max-width: calc(50% - 1rem);
+        }
+        
+        /* Garantir altura uniforme para todas as cards */
         .card {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             height: 100%; /* Altura máxima */
-            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Sombras mais suaves */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Adiciona sombra */
+            border-radius: 8px; /* Bordas arredondadas */
         }
         
-        .row > .col-sm-6 {
-            display: flex;
-            flex-direction: column;
-            flex: 1 1 calc(50% - 1rem); /* 50% de largura menos o gap */
-            max-width: calc(50% - 1rem);
-            box-sizing: border-box; /* Inclui padding no cálculo da largura */
-        }
-        }
-        
-        .row > .col-sm-6 .card {
-            flex: 1;
-            margin-bottom: 1rem; /* Adiciona espaço entre as cards */
-        }
-
-        /* Ajusta a largura dos cartões no container específico */
-        .row > .col-xl-6.col-xxl-5 {
-            flex: 1 0 calc(50% - 1rem); /* 50% da largura menos margem */
-            max-width: calc(50% - 1rem); /* Define o tamanho máximo */
-        }
-
-        /* Ajusta o layout das cards dentro de uma row */
-        .row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem; /* Adiciona espaço entre os itens */
+        /* Para telas menores, as cards ocupam largura total */
+        @media (max-width: 768px) {
+            .row > .col-sm-6 {
+                flex: 1 1 100%; /* Ocupa 100% da largura */
+                max-width: 100%;
+            }
         }
 
     </style>
