@@ -267,7 +267,7 @@
             font-size: var(--bs-body-font-size);
             font-weight: var(--bs-body-font-weight);
             line-height: var(--bs-body-line-height);
-            text-align: var (--bs-body-text-align);
+            text-align: var(--bs-body-text-align);
             box-sizing: border-box;
             direction: ltr;
             flex: 1;
@@ -699,6 +699,24 @@
                     if (!response.ok) throw new Error(`Erro ao carregar os dados: ${response.status}`);
 
                     const data = await response.json();
+
+                    if (data.length === 0) {
+                        const latestProjects = document.getElementById('latest-projects');
+                        latestProjects.innerHTML = `
+                            <tr>
+                                <td colspan="5">Não houve pedidos nessa data.</td>
+                            </tr>`;
+                        document.getElementById('sales-value').textContent = 'R$ 0.00';
+                        document.getElementById('visitors-value').textContent = 'R$ 0.00';
+                        document.getElementById('earnings-value').textContent = 'R$ 0.00';
+                        document.getElementById('orders-value').textContent = '0';
+
+                        // Limpa os gráficos se necessário
+                        if (window.recentMovementChart) window.recentMovementChart.destroy();
+                        if (window.browserUsageChart) window.browserUsageChart.destroy();
+                        if (window.monthlySalesChart) window.monthlySalesChart.destroy();
+                        return;
+                    }
 
                     // Calcula métricas a partir dos dados
                     const totalReceita = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_comissao || 0), 0);
