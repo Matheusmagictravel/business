@@ -5,17 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pedidos - Magic Travel</title>
   <!-- Adicionando o CSS do Bootstrap -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Adicionando fonte alternativa -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    @font-face {
-      font-family: 'San Francisco';
-      src: url('path/to/san-francisco-font.woff2') format('woff2'),
-           url('path/to/san-francisco-font.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-    }
-    
     body {
       font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       margin: 0;
@@ -363,18 +354,18 @@
                     <div class="calendar">
                         <div class="calendar__opts">
                             <select name="calendar__month" id="calendar__month">
-                                <option value="0">Jan</option>
-                                <option value="1">Feb</option>
-                                <option value="2">Mar</option>
-                                <option value="3">Apr</option>
-                                <option value="4">May</option>
-                                <option value="5">Jun</option>
-                                <option value="6">Jul</option>
-                                <option value="7">Aug</option>
-                                <option value="8">Sep</option>
-                                <option value="9">Oct</option>
-                                <option value="10">Nov</option>
-                                <option value="11">Dec</option>
+                                <option value="0">Janeiro</option>
+                                <option value="1">Fevereiro</option>
+                                <option value="2">Março</option>
+                                <option value="3">Abril</option>
+                                <option value="4">Maio</option>
+                                <option value="5">Junho</option>
+                                <option value="6">Julho</option>
+                                <option value="7">Agosto</option>
+                                <option value="8">Setembro</option>
+                                <option value="9">Outubro</option>
+                                <option value="10">Novembro</option>
+                                <option value="11">Dezembro</option>
                             </select>
 
                             <select name="calendar__year" id="calendar__year">
@@ -387,13 +378,13 @@
 
                         <div class="calendar__body">
                             <div class="calendar__days">
-                                <div>S</div>
-                                <div>M</div>
-                                <div>T</div>
-                                <div>W</div>
-                                <div>T</div>
-                                <div>F</div>
-                                <div>S</div>
+                                <div>Dom</div>
+                                <div>Seg</div>
+                                <div>Ter</div>
+                                <div>Qua</div>
+                                <div>Qui</div>
+                                <div>Sex</div>
+                                <div>Sab</div>
                             </div>
 
                             <div class="calendar__dates">
@@ -442,7 +433,7 @@
   </main>
 
   <!-- Adicionando o JS do Bootstrap -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
   <script>
     let currentPage = 1;
     const rowsPerPage = 10;
@@ -657,6 +648,7 @@
       }
 
       openCalendarBtn.addEventListener("click", function () {
+          console.log("Open calendar button clicked");
           // Remove o atributo 'inert' para interatividade e exibe o modal
           calendarModal.removeAttribute("inert");
           bootstrapModal.show();
@@ -691,30 +683,11 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+      console.log("DOM content loaded");
       loadSidebar();
       loadOrders();
       initializeCalendar();
   });
-
-  // Fallback para navegadores que não suportam o atributo inert
-  if (!('inert' in HTMLElement.prototype)) {
-    Object.defineProperty(HTMLElement.prototype, 'inert', {
-      get() {
-        return this.hasAttribute('inert');
-      },
-      set(value) {
-        if (value) {
-          this.setAttribute('inert', '');
-          this.style.pointerEvents = 'none';
-          this.style.userSelect = 'none';
-        } else {
-          this.removeAttribute('inert');
-          this.style.pointerEvents = '';
-          this.style.userSelect = '';
-        }
-      },
-    });
-  }
   </script>
 </body>
 </html>
