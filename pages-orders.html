@@ -319,7 +319,7 @@
       align-items: center;
       position: fixed;
       top: 20px;
-      right: 20px;
+      right: 63px;
       z-index: 1050; /* Ensure it is above other content */
     }
 
@@ -334,6 +334,7 @@
       align-items: center;
       height: 95%;
     }
+
   </style>
 </head>
 <body>
@@ -434,9 +435,8 @@
     let currentPage = 1;
     const rowsPerPage = 10;
     let totalOrders = [];
-    let filteredOrders = [];
-    let selectedStartDate = null;
-    let selectedEndDate = null;
+    let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1); // Primeiro dia do mês atual
+    let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0); // Último dia do mês atual
 
     // Função para carregar o sidebar
     async function loadSidebar() {
@@ -455,7 +455,11 @@
     // Função para carregar os pedidos da API
     async function loadOrders() {
       try {
-        const response = await fetch('https://www.magictraveltur.com/api_pedidos.php');
+        const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
+        const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
+        const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?start_date=${startDate}&end_date=${endDate}`;
+
+        const response = await fetch(apiUrl);
         if (!response.ok) {
           throw new Error(`Erro ao carregar pedidos: ${response.status}`);
         }
@@ -475,20 +479,19 @@
 
     // Função para filtrar os pedidos por data
     function filterOrders() {
+      let filteredOrders = totalOrders;
       if (selectedStartDate && selectedEndDate) {
         filteredOrders = totalOrders.filter(pedido => {
           const orderDate = new Date(pedido.data_venda);
           return orderDate >= selectedStartDate && orderDate <= selectedEndDate;
         });
-      } else {
-        filteredOrders = totalOrders;
       }
-      renderTable();
-      renderPagination();
+      renderTable(filteredOrders);
+      renderPagination(filteredOrders);
     }
 
     // Função para renderizar a tabela com paginação
-    function renderTable() {
+    function renderTable(filteredOrders) {
       const ordersTable = document.getElementById('orders-table');
       const start = (currentPage - 1) * rowsPerPage;
       const end = start + rowsPerPage;
@@ -511,7 +514,7 @@
     }
 
     // Função para renderizar os controles de paginação
-    function renderPagination() {
+    function renderPagination(filteredOrders) {
       const paginationControls = document.getElementById('pagination-controls');
       const totalPages = Math.ceil(filteredOrders.length / rowsPerPage);
 
@@ -522,8 +525,8 @@
         button.disabled = i === currentPage;
         button.onclick = () => {
           currentPage = i;
-          renderTable();
-          renderPagination();
+          renderTable(filteredOrders);
+          renderPagination(filteredOrders);
         };
         paginationControls.appendChild(button);
       }
@@ -549,6 +552,7 @@
         const calendarDatesContainer = document.querySelector(".calendar__dates");
         const monthSelect = document.getElementById("calendar__month");
         const yearSelect = document.getElementById("calendar__year");
+        const selectedDateDisplay = document.getElementById("datas-selecionadas");
 
         function renderCalendar() {
             const month = parseInt(monthSelect.value);
@@ -638,16 +642,6 @@
         }
 
         openCalendarBtn.addEventListener("click", function () {
-            // Obtém as coordenadas do botão clicado
-            const buttonRect = openCalendarBtn.getBoundingClientRect();
-
-            // Garante que o modal abra posicionado abaixo do botão
-            calendarModal.style.position = "absolute";
-            calendarModal.style.top = `${buttonRect.bottom + window.scrollY}px`; // Calcula a posição abaixo do botão
-            calendarModal.style.left = `${buttonRect.left + window.scrollX}px`; // Alinha com o lado esquerdo do botão
-            calendarModal.style.transform = "translateX(0)"; // Remove a centralização horizontal
-            calendarModal.style.zIndex = "1055"; // Garante que o modal esteja acima de outros elementos
-
             // Remove o atributo 'inert' para interatividade e exibe o modal
             calendarModal.removeAttribute("inert");
             bootstrapModal.show();
@@ -665,20 +659,22 @@
 
             updateSelectedDateDisplay();
             bootstrapModal.hide();
-            filterOrders(); // Filter orders with the selected date range
+            loadOrders(); // Recarrega os pedidos com o intervalo de data selecionado
         });
 
         calendarModal.addEventListener('hidden.bs.modal', function () {
-            calendarModal.setAttribute('inert', 'true'); // Re-add the `inert` attribute after closing
+            calendarModal.setAttribute('inert', 'true'); // Re-adiciona o atributo `inert` após fechar
         });
 
         monthSelect.addEventListener('change', renderCalendar);
         yearSelect.addEventListener('change', renderCalendar);
 
-        renderCalendar(); // Initialize the calendar
+        monthSelect.value = selectedStartDate.getMonth(); // Define o mês atual no select
+        yearSelect.value = selectedStartDate.getFullYear(); // Define o ano atual no select
+        renderCalendar(); // Inicializa o calendário com o mês e ano ajustados
+        updateSelectedDateDisplay(); // Atualiza a exibição inicial das datas selecionadas
     }
 
-    // Carregar o sidebar e os pedidos ao carregar a página
     document.addEventListener('DOMContentLoaded', () => {
         loadSidebar();
         loadOrders();
