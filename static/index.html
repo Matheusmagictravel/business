@@ -31,6 +31,7 @@
             transform: scale(1); /* Escala padrão */
             transform-origin: top; /* Origem do redimensionamento */
             background-color: white;
+            border-radius: 5px;   
         }
         
         /* Estilo do corpo do calendário */
@@ -70,7 +71,7 @@
         }
         
         .calendar__date {
-            --height: 40px; /* Tamanho dos dias */
+            --height: 30px; /* Tamanho dos dias */
             text-align: center;
             line-height: var(--height);
             height: var(--height);
@@ -581,14 +582,14 @@
                 dateElement.addEventListener('click', function () {
                     const clickedDate = new Date(year, month, i);
         
+                    // Se ainda não há datas selecionadas ou ambas as datas estão definidas
                     if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
-                        // Inicia uma nova seleção
                         selectedStartDate = clickedDate;
-                        selectedEndDate = null;
+                        selectedEndDate = null; // Reseta o intervalo
                         clearSelection();
                         dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
                     } else {
-                        // Define a data final
+                        // Se já há uma data inicial, define a final
                         if (clickedDate < selectedStartDate) {
                             alert('Data de término não pode ser anterior à data de início.');
                             return;
@@ -606,9 +607,6 @@
             document.querySelectorAll('.calendar__date--selected, .calendar__date--range-start, .calendar__date--range-end').forEach(el => {
                 el.classList.remove('calendar__date--selected', 'calendar__date--range-start', 'calendar__date--range-end');
             });
-            selectedStartDate = null;
-            selectedEndDate = null;
-            updateSelectedDateDisplay();
         }
         
         function highlightRange(start, end) {
@@ -631,9 +629,6 @@
         }
         
         applyBtn.addEventListener("click", function () {
-            console.log("Selected Start Date:", selectedStartDate);
-            console.log("Selected End Date:", selectedEndDate);
-        
             if (!selectedStartDate || !selectedEndDate) {
                 alert("Por favor, selecione um intervalo completo de datas.");
                 return;
@@ -644,12 +639,13 @@
             fetchDashboardData(); // Fetch data with the selected date range
         });
         
-        // Adiciona funcionalidade para limpar a seleção ao clicar novamente no botão "Back"
         backBtn.addEventListener("click", function () {
             clearSelection();
+            selectedStartDate = null;
+            selectedEndDate = null;
+            updateSelectedDateDisplay();
             bootstrapModal.hide();
         });
-
 
         function updateSelectedDateDisplay() {
             if (selectedStartDate && selectedEndDate) {
