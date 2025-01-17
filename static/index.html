@@ -584,8 +584,9 @@
         const yearSelect = document.getElementById("calendar__year");
         const selectedDateDisplay = document.getElementById("datas-selecionadas");
 
-        let selectedStartDate = null;
-        let selectedEndDate = null;
+        let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1); // Primeiro dia do mês atual
+        let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0); // Último dia do mês atual
+
 
         function renderCalendar() {
             const month = parseInt(monthSelect.value);
@@ -667,7 +668,11 @@
         monthSelect.addEventListener('change', renderCalendar);
         yearSelect.addEventListener('change', renderCalendar);
 
-        renderCalendar(); // Initialize the calendar
+        monthSelect.value = selectedStartDate.getMonth(); // Define o mês atual no select
+        yearSelect.value = selectedStartDate.getFullYear(); // Define o ano atual no select
+        renderCalendar(); // Inicializa o calendário com o mês e ano ajustados
+        updateSelectedDateDisplay(); // Atualiza a exibição inicial das datas selecionadas
+
 
         openCalendarBtn.addEventListener("click", function () {
             calendarModal.removeAttribute('inert'); // Remove the `inert` attribute
