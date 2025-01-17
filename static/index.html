@@ -92,77 +92,69 @@
         .calendar__dates {
             padding: 10px var(--side-padding);
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            grid-template-columns: repeat(7, 1fr); /* Define 7 colunas para os dias da semana */
+            gap: 5px; /* Espaçamento entre os dias */
         }
-
+        
         .calendar__date {
-            --height: calc(300px / 6 - var(--side-padding));
+            --height: 40px; /* Ajuste da altura */
             text-align: center;
             height: var(--height);
             line-height: var(--height);
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.9rem; /* Ajuste do tamanho da fonte */
             cursor: pointer;
             position: relative;
+            background-color: #ffffff; /* Fundo branco para os dias */
+            border-radius: 10px; /* Bordas arredondadas */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Efeitos de hover */
         }
-
-        .calendar__date::before {
-            content: "";
-            position: absolute;
-            background-color: rgba(255, 255, 255, 0);
-            width: 100%;
-            height: calc(var(--height) * 0.9);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            border-radius: var(--accent-br);
-            transition: background-color 0.3s ease;
+        
+        .calendar__date:hover {
+            background-color: #e5e7eb; /* Fundo cinza claro no hover */
+            transform: scale(1.05); /* Leve aumento no tamanho ao passar o mouse */
         }
-
-        .calendar__date:not(.calendar__date--selected):not(.calendar__date--grey):hover::before {
-            background-color: #ededed;
-        }
-
+        
         .calendar__date--grey {
-            color: #c5c8ca;
-            cursor: not-allowed;
+            color: #c5c8ca; /* Cor para dias fora do mês */
+            background-color: #f9f9f9; /* Fundo mais claro */
+            pointer-events: none; /* Desabilita cliques */
         }
-
+        
         .calendar__date--selected {
-            color: #4b37ff;
+            color: #fff; /* Cor do texto branco */
+            background-color: #4b37ff; /* Fundo azul para dias selecionados */
+            font-weight: bold; /* Destaque no texto */
+            border-radius: 10px; /* Bordas arredondadas */
+            box-shadow: 0 2px 5px rgba(75, 55, 255, 0.3); /* Sombra para destaque */
         }
-
-        .calendar__date--selected::before {
-            background-color: #eceaff;
-            border-radius: 0px;
+        
+        .calendar__date--range-start {
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
         }
-
-        .calendar__date--first-date::before {
-            border-top-left-radius: var(--accent-br);
-            border-bottom-left-radius: var(--accent-br);
-        }
-
-        .calendar__date--last-date::before {
-            border-top-right-radius: var(--accent-br);
-            border-bottom-right-radius: var(--accent-br);
-        }
-
-        .calendar__date--range-start::after {
-            content: "";
-            position: absolute;
-            bottom: 3px;
-            border-radius: 24px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #4b37ff;
-            width: 10px;
-            height: 4px;
-        }
-
+        
         .calendar__date--range-end {
-            color: #fff;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
         }
-
+        
+        .calendar__date--selected:not(.calendar__date--range-start):not(.calendar__date--range-end) {
+            background-color: #eceaff; /* Cor mais clara para indicar intervalo */
+            color: #4b37ff; /* Texto com contraste */
+        }
+        
+        @media (max-width: 768px) {
+            .calendar__date {
+                --height: 35px; /* Reduz a altura em telas menores */
+                font-size: 0.8rem; /* Reduz o tamanho da fonte */
+            }
+        
+            .calendar__dates {
+                gap: 3px; /* Reduz o espaçamento entre os dias */
+            }
+        }
+        
         .calendar__date--range-end::before {
             box-shadow: 0 15px 20px -3px rgba(72, 55, 255, 0.35);
             background-color: #4b37ff;
@@ -307,6 +299,7 @@
             width: auto;
             padding: 3rem 3rem 1.5rem;
             margin-left: 260px;
+            margin-top: 40px;
         }
 
         .h1, h1 {
