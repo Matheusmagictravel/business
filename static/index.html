@@ -280,6 +280,25 @@
             font-size: 1.3rem !important;
         }
 
+        /* Garante que todas as cards em uma linha tenham a mesma altura */
+        .card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%; /* Define altura máxima para cada card */
+        }
+        
+        .row > .col-sm-6 {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .row > .col-sm-6 .card {
+            flex: 1;
+            margin-bottom: 1rem; /* Adiciona espaço entre as cards */
+        }
+
+
     </style>
 </head>
 
