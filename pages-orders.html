@@ -155,7 +155,6 @@
       cursor: not-allowed;
     }
 
-    /* CSS do Calendário */
     .calendar {
       --side-padding: 5px; /* Padding lateral reduzido */
       --border-radius: 15px; /* Bordas mais arredondadas */
@@ -341,95 +340,97 @@
   <!-- Sidebar será carregado aqui -->
   <div id="sidebar-container"></div>
 
-  <!-- Conteúdo principal -->
-  <div class="dashboard-orders">
-    <div class="dashboard-orders-container">
-      <div class="dashboard-header">
-        <h1>Pedidos</h1>
-        <button class="add-order-button" onclick="addNewOrder()">Adicionar Pedido</button>
-      </div>
-      <div class="date-selector-container">
+  <main class="content">
+    <div class="date-selector-container">
         <span id="datas-selecionadas" class="selected-date-display"></span>
         <button id="open-calendar-btn" class="btn btn-primary">Selecionar Data</button>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>ID do Pedido</th>
-            <th>Data da Venda</th>
-            <th>Cliente</th>
-            <th>Agente</th>
-            <th>Valor</th>
-            <th>Pagamento</th>
-            <th>Status</th>
-            <th>Ação</th>
-          </tr>
-        </thead>
-        <tbody id="orders-table">
-          <!-- Os pedidos serão carregados dinamicamente aqui -->
-        </tbody>
-      </table>
-      <div class="pagination" id="pagination-controls">
-        <!-- Controles de paginação serão inseridos dinamicamente aqui -->
-      </div>
     </div>
-  </div>
 
-  <!-- Calendar Modal -->
-  <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" inert>
-    <div class="modal-dialog modal-dialog-centered modal-sm">
-        <div class="modal-content">
-            <div class="modal-body">
-                <div class="calendar">
-                    <div class="calendar__opts">
-                        <select name="calendar__month" id="calendar__month">
-                            <option value="0">Jan</option>
-                            <option value="1">Feb</option>
-                            <option value="2">Mar</option>
-                            <option value="3">Apr</option>
-                            <option value="4">May</option>
-                            <option value="5">Jun</option>
-                            <option value="6">Jul</option>
-                            <option value="7">Aug</option>
-                            <option value="8">Sep</option>
-                            <option value="9">Oct</option>
-                            <option value="10">Nov</option>
-                            <option value="11">Dec</option>
-                        </select>
+  <!-- Conteúdo principal -->
+    <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" inert>
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <div class="calendar">
+                        <div class="calendar__opts">
+                            <select name="calendar__month" id="calendar__month">
+                                <option value="0">Jan</option>
+                                <option value="1">Feb</option>
+                                <option value="2">Mar</option>
+                                <option value="3">Apr</option>
+                                <option value="4">May</option>
+                                <option value="5">Jun</option>
+                                <option value="6">Jul</option>
+                                <option value="7">Aug</option>
+                                <option value="8">Sep</option>
+                                <option value="9">Oct</option>
+                                <option value="10">Nov</option>
+                                <option value="11">Dec</option>
+                            </select>
 
-                        <select name="calendar__year" id="calendar__year">
-                            <option value="2025">2025</option>
-                            <option value="2026">2026</option>
-                            <option value="2027">2027</option>
-                            <option value="2028">2028</option>
-                        </select>
-                    </div>
-
-                    <div class="calendar__body">
-                        <div class="calendar__days">
-                            <div>M</div>
-                            <div>T</div>
-                            <div>W</div>
-                            <div>T</div>
-                            <div>F</div>
-                            <div>S</div>
-                            <div>S</div>
+                            <select name="calendar__year" id="calendar__year">
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                                <option value="2027">2027</option>
+                                <option value="2028">2028</option>
+                            </select>
                         </div>
 
-                        <div class="calendar__dates">
-                            <!-- Date elements will be dynamically generated here -->
-                        </div>
-                    </div>
+                        <div class="calendar__body">
+                            <div class="calendar__days">
+                                <div>M</div>
+                                <div>T</div>
+                                <div>W</div>
+                                <div>T</div>
+                                <div>F</div>
+                                <div>S</div>
+                                <div>S</div>
+                            </div>
 
-                    <div class="calendar__buttons">
-                        <button class="calendar__button calendar__button--grey" id="back-btn">Back</button>
-                        <button class="calendar__button calendar__button--primary" id="apply-btn">Apply</button>
+                            <div class="calendar__dates">
+                                <!-- Date elements will be dynamically generated here -->
+                            </div>
+                        </div>
+
+                        <div class="calendar__buttons">
+                            <button class="calendar__button calendar__button--grey" id="back-btn">Back</button>
+                            <button class="calendar__button calendar__button--primary" id="apply-btn">Apply</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-  </div>
+
+    <div class="dashboard-orders">
+        <div class="dashboard-orders-container">
+            <div class="dashboard-header">
+                <h1>Pedidos</h1>
+                <button class="add-order-button" onclick="addNewOrder()">Adicionar Pedido</button>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID do Pedido</th>
+                    <th>Data da Venda</th>
+                    <th>Cliente</th>
+                    <th>Agente</th>
+                    <th>Valor</th>
+                    <th>Pagamento</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                </tr>
+                </thead>
+                <tbody id="orders-table">
+                <!-- Os pedidos serão carregados dinamicamente aqui -->
+                </tbody>
+            </table>
+            <div class="pagination" id="pagination-controls">
+                <!-- Controles de paginação serão inseridos dinamicamente aqui -->
+            </div>
+        </div>
+    </div>
+  </main>
 
   <script>
     let currentPage = 1;
@@ -544,142 +545,141 @@
 
     // Função para inicializar o calendário
     function initializeCalendar() {
-        const openCalendarBtn = document.getElementById("open-calendar-btn");
-        const backBtn = document.getElementById("back-btn");
-        const applyBtn = document.getElementById("apply-btn");
-        const calendarModal = document.getElementById("calendarModal");
-        const bootstrapModal = new bootstrap.Modal(calendarModal);
-        const calendarDatesContainer = document.querySelector(".calendar__dates");
-        const monthSelect = document.getElementById("calendar__month");
-        const yearSelect = document.getElementById("calendar__year");
-        const selectedDateDisplay = document.getElementById("datas-selecionadas");
+      const openCalendarBtn = document.getElementById("open-calendar-btn");
+      const backBtn = document.getElementById("back-btn");
+      const applyBtn = document.getElementById("apply-btn");
+      const calendarModal = document.getElementById("calendarModal");
+      const bootstrapModal = new bootstrap.Modal(calendarModal);
+      const calendarDatesContainer = document.querySelector(".calendar__dates");
+      const monthSelect = document.getElementById("calendar__month");
+      const yearSelect = document.getElementById("calendar__year");
+      const selectedDateDisplay = document.getElementById("datas-selecionadas");
 
-        function renderCalendar() {
-            const month = parseInt(monthSelect.value);
-            const year = parseInt(yearSelect.value);
+      function renderCalendar() {
+          const month = parseInt(monthSelect.value);
+          const year = parseInt(yearSelect.value);
 
-            const firstDayOfMonth = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
+          const firstDayOfMonth = new Date(year, month, 1).getDay();
+          const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-            calendarDatesContainer.innerHTML = '';
+          calendarDatesContainer.innerHTML = '';
 
-            // Render empty days for the first week
-            let firstWeekDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
-            for (let i = 0; i < firstWeekDay; i++) {
-                const emptyDateElement = document.createElement('div');
-                emptyDateElement.classList.add('calendar__date', 'calendar__date--grey');
-                calendarDatesContainer.appendChild(emptyDateElement);
-            }
+          // Render empty days for the first week
+          let firstWeekDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+          for (let i = 0; i < firstWeekDay; i++) {
+              const emptyDateElement = document.createElement('div');
+              emptyDateElement.classList.add('calendar__date', 'calendar__date--grey');
+              calendarDatesContainer.appendChild(emptyDateElement);
+          }
 
-            // Render days of the month
-            for (let i = 1; i <= daysInMonth; i++) {
-                const dateElement = document.createElement('div');
-                dateElement.classList.add('calendar__date');
-                dateElement.innerHTML = `<span>${i}</span>`;
-                calendarDatesContainer.appendChild(dateElement);
+          // Render days of the month
+          for (let i = 1; i <= daysInMonth; i++) {
+              const dateElement = document.createElement('div');
+              dateElement.classList.add('calendar__date');
+              dateElement.innerHTML = `<span>${i}</span>`;
+              calendarDatesContainer.appendChild(dateElement);
 
-                dateElement.addEventListener('click', function () {
-                    const clickedDate = new Date(year, month, i);
+              dateElement.addEventListener('click', function () {
+                  const clickedDate = new Date(year, month, i);
 
-                    // Se ainda não há datas selecionadas ou ambas as datas estão definidas
-                    if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
-                        selectedStartDate = clickedDate;
-                        selectedEndDate = null; // Reseta o intervalo
-                        clearSelection();
-                        dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
-                    } else {
-                        // Se já há uma data inicial, define a final
-                        if (clickedDate < selectedStartDate) {
-                            alert('Data de término não pode ser anterior à data de início.');
-                            return;
-                        }
+                  // Se ainda não há datas selecionadas ou ambas as datas estão definidas
+                  if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
+                      selectedStartDate = clickedDate;
+                      selectedEndDate = null; // Reseta o intervalo
+                      clearSelection();
+                      dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+                  } else {
+                      // Se já há uma data inicial, define a final
+                      if (clickedDate < selectedStartDate) {
+                          alert('Data de término não pode ser anterior à data de início.');
+                          return;
+                      }
 
-                        selectedEndDate = clickedDate;
-                        highlightRange(selectedStartDate, selectedEndDate);
-                    }
-                    updateSelectedDateDisplay();
-                });
-            }
-        }
+                      selectedEndDate = clickedDate;
+                      highlightRange(selectedStartDate, selectedEndDate);
+                  }
+                  updateSelectedDateDisplay();
+              });
+          }
+      }
 
-        function clearSelection() {
-            document.querySelectorAll('.calendar__date--selected, .calendar__date--range-start, .calendar__date--range-end').forEach(el => {
-                el.classList.remove('calendar__date--selected', 'calendar__date--range-start', 'calendar__date--range-end');
-            });
-        }
+      function clearSelection() {
+          document.querySelectorAll('.calendar__date--selected, .calendar__date--range-start, .calendar__date--range-end').forEach(el => {
+              el.classList.remove('calendar__date--selected', 'calendar__date--range-start', 'calendar__date--range-end');
+          });
+      }
 
-        function highlightRange(start, end) {
-            const allDates = document.querySelectorAll('.calendar__date');
-            const startTimestamp = start.getTime();
-            const endTimestamp = end.getTime();
+      function highlightRange(start, end) {
+          const allDates = document.querySelectorAll('.calendar__date');
+          const startTimestamp = start.getTime();
+          const endTimestamp = end.getTime();
 
-            allDates.forEach(el => {
-                const day = parseInt(el.textContent);
-                if (isNaN(day)) return; // Ignora dias não clicáveis
+          allDates.forEach(el => {
+              const day = parseInt(el.textContent);
+              if (isNaN(day)) return; // Ignora dias não clicáveis
 
-                const elDate = new Date(yearSelect.value, monthSelect.value, day).getTime();
+              const elDate = new Date(yearSelect.value, monthSelect.value, day).getTime();
 
-                if (elDate >= startTimestamp && elDate <= endTimestamp) {
-                    el.classList.add('calendar__date--selected');
-                    if (elDate === startTimestamp) el.classList.add('calendar__date--range-start');
-                    if (elDate === endTimestamp) el.classList.add('calendar__date--range-end');
-                }
-            });
-        }
+              if (elDate >= startTimestamp && elDate <= endTimestamp) {
+                  el.classList.add('calendar__date--selected');
+                  if (elDate === startTimestamp) el.classList.add('calendar__date--range-start');
+                  if (elDate === endTimestamp) el.classList.add('calendar__date--range-end');
+              }
+          });
+      }
 
-        function updateSelectedDateDisplay() {
-            const selectedDateDisplay = document.getElementById("datas-selecionadas");
-            if (selectedStartDate && selectedEndDate) {
-                const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
-                const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}`;
-                selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
-            } else if (selectedStartDate) {
-                const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
-                selectedDateDisplay.textContent = `Data selecionada: ${startDateStr}`;
-            } else {
-                selectedDateDisplay.textContent = '';
-            }
-        }
+      function updateSelectedDateDisplay() {
+          if (selectedStartDate && selectedEndDate) {
+              const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
+              const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}`;
+              selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
+          } else if (selectedStartDate) {
+              const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}`;
+              selectedDateDisplay.textContent = `Data selecionada: ${startDateStr}`;
+          } else {
+              selectedDateDisplay.textContent = '';
+          }
+      }
 
-        openCalendarBtn.addEventListener("click", function () {
-            // Remove o atributo 'inert' para interatividade e exibe o modal
-            calendarModal.removeAttribute("inert");
-            bootstrapModal.show();
-        });
+      openCalendarBtn.addEventListener("click", function () {
+          // Remove o atributo 'inert' para interatividade e exibe o modal
+          calendarModal.removeAttribute("inert");
+          bootstrapModal.show();
+      });
 
-        backBtn.addEventListener("click", function () {
-            bootstrapModal.hide();
-        });
+      backBtn.addEventListener("click", function () {
+          bootstrapModal.hide();
+      });
 
-        applyBtn.addEventListener("click", function () {
-            if (!selectedStartDate || !selectedEndDate) {
-                alert("Por favor, selecione um intervalo completo de datas.");
-                return;
-            }
+      applyBtn.addEventListener("click", function () {
+          if (!selectedStartDate || !selectedEndDate) {
+              alert("Por favor, selecione um intervalo completo de datas.");
+              return;
+          }
 
-            updateSelectedDateDisplay();
-            bootstrapModal.hide();
-            loadOrders(); // Recarrega os pedidos com o intervalo de data selecionado
-        });
+          updateSelectedDateDisplay();
+          bootstrapModal.hide();
+          loadOrders(); // Recarrega os pedidos com o intervalo de data selecionado
+      });
 
-        calendarModal.addEventListener('hidden.bs.modal', function () {
-            calendarModal.setAttribute('inert', 'true'); // Re-adiciona o atributo `inert` após fechar
-        });
+      calendarModal.addEventListener('hidden.bs.modal', function () {
+          calendarModal.setAttribute('inert', 'true'); // Re-adiciona o atributo `inert` após fechar
+      });
 
-        monthSelect.addEventListener('change', renderCalendar);
-        yearSelect.addEventListener('change', renderCalendar);
+      monthSelect.addEventListener('change', renderCalendar);
+      yearSelect.addEventListener('change', renderCalendar);
 
-        monthSelect.value = selectedStartDate.getMonth(); // Define o mês atual no select
-        yearSelect.value = selectedStartDate.getFullYear(); // Define o ano atual no select
-        renderCalendar(); // Inicializa o calendário com o mês e ano ajustados
-        updateSelectedDateDisplay(); // Atualiza a exibição inicial das datas selecionadas
-    }
+      monthSelect.value = selectedStartDate.getMonth(); // Define o mês atual no select
+      yearSelect.value = selectedStartDate.getFullYear(); // Define o ano atual no select
+      renderCalendar(); // Inicializa o calendário com o mês e ano ajustados
+      updateSelectedDateDisplay(); // Atualiza a exibição inicial das datas selecionadas
+  }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        loadSidebar();
-        loadOrders();
-        initializeCalendar();
-    });
+  document.addEventListener('DOMContentLoaded', () => {
+      loadSidebar();
+      loadOrders();
+      initializeCalendar();
+  });
   </script>
 </body>
 </html>
