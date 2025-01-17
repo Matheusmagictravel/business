@@ -952,21 +952,31 @@
 
     // Load sidebar content
     async function loadSidebar() {
-        try {
-            const response = await fetch('https://business.magictraveltur.com/sidebar.html');
-            if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
+    try {
+        const response = await fetch('https://business.magictraveltur.com/sidebar.html');
+        if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
 
-            const sidebarContent = await response.text();
-            document.getElementById('sidebar-container').innerHTML = sidebarContent;
-        } catch (error) {
-            console.error('Erro ao carregar a sidebar:', error);
-            document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
-        }
+        const sidebarContent = await response.text();
+        document.getElementById('sidebar-container').innerHTML = sidebarContent;
+    } catch (error) {
+        console.error('Erro ao carregar a sidebar:', error);
+        document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
     }
+}
 
-    // Fetch dashboard data initially
+async function fetchDashboardData() {
+    // Sua lógica para buscar dados do dashboard
+    console.log('Dados do dashboard carregados!');
+}
+
+// Inicialize a aplicação
+async function initializeApp() {
     await loadSidebar();
     await fetchDashboardData();
+}
+
+initializeApp(); // Chame a função para iniciar
+
 });
 </script>
 </body>
