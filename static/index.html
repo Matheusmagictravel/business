@@ -863,7 +863,7 @@
                                         meioPgtoCounts[meioPgto]++;
                                     }
                                 });
-                    
+                            
                                 const browserUsage = document.getElementById('browser-usage');
                                 browserUsage.innerHTML = '';
                                 Object.keys(meioPgtoCounts).forEach(meioPgto => {
@@ -873,9 +873,16 @@
                                             <td class="text-end">${meioPgtoCounts[meioPgto]}</td>
                                         </tr>`;
                                 });
-                    
+                            
                                 const ctx = document.getElementById('chartjs-dashboard-pie').getContext('2d');
-                                new Chart(ctx, {
+                            
+                                // Verifica e destrói o gráfico existente antes de criar um novo
+                                if (window.browserUsageChart) {
+                                    window.browserUsageChart.destroy();
+                                }
+                            
+                                // Cria o novo gráfico e o salva na variável global
+                                window.browserUsageChart = new Chart(ctx, {
                                     type: 'pie',
                                     data: {
                                         labels: Object.keys(meioPgtoCounts),
