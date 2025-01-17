@@ -267,7 +267,7 @@
             font-size: var(--bs-body-font-size);
             font-weight: var(--bs-body-font-weight);
             line-height: var(--bs-body-line-height);
-            text-align: var(--bs-body-text-align);
+            text-align: var (--bs-body-text-align);
             box-sizing: border-box;
             direction: ltr;
             flex: 1;
@@ -922,7 +922,14 @@
                 });
 
                 const ctx = document.getElementById('chartjs-dashboard-bar').getContext('2d');
-                new Chart(ctx, {
+
+                // Verifica e destrói o gráfico existente antes de criar um novo
+                if (window.monthlySalesChart) {
+                    window.monthlySalesChart.destroy();
+                }
+
+                // Cria o novo gráfico e o salva na variável global
+                window.monthlySalesChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
                         labels: Object.keys(salesCounts),
