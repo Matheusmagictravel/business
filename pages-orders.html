@@ -1,4 +1,4 @@
-Quem sabe...
+Talvez
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -9,38 +9,44 @@ Quem sabe...
 <!-- Adicionando o CSS do Bootstrap -->
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
 <style>
+    /* Define o layout principal com o sidebar e o conteúdo */
     body {
-        font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        display: flex; /* Define um layout flex para o sidebar e conteúdo */
         margin: 0;
-        padding: 0;
-        color: #1d1d1f;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        height: 100vh;
+        font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         font-size: 14px;
+        height: 100vh; /* Faz com que o layout ocupe a altura da janela */
+        overflow: hidden; /* Impede o overflow do layout */
     }
 
-    /* Sidebar */
+    /* Sidebar: já está como fixo, mas precisa de ajustes */
     #sidebar-container {
-        width: 260px;
-        position: fixed;
+        width: 260px; /* Largura fixa para alinhar com o conteúdo principal */
+        flex-shrink: 0; /* Evita que o sidebar encolha */
+        height: 100vh; /* Ocupa toda a altura da tela */
+        background-color: #333; /* Apenas exemplo, ajuste conforme necessário */
+        position: fixed; /* Continua fixo no layout */
         top: 0;
         left: 0;
-        height: 100%;
+        z-index: 1000; /* Garante que o sidebar fique acima de outros elementos */
     }
 
-    .sidebar-loading {
-        padding: 20px;
-        text-align: center;
-        font-size: 14px;
+    /* Conteúdo principal */
+    main.content {
+        margin-left: 260px; /* Ajusta a margem do conteúdo para evitar sobreposição com o sidebar */
+        flex-grow: 1; /* Faz o conteúdo crescer para preencher o restante da tela */
+        padding: 40px; /* Espaçamento interno */
+        overflow-y: auto; /* Permite rolagem caso o conteúdo ultrapasse a altura da tela */
     }
 
+    /* Estilização da tabela */
     .dashboard-orders {
-        flex-grow: 1;
-        padding: 100px 40px 40px;
-        margin-left: 260px;
-        margin-top: 40px;
+        padding: 20px; /* Reduz o padding para melhorar o layout */
+        margin: 0 auto; /* Centraliza o conteúdo horizontalmente */
+        max-width: 1200px; /* Limita a largura da tabela */
+        background-color: #fff;
+        border-radius: 8px; /* Bordas arredondadas */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra para destacar */
     }
 
     .dashboard-orders-container {
@@ -348,7 +354,7 @@ Quem sabe...
         <button id="open-calendar-btn" class="btn btn-primary">Selecionar Data</button>
     </div>
 
-<!-- Conteúdo principal -->
+    <!-- Conteúdo principal -->
     <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" style="display: none;">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
