@@ -347,7 +347,7 @@
     </div>
 
 <!-- Conteúdo principal -->
-    <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel">
+    <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" style="display: none;">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body">
@@ -561,6 +561,16 @@
         const monthSelect = document.getElementById("calendar__month");
         const yearSelect = document.getElementById("calendar__year");
         const selectedDateDisplay = document.getElementById("datas-selecionadas");
+        
+        function openModal() {
+            calendarModal.removeAttribute("inert");
+            calendarModal.style.display = "block";
+        }
+        
+        function closeModal() {
+            calendarModal.setAttribute("inert", "true");
+            calendarModal.style.display = "none";
+        }
 
         function renderCalendar() {
             const month = parseInt(monthSelect.value);
