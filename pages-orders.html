@@ -1,4 +1,4 @@
-Será?
+Quem sabe...
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -158,23 +158,26 @@ Será?
         cursor: not-allowed;
     }
 
-    /* Estilos do Calendário */
     .calendar {
-        --side-padding: 5px;
-        --border-radius: 15px;
-        --accent-br: 10px;
-        width: 280px;
+        --side-padding: 5px; /* Padding lateral reduzido */
+        --border-radius: 15px; /* Bordas mais arredondadas */
+        --accent-br: 10px; /* Ajuste do raio para destaques */
+        width: 280px; /* Largura ajustada */
         margin: auto;
+        transform: scale(1); /* Escala padrão */
+        transform-origin: top; /* Origem do redimensionamento */
         background-color: white;
         border-radius: 5px;
         box-shadow: 0 0 .875rem 0 rgba(33, 37, 41, .05);
     }
 
+    /* Estilo do corpo do calendário */
     .calendar__body {
         border-radius: var(--border-radius);
         padding: 10px;
     }
 
+    /* Cabeçalho do calendário (mês e ano) */
     .calendar__opts {
         background-color: #fff;
         display: grid;
@@ -185,6 +188,7 @@ Será?
         border-top-right-radius: var(--border-radius);
     }
 
+    /* Dias da semana */
     .calendar__days {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
@@ -195,6 +199,7 @@ Será?
         font-size: 0.85rem;
     }
 
+    /* Dias do calendário */
     .calendar__dates {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
@@ -203,7 +208,7 @@ Será?
     }
 
     .calendar__date {
-        --height: 30px;
+        --height: 30px; /* Tamanho dos dias */
         text-align: center;
         line-height: var(--height);
         height: var(--height);
@@ -217,10 +222,11 @@ Será?
     }
 
     .calendar__date:hover {
-        background-color: #eaeaea;
-        transform: scale(1.05);
+        background-color: #eaeaea; /* Fundo no hover */
+        transform: scale(1.05); /* Leve aumento no hover */
     }
 
+    /* Dias selecionados */
     .calendar__date--selected {
         background-color: #4b37ff;
         color: #fff;
@@ -244,6 +250,7 @@ Será?
         cursor: not-allowed;
     }
 
+    /* Botões */
     .calendar__buttons {
         display: flex;
         justify-content: space-between;
@@ -276,34 +283,57 @@ Será?
         transform: scale(1.05);
     }
 
+    /* Responsividade */
     @media (max-width: 768px) {
         .calendar {
-            width: 240px;
+            width: 240px; /* Largura menor */
         }
 
         .calendar__date {
-            --height: 35px;
-            font-size: 0.8rem;
+            --height: 35px; /* Altura menor */
+            font-size: 0.8rem; /* Fonte menor */
         }
 
         .calendar__dates {
-            gap: 4px;
+            gap: 4px; /* Espaçamento reduzido */
         }
     }
 
+    /* Estilos do Modal */
     .modal {
-        z-index: 1055 !important;
+        z-index: 1055 !important; /* Garante que esteja acima de todos os elementos */
     }
 
     .modal-backdrop {
-        z-index: 1050;
+        z-index: 1050; /* Ajusta o fundo escuro para acompanhar o modal */
     }
 
     .modal-dialog {
         position: absolute;
         left: 50%;
-        transform: translateX(-50%);
-        margin-top: 10px;
+        transform: translateX(-50%); /* Centraliza horizontalmente */
+        margin-top: 10px; /* Ajusta o deslocamento vertical */
+    }
+
+    .date-selector-container {
+        display: flex;
+        align-items: center;
+        position: fixed;
+        top: 20px;
+        right: 63px;
+        z-index: 1050; /* Ensure it is above other content */
+    }
+
+    .selected-date-display {
+        margin-right: 10px;
+        padding: 8px 12px;
+        background-color: #f3f4f6;
+        border-radius: 4px;
+        font-weight: 400;
+        color: #333;
+        display: flex;
+        align-items: center;
+        height: 95%;
     }
 
 </style>
@@ -318,27 +348,26 @@ Será?
         <button id="open-calendar-btn" class="btn btn-primary">Selecionar Data</button>
     </div>
 
-    <!-- Conteúdo principal -->
-    <!-- Calendar Modal -->
-    <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" inert>
-        <div class="modal-dialog modal-dialog-centered modal-sm">
+<!-- Conteúdo principal -->
+    <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" style="display: none;">
+        <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="calendar">
                         <div class="calendar__opts">
                             <select name="calendar__month" id="calendar__month">
-                                <option value="0">Jan</option>
-                                <option value="1">Feb</option>
-                                <option value="2">Mar</option>
-                                <option value="3">Apr</option>
-                                <option value="4">May</option>
-                                <option value="5">Jun</option>
-                                <option value="6">Jul</option>
-                                <option value="7">Aug</option>
-                                <option value="8">Sep</option>
-                                <option value="9">Oct</option>
-                                <option value="10">Nov</option>
-                                <option value="11">Dec</option>
+                                <option value="0">Janeiro</option>
+                                <option value="1">Fevereiro</option>
+                                <option value="2">Março</option>
+                                <option value="3">Abril</option>
+                                <option value="4">Maio</option>
+                                <option value="5">Junho</option>
+                                <option value="6">Julho</option>
+                                <option value="7">Agosto</option>
+                                <option value="8">Setembro</option>
+                                <option value="9">Outubro</option>
+                                <option value="10">Novembro</option>
+                                <option value="11">Dezembro</option>
                             </select>
 
                             <select name="calendar__year" id="calendar__year">
@@ -351,13 +380,13 @@ Será?
 
                         <div class="calendar__body">
                             <div class="calendar__days">
-                                <div>M</div>
-                                <div>T</div>
-                                <div>W</div>
-                                <div>T</div>
-                                <div>F</div>
-                                <div>S</div>
-                                <div>S</div>
+                                <div>Dom</div>
+                                <div>Seg</div>
+                                <div>Ter</div>
+                                <div>Qua</div>
+                                <div>Qui</div>
+                                <div>Sex</div>
+                                <div>Sab</div>
                             </div>
 
                             <div class="calendar__dates">
@@ -374,7 +403,6 @@ Será?
             </div>
         </div>
     </div>
-
 
     <div class="dashboard-orders">
         <div class="dashboard-orders-container">
@@ -527,13 +555,145 @@ Será?
     }
 
     // Função para inicializar o calendário
-    initializeCalendar();
+    function initializeCalendar() {
+        const openCalendarBtn = document.getElementById("open-calendar-btn");
+        const backBtn = document.getElementById("back-btn");
+        const applyBtn = document.getElementById("apply-btn");
+        const calendarModal = document.getElementById("calendarModal");
+        const bootstrapModal = new bootstrap.Modal(calendarModal); // Inicializa o modal do Bootstrap
+        const calendarDatesContainer = document.querySelector(".calendar__dates");
+        const monthSelect = document.getElementById("calendar__month");
+        const yearSelect = document.getElementById("calendar__year");
+        const selectedDateDisplay = document.getElementById("datas-selecionadas");
+
+        // Abrir o modal ao clicar no botão
+        openCalendarBtn.addEventListener("click", () => {
+            bootstrapModal.show(); // Abre o modal usando o Bootstrap
+        });
+
+        // Fechar o modal ao clicar no botão de "Back"
+        backBtn.addEventListener("click", () => {
+            bootstrapModal.hide(); // Fecha o modal
+        });
+
+        // Aplicar a seleção de datas e fechar o modal
+        applyBtn.addEventListener("click", () => {
+            if (!selectedStartDate || !selectedEndDate) {
+                if (selectedStartDate && !selectedEndDate) {
+                    selectedEndDate = selectedStartDate; // Permite intervalo de um único dia
+                } else {
+                    alert("Por favor, selecione um intervalo completo de datas.");
+                    return;
+                }
+            }
+
+            updateSelectedDateDisplay();
+            bootstrapModal.hide(); // Fecha o modal
+            loadOrders(); // Recarrega os pedidos com o intervalo de data selecionado
+        });
+
+        // Renderizar o calendário ao alterar o mês ou o ano
+        monthSelect.addEventListener("change", renderCalendar);
+        yearSelect.addEventListener("change", renderCalendar);
+
+        function renderCalendar() {
+            const month = parseInt(monthSelect.value);
+            const year = parseInt(yearSelect.value);
+
+            const firstDayOfMonth = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            calendarDatesContainer.innerHTML = ''; // Limpa o calendário antes de renderizar
+
+            // Renderiza os dias vazios antes do primeiro dia do mês
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                const emptyDate = document.createElement('div');
+                emptyDate.classList.add('calendar__date', 'calendar__date--grey');
+                calendarDatesContainer.appendChild(emptyDate);
+            }
+
+            // Renderiza os dias do mês
+            for (let i = 1; i <= daysInMonth; i++) {
+                const dateElement = document.createElement('div');
+                dateElement.classList.add('calendar__date');
+                dateElement.textContent = i;
+
+                dateElement.addEventListener("click", function () {
+                    const clickedDate = new Date(year, month, i);
+
+                    if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
+                        selectedStartDate = clickedDate;
+                        selectedEndDate = null; // Reseta o intervalo
+                        clearSelection();
+                        dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+                    } else if (clickedDate < selectedStartDate) {
+                        selectedStartDate = clickedDate; // Permite redefinir a data inicial
+                        selectedEndDate = null; // Reseta o intervalo
+                        clearSelection();
+                        dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+                    } else {
+                        selectedEndDate = clickedDate;
+                        highlightRange(selectedStartDate, selectedEndDate);
+                    }
+                    updateSelectedDateDisplay();
+                });
+
+                calendarDatesContainer.appendChild(dateElement);
+            }
+        }
+
+        function clearSelection() {
+            document.querySelectorAll('.calendar__date--selected, .calendar__date--range-start, .calendar__date--range-end').forEach(el => {
+                el.classList.remove('calendar__date--selected', 'calendar__date--range-start', 'calendar__date--range-end');
+            });
+        }
+
+        function highlightRange(start, end) {
+            const allDates = document.querySelectorAll('.calendar__date');
+            const startTimestamp = start.getTime();
+            const endTimestamp = end.getTime();
+
+            allDates.forEach(el => {
+                const day = parseInt(el.textContent);
+                if (isNaN(day)) return; // Ignora dias não clicáveis
+
+                const elDate = new Date(yearSelect.value, monthSelect.value, day).getTime();
+
+                if (elDate >= startTimestamp && elDate <= endTimestamp) {
+                    el.classList.add('calendar__date--selected');
+                    if (elDate === startTimestamp) el.classList.add('calendar__date--range-start');
+                    if (elDate === endTimestamp) el.classList.add('calendar__date--range-end');
+                }
+            });
+        }
+
+        function updateSelectedDateDisplay() {
+            if (selectedStartDate && selectedEndDate) {
+                const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
+                const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedEndDate.getFullYear()}`;
+                selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
+            } else if (selectedStartDate) {
+                const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
+                selectedDateDisplay.textContent = `Data selecionada: ${startDateStr}`;
+            } else {
+                selectedDateDisplay.textContent = '';
+            }
+        }
+
+        monthSelect.value = selectedStartDate.getMonth(); // Define o mês atual no select
+        yearSelect.value = selectedStartDate.getFullYear(); // Define o ano atual no select
+        renderCalendar(); // Inicializa o calendário com o mês e ano ajustados
+        updateSelectedDateDisplay(); // Atualiza a exibição inicial das datas selecionadas
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initializeCalendar();
+    });
 
     document.addEventListener('DOMContentLoaded', () => {
         console.log("DOM content loaded");
         loadSidebar();
         loadOrders();
-        initializeCalendar();
     });
 </script>
 </body>
