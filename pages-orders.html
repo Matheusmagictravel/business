@@ -595,6 +595,7 @@
                         // Se já há uma data inicial, define a final
                         if (clickedDate < selectedStartDate) {
                             selectedStartDate = clickedDate; // Permite redefinir a data inicial
+                            selectedEndDate = null; // Reseta o intervalo
                             clearSelection();
                             dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
                         } else {
