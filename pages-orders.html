@@ -1,4 +1,4 @@
-Precisa arrumar no código abaixo:
+Precisa 
 
 
 <!DOCTYPE html>
@@ -489,7 +489,7 @@ Precisa arrumar no código abaixo:
         if (selectedStartDate && selectedEndDate) {
             filteredOrders = totalOrders.filter(pedido => {
                 const [year, month, day] = pedido.data_venda.split('-').map(Number);
-                const orderDate = new Date(year, month, day); // Corrige a data
+                const orderDate = new Date(year, month - 1, day); // Corrige a data
                 return orderDate >= selectedStartDate && orderDate <= selectedEndDate;
             });
         }
@@ -503,11 +503,11 @@ Precisa arrumar no código abaixo:
         const start = (currentPage - 1) * rowsPerPage;
         const end = start + rowsPerPage;
         const ordersToDisplay = filteredOrders.slice(start, end);
-
+    
         ordersTable.innerHTML = ordersToDisplay.map(pedido => `
             <tr>
                 <td>${pedido.id}</td>
-                <td>${new Date(pedido.data_venda).toLocaleDateString('pt-BR')}</td>
+                <td>${formatDate(pedido.data_venda)}</td>
                 <td>${pedido.nome}</td>
                 <td>${pedido.efetivado_por || 'N/A'}</td>
                 <td>R$ ${parseFloat(pedido.valor_venda).toFixed(2)}</td>
@@ -519,6 +519,11 @@ Precisa arrumar no código abaixo:
             </tr>
         `).join('');
     }
+    
+    function formatDate(dateString) {
+        const [year, month, day] = dateString.split('-').map(Number);
+        return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+    }    
 
     // Função para renderizar os controles de paginação
     function renderPagination(filteredOrders) {
