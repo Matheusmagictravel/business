@@ -1,6 +1,3 @@
-Precisa arrumar no código abaixo:
-
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -562,65 +559,81 @@ Precisa arrumar no código abaixo:
         const yearSelect = document.getElementById("calendar__year");
         const selectedDateDisplay = document.getElementById("datas-selecionadas");
         
-        function openModal() {
-            calendarModal.removeAttribute("inert");
-            calendarModal.style.display = "block";
-        }
+        bootstrapModal.show();
         
-        function closeModal() {
-            calendarModal.setAttribute("inert", "true");
-            calendarModal.style.display = "none";
-        }
+        bootstrapModal.hide();
 
+        openCalendarBtn.addEventListener("click", function () {
+            bootstrapModal.show();
+        });
+        
+        backBtn.addEventListener("click", function () {
+            bootstrapModal.hide();
+        });
+        
+        applyBtn.addEventListener("click", function () {
+            if (!selectedStartDate) {
+                alert("Por favor, selecione uma data inicial.");
+                return;
+            }
+        
+            if (!selectedEndDate) {
+                selectedEndDate = selectedStartDate; // Permite intervalo de um único dia
+            }
+        
+            updateSelectedDateDisplay();
+            bootstrapModal.hide();
+            loadOrders(); // Recarrega os pedidos com o intervalo de datas selecionado
+        });
+        
+        monthSelect.addEventListener("change", renderCalendar);
+        yearSelect.addEventListener("change", renderCalendar);
+        
         function renderCalendar() {
             const month = parseInt(monthSelect.value);
             const year = parseInt(yearSelect.value);
-
+        
             const firstDayOfMonth = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            calendarDatesContainer.innerHTML = '';
-
-            // Render empty days for the first week
-            let firstWeekDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
-            for (let i = 0; i < firstWeekDay; i++) {
-                const emptyDateElement = document.createElement('div');
-                emptyDateElement.classList.add('calendar__date', 'calendar__date--grey');
-                calendarDatesContainer.appendChild(emptyDateElement);
+        
+            calendarDatesContainer.innerHTML = ''; // Limpa o calendário antes de renderizar
+        
+            // Renderiza os dias vazios antes do primeiro dia do mês
+            for (let i = 0; i < firstDayOfMonth; i++) {
+                const emptyDate = document.createElement('div');
+                emptyDate.classList.add('calendar__date', 'calendar__date--grey');
+                calendarDatesContainer.appendChild(emptyDate);
             }
-
-            // Render days of the month
+        
+            // Renderiza os dias do mês
             for (let i = 1; i <= daysInMonth; i++) {
                 const dateElement = document.createElement('div');
                 dateElement.classList.add('calendar__date');
-                dateElement.innerHTML = `<span>${i}</span>`;
-                calendarDatesContainer.appendChild(dateElement);
-
-                dateElement.addEventListener('click', function () {
+                dateElement.textContent = i;
+        
+                dateElement.addEventListener("click", function () {
                     const clickedDate = new Date(year, month, i);
-
-                    // Se ainda não há datas selecionadas ou ambas as datas estão definidas
+        
                     if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
                         selectedStartDate = clickedDate;
                         selectedEndDate = null; // Reseta o intervalo
                         clearSelection();
                         dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+                    } else if (clickedDate < selectedStartDate) {
+                        selectedStartDate = clickedDate; // Permite redefinir a data inicial
+                        selectedEndDate = null; // Reseta o intervalo
+                        clearSelection();
+                        dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
                     } else {
-                        // Se já há uma data inicial, define a final
-                        if (clickedDate < selectedStartDate) {
-                            selectedStartDate = clickedDate; // Permite redefinir a data inicial
-                            selectedEndDate = null; // Reseta o intervalo
-                            clearSelection();
-                            dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
-                        } else {
-                            selectedEndDate = clickedDate;
-                            highlightRange(selectedStartDate, selectedEndDate);
-                        }
+                        selectedEndDate = clickedDate;
+                        highlightRange(selectedStartDate, selectedEndDate);
                     }
                     updateSelectedDateDisplay();
                 });
+        
+                calendarDatesContainer.appendChild(dateElement);
             }
-        }
+        }        
 
         function clearSelection() {
             document.querySelectorAll('.calendar__date--selected, .calendar__date--range-start, .calendar__date--range-end').forEach(el => {
@@ -670,18 +683,6 @@ Precisa arrumar no código abaixo:
         }        
 
         openCalendarBtn.addEventListener("click", function (event) {
-            // Obtém as coordenadas do botão clicado
-            const buttonRect = openCalendarBtn.getBoundingClientRect();
-        
-            // Garante que o modal abra posicionado abaixo do botão
-            calendarModal.style.position = "absolute";
-            calendarModal.style.top = `${buttonRect.bottom + window.scrollY}px`; // Calcula a posição abaixo do botão
-            calendarModal.style.left = `${buttonRect.left + window.scrollX}px`; // Alinha com o lado esquerdo do botão
-            calendarModal.style.transform = "translateX(0)"; // Remove a centralização horizontal
-            calendarModal.style.zIndex = "1055"; // Garante que o modal esteja acima de outros elementos
-        
-            // Remove o atributo 'inert' para interatividade e exibe o modal
-            calendarModal.removeAttribute("inert");
             bootstrapModal.show();
         });
 
