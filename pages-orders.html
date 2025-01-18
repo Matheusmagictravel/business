@@ -484,14 +484,18 @@
     function filterOrders() {
         let filteredOrders = totalOrders;
         if (selectedStartDate && selectedEndDate) {
+            // Adiciona um dia ao selectedEndDate para incluir o dia completo
+            const adjustedEndDate = new Date(selectedEndDate);
+            adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
+    
             filteredOrders = totalOrders.filter(pedido => {
                 const orderDate = new Date(pedido.data_venda);
-                return orderDate >= selectedStartDate && orderDate <= selectedEndDate;
+                return orderDate >= selectedStartDate && orderDate < adjustedEndDate;
             });
         }
         renderTable(filteredOrders);
         renderPagination(filteredOrders);
-    }
+    }    
 
     // Função para renderizar a tabela com paginação
     function renderTable(filteredOrders) {
