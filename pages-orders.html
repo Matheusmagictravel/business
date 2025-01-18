@@ -1,719 +1,720 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pedidos - Magic Travel</title>
-<!-- Adicionando o CSS do Bootstrap -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-<style>
-    body {
-        font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        margin: 0;
-        padding: 0;
-        color: #1d1d1f;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        height: 100vh;
-        font-size: 14px;
-    }
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos - Magic Travel</title>
+    <!-- Adicionando o CSS do Bootstrap -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #1d1d1f;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            font-size: 14px;
+        }
 
-    /* Sidebar */
-    #sidebar-container {
-        width: 260px;
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 100%;
-    }
+        /* Sidebar */
+        #sidebar-container {
+            width: 260px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+        }
 
-    .sidebar-loading {
-        padding: 20px;
-        text-align: center;
-        font-size: 14px;
-    }
+        .sidebar-loading {
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
 
-    .dashboard-orders {
-        flex-grow: 1;
-        padding: 100px 40px 40px;
-        margin-left: 260px;
-        margin-top: 40px;
-    }
+        .dashboard-orders {
+            flex-grow: 1;
+            padding: 100px 40px 40px;
+            margin-left: 260px;
+            margin-top: 40px;
+        }
 
-    .dashboard-orders-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 20px;
-        background-color: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
+        .dashboard-orders-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
 
-    .dashboard-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-    }
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
 
-    h1 {
-        font-weight: 600;
-        color: #1d1d1f;
-    }
+        h1 {
+            font-weight: 600;
+            color: #1d1d1f;
+        }
 
-    .add-order-button {
-        background-color: #1cbb8c;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 15px;
-        font-weight: 600;
-        text-align: center;
-        cursor: pointer;
-        font-size: 12px;
-    }
+        .add-order-button {
+            background-color: #1cbb8c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
 
-    .add-order-button:hover {
-        background-color: #17a2b8;
-    }
+        .add-order-button:hover {
+            background-color: #17a2b8;
+        }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
 
-    th, td {
-        padding: 12px 15px;
-        font-size: 12px;
-        text-align: left;
-    }
+        th, td {
+            padding: 12px 15px;
+            font-size: 12px;
+            text-align: left;
+        }
 
-    th {
-        font-weight: 600;
-        color: #6e6e73;
-        background-color: #f9f9fa;
-    }
+        th {
+            font-weight: 600;
+            color: #6e6e73;
+            background-color: #f9f9fa;
+        }
 
-    tr:nth-child(odd) {
-        background-color: #ffffff;
-    }
+        tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
 
-    tr:nth-child(even) {
-        background: linear-gradient(90deg, rgba(59, 125, 221, .1), rgba(59, 125, 221, .088) 50%, transparent);
-    }
+        tr:nth-child(even) {
+            background: linear-gradient(90deg, rgba(59, 125, 221, .1), rgba(59, 125, 221, .088) 50%, transparent);
+        }
 
-    td {
-        color: #1d1d1f;
-        border-bottom: 1px solid #e5e5e5;
-    }
+        td {
+            color: #1d1d1f;
+            border-bottom: 1px solid #e5e5e5;
+        }
 
-    tr:hover {
-        background-color: #cceeff;
-        cursor: pointer;
-    }
+        tr:hover {
+            background-color: #cceeff;
+            cursor: pointer;
+        }
 
-    .details-button {
-        background-color: #0071e3;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 15px;
-        font-weight: 600;
-        text-align: center;
-        cursor: pointer;
-        font-size: 12px;
-    }
+        .details-button {
+            background-color: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+        }
 
-    .details-button:hover {
-        background-color: #005bb5;
-    }
+        .details-button:hover {
+            background-color: #005bb5;
+        }
 
-    .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
 
-    .pagination button {
-        background-color: #0071e3;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 15px;
-        margin: 0 5px;
-        font-weight: 600;
-        cursor: pointer;
-    }
+        .pagination button {
+            background-color: #0071e3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin: 0 5px;
+            font-weight: 600;
+            cursor: pointer;
+        }
 
-    .pagination button:hover {
-        background-color: #005bb5;
-    }
+        .pagination button:hover {
+            background-color: #005bb5;
+        }
 
-    .pagination button:disabled {
-        background-color: #cccccc;
-        cursor: not-allowed;
-    }
+        .pagination button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
 
-    .calendar {
-        --side-padding: 5px; /* Padding lateral reduzido */
-        --border-radius: 15px; /* Bordas mais arredondadas */
-        --accent-br: 10px; /* Ajuste do raio para destaques */
-        width: 280px; /* Largura ajustada */
-        margin: auto;
-        transform: scale(1); /* Escala padrão */
-        transform-origin: top; /* Origem do redimensionamento */
-        background-color: white;
-        border-radius: 5px;
-        box-shadow: 0 0 .875rem 0 rgba(33, 37, 41, .05);
-    }
-
-    /* Estilo do corpo do calendário */
-    .calendar__body {
-        border-radius: var(--border-radius);
-        padding: 10px;
-    }
-
-    /* Cabeçalho do calendário (mês e ano) */
-    .calendar__opts {
-        background-color: #fff;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        padding: 10px;
-        border-top-left-radius: var(--border-radius);
-        border-top-right-radius: var(--border-radius);
-    }
-
-    /* Dias da semana */
-    .calendar__days {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        text-align: center;
-        font-weight: bold;
-        color: #999;
-        padding: 0 10px;
-        font-size: 0.85rem;
-    }
-
-    /* Dias do calendário */
-    .calendar__dates {
-        display: grid;
-        grid-template-columns: repeat(7, 1fr);
-        gap: 5px;
-        padding: 10px;
-    }
-
-    .calendar__date {
-        --height: 30px; /* Tamanho dos dias */
-        text-align: center;
-        line-height: var(--height);
-        height: var(--height);
-        background-color: #fff;
-        color: #333;
-        border-radius: var(--accent-br);
-        font-size: 0.9rem;
-        cursor: pointer;
-        transition: background-color 0.3s, transform 0.2s;
-        position: relative;
-    }
-
-    .calendar__date:hover {
-        background-color: #eaeaea; /* Fundo no hover */
-        transform: scale(1.05); /* Leve aumento no hover */
-    }
-
-    /* Dias selecionados */
-    .calendar__date--selected {
-        background-color: #4b37ff;
-        color: #fff;
-        font-weight: bold;
-        box-shadow: 0 3px 6px rgba(75, 55, 255, 0.3);
-    }
-
-    .calendar__date--range-start {
-        border-top-left-radius: var(--accent-br);
-        border-bottom-left-radius: var(--accent-br);
-    }
-
-    .calendar__date--range-end {
-        border-top-right-radius: var(--accent-br);
-        border-bottom-right-radius: var(--accent-br);
-    }
-
-    .calendar__date--grey {
-        color: #ccc;
-        background-color: #f2f2f2;
-        cursor: not-allowed;
-    }
-
-    /* Botões */
-    .calendar__buttons {
-        display: flex;
-        justify-content: space-between;
-        padding: 10px;
-        border-bottom-left-radius: var(--border-radius);
-        border-bottom-right-radius: var(--border-radius);
-    }
-
-    .calendar__button {
-        padding: 8px 12px;
-        font-size: 0.9rem;
-        border: none;
-        border-radius: var(--accent-br);
-        cursor: pointer;
-    }
-
-    .calendar__button--grey {
-        background-color: #e0e0e0;
-        color: #333;
-    }
-
-    .calendar__button--primary {
-        background-color: #4b37ff;
-        color: #fff;
-        transition: background-color 0.3s, transform 0.2s;
-    }
-
-    .calendar__button--primary:hover {
-        background-color: #3b27d9;
-        transform: scale(1.05);
-    }
-
-    /* Responsividade */
-    @media (max-width: 768px) {
         .calendar {
-            width: 240px; /* Largura menor */
+            --side-padding: 5px; /* Padding lateral reduzido */
+            --border-radius: 15px; /* Bordas mais arredondadas */
+            --accent-br: 10px; /* Ajuste do raio para destaques */
+            width: 280px; /* Largura ajustada */
+            margin: auto;
+            transform: scale(1); /* Escala padrão */
+            transform-origin: top; /* Origem do redimensionamento */
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 .875rem 0 rgba(33, 37, 41, .05);
+        }
+
+        /* Estilo do corpo do calendário */
+        .calendar__body {
+            border-radius: var(--border-radius);
+            padding: 10px;
+        }
+
+        /* Cabeçalho do calendário (mês e ano) */
+        .calendar__opts {
+            background-color: #fff;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
+            border-top-left-radius: var(--border-radius);
+            border-top-right-radius: var(--border-radius);
+        }
+
+        /* Dias da semana */
+        .calendar__days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-weight: bold;
+            color: #999;
+            padding: 0 10px;
+            font-size: 0.85rem;
+        }
+
+        /* Dias do calendário */
+        .calendar__dates {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            padding: 10px;
         }
 
         .calendar__date {
-            --height: 35px; /* Altura menor */
-            font-size: 0.8rem; /* Fonte menor */
+            --height: 30px; /* Tamanho dos dias */
+            text-align: center;
+            line-height: var(--height);
+            height: var(--height);
+            background-color: #fff;
+            color: #333;
+            border-radius: var(--accent-br);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            position: relative;
         }
 
-        .calendar__dates {
-            gap: 4px; /* Espaçamento reduzido */
+        .calendar__date:hover {
+            background-color: #eaeaea; /* Fundo no hover */
+            transform: scale(1.05); /* Leve aumento no hover */
         }
-    }
 
-    /* Estilos do Modal */
-    .modal {
-        z-index: 1055 !important; /* Garante que esteja acima de todos os elementos */
-    }
+        /* Dias selecionados */
+        .calendar__date--selected {
+            background-color: #4b37ff;
+            color: #fff;
+            font-weight: bold;
+            box-shadow: 0 3px 6px rgba(75, 55, 255, 0.3);
+        }
 
-    .modal-backdrop {
-        z-index: 1050; /* Ajusta o fundo escuro para acompanhar o modal */
-    }
+        .calendar__date--range-start {
+            border-top-left-radius: var(--accent-br);
+            border-bottom-left-radius: var(--accent-br);
+        }
 
-    .modal-dialog {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%); /* Centraliza horizontalmente */
-        margin-top: 10px; /* Ajusta o deslocamento vertical */
-    }
+        .calendar__date--range-end {
+            border-top-right-radius: var(--accent-br);
+            border-bottom-right-radius: var(--accent-br);
+        }
 
-    .date-selector-container {
-        display: flex;
-        align-items: center;
-        position: fixed;
-        top: 20px;
-        right: 63px;
-        z-index: 1050; /* Ensure it is above other content */
-    }
+        .calendar__date--grey {
+            color: #ccc;
+            background-color: #f2f2f2;
+            cursor: not-allowed;
+        }
 
-    .selected-date-display {
-        margin-right: 10px;
-        padding: 8px 12px;
-        background-color: #f3f4f6;
-        border-radius: 4px;
-        font-weight: 400;
-        color: #333;
-        display: flex;
-        align-items: center;
-        height: 95%;
-    }
+        /* Botões */
+        .calendar__buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom-left-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+        }
 
-</style>
-</head>
-<body>
-<!-- Sidebar será carregado aqui -->
-<div id="sidebar-container"></div>
+        .calendar__button {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: var(--accent-br);
+            cursor: pointer;
+        }
 
-<main class="content">
-    <div class="date-selector-container">
-        <span id="datas-selecionadas" class="selected-date-display"></span>
-        <button id="open-calendar-btn" class="btn btn-primary">Selecionar Data</button>
-    </div>
+        .calendar__button--grey {
+            background-color: #e0e0e0;
+            color: #333;
+        }
 
-<!-- Conteúdo principal -->
-    <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" style="display: none;">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="calendar">
-                        <div class="calendar__opts">
-                            <select name="calendar__month" id="calendar__month">
-                                <option value="0">Janeiro</option>
-                                <option value="1">Fevereiro</option>
-                                <option value="2">Março</option>
-                                <option value="3">Abril</option>
-                                <option value="4">Maio</option>
-                                <option value="5">Junho</option>
-                                <option value="6">Julho</option>
-                                <option value="7">Agosto</option>
-                                <option value="8">Setembro</option>
-                                <option value="9">Outubro</option>
-                                <option value="10">Novembro</option>
-                                <option value="11">Dezembro</option>
-                            </select>
+        .calendar__button--primary {
+            background-color: #4b37ff;
+            color: #fff;
+            transition: background-color 0.3s, transform 0.2s;
+        }
 
-                            <select name="calendar__year" id="calendar__year">
-                                <option value="2025">2025</option>
-                                <option value="2026">2026</option>
-                                <option value="2027">2027</option>
-                                <option value="2028">2028</option>
-                            </select>
-                        </div>
+        .calendar__button--primary:hover {
+            background-color: #3b27d9;
+            transform: scale(1.05);
+        }
 
-                        <div class="calendar__body">
-                            <div class="calendar__days">
-                                <div>Dom</div>
-                                <div>Seg</div>
-                                <div>Ter</div>
-                                <div>Qua</div>
-                                <div>Qui</div>
-                                <div>Sex</div>
-                                <div>Sab</div>
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .calendar {
+                width: 240px; /* Largura menor */
+            }
+
+            .calendar__date {
+                --height: 35px; /* Altura menor */
+                font-size: 0.8rem; /* Fonte menor */
+            }
+
+            .calendar__dates {
+                gap: 4px; /* Espaçamento reduzido */
+            }
+        }
+
+        /* Estilos do Modal */
+        .modal {
+            z-index: 1055 !important; /* Garante que esteja acima de todos os elementos */
+        }
+
+        .modal-backdrop {
+            z-index: 1050; /* Ajusta o fundo escuro para acompanhar o modal */
+        }
+
+        .modal-dialog {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%); /* Centraliza horizontalmente */
+            margin-top: 10px; /* Ajusta o deslocamento vertical */
+        }
+
+        .date-selector-container {
+            display: flex;
+            align-items: center;
+            position: fixed;
+            top: 20px;
+            right: 63px;
+            z-index: 1050; /* Ensure it is above other content */
+        }
+
+        .selected-date-display {
+            margin-right: 10px;
+            padding: 8px 12px;
+            background-color: #f3f4f6;
+            border-radius: 4px;
+            font-weight: 400;
+            color: #333;
+            display: flex;
+            align-items: center;
+            height: 95%;
+        }
+
+    </style>
+    </head>
+    <body>
+    <!-- Sidebar será carregado aqui -->
+    <div id="sidebar-container"></div>
+
+    <main class="content">
+        <div class="date-selector-container">
+            <span id="datas-selecionadas" class="selected-date-display"></span>
+            <button id="open-calendar-btn" class="btn btn-primary">Selecionar Data</button>
+        </div>
+
+    <!-- Conteúdo principal -->
+        <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" style="display: none;">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="calendar">
+                            <div class="calendar__opts">
+                                <select name="calendar__month" id="calendar__month">
+                                    <option value="0">Janeiro</option>
+                                    <option value="1">Fevereiro</option>
+                                    <option value="2">Março</option>
+                                    <option value="3">Abril</option>
+                                    <option value="4">Maio</option>
+                                    <option value="5">Junho</option>
+                                    <option value="6">Julho</option>
+                                    <option value="7">Agosto</option>
+                                    <option value="8">Setembro</option>
+                                    <option value="9">Outubro</option>
+                                    <option value="10">Novembro</option>
+                                    <option value="11">Dezembro</option>
+                                </select>
+
+                                <select name="calendar__year" id="calendar__year">
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                    <option value="2028">2028</option>
+                                </select>
                             </div>
 
-                            <div class="calendar__dates">
-                                <!-- Date elements will be dynamically generated here -->
-                            </div>
-                        </div>
+                            <div class="calendar__body">
+                                <div class="calendar__days">
+                                    <div>Dom</div>
+                                    <div>Seg</div>
+                                    <div>Ter</div>
+                                    <div>Qua</div>
+                                    <div>Qui</div>
+                                    <div>Sex</div>
+                                    <div>Sab</div>
+                                </div>
 
-                        <div class="calendar__buttons">
-                            <button class="calendar__button calendar__button--grey" id="back-btn">Back</button>
-                            <button class="calendar__button calendar__button--primary" id="apply-btn">Apply</button>
+                                <div class="calendar__dates">
+                                    <!-- Date elements will be dynamically generated here -->
+                                </div>
+                            </div>
+
+                            <div class="calendar__buttons">
+                                <button class="calendar__button calendar__button--grey" id="back-btn">Back</button>
+                                <button class="calendar__button calendar__button--primary" id="apply-btn">Apply</button>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="dashboard-orders">
-        <div class="dashboard-orders-container">
-            <div class="dashboard-header">
-                <h1>Pedidos</h1>
-                <button class="add-order-button" onclick="addNewOrder()">Adicionar Pedido</button>
-            </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID do Pedido</th>
-                        <th>Data da Venda</th>
-                        <th>Cliente</th>
-                        <th>Agente</th>
-                        <th>Valor</th>
-                        <th>Pagamento</th>
-                        <th>Status</th>
-                        <th>Ação</th>
-                    </tr>
-                </thead>
-                <tbody id="orders-table">
-                <!-- Os pedidos serão carregados dinamicamente aqui -->
-                </tbody>
-            </table>
-            <div class="pagination" id="pagination-controls">
-                <!-- Controles de paginação serão inseridos dinamicamente aqui -->
+        <div class="dashboard-orders">
+            <div class="dashboard-orders-container">
+                <div class="dashboard-header">
+                    <h1>Pedidos</h1>
+                    <button class="add-order-button" onclick="addNewOrder()">Adicionar Pedido</button>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID do Pedido</th>
+                            <th>Data da Venda</th>
+                            <th>Cliente</th>
+                            <th>Agente</th>
+                            <th>Valor</th>
+                            <th>Pagamento</th>
+                            <th>Status</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="orders-table">
+                    <!-- Os pedidos serão carregados dinamicamente aqui -->
+                    </tbody>
+                </table>
+                <div class="pagination" id="pagination-controls">
+                    <!-- Controles de paginação serão inseridos dinamicamente aqui -->
+                </div>
             </div>
         </div>
-    </div>
-</main>
+    </main>
 
-<!-- Adicionando o JS do Bootstrap -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
-<script>
-    let currentPage = 1;
-    const rowsPerPage = 10;
-    let totalOrders = [];
-    let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1); // Primeiro dia do mês atual
-    let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0); // Último dia do mês atual
+    <!-- Adicionando o JS do Bootstrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let currentPage = 1;
+        const rowsPerPage = 10;
+        let totalOrders = [];
+        let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1); // Primeiro dia do mês atual
+        let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0); // Último dia do mês atual
 
-    // Função para carregar o sidebar
-    async function loadSidebar() {
-        try {
-            const response = await fetch('https://business.magictraveltur.com/sidebar.html');
-            if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
+        // Função para carregar o sidebar
+        async function loadSidebar() {
+            try {
+                const response = await fetch('https://business.magictraveltur.com/sidebar.html');
+                if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
 
-            const sidebarContent = await response.text();
-            document.getElementById('sidebar-container').innerHTML = sidebarContent;
-        } catch (error) {
-            console.error('Erro ao carregar a sidebar:', error);
-            document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
-        }
-    }
-
-    // Função para carregar os pedidos da API
-    async function loadOrders() {
-        try {
-            const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
-            const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
-            const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?start_date=${startDate}&end_date=${endDate}`;
-
-            const response = await fetch(apiUrl);
-            if (!response.ok) {
-                throw new Error(`Erro ao carregar pedidos: ${response.status}`);
+                const sidebarContent = await response.text();
+                document.getElementById('sidebar-container').innerHTML = sidebarContent;
+            } catch (error) {
+                console.error('Erro ao carregar a sidebar:', error);
+                document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
             }
-
-            totalOrders = await response.json();
-            console.log('Pedidos retornados pela API:', totalOrders);
-            filterOrders();
-        } catch (error) {
-            console.error('Erro ao carregar os pedidos:', error);
-            document.getElementById('orders-table').innerHTML = `
-                <tr>
-                    <td colspan="8" style="text-align: center; color: red;">Erro ao carregar os pedidos.</td>
-                </tr>
-            `;
-        }
-    }
-
-    // Função para filtrar os pedidos por data
-    function filterOrders() {
-        let filteredOrders = totalOrders;
-        if (selectedStartDate && selectedEndDate) {
-            // Adiciona um dia ao selectedEndDate para incluir o dia completo
-            const adjustedEndDate = new Date(selectedEndDate);
-            adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
-    
-            filteredOrders = totalOrders.filter(pedido => {
-                const orderDate = new Date(pedido.data_venda);
-                return orderDate >= selectedStartDate && orderDate < adjustedEndDate;
-            });
-        }
-        renderTable(filteredOrders);
-        renderPagination(filteredOrders);
-    }    
-
-    // Função para renderizar a tabela com paginação
-    function renderTable(filteredOrders) {
-        const ordersTable = document.getElementById('orders-table');
-        const start = (currentPage - 1) * rowsPerPage;
-        const end = start + rowsPerPage;
-        const ordersToDisplay = filteredOrders.slice(start, end);
-
-        ordersTable.innerHTML = ordersToDisplay.map(pedido => `
-            <tr>
-                <td>${pedido.id}</td>
-                <td>${new Date(pedido.data_venda).toLocaleDateString('pt-BR')}</td>
-                <td>${pedido.nome}</td>
-                <td>${pedido.efetivado_por || 'N/A'}</td>
-                <td>R$ ${parseFloat(pedido.valor_venda).toFixed(2)}</td>
-                <td>${pedido.meio_pgto}</td>
-                <td>${pedido.status || 'Confirmado'}</td>
-                <td>
-                    <button class="details-button" onclick="openDetailsPage('${pedido.id}')">Detalhes</button>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    // Função para renderizar os controles de paginação
-    function renderPagination(filteredOrders) {
-        const paginationControls = document.getElementById('pagination-controls');
-        const totalPages = Math.ceil(filteredOrders.length / rowsPerPage);
-
-        paginationControls.innerHTML = '';
-        for (let i = 1; i <= totalPages; i++) {
-            const button = document.createElement('button');
-            button.textContent = i;
-            button.disabled = i === currentPage;
-            button.classList.toggle('active-page', i === currentPage);
-            button.onclick = () => {
-                currentPage = i;
-                renderTable(filteredOrders);
-                renderPagination(filteredOrders);
-            };
-            paginationControls.appendChild(button);
-        }
-    }
-
-    // Função para abrir detalhes
-    function openDetailsPage(orderId) {
-        window.open(`detalhes.html?pedido=${orderId}`, '_blank');
-    }
-
-    // Função para adicionar novo pedido
-    function addNewOrder() {
-        window.location.href = 'https://business.magictraveltur.com/loti.html';
-    }
-
-    // Função para inicializar o calendário
-    function initializeCalendar() {
-        const openCalendarBtn = document.getElementById("open-calendar-btn");
-        const backBtn = document.getElementById("back-btn");
-        const applyBtn = document.getElementById("apply-btn");
-        const calendarModal = document.getElementById("calendarModal");
-        const bootstrapModal = new bootstrap.Modal(calendarModal);
-        const calendarDatesContainer = document.querySelector(".calendar__dates");
-        const monthSelect = document.getElementById("calendar__month");
-        const yearSelect = document.getElementById("calendar__year");
-        const selectedDateDisplay = document.getElementById("datas-selecionadas");
-        
-        function openModal() {
-            calendarModal.removeAttribute("inert");
-            calendarModal.style.display = "block";
-        }
-        
-        function closeModal() {
-            calendarModal.setAttribute("inert", "true");
-            calendarModal.style.display = "none";
         }
 
-        function renderCalendar() {
-            const month = parseInt(monthSelect.value);
-            const year = parseInt(yearSelect.value);
+        // Função para carregar os pedidos da API
+        async function loadOrders() {
+            try {
+                const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
+                const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
+                const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?start_date=${startDate}&end_date=${endDate}`;
 
-            const firstDayOfMonth = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`Erro ao carregar pedidos: ${response.status}`);
+                }
 
-            calendarDatesContainer.innerHTML = '';
-
-            // Render empty days for the first week
-            let firstWeekDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
-            for (let i = 0; i < firstWeekDay; i++) {
-                const emptyDateElement = document.createElement('div');
-                emptyDateElement.classList.add('calendar__date', 'calendar__date--grey');
-                calendarDatesContainer.appendChild(emptyDateElement);
+                totalOrders = await response.json();
+                console.log('Pedidos retornados pela API:', totalOrders);
+                filterOrders();
+            } catch (error) {
+                console.error('Erro ao carregar os pedidos:', error);
+                document.getElementById('orders-table').innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; color: red;">Erro ao carregar os pedidos.</td>
+                    </tr>
+                `;
             }
+        }
 
-            // Render days of the month
-            for (let i = 1; i <= daysInMonth; i++) {
-                const dateElement = document.createElement('div');
-                dateElement.classList.add('calendar__date');
-                dateElement.innerHTML = `<span>${i}</span>`;
-                calendarDatesContainer.appendChild(dateElement);
-
-                dateElement.addEventListener('click', function () {
-                    const clickedDate = new Date(year, month, i);
-
-                    // Se ainda não há datas selecionadas ou ambas as datas estão definidas
-                    if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
-                        selectedStartDate = clickedDate;
-                        selectedEndDate = null; // Reseta o intervalo
-                        clearSelection();
-                        dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
-                    } else {
-                        // Se já há uma data inicial, define a final
-                        if (clickedDate < selectedStartDate) {
-                            selectedStartDate = clickedDate; // Permite redefinir a data inicial
-                            selectedEndDate = null; // Reseta o intervalo
-                            clearSelection();
-                            dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
-                        } else {
-                            selectedEndDate = clickedDate;
-                            highlightRange(selectedStartDate, selectedEndDate);
-                        }
-                    }
-                    updateSelectedDateDisplay();
+        // Função para filtrar os pedidos por data
+        function filterOrders() {
+            let filteredOrders = totalOrders;
+            if (selectedStartDate && selectedEndDate) {
+                // Ajusta o intervalo para incluir o final do dia
+                const adjustedEndDate = new Date(selectedEndDate);
+                adjustedEndDate.setDate(adjustedEndDate.getDate() + 1);
+        
+                filteredOrders = totalOrders.filter(pedido => {
+                    const orderDate = new Date(pedido.data_venda);
+                    return orderDate >= selectedStartDate && orderDate < adjustedEndDate;
                 });
             }
+            renderTable(filteredOrders);
+            renderPagination(filteredOrders);
+        }            
+
+        // Função para renderizar a tabela com paginação
+        function renderTable(filteredOrders) {
+            const ordersTable = document.getElementById('orders-table');
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const ordersToDisplay = filteredOrders.slice(start, end);
+
+            ordersTable.innerHTML = ordersToDisplay.map(pedido => `
+                <tr>
+                    <td>${pedido.id}</td>
+                    <td>${new Date(pedido.data_venda).toLocaleDateString('pt-BR')}</td>
+                    <td>${pedido.nome}</td>
+                    <td>${pedido.efetivado_por || 'N/A'}</td>
+                    <td>R$ ${parseFloat(pedido.valor_venda).toFixed(2)}</td>
+                    <td>${pedido.meio_pgto}</td>
+                    <td>${pedido.status || 'Confirmado'}</td>
+                    <td>
+                        <button class="details-button" onclick="openDetailsPage('${pedido.id}')">Detalhes</button>
+                    </td>
+                </tr>
+            `).join('');
         }
 
-        function clearSelection() {
-            document.querySelectorAll('.calendar__date--selected, .calendar__date--range-start, .calendar__date--range-end').forEach(el => {
-                el.classList.remove('calendar__date--selected', 'calendar__date--range-start', 'calendar__date--range-end');
-            });
+        // Função para renderizar os controles de paginação
+        function renderPagination(filteredOrders) {
+            const paginationControls = document.getElementById('pagination-controls');
+            const totalPages = Math.ceil(filteredOrders.length / rowsPerPage);
+
+            paginationControls.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const button = document.createElement('button');
+                button.textContent = i;
+                button.disabled = i === currentPage;
+                button.classList.toggle('active-page', i === currentPage);
+                button.onclick = () => {
+                    currentPage = i;
+                    renderTable(filteredOrders);
+                    renderPagination(filteredOrders);
+                };
+                paginationControls.appendChild(button);
+            }
         }
 
-        function highlightRange(start, end) {
-            const allDates = document.querySelectorAll('.calendar__date');
-            const startTimestamp = start.getTime();
-            const endTimestamp = end.getTime();
+        // Função para abrir detalhes
+        function openDetailsPage(orderId) {
+            window.open(`detalhes.html?pedido=${orderId}`, '_blank');
+        }
 
-            allDates.forEach(el => {
-                const day = parseInt(el.textContent);
-                if (isNaN(day)) return; // Ignora dias não clicáveis
+        // Função para adicionar novo pedido
+        function addNewOrder() {
+            window.location.href = 'https://business.magictraveltur.com/loti.html';
+        }
 
-                const elDate = new Date(yearSelect.value, monthSelect.value, day).getTime();
+        // Função para inicializar o calendário
+        function initializeCalendar() {
+            const openCalendarBtn = document.getElementById("open-calendar-btn");
+            const backBtn = document.getElementById("back-btn");
+            const applyBtn = document.getElementById("apply-btn");
+            const calendarModal = document.getElementById("calendarModal");
+            const bootstrapModal = new bootstrap.Modal(calendarModal);
+            const calendarDatesContainer = document.querySelector(".calendar__dates");
+            const monthSelect = document.getElementById("calendar__month");
+            const yearSelect = document.getElementById("calendar__year");
+            const selectedDateDisplay = document.getElementById("datas-selecionadas");
+            
+            function openModal() {
+                calendarModal.removeAttribute("inert");
+                calendarModal.style.display = "block";
+            }
+            
+            function closeModal() {
+                calendarModal.setAttribute("inert", "true");
+                calendarModal.style.display = "none";
+            }
 
-                if (elDate >= startTimestamp && elDate <= endTimestamp) {
-                    el.classList.add('calendar__date--selected');
-                    if (elDate === startTimestamp) el.classList.add('calendar__date--range-start');
-                    if (elDate === endTimestamp) el.classList.add('calendar__date--range-end');
+            function renderCalendar() {
+                const month = parseInt(monthSelect.value);
+                const year = parseInt(yearSelect.value);
+
+                const firstDayOfMonth = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                calendarDatesContainer.innerHTML = '';
+
+                // Render empty days for the first week
+                let firstWeekDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
+                for (let i = 0; i < firstWeekDay; i++) {
+                    const emptyDateElement = document.createElement('div');
+                    emptyDateElement.classList.add('calendar__date', 'calendar__date--grey');
+                    calendarDatesContainer.appendChild(emptyDateElement);
                 }
-            });
-        }
 
-        function updateSelectedDateDisplay() {
-            if (selectedStartDate && selectedEndDate) {
-                // Verifica se a data inicial e final são iguais
-                if (selectedStartDate.getTime() === selectedEndDate.getTime()) {
-                    const singleDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
-                    selectedDateDisplay.textContent = `Data selecionada: ${singleDateStr}`;
-                } else {
-                    // Caso as datas sejam diferentes
+                // Render days of the month
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const dateElement = document.createElement('div');
+                    dateElement.classList.add('calendar__date');
+                    dateElement.innerHTML = `<span>${i}</span>`;
+                    calendarDatesContainer.appendChild(dateElement);
+
+                    dateElement.addEventListener("click", function () {
+                        const clickedDate = new Date(year, month, i);
+                    
+                        if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
+                            selectedStartDate = clickedDate;
+                            selectedEndDate = null; // Permite redefinir o intervalo
+                            clearSelection();
+                            dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+                        } else if (clickedDate >= selectedStartDate) {
+                            selectedEndDate = clickedDate;
+                            highlightRange(selectedStartDate, selectedEndDate);
+                        } else {
+                            // Permite redefinir a data inicial
+                            selectedStartDate = clickedDate;
+                            selectedEndDate = null;
+                            clearSelection();
+                            dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+                        }
+                        updateSelectedDateDisplay();
+                    });                    
+                }
+            }
+
+            function clearSelection() {
+                document.querySelectorAll('.calendar__date--selected, .calendar__date--range-start, .calendar__date--range-end').forEach(el => {
+                    el.classList.remove('calendar__date--selected', 'calendar__date--range-start', 'calendar__date--range-end');
+                });
+            }
+
+            function highlightRange(start, end) {
+                const allDates = document.querySelectorAll('.calendar__date');
+                const startTimestamp = start.getTime();
+                const endTimestamp = end.getTime();
+
+                allDates.forEach(el => {
+                    const day = parseInt(el.textContent);
+                    if (isNaN(day)) return; // Ignora dias não clicáveis
+
+                    const elDate = new Date(yearSelect.value, monthSelect.value, day).getTime();
+
+                    if (elDate >= startTimestamp && elDate <= endTimestamp) {
+                        el.classList.add('calendar__date--selected');
+                        if (elDate === startTimestamp) el.classList.add('calendar__date--range-start');
+                        if (elDate === endTimestamp) el.classList.add('calendar__date--range-end');
+                    }
+                });
+            }
+
+            function updateSelectedDateDisplay() {
+                if (selectedStartDate && selectedEndDate) {
+                    // Verifica se a data inicial e final são iguais
+                    if (selectedStartDate.getTime() === selectedEndDate.getTime()) {
+                        const singleDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
+                        selectedDateDisplay.textContent = `Data selecionada: ${singleDateStr}`;
+                    } else {
+                        // Caso as datas sejam diferentes
+                        const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
+                        const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedEndDate.getFullYear()}`;
+                        selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
+                    }
+                } else if (selectedStartDate) {
+                    // Caso apenas a data inicial esteja selecionada
                     const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
-                    const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedEndDate.getFullYear()}`;
-                    selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
-                }
-            } else if (selectedStartDate) {
-                // Caso apenas a data inicial esteja selecionada
-                const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
-                selectedDateDisplay.textContent = `Data selecionada: ${startDateStr}`;
-            } else {
-                // Limpa o texto caso nada esteja selecionado
-                selectedDateDisplay.textContent = '';
-            }
-        }        
-
-        openCalendarBtn.addEventListener("click", function () {
-            console.log("Open calendar button clicked");
-            // Remove o atributo 'inert' para interatividade e exibe o modal
-            calendarModal.removeAttribute("inert");
-            bootstrapModal.show();
-        });
-
-        backBtn.addEventListener("click", function () {
-            bootstrapModal.hide();
-        });
-
-        applyBtn.addEventListener("click", function () {
-            if (!selectedStartDate || !selectedEndDate) {
-                if (selectedStartDate && !selectedEndDate) {
-                    selectedEndDate = selectedStartDate; // Permite intervalo de um único dia
+                    selectedDateDisplay.textContent = `Data selecionada: ${startDateStr}`;
                 } else {
-                    alert("Por favor, selecione um intervalo completo de datas.");
-                    return;
+                    // Limpa o texto caso nada esteja selecionado
+                    selectedDateDisplay.textContent = '';
                 }
-            }
+            }        
 
-            updateSelectedDateDisplay();
-            bootstrapModal.hide();
-            loadOrders(); // Recarrega os pedidos com o intervalo de data selecionado
+            openCalendarBtn.addEventListener("click", function () {
+                const buttonRect = openCalendarBtn.getBoundingClientRect();
+                calendarModal.style.position = "absolute";
+                calendarModal.style.top = `${buttonRect.bottom + window.scrollY}px`; // Calcula a posição abaixo do botão
+                calendarModal.style.left = `${buttonRect.left + window.scrollX}px`; // Alinha com o botão
+                calendarModal.style.transform = "translateX(0)";
+                calendarModal.style.zIndex = "1055"; // Garante que esteja acima dos outros elementos
+                calendarModal.removeAttribute("inert");
+                bootstrapModal.show();
+            });            
+
+            backBtn.addEventListener("click", function () {
+                bootstrapModal.hide();
+            });
+
+            applyBtn.addEventListener("click", function () {
+                if (!selectedStartDate || !selectedEndDate) {
+                    if (selectedStartDate && !selectedEndDate) {
+                        selectedEndDate = selectedStartDate; // Permite intervalo de um único dia
+                    } else {
+                        alert("Por favor, selecione um intervalo completo de datas.");
+                        return;
+                    }
+                }
+
+                updateSelectedDateDisplay();
+                bootstrapModal.hide();
+                loadOrders(); // Recarrega os pedidos com o intervalo de data selecionado
+            });
+
+            calendarModal.addEventListener('hidden.bs.modal', function () {
+                calendarModal.setAttribute('inert', 'true'); // Re-adiciona o atributo `inert` após fechar
+            });
+
+            monthSelect.addEventListener('change', renderCalendar);
+            yearSelect.addEventListener('change', renderCalendar);
+
+            monthSelect.value = selectedStartDate.getMonth(); // Define o mês atual no select
+            yearSelect.value = selectedStartDate.getFullYear(); // Define o ano atual no select
+            renderCalendar(); // Inicializa o calendário com o mês e ano ajustados
+            updateSelectedDateDisplay(); // Atualiza a exibição inicial das datas selecionadas
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM content loaded");
+            loadSidebar();
+            loadOrders();
+            initializeCalendar();
         });
-
-        calendarModal.addEventListener('hidden.bs.modal', function () {
-            calendarModal.setAttribute('inert', 'true'); // Re-adiciona o atributo `inert` após fechar
-        });
-
-        monthSelect.addEventListener('change', renderCalendar);
-        yearSelect.addEventListener('change', renderCalendar);
-
-        monthSelect.value = selectedStartDate.getMonth(); // Define o mês atual no select
-        yearSelect.value = selectedStartDate.getFullYear(); // Define o ano atual no select
-        renderCalendar(); // Inicializa o calendário com o mês e ano ajustados
-        updateSelectedDateDisplay(); // Atualiza a exibição inicial das datas selecionadas
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log("DOM content loaded");
-        loadSidebar();
-        loadOrders();
-        initializeCalendar();
-    });
-</script>
-</body>
-</html>
+    </script>
+    </body>
+    </html>
