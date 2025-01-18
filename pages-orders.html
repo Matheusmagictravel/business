@@ -1,4 +1,4 @@
-Precisa 
+tem que
 
 
 <!DOCTYPE html>
@@ -561,67 +561,67 @@ Precisa
         const backBtn = document.getElementById("back-btn");
         const applyBtn = document.getElementById("apply-btn");
         const calendarModal = document.getElementById("calendarModal");
-        const bootstrapModal = new bootstrap.Modal(calendarModal);
+        const bootstrapModal = new bootstrap.Modal(calendarModal); // Inicializa o modal do Bootstrap
         const calendarDatesContainer = document.querySelector(".calendar__dates");
         const monthSelect = document.getElementById("calendar__month");
         const yearSelect = document.getElementById("calendar__year");
         const selectedDateDisplay = document.getElementById("datas-selecionadas");
-        
-        bootstrapModal.show();
-        
-        bootstrapModal.hide();
 
-        openCalendarBtn.addEventListener("click", function () {
-            bootstrapModal.show();
+        // Abrir o modal ao clicar no botão
+        openCalendarBtn.addEventListener("click", () => {
+            bootstrapModal.show(); // Abre o modal usando o Bootstrap
         });
-        
-        backBtn.addEventListener("click", function () {
-            bootstrapModal.hide();
+
+        // Fechar o modal ao clicar no botão de "Back"
+        backBtn.addEventListener("click", () => {
+            bootstrapModal.hide(); // Fecha o modal
         });
-        
-        applyBtn.addEventListener("click", function () {
-            if (!selectedStartDate) {
-                alert("Por favor, selecione uma data inicial.");
-                return;
+
+        // Aplicar a seleção de datas e fechar o modal
+        applyBtn.addEventListener("click", () => {
+            if (!selectedStartDate || !selectedEndDate) {
+                if (selectedStartDate && !selectedEndDate) {
+                    selectedEndDate = selectedStartDate; // Permite intervalo de um único dia
+                } else {
+                    alert("Por favor, selecione um intervalo completo de datas.");
+                    return;
+                }
             }
-        
-            if (!selectedEndDate) {
-                selectedEndDate = selectedStartDate; // Permite intervalo de um único dia
-            }
-        
+
             updateSelectedDateDisplay();
-            bootstrapModal.hide();
-            loadOrders(); // Recarrega os pedidos com o intervalo de datas selecionado
+            bootstrapModal.hide(); // Fecha o modal
+            loadOrders(); // Recarrega os pedidos com o intervalo de data selecionado
         });
-        
+
+        // Renderizar o calendário ao alterar o mês ou o ano
         monthSelect.addEventListener("change", renderCalendar);
         yearSelect.addEventListener("change", renderCalendar);
-        
+
         function renderCalendar() {
             const month = parseInt(monthSelect.value);
             const year = parseInt(yearSelect.value);
-        
+
             const firstDayOfMonth = new Date(year, month, 1).getDay();
             const daysInMonth = new Date(year, month + 1, 0).getDate();
-        
+
             calendarDatesContainer.innerHTML = ''; // Limpa o calendário antes de renderizar
-        
+
             // Renderiza os dias vazios antes do primeiro dia do mês
             for (let i = 0; i < firstDayOfMonth; i++) {
                 const emptyDate = document.createElement('div');
                 emptyDate.classList.add('calendar__date', 'calendar__date--grey');
                 calendarDatesContainer.appendChild(emptyDate);
             }
-        
+
             // Renderiza os dias do mês
             for (let i = 1; i <= daysInMonth; i++) {
                 const dateElement = document.createElement('div');
                 dateElement.classList.add('calendar__date');
                 dateElement.textContent = i;
-        
+
                 dateElement.addEventListener("click", function () {
                     const clickedDate = new Date(year, month, i);
-        
+
                     if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
                         selectedStartDate = clickedDate;
                         selectedEndDate = null; // Reseta o intervalo
@@ -638,10 +638,10 @@ Precisa
                     }
                     updateSelectedDateDisplay();
                 });
-        
+
                 calendarDatesContainer.appendChild(dateElement);
             }
-        }        
+        }
 
         function clearSelection() {
             document.querySelectorAll('.calendar__date--selected, .calendar__date--range-start, .calendar__date--range-end').forEach(el => {
@@ -670,55 +670,16 @@ Precisa
 
         function updateSelectedDateDisplay() {
             if (selectedStartDate && selectedEndDate) {
-                // Verifica se a data inicial e final são iguais
-                if (selectedStartDate.getTime() === selectedEndDate.getTime()) {
-                    const singleDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
-                    selectedDateDisplay.textContent = `Data selecionada: ${singleDateStr}`;
-                } else {
-                    // Caso as datas sejam diferentes
-                    const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
-                    const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedEndDate.getFullYear()}`;
-                    selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
-                }
+                const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
+                const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedEndDate.getFullYear()}`;
+                selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
             } else if (selectedStartDate) {
-                // Caso apenas a data inicial esteja selecionada
                 const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
                 selectedDateDisplay.textContent = `Data selecionada: ${startDateStr}`;
             } else {
-                // Limpa o texto caso nada esteja selecionado
                 selectedDateDisplay.textContent = '';
             }
-        }        
-
-        openCalendarBtn.addEventListener("click", function (event) {
-            bootstrapModal.show();
-        });
-
-        backBtn.addEventListener("click", function () {
-            bootstrapModal.hide();
-        });
-
-        applyBtn.addEventListener("click", function () {
-            if (!selectedStartDate || !selectedEndDate) {
-                if (selectedStartDate && !selectedEndDate) {
-                    selectedEndDate = selectedStartDate; // Permite intervalo de um único dia
-                } else {
-                    alert("Por favor, selecione um intervalo completo de datas.");
-                    return;
-                }
-            }
-
-            updateSelectedDateDisplay();
-            bootstrapModal.hide();
-            loadOrders(); // Recarrega os pedidos com o intervalo de data selecionado
-        });
-
-        calendarModal.addEventListener('hidden.bs.modal', function () {
-            calendarModal.setAttribute('inert', 'true'); // Re-adiciona o atributo `inert` após fechar
-        });
-
-        monthSelect.addEventListener('change', renderCalendar);
-        yearSelect.addEventListener('change', renderCalendar);
+        }
 
         monthSelect.value = selectedStartDate.getMonth(); // Define o mês atual no select
         yearSelect.value = selectedStartDate.getFullYear(); // Define o ano atual no select
@@ -727,10 +688,13 @@ Precisa
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+        initializeCalendar();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
         console.log("DOM content loaded");
         loadSidebar();
         loadOrders();
-        initializeCalendar();
     });
 </script>
 </body>
