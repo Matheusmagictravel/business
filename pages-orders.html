@@ -635,16 +635,25 @@
 
         function updateSelectedDateDisplay() {
             if (selectedStartDate && selectedEndDate) {
-                const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
-                const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedEndDate.getFullYear()}`;
-                selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
+                // Verifica se a data inicial e final são iguais
+                if (selectedStartDate.getTime() === selectedEndDate.getTime()) {
+                    const singleDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
+                    selectedDateDisplay.textContent = `Data selecionada: ${singleDateStr}`;
+                } else {
+                    // Caso as datas sejam diferentes
+                    const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
+                    const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedEndDate.getFullYear()}`;
+                    selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
+                }
             } else if (selectedStartDate) {
+                // Caso apenas a data inicial esteja selecionada
                 const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
                 selectedDateDisplay.textContent = `Data selecionada: ${startDateStr}`;
             } else {
+                // Limpa o texto caso nada esteja selecionado
                 selectedDateDisplay.textContent = '';
             }
-        }
+        }        
 
         openCalendarBtn.addEventListener("click", function () {
             console.log("Open calendar button clicked");
