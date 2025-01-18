@@ -348,7 +348,7 @@
 
 <!-- Conteúdo principal -->
     <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel">
-        <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-dialog modal-sm">
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="calendar">
@@ -558,7 +558,6 @@
         const yearSelect = document.getElementById("calendar__year");
         const selectedDateDisplay = document.getElementById("datas-selecionadas");
 
-        // Função para renderizar o calendário
         function renderCalendar() {
             const month = parseInt(monthSelect.value);
             const year = parseInt(yearSelect.value);
@@ -648,10 +647,6 @@
 
         openCalendarBtn.addEventListener("click", function () {
             console.log("Open calendar button clicked");
-            // Posiciona o modal abaixo do botão
-            const rect = openCalendarBtn.getBoundingClientRect();
-            calendarModal.style.top = `${rect.bottom + window.scrollY}px`;
-            calendarModal.style.left = `${rect.left + window.scrollX}px`;
             // Remove o atributo 'inert' para interatividade e exibe o modal
             calendarModal.removeAttribute("inert");
             bootstrapModal.show();
