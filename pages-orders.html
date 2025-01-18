@@ -1,3 +1,6 @@
+Precisa arrumar no código abaixo:
+
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -486,7 +489,7 @@
         if (selectedStartDate && selectedEndDate) {
             filteredOrders = totalOrders.filter(pedido => {
                 const [year, month, day] = pedido.data_venda.split('-').map(Number);
-                const orderDate = new Date(year, month - 1, day); // Corrige a data
+                const orderDate = new Date(year, month, day); // Corrige a data
                 return orderDate >= selectedStartDate && orderDate <= selectedEndDate;
             });
         }
