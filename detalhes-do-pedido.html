@@ -96,6 +96,7 @@
       margin-bottom: 20px;
       border-radius: 8px;
       overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
     
     table thead {
@@ -121,6 +122,47 @@
     
     table tr:nth-child(even) {
       background-color: #f7f7fb;
+    }
+    
+    /* Botões */
+    .btn {
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      display: inline-block;
+      margin: 5px 0;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-primary {
+      background-color: #3b7ddd;
+    }
+    
+    .btn-secondary {
+      background-color: #565e64;
+    }
+    
+    .btn-success {
+      background-color: #1cbb8c;
+    }
+    
+    .btn-danger {
+      background-color: #bb2d3b;
+    }
+    
+    .btn-warning {
+      background-color: #fcb92c;
+    }
+    
+    .btn-info {
+      background-color: #17a2b8;
+    }
+    
+    .btn:hover {
+      opacity: 0.8;
     }
     
     /* Responsividade */
@@ -157,7 +199,7 @@
 
   <!-- Conteúdo principal -->
   <div class="order-details">
-    <a href="pages-orders.html" class="back-button">Voltar para Página de Pedidos</a>
+    <a href="pages-orders.html" class="back-button btn btn-primary">Voltar para Página de Pedidos</a>
 
     <h1>Detalhes do Pedido</h1>
     <p>ID do Pedido: <span id="pedido-id">Carregando...</span></p>
@@ -281,7 +323,7 @@
         </thead>
         <tbody id="spreadsheet-info-2"></tbody>
       </table>
-      <button id="add-row-button" class="add-row-button" style="background-color: #1cbb8c; color: white;">Adicionar Linha</button>
+      <button id="add-row-button" class="btn btn-success">Adicionar Linha</button>
     </div>
 
     <!-- Emissão -->
@@ -417,7 +459,7 @@
         document.getElementById('spreadsheet-info-1').innerHTML = `
           <tr>
             <td>${pedido.dolar_cambio || '<input type="number" placeholder="Dolar Câmbio">'}</td>
-            <td>${pedido.dolar_cambio ? (parseFloat(pedido.dolar_cambio) + 0.98).toFixed(2) : '<input type="text" placeholder="Dolar Magic">'}</td>
+            <td>${pedido.dolar_cambio ? (parseFloat(pedido.dolar_cambio) + 0.98).toFixed(2) : '<input type="number" placeholder="Dolar Magic">'}</td>
           </tr>`;
 
         // Função para adicionar uma nova linha na planilha do pedido (segunda linha)
@@ -437,6 +479,7 @@
             <td><input type="number" placeholder="Total Dollar"></td>
             <td><input type="number" placeholder="Net Real"></td>
             <td><input type="number" placeholder="Margem"></td>
+            <td><input type="number" placeholder="Total Pix"></td>
             <td><input type="number" placeholder="Total Pix"></td>
             <td><input type="number" placeholder="Gateway"></td>
             <td><input type="number" placeholder="Total 10x"></td>
