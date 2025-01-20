@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalhes do Pedido - Magic Travel</title>
+  <style>
+    /* Fonte padrão */
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+    
+    body {
+      font-family: 'Montserrat', sans-serif;
+      margin: 0;
+      background-color: #f4f4f9;
+      color: #333;
+      display: flex;
+    }
+    
+    /* Sidebar */
+    #sidebar-container {
+      width: 260px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background-color: #0d112d;
+      color: #fff;
+      overflow-y: auto;
+      box-shadow: 3px 0 6px rgba(0, 0, 0, 0.2);
+      transition: background-color 0.3s;
+    }
+    
+    #sidebar-container:hover {
+      background-color: #101740;
+    }
+    
+    .sidebar-loading {
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #ccc;
+    }
+    
+    /* Conteúdo principal */
+    .order-details {
+      margin-left: 260px;
+      padding: 30px;
+      width: calc(100% - 260px);
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease-in-out;
+    }
+    
+    .order-details h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 25px;
+      color: #0d112d;
+    }
+    
+    .order-details h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 15px;
+      color: #4a4a4a;
+    }
+    
+    .order-details p {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: #666;
+    }
+    
+    .back-button {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      background-color: #ff6f61;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background-color 0.3s;
+    }
+    
+    .back-button:hover {
+      background-color: #e65b50;
+    }
+    
+    /* Tabelas */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    table thead {
+      background-color: #f9f9fa;
+    }
+    
+    table th, table td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid #ebebf0;
+      text-transform: capitalize;
+    }
+    
+    table th {
+      font-weight: 600;
+      color: #555;
+      background-color: #f0f0f5;
+    }
+    
+    table td {
+      color: #333;
+    }
+    
+    table tr:nth-child(even) {
+      background-color: #f7f7fb;
+    }
+    
+    /* Responsividade */
+    @media (max-width: 768px) {
+      #sidebar-container {
+        width: 220px;
+      }
+    
+      .order-details {
+        margin-left: 220px;
+        width: calc(100% - 220px);
+      }
+    }
+    
+    @media (max-width: 576px) {
+      #sidebar-container {
+        width: 100%;
+        position: fixed;
+        z-index: 1000;
+      }
+    
+      .order-details {
+        margin-left: 0;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div id="sidebar-container">
+    <div class="sidebar-loading">Carregando...</div>
+  </div>
+
+  <!-- Conteúdo principal -->
+  <div class="order-details">
+    <a href="pages-orders.html" class="back-button">Voltar para Página de Pedidos</a>
+
+    <h1>Detalhes do Pedido</h1>
+    <p>ID do Pedido: <span id="pedido-id">Carregando...</span></p>
+
+    <!-- Informações do Pedido -->
+    <div class="section">
+      <h3>Informações do Pedido</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Destino</th>
+            <th>Item/Categoria</th>
+            <th>Data Venda</th>
+          </tr>
+        </thead>
+        <tbody id="order-info"></tbody>
+      </table>
+    </div>
+
+    <!-- Informações do Cliente -->
+    <div class="section">
+      <h3>Informações do Cliente</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>Telefone</th>
+            <th>CPF</th>
+            <th>Data de Nascimento</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="customer-info"></tbody>
+      </table>
+    </div>
+
+    <!-- Informações Financeiras -->
+    <div class="section">
+      <h3>Informações Financeiras</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Gateway</th>
+            <th>Data Pgto</th>
+            <th>Recebido</th>
+            <th>Valor Repassado</th>
+            <th>Data Repasse</th>
+            <th>Cambio do Dia</th>
+            <th>Valor Comissão</th>
+            <th>Meio Pgto</th>
+            <th>Bandeira Cartão</th>
+            <th>Parcelas</th>
+            <th>Valor Venda</th>
+            <th>Custo</th>
+            <th>Fornecedor</th>
+          </tr>
+        </thead>
+        <tbody id="financial-info"></tbody>
+      </table>
+    </div>
+
+    <!-- Informações Comerciais -->
+    <div class="section">
+      <h3>Informações Comerciais</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Origem do Cliente</th>
+            <th>Cliente de (30%)</th>
+            <th>Efetivado por (70%)</th>
+            <th>Comissão Agente</th>
+          </tr>
+        </thead>
+        <tbody id="commercial-info"></tbody>
+      </table>
+    </div>
+
+    <!-- Informações Adicionais -->
+    <div class="section">
+      <h3>Informações Adicionais</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Observações Operacionais</th>
+            <th>Observações Financeiras</th>
+          </tr>
+        </thead>
+        <tbody id="additional-info"></tbody>
+      </table>
+    </div>
+
+    <!-- Planilha do Pedido -->
+    <div class="section">
+      <h3>Planilha do Pedido</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Dolar Câmbio</th>
+            <th>Dolar Magic</th>
+          </tr>
+        </thead>
+        <tbody id="spreadsheet-info-1"></tbody>
+      </table>
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Idade</th>
+            <th>Intermediario</th>
+            <th>Net Dollar</th>
+            <th>Quantidade</th>
+            <th>Total Dollar</th>
+            <th>Net Real</th>
+            <th>Margem</th>
+            <th>Total Pix</th>
+            <th>Gateway</th>
+            <th>Total 10x</th>
+          </tr>
+        </thead>
+        <tbody id="spreadsheet-info-2"></tbody>
+      </table>
+    </div>
+
+    <!-- Emissão -->
+    <div class="section">
+      <h3>Emissão</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Invoice</th>
+            <th>Nome dos Passageiros</th>
+            <th>Itens</th>
+            <th>Identificador</th>
+            <th>Data de Pagamento</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="emission-info"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    // Função para capturar o ID do pedido na URL
+    function getPedidoId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('pedido') || 'Não informado';
+    }
+
+    // Função para formatar datas
+    function formatDate(date) {
+      return date ? new Date(date).toLocaleDateString('pt-BR') : 'N/A';
+    }
+
+    // Função para carregar a sidebar
+    async function loadSidebar() {
+      try {
+        const response = await fetch('sidebar.html');
+        if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
+
+        const sidebarContent = await response.text();
+        document.getElementById('sidebar-container').innerHTML = sidebarContent;
+      } catch (error) {
+        console.error('Erro ao carregar a sidebar:', error);
+        document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
+      }
+    }
+
+    // Função para carregar os detalhes do pedido
+    async function loadOrderDetails() {
+      const pedidoId = getPedidoId();
+      if (pedidoId === 'Não informado') {
+        alert('ID do pedido não informado!');
+        return;
+      }
+
+      try {
+        // Chama a API para obter os dados do pedido
+        const response = await fetch(`https://www.magictraveltur.com/api_pedidos.php?pedido=${pedidoId}`);
+        if (!response.ok) throw new Error(`Erro ao buscar os detalhes do pedido. Status: ${response.status}`);
+
+        const pedido = await response.json(); // API retorna um objeto
+        console.log('Dados retornados pela API:', pedido);
+
+        if (!pedido) {
+          throw new Error('Nenhum dado encontrado para o pedido informado.');
+        }
+
+        // Atualiza o ID do pedido na página
+        document.getElementById('pedido-id').textContent = pedidoId;
+
+        // Preenche as informações do pedido
+        document.getElementById('order-info').innerHTML = `
+          <tr>
+            <td><select>
+              <option value="Pagamento recebido" ${pedido.status === "Pagamento recebido" ? "selected" : ""}>Pagamento recebido</option>
+              <option value="Envio de contrato" ${pedido.status === "Envio de contrato" ? "selected" : ""}>Envio de contrato</option>
+              <option value="Aguardando Emissão" ${pedido.status === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
+              <option value="Pendente de Pagamento" ${pedido.status === "Pendente de Pagamento" ? "selected" : ""}>Pendente de Pagamento</option>
+              <option value="Envio de Brindes" ${pedido.status === "Envio de Brindes" ? "selected" : ""}>Envio de Brindes</option>
+              <option value="Concluído" ${pedido.status === "Concluído" ? "selected" : ""}>Concluído</option>
+            </select></td>
+            <td>${pedido.destino || 'N/A'}</td>
+            <td>${pedido.item || 'N/A'}</td>
+            <td>${formatDate(pedido.data_venda)}</td>
+          </tr>`;
+
+        // Preenche as informações do cliente
+        document.getElementById('customer-info').innerHTML = `
+          <tr>
+            <td>${pedido.nome || 'N/A'}</td>
+            <td>${pedido.email || 'N/A'}</td>
+            <td>${pedido.telefone || 'N/A'}</td>
+            <td>${pedido.cpf || 'N/A'}</td>
+            <td>${formatDate(pedido.data_nascimento)}</td>
+            <td>${pedido.estado || 'N/A'}</td>
+          </tr>`;
+
+        // Preenche as informações financeiras
+        document.getElementById('financial-info').innerHTML = `
+          <tr>
+            <td>${pedido.gateway || 'N/A'}</td>
+            <td>${formatDate(pedido.data_pgto)}</td>
+            <td>R$ ${parseFloat(pedido.recebido).toFixed(2) || 'N/A'}</td>
+            <td>R$ ${parseFloat(pedido.valor_repassado).toFixed(2) || 'N/A'}</td>
+            <td>${formatDate(pedido.data_repasse)}</td>
+            <td>${pedido.cambio_dia || 'N/A'}</td>
+            <td>R$ ${parseFloat(pedido.valor_comissao).toFixed(2) || 'N/A'}</td>
+            <td>${pedido.meio_pgto || 'N/A'}</td>
+            <td>${pedido.bandeira_cartao || 'N/A'}</td>
+            <td>${pedido.parcelas || 'N/A'}</td>
+            <td>R$ ${parseFloat(pedido.valor_venda).toFixed(2) || 'N/A'}</td>
+            <td>R$ ${parseFloat(pedido.custo).toFixed(2) || 'N/A'}</td>
+            <td>${pedido.fornecedor || 'N/A'}</td>
+          </tr>`;
+
+        // Preenche as informações comerciais
+        document.getElementById('commercial-info').innerHTML = `
+          <tr>
+            <td>${pedido.origem_cliente || 'N/A'}</td>
+            <td>${pedido.cliente_de_30 || 'N/A'}</td>
+            <td>${pedido.efetivado_por_70 || 'N/A'}</td>
+            <td>${pedido.comissao_agente || 'N/A'}</td>
+          </tr>`;
+
+        // Preenche as informações adicionais
+        document.getElementById('additional-info').innerHTML = `
+          <tr>
+            <td>${pedido.observacoes_operacionais || 'N/A'}</td>
+            <td>${pedido.observacoes_financeiras || 'N/A'}</td>
+          </tr>`;
+
+        // Preenche a planilha do pedido (primeira linha)
+        document.getElementById('spreadsheet-info-1').innerHTML = `
+          <tr>
+            <td>${pedido.dolar_cambio || 'IMPUTAR'}</td>
+            <td>${pedido.dolar_cambio ? (parseFloat(pedido.dolar_cambio) + 0.98).toFixed(2) : 'IMPUTAR'}</td>
+          </tr>`;
+
+        // Preenche a planilha do pedido (segunda linha)
+        document.getElementById('spreadsheet-info-2').innerHTML = `
+          <tr>
+            <td>${pedido.produto || 'IMPUTAR'}</td>
+            <td><select>
+              <option value="Adulto" ${pedido.idade === "Adulto" ? "selected" : ""}>Adulto</option>
+              <option value="Criança" ${pedido.idade === "Criança" ? "selected" : ""}>Criança</option>
+            </select></td>
+            <td>${pedido.intermediario || 'IMPUTAR'}</td>
+            <td>${pedido.net_dollar || 'IMPUTAR'}</td>
+            <td>${pedido.quantidade || 'IMPUTAR'}</td>
+            <td>${pedido.net_dollar && pedido.intermediario && pedido.quantidade ? (parseFloat(pedido.net_dollar) + parseFloat(pedido.intermediario)) * parseInt(pedido.quantidade) : 'NÃO IMPUTA'}</td>
+            <td>${pedido.total_dollar && pedido.dolar_magic ? (parseFloat(pedido.total_dollar) * parseFloat(pedido.dolar_magic)).toFixed(2) : 'GERA AUTOMATICAMENTE'}</td>
+            <td>${pedido.margem || 'IMPUTAR'}</td>
+            <td>${pedido.net_real && pedido.margem ? (parseFloat(pedido.net_real) / (1 - parseFloat(pedido.margem))).toFixed(2) : 'NÃO IMPUTA'}</td>
+            <td>${pedido.gateway || 'IMPUTAR'}</td>
+            <td>${pedido.total_pix && pedido.gateway ? (parseFloat(pedido.total_pix) / (1 - parseFloat(pedido.gateway))).toFixed(2) : 'IMPUTAR'}</td>
+          </tr>`;
+
+        // Preenche as informações de emissão
+        document.getElementById('emission-info').innerHTML = `
+          <tr>
+            <td>${pedido.invoice || 'IMPUTAR'}</td>
+            <td>${pedido.nome_passageiros || 'IMPUTAR'}</td>
+            <td>${pedido.itens || 'IMPUTAR'}</td>
+            <td>${pedido.identificador || 'IMPUTAR'}</td>
+            <td>${formatDate(pedido.data_pagamento)}</td>
+            <td><select>
+              <option value="Aguardando Emissão" ${pedido.status_emissao === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
+              <option value="Pendente de Pagamento" ${pedido.status_emissao === "Pendente de Pagamento" ? "selected" : ""}>Pendente de Pagamento</option>
+            </select></td>
+          </tr>`;
+      } catch (error) {
+        console.error('Erro ao carregar os detalhes do pedido:', error);
+        alert(`Erro ao carregar os dados do pedido: ${error.message}`);
+      }
+    }
+
+    // Inicializa o carregamento da página
+    document.addEventListener('DOMContentLoaded', () => {
+      loadSidebar();
+      loadOrderDetails();
+    });
+  </script>
+</body>
+</html>
