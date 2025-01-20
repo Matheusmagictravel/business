@@ -11,140 +11,134 @@
     body {
       font-family: 'Montserrat', sans-serif;
       margin: 0;
-      background-color: #f0f4f8;
+      background-color: #f4f6fb;
       color: #333;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
-      overflow-x: hidden;
+      padding: 0;
     }
 
-    /* Reset de elementos */
     * {
       box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    }
+
+    h1, h2, h3 {
+      color: #1f3b6f;
+    }
+
+    a {
+      text-decoration: none;
     }
 
     /* Sidebar */
     #sidebar-container {
       width: 260px;
+      height: 100vh;
+      background: linear-gradient(180deg, #1f3b6f, #3b7ddd);
+      color: white;
       position: fixed;
       top: 0;
       left: 0;
-      height: 100%;
-      background: linear-gradient(180deg, #3b7ddd, #0d112d);
-      color: #fff;
-      overflow-y: auto;
-      box-shadow: 3px 0 10px rgba(0, 0, 0, 0.3);
-      padding: 20px 15px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      align-items: center;
+      padding: 20px 0;
     }
 
-    #sidebar-container .sidebar-title {
-      font-size: 20px;
-      font-weight: 700;
-      margin-bottom: 15px;
+    .sidebar-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+
+    .sidebar-link {
+      padding: 12px 20px;
+      border-radius: 5px;
+      font-size: 16px;
+      margin-bottom: 10px;
+      width: 80%;
       text-align: center;
-      text-transform: uppercase;
-    }
-
-    #sidebar-container .sidebar-link {
-      color: #fff;
-      text-decoration: none;
-      padding: 10px 15px;
-      border-radius: 6px;
-      background-color: rgba(255, 255, 255, 0.1);
-      transition: background-color 0.3s ease;
-      font-weight: 500;
-    }
-
-    #sidebar-container .sidebar-link:hover {
+      color: white;
       background-color: rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .sidebar-link:hover {
+      background-color: rgba(255, 255, 255, 0.4);
     }
 
     /* Conteúdo principal */
     .order-details {
       margin-left: 280px;
-      padding: 30px;
-      width: calc(100% - 320px);
+      padding: 40px;
+      width: calc(100% - 280px);
       background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-      margin-top: 30px;
+      border-radius: 10px;
+      margin-top: 20px;
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
       display: flex;
       flex-direction: column;
       gap: 30px;
     }
 
     .order-details h1 {
-      font-size: 32px;
-      font-weight: 700;
-      color: #0d112d;
       text-align: center;
+      font-size: 28px;
+      margin-bottom: 20px;
       text-transform: uppercase;
-      margin-bottom: 10px;
     }
 
     .section {
       padding: 20px;
-      background-color: #f9fafc;
+      background-color: #f9faff;
       border-radius: 10px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
     }
 
     .section h3 {
-      font-size: 22px;
-      font-weight: 600;
-      margin-bottom: 15px;
-      color: #3b7ddd;
-      border-bottom: 2px solid #ddd;
-      padding-bottom: 10px;
+      font-size: 20px;
+      margin-bottom: 10px;
+      border-bottom: 2px solid #3b7ddd;
+      padding-bottom: 8px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 20px;
-      border-radius: 10px;
-      overflow: hidden;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      background-color: #fff;
+      margin-top: 10px;
     }
 
     table thead {
       background-color: #3b7ddd;
-      color: #fff;
+      color: white;
       text-transform: uppercase;
     }
 
     table th, table td {
-      padding: 14px 16px;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
       text-align: left;
-      border-bottom: 1px solid #ebebf0;
     }
 
     table tr:nth-child(even) {
-      background-color: #f7f7fb;
+      background-color: #f3f7fc;
     }
 
     table tr:hover {
-      background-color: rgba(59, 125, 221, 0.1);
+      background-color: #e7f0fb;
     }
 
     .btn {
-      padding: 12px 25px;
-      font-size: 16px;
-      font-weight: 500;
-      color: #fff;
-      border-radius: 8px;
-      text-decoration: none;
       display: inline-block;
-      margin: 5px 0;
-      transition: background-color 0.3s ease;
+      padding: 10px 20px;
+      font-size: 16px;
+      color: white;
+      border-radius: 5px;
+      text-align: center;
+      margin-top: 10px;
+      transition: all 0.3s ease;
       cursor: pointer;
     }
 
@@ -153,46 +147,12 @@
     }
 
     .btn-primary:hover {
-      background-color: #2a5ca8;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .form-group label {
-      font-weight: 600;
-      color: #333;
-    }
-
-    .form-group input, .form-group select {
-      padding: 12px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
-      background-color: #f9fafc;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    .form-group input:focus, .form-group select:focus {
-      outline: none;
-      border-color: #3b7ddd;
-    }
-
-    .financial-info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
+      background-color: #2b5da3;
     }
 
     @media (max-width: 768px) {
       #sidebar-container {
-        position: relative;
-        width: 100%;
-        box-shadow: none;
-        margin-bottom: 20px;
+        display: none;
       }
 
       .order-details {
@@ -200,21 +160,31 @@
         width: 100%;
       }
     }
+
+    @media (max-width: 576px) {
+      .order-details {
+        padding: 20px;
+      }
+    }
   </style>
 </head>
 <body>
   <!-- Sidebar -->
   <div id="sidebar-container">
-    <div class="sidebar-title">Menu</div>
-    <a href="#" class="sidebar-link">Link 1</a>
-    <a href="#" class="sidebar-link">Link 2</a>
-    <a href="#" class="sidebar-link">Link 3</a>
+    <div class="sidebar-title">Magic Travel</div>
+    <div class="sidebar-link">Home</div>
+    <div class="sidebar-link">Pedidos</div>
+    <div class="sidebar-link">Sobre</div>
   </div>
 
   <!-- Conteúdo principal -->
   <div class="order-details">
-    <h1>Detalhes do Pedido</h1>
+    <a href="pages-orders.html" class="back-button btn btn-primary">Voltar para Página de Pedidos</a>
 
+    <h1>Detalhes do Pedido</h1>
+    <p>ID do Pedido: <span id="pedido-id">Carregando...</span></p>
+
+    <!-- Informações do Pedido -->
     <div class="section">
       <h3>Informações do Pedido</h3>
       <table>
@@ -230,6 +200,7 @@
       </table>
     </div>
 
+    <!-- Informações do Cliente -->
     <div class="section">
       <h3>Informações do Cliente</h3>
       <table>
@@ -247,6 +218,7 @@
       </table>
     </div>
 
+    <!-- Informações Financeiras -->
     <div class="section">
       <h3>Informações Financeiras</h3>
       <div class="financial-info-grid">
@@ -278,9 +250,34 @@
           <label for="valor_comissao">Valor Comissão</label>
           <input type="number" id="valor_comissao" placeholder="Valor Comissão">
         </div>
+        <div class="form-group">
+          <label for="meio_pgto">Meio Pgto</label>
+          <input type="text" id="meio_pgto" placeholder="Meio Pgto">
+        </div>
+        <div class="form-group">
+          <label for="bandeira_cartao">Bandeira Cartão</label>
+          <input type="text" id="bandeira_cartao" placeholder="Bandeira Cartão">
+        </div>
+        <div class="form-group">
+          <label for="parcelas">Parcelas</label>
+          <input type="number" id="parcelas" placeholder="Parcelas">
+        </div>
+        <div class="form-group">
+          <label for="valor_venda">Valor Venda</label>
+          <input type="number" id="valor_venda" placeholder="Valor Venda">
+        </div>
+        <div class="form-group">
+          <label for="custo">Custo</label>
+          <input type="number" id="custo" placeholder="Custo">
+        </div>
+        <div class="form-group">
+          <label for="fornecedor">Fornecedor</label>
+          <input type="text" id="fornecedor" placeholder="Fornecedor">
+        </div>
       </div>
     </div>
 
+    <!-- Informações Comerciais -->
     <div class="section">
       <h3>Informações Comerciais</h3>
       <table>
@@ -296,6 +293,7 @@
       </table>
     </div>
 
+    <!-- Informações Adicionais -->
     <div class="section">
       <h3>Informações Adicionais</h3>
       <table>
@@ -308,9 +306,58 @@
         <tbody id="additional-info"></tbody>
       </table>
     </div>
+
+    <!-- Planilha do Pedido -->
+    <div class="section">
+      <h3>Planilha do Pedido</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Dolar Câmbio</th>
+            <th>Dolar Magic</th>
+          </tr>
+        </thead>
+        <tbody id="spreadsheet-info-1"></tbody>
+      </table>
+      <table>
+        <thead>
+          <tr>
+            <th>Produto</th>
+            <th>Idade</th>
+            <th>Intermediario</th>
+            <th>Net Dollar</th>
+            <th>Quantidade</th>
+            <th>Total Dollar</th>
+            <th>Net Real</th>
+            <th>Margem</th>
+            <th>Total Pix</th>
+            <th>Gateway</th>
+            <th>Total 10x</th>
+          </tr>
+        </thead>
+        <tbody id="spreadsheet-info-2"></tbody>
+      </table>
+      <button id="add-row-button" class="btn btn-success">Adicionar Linha</button>
+    </div>
+
+    <!-- Emissão -->
+    <div class="section">
+      <h3>Emissão</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Invoice</th>
+            <th>Nome dos Passageiros</th>
+            <th>Itens</th>
+            <th>Identificador</th>
+            <th>Data de Pagamento</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="emission-info"></tbody>
+      </table>
+    </div>
   </div>
-</body>
-</html>
 
   <script>
     // Função para capturar o ID do pedido na URL
