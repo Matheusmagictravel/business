@@ -79,14 +79,14 @@
       font-size: 14px;
       font-weight: 500;
       color: #fff;
-      background-color: #ff6f61;
+      background-color: #3b7ddd;
       border-radius: 8px;
       text-decoration: none;
       transition: background-color 0.3s;
     }
     
     .back-button:hover {
-      background-color: #e65b50;
+      background-color: #565e64;
     }
     
     /* Tabelas */
@@ -281,6 +281,7 @@
         </thead>
         <tbody id="spreadsheet-info-2"></tbody>
       </table>
+      <button id="add-row-button" class="add-row-button" style="background-color: #1cbb8c; color: white;">Adicionar Linha</button>
     </div>
 
     <!-- Emissão -->
@@ -381,71 +382,98 @@
         // Preenche as informações financeiras
         document.getElementById('financial-info').innerHTML = `
           <tr>
-            <td>${pedido.gateway || 'N/A'}</td>
-            <td>${formatDate(pedido.data_pgto)}</td>
-            <td>R$ ${parseFloat(pedido.recebido).toFixed(2) || 'N/A'}</td>
-            <td>R$ ${parseFloat(pedido.valor_repassado).toFixed(2) || 'N/A'}</td>
-            <td>${formatDate(pedido.data_repasse)}</td>
-            <td>${pedido.cambio_dia || 'N/A'}</td>
-            <td>R$ ${parseFloat(pedido.valor_comissao).toFixed(2) || 'N/A'}</td>
-            <td>${pedido.meio_pgto || 'N/A'}</td>
-            <td>${pedido.bandeira_cartao || 'N/A'}</td>
-            <td>${pedido.parcelas || 'N/A'}</td>
-            <td>R$ ${parseFloat(pedido.valor_venda).toFixed(2) || 'N/A'}</td>
-            <td>R$ ${parseFloat(pedido.custo).toFixed(2) || 'N/A'}</td>
-            <td>${pedido.fornecedor || 'N/A'}</td>
+            <td>${pedido.gateway || '<input type="text" placeholder="Gateway">'}</td>
+            <td>${formatDate(pedido.data_pgto) || '<input type="date">'}</td>
+            <td>${pedido.recebido ? `R$ ${parseFloat(pedido.recebido).toFixed(2)}` : '<input type="number" placeholder="Recebido">'}</td>
+            <td>${pedido.valor_repassado ? `R$ ${parseFloat(pedido.valor_repassado).toFixed(2)}` : '<input type="number" placeholder="Valor Repassado">'}</td>
+            <td>${formatDate(pedido.data_repasse) || '<input type="date">'}</td>
+            <td>${pedido.cambio_dia || '<input type="number" placeholder="Cambio do Dia">'}</td>
+            <td>${pedido.valor_comissao ? `R$ ${parseFloat(pedido.valor_comissao).toFixed(2)}` : '<input type="number" placeholder="Valor Comissão">'}</td>
+            <td>${pedido.meio_pgto || '<input type="text" placeholder="Meio Pgto">'}</td>
+            <td>${pedido.bandeira_cartao || '<input type="text" placeholder="Bandeira Cartão">'}</td>
+            <td>${pedido.parcelas || '<input type="number" placeholder="Parcelas">'}</td>
+            <td>${pedido.valor_venda ? `R$ ${parseFloat(pedido.valor_venda).toFixed(2)}` : '<input type="number" placeholder="Valor Venda">'}</td>
+            <td>${pedido.custo ? `R$ ${parseFloat(pedido.custo).toFixed(2)}` : '<input type="number" placeholder="Custo">'}</td>
+            <td>${pedido.fornecedor || '<input type="text" placeholder="Fornecedor">'}</td>
           </tr>`;
 
         // Preenche as informações comerciais
         document.getElementById('commercial-info').innerHTML = `
           <tr>
-            <td>${pedido.origem_cliente || 'N/A'}</td>
-            <td>${pedido.cliente_de_30 || 'N/A'}</td>
-            <td>${pedido.efetivado_por_70 || 'N/A'}</td>
-            <td>${pedido.comissao_agente || 'N/A'}</td>
+            <td>${pedido.origem_cliente || '<input type="text" placeholder="Origem do Cliente">'}</td>
+            <td>${pedido.cliente_de_30 || '<input type="text" placeholder="Cliente de (30%)">'}</td>
+            <td>${pedido.efetivado_por_70 || '<input type="text" placeholder="Efetivado por (70%)">'}</td>
+            <td>${pedido.comissao_agente || '<input type="text" placeholder="Comissão Agente">'}</td>
           </tr>`;
 
         // Preenche as informações adicionais
         document.getElementById('additional-info').innerHTML = `
           <tr>
-            <td>${pedido.observacoes_operacionais || 'N/A'}</td>
-            <td>${pedido.observacoes_financeiras || 'N/A'}</td>
+            <td>${pedido.observacoes_operacionais || '<input type="text" placeholder="Observações Operacionais">'}</td>
+            <td>${pedido.observacoes_financeiras || '<input type="text" placeholder="Observações Financeiras">'}</td>
           </tr>`;
 
         // Preenche a planilha do pedido (primeira linha)
         document.getElementById('spreadsheet-info-1').innerHTML = `
           <tr>
-            <td>${pedido.dolar_cambio || 'IMPUTAR'}</td>
-            <td>${pedido.dolar_cambio ? (parseFloat(pedido.dolar_cambio) + 0.98).toFixed(2) : 'IMPUTAR'}</td>
+            <td>${pedido.dolar_cambio || '<input type="number" placeholder="Dolar Câmbio">'}</td>
+            <td>${pedido.dolar_cambio ? (parseFloat(pedido.dolar_cambio) + 0.98).toFixed(2) : '<input type="text" placeholder="Dolar Magic">'}</td>
           </tr>`;
+
+        // Função para adicionar uma nova linha na planilha do pedido (segunda linha)
+        function addNewRow() {
+          const newRow = `
+          <tr>
+            <td><input type="text" placeholder="Produto"></td>
+            <td>
+              <select>
+                <option value="Adulto">Adulto</option>
+                <option value="Criança">Criança</option>
+              </select>
+            </td>
+            <td><input type="number" placeholder="Intermediario"></td>
+            <td><input type="number" placeholder="Net Dollar"></td>
+            <td><input type="number" placeholder="Quantidade"></td>
+            <td><input type="number" placeholder="Total Dollar"></td>
+            <td><input type="number" placeholder="Net Real"></td>
+            <td><input type="number" placeholder="Margem"></td>
+            <td><input type="number" placeholder="Total Pix"></td>
+            <td><input type="number" placeholder="Gateway"></td>
+            <td><input type="number" placeholder="Total 10x"></td>
+          </tr>`;
+          document.getElementById('spreadsheet-info-2').insertAdjacentHTML('beforeend', newRow);
+        }
+
+        // Adiciona evento ao botão para incluir nova linha
+        document.getElementById('add-row-button').addEventListener('click', addNewRow);
 
         // Preenche a planilha do pedido (segunda linha)
         document.getElementById('spreadsheet-info-2').innerHTML = `
           <tr>
-            <td>${pedido.produto || 'IMPUTAR'}</td>
+            <td>${pedido.produto || '<input type="text" placeholder="Produto">'}</td>
             <td><select>
               <option value="Adulto" ${pedido.idade === "Adulto" ? "selected" : ""}>Adulto</option>
               <option value="Criança" ${pedido.idade === "Criança" ? "selected" : ""}>Criança</option>
             </select></td>
-            <td>${pedido.intermediario || 'IMPUTAR'}</td>
-            <td>${pedido.net_dollar || 'IMPUTAR'}</td>
-            <td>${pedido.quantidade || 'IMPUTAR'}</td>
-            <td>${pedido.net_dollar && pedido.intermediario && pedido.quantidade ? (parseFloat(pedido.net_dollar) + parseFloat(pedido.intermediario)) * parseInt(pedido.quantidade) : 'NÃO IMPUTA'}</td>
-            <td>${pedido.total_dollar && pedido.dolar_magic ? (parseFloat(pedido.total_dollar) * parseFloat(pedido.dolar_magic)).toFixed(2) : 'GERA AUTOMATICAMENTE'}</td>
-            <td>${pedido.margem || 'IMPUTAR'}</td>
-            <td>${pedido.net_real && pedido.margem ? (parseFloat(pedido.net_real) / (1 - parseFloat(pedido.margem))).toFixed(2) : 'NÃO IMPUTA'}</td>
-            <td>${pedido.gateway || 'IMPUTAR'}</td>
-            <td>${pedido.total_pix && pedido.gateway ? (parseFloat(pedido.total_pix) / (1 - parseFloat(pedido.gateway))).toFixed(2) : 'IMPUTAR'}</td>
+            <td>${pedido.intermediario || '<input type="number" placeholder="Intermediario">'}</td>
+            <td>${pedido.net_dollar || '<input type="number" placeholder="Net Dollar">'}</td>
+            <td>${pedido.quantidade || '<input type="number" placeholder="Quantidade">'}</td>
+            <td>${pedido.net_dollar && pedido.intermediario && pedido.quantidade ? (parseFloat(pedido.net_dollar) + parseFloat(pedido.intermediario)) * parseInt(pedido.quantidade) : '<input type="number" placeholder="Total Dollar">'}</td>
+            <td>${pedido.total_dollar && pedido.dolar_magic ? (parseFloat(pedido.total_dollar) * (parseFloat(pedido.dolar_cambio) + 0.98)).toFixed(2) : '<input type="number" placeholder="Net Real">'}</td>
+            <td>${pedido.margem || '<input type="number" placeholder="Margem">'}</td>
+            <td>${pedido.net_real && pedido.margem ? (parseFloat(pedido.net_real) / (1 - parseFloat(pedido.margem))).toFixed(2) : '<input type="number" placeholder="Total Pix">'}</td>
+            <td>${pedido.gateway || '<input type="number" placeholder="Gateway">'}</td>
+            <td>${pedido.total_pix && pedido.gateway ? (parseFloat(pedido.total_pix) / (1 - parseFloat(pedido.gateway))).toFixed(2) : '<input type="number" placeholder="Total 10x">'}</td>
           </tr>`;
 
         // Preenche as informações de emissão
         document.getElementById('emission-info').innerHTML = `
           <tr>
-            <td>${pedido.invoice || 'IMPUTAR'}</td>
-            <td>${pedido.nome_passageiros || 'IMPUTAR'}</td>
-            <td>${pedido.itens || 'IMPUTAR'}</td>
-            <td>${pedido.identificador || 'IMPUTAR'}</td>
-            <td>${formatDate(pedido.data_pagamento)}</td>
+            <td>${pedido.invoice || '<input type="text" placeholder="Invoice">'}</td>
+            <td>${pedido.nome_passageiros || '<input type="text" placeholder="Nome dos Passageiros">'}</td>
+            <td>${pedido.itens || '<input type="text" placeholder="Itens">'}</td>
+            <td>${pedido.identificador || '<input type="text" placeholder="Identificador">'}</td>
+            <td>${formatDate(pedido.data_pagamento) || '<input type="date">'}</td>
             <td><select>
               <option value="Aguardando Emissão" ${pedido.status_emissao === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
               <option value="Pendente de Pagamento" ${pedido.status_emissao === "Pendente de Pagamento" ? "selected" : ""}>Pendente de Pagamento</option>
