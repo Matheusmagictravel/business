@@ -14,6 +14,9 @@
       background-color: #f4f4f9;
       color: #333;
       display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
     }
 
     /* Reset de elementos */
@@ -50,15 +53,16 @@
     
     /* Conteúdo principal */
     .order-details {
-      margin-left: 260px;
+      margin-left: 280px;
       padding: 30px;
-      width: calc(100% - 260px);
+      width: calc(100% - 320px);
       background-color: #ffffff;
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease-in-out;
+      margin-top: 30px;
     }
-    
+
     .order-details h1 {
       font-size: 32px;
       font-weight: 700;
@@ -66,7 +70,7 @@
       color: #0d112d;
       text-align: center;
     }
-    
+
     .order-details h3 {
       font-size: 24px;
       font-weight: 600;
@@ -75,13 +79,13 @@
       border-bottom: 2px solid #ddd;
       padding-bottom: 10px;
     }
-    
+
     .order-details p {
       font-size: 18px;
       margin-bottom: 15px;
       color: #666;
     }
-    
+
     .back-button {
       display: inline-block;
       margin-bottom: 20px;
@@ -95,11 +99,11 @@
       transition: background-color 0.3s;
       text-align: center;
     }
-    
+
     .back-button:hover {
       background-color: #565e64;
     }
-    
+
     /* Tabelas */
     table {
       width: 100%;
@@ -110,32 +114,32 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       background-color: #fff;
     }
-    
+
     table thead {
       background-color: #f9f9fa;
     }
-    
+
     table th, table td {
       padding: 14px 16px;
       text-align: left;
       border-bottom: 1px solid #ebebf0;
       text-transform: capitalize;
     }
-    
+
     table th {
       font-weight: 600;
       color: #555;
       background-color: #f0f0f5;
     }
-    
+
     table td {
       color: #333;
     }
-    
+
     table tr:nth-child(even) {
       background-color: #f7f7fb;
     }
-    
+
     /* Botões */
     .btn {
       padding: 10px 20px;
@@ -149,47 +153,47 @@
       transition: background-color 0.3s;
       cursor: pointer;
     }
-    
+
     .btn-primary {
       background-color: #3b7ddd;
     }
-    
+
     .btn-secondary {
       background-color: #565e64;
     }
-    
+
     .btn-success {
       background-color: #1cbb8c;
     }
-    
+
     .btn-danger {
       background-color: #bb2d3b;
     }
-    
+
     .btn-warning {
       background-color: #fcb92c;
     }
-    
+
     .btn-info {
       background-color: #17a2b8;
     }
-    
+
     .btn:hover {
       opacity: 0.8;
     }
-    
+
     /* Form */
     .form-group {
       margin-bottom: 15px;
     }
-    
+
     .form-group label {
       display: block;
       font-weight: 600;
       margin-bottom: 5px;
       color: #333;
     }
-    
+
     .form-group input, .form-group select {
       width: 100%;
       padding: 10px;
@@ -198,46 +202,42 @@
       font-size: 14px;
       box-sizing: border-box;
     }
-    
+
     .form-group input:focus, .form-group select:focus {
       border-color: #3b7ddd;
       outline: none;
     }
-    
+
     /* Distribuição dos campos em Informações Financeiras */
     .financial-info-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
       gap: 20px;
     }
-    
+
     /* Margem superior */
     .section {
       margin-top: 50px;
     }
-    
+
     /* Responsividade */
     @media (max-width: 768px) {
       #sidebar-container {
-        width: 220px;
-      }
-    
-      .order-details {
-        margin-left: 220px;
-        width: calc(100% - 220px);
-      }
-    }
-    
-    @media (max-width: 576px) {
-      #sidebar-container {
         width: 100%;
-        position: fixed;
-        z-index: 1000;
+        position: relative;
+        height: auto;
+        box-shadow: none;
       }
-    
+
       .order-details {
         margin-left: 0;
         width: 100%;
+        margin-top: 20px;
+      }
+    }
+
+    @media (max-width: 576px) {
+      .order-details {
         padding: 20px;
       }
     }
