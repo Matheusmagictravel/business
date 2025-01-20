@@ -53,21 +53,21 @@
     }
     
     .order-details h1 {
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 700;
       margin-bottom: 25px;
       color: #0d112d;
     }
     
     .order-details h3 {
-      font-size: 20px;
+      font-size: 24px;
       font-weight: 600;
       margin-bottom: 15px;
       color: #4a4a4a;
     }
     
     .order-details p {
-      font-size: 16px;
+      font-size: 18px;
       margin-bottom: 15px;
       color: #666;
     }
@@ -76,7 +76,7 @@
       display: inline-block;
       margin-bottom: 20px;
       padding: 10px 20px;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 500;
       color: #fff;
       background-color: #3b7ddd;
@@ -165,6 +165,43 @@
       opacity: 0.8;
     }
     
+    /* Form */
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    
+    .form-group input:focus, .form-group select:focus {
+      border-color: #3b7ddd;
+      outline: none;
+    }
+    
+    /* Distribuição dos campos em Informações Financeiras */
+    .financial-info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    
+    /* Margem superior */
+    .section {
+      margin-top: 50px;
+    }
+    
     /* Responsividade */
     @media (max-width: 768px) {
       #sidebar-container {
@@ -241,26 +278,60 @@
     <!-- Informações Financeiras -->
     <div class="section">
       <h3>Informações Financeiras</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Gateway</th>
-            <th>Data Pgto</th>
-            <th>Recebido</th>
-            <th>Valor Repassado</th>
-            <th>Data Repasse</th>
-            <th>Cambio do Dia</th>
-            <th>Valor Comissão</th>
-            <th>Meio Pgto</th>
-            <th>Bandeira Cartão</th>
-            <th>Parcelas</th>
-            <th>Valor Venda</th>
-            <th>Custo</th>
-            <th>Fornecedor</th>
-          </tr>
-        </thead>
-        <tbody id="financial-info"></tbody>
-      </table>
+      <div class="financial-info-grid">
+        <div class="form-group">
+          <label for="gateway">Gateway</label>
+          <input type="text" id="gateway" placeholder="Gateway">
+        </div>
+        <div class="form-group">
+          <label for="data_pgto">Data Pgto</label>
+          <input type="date" id="data_pgto">
+        </div>
+        <div class="form-group">
+          <label for="recebido">Recebido</label>
+          <input type="number" id="recebido" placeholder="Recebido">
+        </div>
+        <div class="form-group">
+          <label for="valor_repassado">Valor Repassado</label>
+          <input type="number" id="valor_repassado" placeholder="Valor Repassado">
+        </div>
+        <div class="form-group">
+          <label for="data_repasse">Data Repasse</label>
+          <input type="date" id="data_repasse">
+        </div>
+        <div class="form-group">
+          <label for="cambio_dia">Cambio do Dia</label>
+          <input type="number" id="cambio_dia" placeholder="Cambio do Dia">
+        </div>
+        <div class="form-group">
+          <label for="valor_comissao">Valor Comissão</label>
+          <input type="number" id="valor_comissao" placeholder="Valor Comissão">
+        </div>
+        <div class="form-group">
+          <label for="meio_pgto">Meio Pgto</label>
+          <input type="text" id="meio_pgto" placeholder="Meio Pgto">
+        </div>
+        <div class="form-group">
+          <label for="bandeira_cartao">Bandeira Cartão</label>
+          <input type="text" id="bandeira_cartao" placeholder="Bandeira Cartão">
+        </div>
+        <div class="form-group">
+          <label for="parcelas">Parcelas</label>
+          <input type="number" id="parcelas" placeholder="Parcelas">
+        </div>
+        <div class="form-group">
+          <label for="valor_venda">Valor Venda</label>
+          <input type="number" id="valor_venda" placeholder="Valor Venda">
+        </div>
+        <div class="form-group">
+          <label for="custo">Custo</label>
+          <input type="number" id="custo" placeholder="Custo">
+        </div>
+        <div class="form-group">
+          <label for="fornecedor">Fornecedor</label>
+          <input type="text" id="fornecedor" placeholder="Fornecedor">
+        </div>
+      </div>
     </div>
 
     <!-- Informações Comerciais -->
@@ -397,14 +468,7 @@
         // Preenche as informações do pedido
         document.getElementById('order-info').innerHTML = `
           <tr>
-            <td><select>
-              <option value="Pagamento recebido" ${pedido.status === "Pagamento recebido" ? "selected" : ""}>Pagamento recebido</option>
-              <option value="Envio de contrato" ${pedido.status === "Envio de contrato" ? "selected" : ""}>Envio de contrato</option>
-              <option value="Aguardando Emissão" ${pedido.status === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
-              <option value="Pendente de Pagamento" ${pedido.status === "Pendente de Pagamento" ? "selected" : ""}>Pendente de Pagamento</option>
-              <option value="Envio de Brindes" ${pedido.status === "Envio de Brindes" ? "selected" : ""}>Envio de Brindes</option>
-              <option value="Concluído" ${pedido.status === "Concluído" ? "selected" : ""}>Concluído</option>
-            </select></td>
+            <td><button class="btn btn-info">${pedido.status || 'N/A'}</button></td>
             <td>${pedido.destino || 'N/A'}</td>
             <td>${pedido.item || 'N/A'}</td>
             <td>${formatDate(pedido.data_venda)}</td>
@@ -422,37 +486,34 @@
           </tr>`;
 
         // Preenche as informações financeiras
-        document.getElementById('financial-info').innerHTML = `
-          <tr>
-            <td>${pedido.gateway || '<input type="text" placeholder="Gateway">'}</td>
-            <td>${formatDate(pedido.data_pgto) || '<input type="date">'}</td>
-            <td>${pedido.recebido ? `R$ ${parseFloat(pedido.recebido).toFixed(2)}` : '<input type="number" placeholder="Recebido">'}</td>
-            <td>${pedido.valor_repassado ? `R$ ${parseFloat(pedido.valor_repassado).toFixed(2)}` : '<input type="number" placeholder="Valor Repassado">'}</td>
-            <td>${formatDate(pedido.data_repasse) || '<input type="date">'}</td>
-            <td>${pedido.cambio_dia || '<input type="number" placeholder="Cambio do Dia">'}</td>
-            <td>${pedido.valor_comissao ? `R$ ${parseFloat(pedido.valor_comissao).toFixed(2)}` : '<input type="number" placeholder="Valor Comissão">'}</td>
-            <td>${pedido.meio_pgto || '<input type="text" placeholder="Meio Pgto">'}</td>
-            <td>${pedido.bandeira_cartao || '<input type="text" placeholder="Bandeira Cartão">'}</td>
-            <td>${pedido.parcelas || '<input type="number" placeholder="Parcelas">'}</td>
-            <td>${pedido.valor_venda ? `R$ ${parseFloat(pedido.valor_venda).toFixed(2)}` : '<input type="number" placeholder="Valor Venda">'}</td>
-            <td>${pedido.custo ? `R$ ${parseFloat(pedido.custo).toFixed(2)}` : '<input type="number" placeholder="Custo">'}</td>
-            <td>${pedido.fornecedor || '<input type="text" placeholder="Fornecedor">'}</td>
-          </tr>`;
+        document.getElementById('gateway').value = pedido.gateway || '';
+        document.getElementById('data_pgto').value = pedido.data_pgto || '';
+        document.getElementById('recebido').value = pedido.recebido || '';
+        document.getElementById('valor_repassado').value = pedido.valor_repassado || '';
+        document.getElementById('data_repasse').value = pedido.data_repasse || '';
+        document.getElementById('cambio_dia').value = pedido.cambio_dia || '';
+        document.getElementById('valor_comissao').value = pedido.valor_comissao || '';
+        document.getElementById('meio_pgto').value = pedido.meio_pgto || '';
+        document.getElementById('bandeira_cartao').value = pedido.bandeira_cartao || '';
+        document.getElementById('parcelas').value = pedido.parcelas || '';
+        document.getElementById('valor_venda').value = pedido.valor_venda || '';
+        document.getElementById('custo').value = pedido.custo || '';
+        document.getElementById('fornecedor').value = pedido.fornecedor || '';
 
         // Preenche as informações comerciais
         document.getElementById('commercial-info').innerHTML = `
           <tr>
-            <td>${pedido.origem_cliente || '<input type="text" placeholder="Origem do Cliente">'}</td>
-            <td>${pedido.cliente_de_30 || '<input type="text" placeholder="Cliente de (30%)">'}</td>
-            <td>${pedido.efetivado_por_70 || '<input type="text" placeholder="Efetivado por (70%)">'}</td>
-            <td>${pedido.comissao_agente || '<input type="text" placeholder="Comissão Agente">'}</td>
+            <td>${pedido.origem_cliente || 'N/A'}</td>
+            <td>${pedido.cliente_de_30 || 'N/A'}</td>
+            <td>${pedido.efetivado_por_70 || 'N/A'}</td>
+            <td>${pedido.comissao_agente || 'N/A'}</td>
           </tr>`;
 
         // Preenche as informações adicionais
         document.getElementById('additional-info').innerHTML = `
           <tr>
-            <td>${pedido.observacoes_operacionais || '<input type="text" placeholder="Observações Operacionais">'}</td>
-            <td>${pedido.observacoes_financeiras || '<input type="text" placeholder="Observações Financeiras">'}</td>
+            <td>${pedido.observacoes_operacionais || 'N/A'}</td>
+            <td>${pedido.observacoes_financeiras || 'N/A'}</td>
           </tr>`;
 
         // Preenche a planilha do pedido (primeira linha)
@@ -479,7 +540,6 @@
             <td><input type="number" placeholder="Total Dollar"></td>
             <td><input type="number" placeholder="Net Real"></td>
             <td><input type="number" placeholder="Margem"></td>
-            <td><input type="number" placeholder="Total Pix"></td>
             <td><input type="number" placeholder="Total Pix"></td>
             <td><input type="number" placeholder="Gateway"></td>
             <td><input type="number" placeholder="Total 10x"></td>
