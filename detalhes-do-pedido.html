@@ -50,6 +50,7 @@
       border-radius: 12px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease-in-out;
+      box-sizing: border-box;
     }
     
     .order-details h1 {
@@ -131,7 +132,7 @@
     
     /* Botões */
     .btn {
-      padding: 8px 16px;
+      padding: 10px 20px;
       font-size: 14px;
       font-weight: 500;
       color: #fff;
@@ -140,6 +141,7 @@
       display: inline-block;
       margin: 5px 0;
       transition: background-color 0.3s;
+      cursor: pointer;
     }
     
     .btn-primary {
@@ -526,6 +528,7 @@
         // Preenche a planilha do pedido (primeira linha)
         document.getElementById('spreadsheet-info-1').innerHTML = `
           <tr>
+            <tr>
             <td>${pedido.dolar_cambio || '<input type="number" placeholder="Dolar Câmbio">'}</td>
             <td>${pedido.dolar_cambio ? (parseFloat(pedido.dolar_cambio) + 0.98).toFixed(2) : '<input type="number" placeholder="Dolar Magic">'}</td>
           </tr>`;
