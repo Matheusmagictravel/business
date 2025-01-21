@@ -359,17 +359,11 @@
 
         // Chama a API para obter os dados do pedido
         const response = await fetch(apiUrl);
-        const responseData = await response.json();
-        console.log('API Response Data:', responseData);
+        const pedido = await response.json();
+        console.log('API Response Data:', pedido);
 
-        if (!response.ok || !responseData) {
+        if (!response.ok || !pedido) {
           throw new Error(`Erro ao buscar os detalhes do pedido. Status: ${response.status}`);
-        }
-
-        const pedido = responseData; // API retorna um objeto
-
-        if (!pedido) {
-          throw new Error('Nenhum dado encontrado para o pedido informado.');
         }
 
         // Atualiza o ID do pedido na página
@@ -394,12 +388,12 @@
         // Preenche as informações do cliente
         document.getElementById('customer-info').innerHTML = `
           <tr>
-            <td>${pedido.nome || 'N/A'}</td>
+            <td>${pedido.nome_comprador || 'N/A'}</td>
             <td>${pedido.email || 'N/A'}</td>
             <td>${pedido.telefone || 'N/A'}</td>
             <td>${pedido.cpf || 'N/A'}</td>
             <td>${formatDate(pedido.data_nascimento)}</td>
-            <td>${pedido.estado || 'N/A'}</td>
+            <td>${pedido.uf || 'N/A'}</td>
           </tr>`;
 
         // Preenche as informações financeiras
@@ -424,9 +418,9 @@
         document.getElementById('commercial-info').innerHTML = `
           <tr>
             <td>${pedido.origem_cliente || '<input type="text" placeholder="Origem do Cliente">'}</td>
-            <td>${pedido.cliente_de_30 || '<input type="text" placeholder="Cliente de (30%)">'}</td>
-            <td>${pedido.efetivado_por_70 || '<input type="text" placeholder="Efetivado por (70%)">'}</td>
-            <td>${pedido.comissao_agente || '<input type="text" placeholder="Comissão Agente">'}</td>
+            <td>${pedido.cliente_de || '<input type="text" placeholder="Cliente de (30%)">'}</td>
+            <td>${pedido.efetivado_por || '<input type="text" placeholder="Efetivado por (70%)">'}</td>
+            <td>${pedido.comissao_do_agente || '<input type="text" placeholder="Comissão Agente">'}</td>
           </tr>`;
 
         // Preenche as informações adicionais
@@ -439,8 +433,8 @@
         // Preenche a planilha do pedido (primeira linha)
         document.getElementById('spreadsheet-info-1').innerHTML = `
           <tr>
-            <td>${pedido.dolar_cambio || '<input type="number" placeholder="Dolar Câmbio">'}</td>
-            <td>${pedido.dolar_cambio ? (parseFloat(pedido.dolar_cambio) + 0.98).toFixed(2) : '<input type="text" placeholder="Dolar Magic">'}</td>
+            <td>${pedido.cambio_dia || '<input type="number" placeholder="Dolar Câmbio">'}</td>
+            <td>${pedido.cambio_dia ? (parseFloat(pedido.cambio_dia) + 0.98).toFixed(2) : '<input type="text" placeholder="Dolar Magic">'}</td>
           </tr>`;
 
         // Função para adicionar uma nova linha na planilha do pedido (segunda linha)
@@ -473,7 +467,7 @@
         // Preenche a planilha do pedido (segunda linha)
         document.getElementById('spreadsheet-info-2').innerHTML = `
           <tr>
-            <td>${pedido.produto || '<input type="text" placeholder="Produto">'}</td>
+            <td>${pedido.item || '<input type="text" placeholder="Produto">'}</td>
             <td><select>
               <option value="Adulto" ${pedido.idade === "Adulto" ? "selected" : ""}>Adulto</option>
               <option value="Criança" ${pedido.idade === "Criança" ? "selected" : ""}>Criança</option>
@@ -482,9 +476,9 @@
             <td>${pedido.net_dollar || '<input type="number" placeholder="Net Dollar">'}</td>
             <td>${pedido.quantidade || '<input type="number" placeholder="Quantidade">'}</td>
             <td>${pedido.net_dollar && pedido.intermediario && pedido.quantidade ? (parseFloat(pedido.net_dollar) + parseFloat(pedido.intermediario)) * parseInt(pedido.quantidade) : '<input type="number" placeholder="Total Dollar">'}</td>
-            <td>${pedido.total_dollar && pedido.dolar_magic ? (parseFloat(pedido.total_dollar) * (parseFloat(pedido.dolar_cambio) + 0.98)).toFixed(2) : '<input type="number" placeholder="Net Real">'}</td>
-            <td>${pedido.margem || '<input type="number" placeholder="Margem">'}</td>
-            <td>${pedido.net_real && pedido.margem ? (parseFloat(pedido.net_real) / (1 - parseFloat(pedido.margem))).toFixed(2) : '<input type="number" placeholder="Total Pix">'}</td>
+            <td>${pedido.total_dollar && pedido.dolar_magic ? (parseFloat(pedido.total_dollar) * (parseFloat(pedido.cambio_dia) + 0.98)).toFixed(2) : '<input type="number" placeholder="Net Real">'}</td>
+            <td>${pedido.markup || '<input type="number" placeholder="Margem">'}</td>
+            <td>${pedido.net_real && pedido.markup ? (parseFloat(pedido.net_real) / (1 - parseFloat(pedido.markup))).toFixed(2) : '<input type="number" placeholder="Total Pix">'}</td>
             <td>${pedido.gateway || '<input type="number" placeholder="Gateway">'}</td>
             <td>${pedido.total_pix && pedido.gateway ? (parseFloat(pedido.total_pix) / (1 - parseFloat(pedido.gateway))).toFixed(2) : '<input type="number" placeholder="Total 10x">'}</td>
           </tr>`;
@@ -492,14 +486,14 @@
         // Preenche as informações de emissão
         document.getElementById('emission-info').innerHTML = `
           <tr>
-            <td>${pedido.invoice || '<input type="text" placeholder="Invoice">'}</td>
-            <td>${pedido.nome_passageiros || '<input type="text" placeholder="Nome dos Passageiros">'}</td>
-            <td>${pedido.itens || '<input type="text" placeholder="Itens">'}</td>
+            <td>${pedido.nf || '<input type="text" placeholder="Invoice">'}</td>
+            <td>${pedido.nome || '<input type="text" placeholder="Nome dos Passageiros">'}</td>
+            <td>${pedido.item || '<input type="text" placeholder="Itens">'}</td>
             <td>${pedido.identificador || '<input type="text" placeholder="Identificador">'}</td>
-            <td>${formatDate(pedido.data_pagamento) || '<input type="date">'}</td>
+            <td>${formatDate(pedido.data_pgto) || '<input type="date">'}</td>
             <td><select>
-              <option value="Aguardando Emissão" ${pedido.status_emissao === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
-              <option value="Pendente de Pagamento" ${pedido.status_emissao === "Pendente de Pagamento" ? "selected" : ""}>Pendente de Pagamento</option>
+              <option value="Aguardando Emissão" ${pedido.status === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
+              <option value="Pendente de Pagamento" ${pedido.status === "Pendente de Pagamento" ? "selected" : ""}>Pendente de Pagamento</option>
             </select></td>
           </tr>`;
       } catch (error) {
