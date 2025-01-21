@@ -47,7 +47,7 @@
     /* Conteúdo principal */
     .order-details {
       margin-left: 260px;
-      padding: 30px;
+      padding: 40px;
       width: calc(100% - 260px);
       background-color: #ffffff;
       border-radius: 12px;
@@ -59,7 +59,7 @@
     }
     
     .order-details h1 {
-      font-size: 28px;
+      font-size: 32px;
       font-weight: 700;
       margin-bottom: 25px;
       color: #0d112d;
@@ -68,16 +68,16 @@
     }
     
     .order-details h3 {
-      font-size: 20px;
+      font-size: 24px;
       font-weight: 600;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       color: #4a4a4a;
       animation: fadeIn 1.2s ease-in-out;
     }
     
     .order-details p {
-      font-size: 16px;
-      margin-bottom: 15px;
+      font-size: 18px;
+      margin-bottom: 20px;
       color: #666;
       text-align: center;
       animation: fadeIn 1.4s ease-in-out;
@@ -85,9 +85,9 @@
     
     .back-button {
       display: inline-block;
-      margin-bottom: 20px;
-      padding: 10px 20px;
-      font-size: 14px;
+      margin-bottom: 30px;
+      padding: 12px 24px;
+      font-size: 16px;
       font-weight: 500;
       color: #fff;
       background-color: #3b7ddd;
@@ -107,8 +107,8 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 20px;
-      border-radius: 8px;
+      margin-bottom: 30px;
+      border-radius: 12px;
       overflow: hidden;
       animation: fadeIn 1.8s ease-in-out;
     }
@@ -118,7 +118,7 @@
     }
     
     table th, table td {
-      padding: 14px 16px;
+      padding: 16px 18px;
       text-align: left;
       border-bottom: 1px solid #ebebf0;
       text-transform: capitalize;
@@ -136,6 +136,10 @@
     
     table tr:nth-child(even) {
       background-color: #f7f7fb;
+    }
+
+    .section {
+      margin-bottom: 40px;
     }
     
     /* Responsividade */
@@ -167,12 +171,13 @@
     .add-row-button {
       background-color: #1cbb8c;
       color: white;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s, transform 0.3s;
       animation: fadeIn 2s ease-in-out;
+      align-self: center;
     }
 
     .add-row-button:hover {
@@ -252,6 +257,13 @@
             <th>Valor Repassado</th>
             <th>Data Repasse</th>
             <th>Cambio do Dia</th>
+          </tr>
+        </thead>
+        <tbody id="financial-info"></tbody>
+      </table>
+      <table>
+        <thead>
+          <tr>
             <th>Valor Comissão</th>
             <th>Meio Pgto</th>
             <th>Bandeira Cartão</th>
@@ -261,7 +273,7 @@
             <th>Fornecedor</th>
           </tr>
         </thead>
-        <tbody id="financial-info"></tbody>
+        <tbody id="financial-info-2"></tbody>
       </table>
     </div>
 
@@ -307,20 +319,20 @@
         </thead>
         <tbody id="spreadsheet-info-1"></tbody>
       </table>
-      <table>
+      <table style="table-layout: fixed;">
         <thead>
           <tr>
-            <th>Produto</th>
-            <th>Idade</th>
-            <th>Intermediario</th>
-            <th>Net Dollar</th>
-            <th>Quantidade</th>
-            <th>Total Dollar</th>
-            <th>Net Real</th>
-            <th>Margem</th>
-            <th>Total Pix</th>
-            <th>Gateway</th>
-            <th>Total 10x</th>
+            <th style="width: 10%;">Produto</th>
+            <th style="width: 8%;">Idade</th>
+            <th style="width: 10%;">Intermediario</th>
+            <th style="width: 10%;">Net Dollar</th>
+            <th style="width: 8%;">Quantidade</th>
+            <th style="width: 10%;">Total Dollar</th>
+            <th style="width: 10%;">Net Real</th>
+            <th style="width: 8%;">Margem</th>
+            <th style="width: 10%;">Total Pix</th>
+            <th style="width: 8%;">Gateway</th>
+            <th style="width: 8%;">Total 10x</th>
           </tr>
         </thead>
         <tbody id="spreadsheet-info-2"></tbody>
@@ -427,7 +439,7 @@
             <td>${pedido.uf || 'N/A'}</td>
           </tr>`;
 
-        // Preenche as informações financeiras
+        // Preenche as informações financeiras (primeira linha)
         document.getElementById('financial-info').innerHTML = `
           <tr>
             <td>${pedido.gateway || '<input type="text" placeholder="Gateway">'}</td>
@@ -436,6 +448,11 @@
             <td>${pedido.valor_repassado ? `R$ ${parseFloat(pedido.valor_repassado).toFixed(2)}` : '<input type="number" placeholder="Valor Repassado">'}</td>
             <td>${formatDate(pedido.data_repasse) || '<input type="date">'}</td>
             <td>${pedido.cambio_dia || '<input type="number" placeholder="Cambio do Dia">'}</td>
+          </tr>`;
+
+        // Preenche as informações financeiras (segunda linha)
+        document.getElementById('financial-info-2').innerHTML = `
+          <tr>
             <td>${pedido.valor_comissao ? `R$ ${parseFloat(pedido.valor_comissao).toFixed(2)}` : '<input type="number" placeholder="Valor Comissão">'}</td>
             <td>${pedido.meio_pgto || '<input type="text" placeholder="Meio Pgto">'}</td>
             <td>${pedido.bandeira_cartao || '<input type="text" placeholder="Bandeira Cartão">'}</td>
@@ -540,3 +557,4 @@
     });
   </script>
 </body>
+</html>
