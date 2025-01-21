@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -209,45 +210,67 @@
       margin-bottom: 20px;
     }
 
+    /* Ajustes para a tabela ficar como na "Foto 1" */
     .planilha-tabela {
-      width: 100%;
-      margin-bottom: 20px;
-      border-radius: 12px;
-      overflow: hidden;
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
     }
 
     .planilha-tabela thead {
-      background-color: #f9f9fa;
+    background-color: #4a90e2; /* Fundo azul */
     }
 
     .planilha-tabela th, .planilha-tabela td {
-      padding: 12px 16px;
-      text-align: left;
-      border-bottom: 1px solid #ebebf0;
-      text-transform: capitalize;
+    padding: 14px 16px;
+    text-align: center; /* Centralizar os textos */
+    border: 1px solid #d9d9d9; /* Cor da borda */
+    font-weight: 500;
     }
 
     .planilha-tabela th {
-      font-weight: 600;
-      color: #555;
-      background-color: #f0f0f5;
+    color: #fff; /* Texto branco nos cabeçalhos */
+    text-transform: none; /* Não aplicar capitalização */
+    font-size: 14px;
     }
 
     .planilha-tabela td {
-      color: #333;
+    color: #333; /* Texto escuro nas células */
+    background-color: #f9f9f9; /* Fundo claro nas células */
     }
 
     .planilha-tabela tr:nth-child(even) {
-      background-color: #f7f7fb;
+    background-color: #eef4fb; /* Fundo alternado */
     }
 
     .planilha-tabela input, .planilha-tabela select {
-      width: 100%;
-      padding: 8px;
-      margin: 0;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+    width: 100%;
+    padding: 8px;
+    margin: 0;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    }
+
+    /* Borda arredondada no topo */
+    .planilha-tabela thead th:first-child {
+    border-top-left-radius: 12px;
+    }
+
+    .planilha-tabela thead th:last-child {
+    border-top-right-radius: 12px;
+    }
+
+    /* Borda arredondada no rodapé */
+    .planilha-tabela tbody tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+    }
+
+    .planilha-tabela tbody tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
     }
   </style>
 </head>
