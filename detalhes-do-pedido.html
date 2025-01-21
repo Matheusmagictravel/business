@@ -1,4 +1,3 @@
-
     <!DOCTYPE html>
     <html lang="pt-BR">
     <head>
@@ -343,14 +342,14 @@
             <tbody id="order-info">
                 <tr>
                   <td>
-                    <select class="dropdown-status">
-                      <option value="Pagamento recebido">Pagamento recebido</option>
-                      <option value="Envio de contrato">Envio de contrato</option>
-                      <option value="Aguardando Emissão">Aguardando Emissão</option>
-                      <option value="Pendente de Pagamento">Pendente de Pagamento</option>
-                      <option value="Envio de Brindes">Envio de Brindes</option>
-                      <option value="Concluído">Concluído</option>
-                    </select>
+                    <select class="dropdown-status status-primary">
+                        <option value="Pagamento recebido">Pagamento recebido</option>
+                        <option value="Envio de contrato">Envio de contrato</option>
+                        <option value="Aguardando Emissão">Aguardando Emissão</option>
+                        <option value="Pendente de Pagamento">Pendente de Pagamento</option>
+                        <option value="Envio de Brindes">Envio de Brindes</option>
+                        <option value="Concluído">Concluído</option>
+                      </select>
                   </td>
                 </tr>
               </tbody>
@@ -689,46 +688,48 @@
         });
     </script>
     <script>
-        // Função para alterar a cor do dropdown baseado no valor selecionado
         function updateDropdownColor(dropdown) {
-          // Remove todas as classes de status
-          dropdown.classList.remove(
+        dropdown.classList.remove(
             'status-primary',
             'status-info',
             'status-warning',
             'status-danger',
             'status-secondary',
             'status-success'
-          );
-      
-          // Adiciona a classe correspondente ao valor
-          switch (dropdown.value) {
+        );
+
+        switch (dropdown.value) {
             case 'Pagamento recebido':
-              dropdown.classList.add('status-primary');
-              break;
+            dropdown.classList.add('status-primary');
+            break;
             case 'Envio de contrato':
-              dropdown.classList.add('status-info');
-              break;
+            dropdown.classList.add('status-info');
+            break;
             case 'Aguardando Emissão':
-              dropdown.classList.add('status-warning');
-              break;
+            dropdown.classList.add('status-warning');
+            break;
             case 'Pendente de Pagamento':
-              dropdown.classList.add('status-danger');
-              break;
+            dropdown.classList.add('status-danger');
+            break;
             case 'Envio de Brindes':
-              dropdown.classList.add('status-secondary');
-              break;
+            dropdown.classList.add('status-secondary');
+            break;
             case 'Concluído':
-              dropdown.classList.add('status-success');
-              break;
-          }
+            dropdown.classList.add('status-success');
+            break;
         }
-      
-        // Adiciona o evento para atualizar a cor ao mudar o valor
+        }
+
+        function attachDropdownEvents() {
         document.querySelectorAll('.dropdown-status').forEach((dropdown) => {
-          updateDropdownColor(dropdown); // Define a cor inicial
-          dropdown.addEventListener('change', () => updateDropdownColor(dropdown));
+            updateDropdownColor(dropdown); // Define a cor inicial
+            dropdown.addEventListener('change', () => updateDropdownColor(dropdown));
         });
-      </script>      
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+        attachDropdownEvents(); // Chamado no carregamento inicial
+        });
+      </script>            
     </body>
     </html>
