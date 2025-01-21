@@ -196,6 +196,59 @@
         transform: translateY(0);
       }
     }
+
+    /* Estilização específica para a planilha do pedido */
+    .planilha-pedido {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 40px;
+    }
+
+    .planilha-pedido h3 {
+      align-self: center;
+      margin-bottom: 20px;
+    }
+
+    .planilha-tabela {
+      width: 100%;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .planilha-tabela thead {
+      background-color: #f9f9fa;
+    }
+
+    .planilha-tabela th, .planilha-tabela td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #ebebf0;
+      text-transform: capitalize;
+    }
+
+    .planilha-tabela th {
+      font-weight: 600;
+      color: #555;
+      background-color: #f0f0f5;
+    }
+
+    .planilha-tabela td {
+      color: #333;
+    }
+
+    .planilha-tabela tr:nth-child(even) {
+      background-color: #f7f7fb;
+    }
+
+    .planilha-tabela input, .planilha-tabela select {
+      width: 100%;
+      padding: 8px;
+      margin: 0;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
   </style>
 </head>
 <body>
@@ -308,9 +361,9 @@
     </div>
 
     <!-- Planilha do Pedido -->
-    <div class="section">
+    <div class="section planilha-pedido">
       <h3>Planilha do Pedido</h3>
-      <table>
+      <table class="planilha-tabela">
         <thead>
           <tr>
             <th>Dolar Câmbio</th>
@@ -319,20 +372,20 @@
         </thead>
         <tbody id="spreadsheet-info-1"></tbody>
       </table>
-      <table style="table-layout: fixed;">
+      <table class="planilha-tabela">
         <thead>
           <tr>
-            <th style="width: 10%;">Produto</th>
-            <th style="width: 8%;">Idade</th>
-            <th style="width: 10%;">Intermediario</th>
-            <th style="width: 10%;">Net Dollar</th>
-            <th style="width: 8%;">Quantidade</th>
-            <th style="width: 10%;">Total Dollar</th>
-            <th style="width: 10%;">Net Real</th>
-            <th style="width: 8%;">Margem</th>
-            <th style="width: 10%;">Total Pix</th>
-            <th style="width: 8%;">Gateway</th>
-            <th style="width: 8%;">Total 10x</th>
+            <th>Produto</th>
+            <th>Idade</th>
+            <th>Intermediario</th>
+            <th>Net Dollar</th>
+            <th>Quantidade</th>
+            <th>Total Dollar</th>
+            <th>Net Real</th>
+            <th>Margem</th>
+            <th>Total Pix</th>
+            <th>Gateway</th>
+            <th>Total 10x</th>
           </tr>
         </thead>
         <tbody id="spreadsheet-info-2"></tbody>
