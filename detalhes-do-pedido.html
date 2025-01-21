@@ -359,12 +359,15 @@
 
         // Chama a API para obter os dados do pedido
         const response = await fetch(apiUrl);
-        const pedido = await response.json();
-        console.log('API Response Data:', pedido);
+        const pedidos = await response.json();
+        console.log('API Response Data:', pedidos);
 
-        if (!response.ok || !pedido) {
+        if (!response.ok || !pedidos || pedidos.length === 0) {
           throw new Error(`Erro ao buscar os detalhes do pedido. Status: ${response.status}`);
         }
+
+        // Assume-se que há apenas um pedido a ser exibido
+        const pedido = pedidos[0];
 
         // Atualiza o ID do pedido na página
         document.getElementById('pedido-id').textContent = pedidoId;
@@ -434,7 +437,7 @@
         document.getElementById('spreadsheet-info-1').innerHTML = `
           <tr>
             <td>${pedido.cambio_dia || '<input type="number" placeholder="Dolar Câmbio">'}</td>
-            <td>${pedido.cambio_dia ? (parseFloat(pedido.cambio_dia) + 0.98).toFixed(2) : '<input type="text" placeholder="Dolar Magic">'}</td>
+            <td>${pedido.cambio_dia ? (parseFloat(pedido.cambio_dia.split(" | ")[0].replace(",", ".")) + 0.98).toFixed(2) : '<input type="text" placeholder="Dolar Magic">'}</td>
           </tr>`;
 
         // Função para adicionar uma nova linha na planilha do pedido (segunda linha)
@@ -476,7 +479,7 @@
             <td>${pedido.net_dollar || '<input type="number" placeholder="Net Dollar">'}</td>
             <td>${pedido.quantidade || '<input type="number" placeholder="Quantidade">'}</td>
             <td>${pedido.net_dollar && pedido.intermediario && pedido.quantidade ? (parseFloat(pedido.net_dollar) + parseFloat(pedido.intermediario)) * parseInt(pedido.quantidade) : '<input type="number" placeholder="Total Dollar">'}</td>
-            <td>${pedido.total_dollar && pedido.dolar_magic ? (parseFloat(pedido.total_dollar) * (parseFloat(pedido.cambio_dia) + 0.98)).toFixed(2) : '<input type="number" placeholder="Net Real">'}</td>
+            <td>${pedido.total_dollar && pedido.dolar_magic ? (parseFloat(pedido.total_dollar) * (parseFloat(pedido.cambio_dia.split(" | ")[0].replace(",", ".")) + 0.98)).toFixed(2) : '<input type="number" placeholder="Net Real">'}</td>
             <td>${pedido.markup || '<input type="number" placeholder="Margem">'}</td>
             <td>${pedido.net_real && pedido.markup ? (parseFloat(pedido.net_real) / (1 - parseFloat(pedido.markup))).toFixed(2) : '<input type="number" placeholder="Total Pix">'}</td>
             <td>${pedido.gateway || '<input type="number" placeholder="Gateway">'}</td>
