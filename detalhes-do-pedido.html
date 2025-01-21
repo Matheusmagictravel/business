@@ -354,12 +354,19 @@
       }
 
       try {
-        // Chama a API para obter os dados do pedido
-        const response = await fetch(`https://www.magictraveltur.com/api_pedidos.php?pedido=${pedidoId}`);
-        if (!response.ok) throw new Error(`Erro ao buscar os detalhes do pedido. Status: ${response.status}`);
+        const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?pedido=${pedidoId}`;
+        console.log('Fetching data from API URL:', apiUrl);
 
-        const pedido = await response.json(); // API retorna um objeto
-        console.log('Dados retornados pela API:', pedido);
+        // Chama a API para obter os dados do pedido
+        const response = await fetch(apiUrl);
+        const responseData = await response.json();
+        console.log('API Response Data:', responseData);
+
+        if (!response.ok || !responseData) {
+          throw new Error(`Erro ao buscar os detalhes do pedido. Status: ${response.status}`);
+        }
+
+        const pedido = responseData; // API retorna um objeto
 
         if (!pedido) {
           throw new Error('Nenhum dado encontrado para o pedido informado.');
