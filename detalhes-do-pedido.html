@@ -500,7 +500,7 @@
     </div>
 </div>
 
-<script>
+    <script>
     // Função para capturar o ID do pedido na URL
     function getPedidoId() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -546,6 +546,28 @@
         if (!response.ok || !pedidos || pedidos.length === 0) {
         throw new Error(`Erro ao buscar os detalhes do pedido. Status: ${response.status}`);
         }
+
+        function setInnerHTMLSafely(elementId, html) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.innerHTML = html;
+            } else {
+                console.warn(`Elemento com ID "${elementId}" não encontrado.`);
+            }
+        }
+
+        // Exemplo de uso na função loadOrderDetails
+        setInnerHTMLSafely('order-info', `
+            <tr>
+                <td><select>
+                    <option value="Pagamento recebido">Pagamento recebido</option>
+                </select></td>
+                <td>Destino</td>
+                <td>Item</td>
+                <td>Data</td>
+            </tr>
+        `);
+
 
         // Assume-se que há apenas um pedido a ser exibido
         const pedido = pedidos[0];
@@ -702,32 +724,34 @@
 </script>
 <script>
     // Função para atualizar a cor do dropdown
-function updateDropdownColor() {
-    // Seleciona o dropdown
+    function updateDropdownColor() {
     const dropdown = document.getElementById('status-dropdown');
 
-    // Remove todas as classes previamente aplicadas
+    if (!dropdown) {
+        console.warn('Dropdown não encontrado: verifique se o ID está correto.');
+        return;
+    }
+
     dropdown.className = 'dropdown-status'; // Reseta para a classe base
 
-    // Adiciona a classe com base no valor selecionado
     switch (dropdown.value) {
         case 'Pagamento recebido':
-            dropdown.classList.add('status-primary'); // Azul
+            dropdown.classList.add('status-primary');
             break;
         case 'Envio de contrato':
-            dropdown.classList.add('status-info'); // Azul claro
+            dropdown.classList.add('status-info');
             break;
         case 'Aguardando Emissão':
-            dropdown.classList.add('status-warning'); // Amarelo
+            dropdown.classList.add('status-warning');
             break;
         case 'Pendente de Pagamento':
-            dropdown.classList.add('status-danger'); // Vermelho
+            dropdown.classList.add('status-danger');
             break;
         case 'Envio de Brindes':
-            dropdown.classList.add('status-secondary'); // Cinza
+            dropdown.classList.add('status-secondary');
             break;
         case 'Concluído':
-            dropdown.classList.add('status-success'); // Verde
+            dropdown.classList.add('status-success');
             break;
     }
 }
