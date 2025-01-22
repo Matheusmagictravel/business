@@ -411,7 +411,7 @@
         const planilhasApiUrl = `https://www.magictraveltur.com/api_planilhas.php?pedido=${pedidoId}`;
         console.log('Fetching data from API URL:', apiUrl);
 
-        // Chama a API para obter os dados do pedido
+        // Chama a API para obter os dados do pedido e da planilha
         const [response, planilhasResponse] = await Promise.all([fetch(apiUrl), fetch(planilhasApiUrl)]);
         const pedidos = await response.json();
         const planilha = await planilhasResponse.json();
@@ -510,22 +510,22 @@
 
         // Função para calcular os valores da planilha
         function calcularValores() {
-          const netDollar = parseFloat(document.querySelector('#spreadsheet-info-2 input[name="netDollar"]').value) || 0;
-          const intermediario = parseFloat(document.querySelector('#spreadsheet-info-2 input[name="intermediario"]').value) || 0;
-          const quantidade = parseInt(document.querySelector('#spreadsheet-info-2 input[name="quantidade"]').value) || 0;
+          const netDollar = parseFloat(document.querySelector('input[name="netDollar"]').value) || 0;
+          const intermediario = parseFloat(document.querySelector('input[name="intermediario"]').value) || 0;
+          const quantidade = parseInt(document.querySelector('input[name="quantidade"]').value) || 0;
           const dolarMagic = parseFloat(document.querySelector('#spreadsheet-info-1 td:nth-child(2)').textContent) || 0;
-          const margem = parseFloat(document.querySelector('#spreadsheet-info-2 input[name="margem"]').value) / 100 || 0;
-          const gateway = parseFloat(document.querySelector('#spreadsheet-info-2 input[name="gateway"]').value) / 100 || 0;
+          const margem = parseFloat(document.querySelector('input[name="margem"]').value) / 100 || 0;
+          const gateway = parseFloat(document.querySelector('input[name="gateway"]').value) / 100 || 0;
 
           const totalDollar = (netDollar + intermediario) * quantidade;
           const netReal = totalDollar * dolarMagic;
           const totalPix = netReal / (1 - margem);
           const total10x = totalPix / (1 - gateway);
 
-          document.querySelector('#spreadsheet-info-2 input[name="totalDollar"]').value = totalDollar.toFixed(2);
-          document.querySelector('#spreadsheet-info-2 input[name="netReal"]').value = netReal.toFixed(2);
-          document.querySelector('#spreadsheet-info-2 input[name="totalPix"]').value = totalPix.toFixed(2);
-          document.querySelector('#spreadsheet-info-2 input[name="total10x"]').value = total10x.toFixed(2);
+          document.querySelector('input[name="totalDollar"]').value = totalDollar.toFixed(2);
+          document.querySelector('input[name="netReal"]').value = netReal.toFixed(2);
+          document.querySelector('input[name="totalPix"]').value = totalPix.toFixed(2);
+          document.querySelector('input[name="total10x"]').value = total10x.toFixed(2);
         }
 
         // Preenche a planilha do pedido (segunda linha)
