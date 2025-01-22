@@ -449,6 +449,17 @@
                 <td id="total-10x">Calculando...</td>
             </tr>
         </tbody>
+        <!-- Linha de resumo dos totais -->
+        <tfoot>
+          <tr style="font-weight: bold; background-color: #f0f0f0;">
+            <td colspan="5" style="text-align: right;">Totais:</td>
+            <td id="resumo-total-dollar">0.00</td>
+            <td id="resumo-net-real">0.00</td>
+            <td colspan="2"></td>
+            <td id="resumo-total-pix">0.00</td>
+            <td id="resumo-total-10x">0.00</td>
+          </tr>
+        </tfoot>
     </table>
     <button id="add-row-button" class="add-row-button">Adicionar Linha</button>
     </div>
@@ -592,22 +603,25 @@
 
         // Função para calcular os valores da planilha
         function calcularValores() {
-          const netDollar = parseFloat(document.querySelector('input[name="netDollar"]').value) || 0;
-          const lobista = parseFloat(document.querySelector('input[name="lobista"]').value) || 0;
-          const quantidade = parseInt(document.querySelector('input[name="quantidade"]').value) || 0;
-          const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
-          const margem = parseFloat(document.querySelector('input[name="margem"]').value) / 100 || 0;
-          const taxa = parseFloat(document.querySelector('input[name="taxa"]').value) / 100 || 0;
+          document.querySelectorAll('#spreadsheet-info tr').forEach((row) => {
+            const netDollar = parseFloat(row.querySelector('input[name="netDollar"]').value) || 0;
+            const lobista = parseFloat(row.querySelector('input[name="lobista"]').value) || 0;
+            const quantidade = parseInt(row.querySelector('input[name="quantidade"]').value) || 0;
+            const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
+            const margem = parseFloat(row.querySelector('input[name="margem"]').value) / 100 || 0;
+            const taxa = parseFloat(row.querySelector('input[name="taxa"]').value) / 100 || 0;
 
-          const totalDollar = (netDollar + lobista) * quantidade;
-          const netReal = totalDollar * dolarMagic;
-          const totalPix = netReal / (1 - margem);
-          const total10x = totalPix / (1 - taxa);
+            const totalDollar = (netDollar + lobista) * quantidade;
+            const netReal = totalDollar * dolarMagic;
+            const totalPix = netReal / (1 - margem);
+            const total10x = totalPix / (1 - taxa);
 
-          document.getElementById('total-dollar').textContent = totalDollar.toFixed(2);
-          document.getElementById('net-real').textContent = netReal.toFixed(2);
-          document.getElementById('total-pix').textContent = totalPix.toFixed(2);
-          document.getElementById('total-10x').textContent = total10x.toFixed(2);
+            row.querySelector('td[name="totalDollar"]').textContent = totalDollar.toFixed(2);
+            row.querySelector('td[name="netReal"]').textContent = netReal.toFixed(2);
+            row.querySelector('td[name="totalPix"]').textContent = totalPix.toFixed(2);
+            row.querySelector('td[name="total10x"]').textContent = total10x.toFixed(2);
+          });
+          calcularResumo();
         }
 
         // Função para adicionar uma nova linha na planilha do pedido (segunda linha)
@@ -635,7 +649,7 @@
 
           // Adiciona eventos para recalcular os valores na nova linha
           document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
-            element.addEventListener('change', calcularValores);
+            element.addEventListener('input', calcularValores);
           });
         }
 
@@ -644,7 +658,7 @@
 
         // Adiciona eventos para recalcular os valores ao alterar os campos relevantes
         document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
-          element.addEventListener('change', calcularValores);
+          element.addEventListener('input', calcularValores);
         });
 
         // Preenche a planilha do pedido (primeira linha)
@@ -674,8 +688,25 @@
 
         // Adiciona eventos para recalcular os valores ao alterar os campos relevantes
         document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
-          element.addEventListener('change', calcularValores);
+          element.addEventListener('input', calcularValores);
         });
+
+        // Função para calcular os valores totais da planilha
+        function calcularResumo() {
+          let totalDollar = 0, totalReal = 0, totalPix = 0, total10x = 0;
+
+          document.querySelectorAll('#spreadsheet-info tr').forEach(row => {
+            totalDollar += parseFloat(row.querySelector('td[name="totalDollar"]').textContent) || 0;
+            totalReal += parseFloat(row.querySelector('td[name="netReal"]').textContent) || 0;
+            totalPix += parseFloat(row.querySelector('td[name="totalPix"]').textContent) || 0;
+            total10x += parseFloat(row.querySelector('td[name="total10x"]').textContent) || 0;
+          });
+
+          document.getElementById('resumo-total-dollar').textContent = totalDollar.toFixed(2);
+          document.getElementById('resumo-net-real').textContent = totalReal.toFixed(2);
+          document.getElementById('resumo-total-pix').textContent = totalPix.toFixed(2);
+          document.getElementById('resumo-total-10x').textContent = total10x.toFixed(2);
+        }
 
         // Preenche as informações de emissão
         document.getElementById('emission-info').innerHTML = `
