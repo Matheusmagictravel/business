@@ -425,10 +425,35 @@
     <h3>Planilha do Pedido</h3>
     <table class="planilha-tabela">
         <thead>
-        <tr>
-            <th>Dolar Câmbio</th>
-            <th>Dolar Magic</th>
-        </tr>
+            <tr>
+                <th>Dólar Câmbio</th>
+                <th>Dólar Magic</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input type="number" id="dolar-cambio" placeholder="Digite o câmbio"></td>
+                <td id="dolar-magic">Calculando...</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Segunda Linha: Planilha Completa -->
+    <table class="planilha-tabela">
+        <thead>
+            <tr>
+                <th>Produto</th>
+                <th>Idade</th>
+                <th>Net U$</th>
+                <th>Lobista</th>
+                <th>Número</th>
+                <th>Total U$</th>
+                <th>Net R$</th>
+                <th>Margem</th>
+                <th>Pix</th>
+                <th>Taxa</th>
+                <th>10x</th>
+            </tr>
         </thead>
         <tbody id="spreadsheet-info">
             <tr>
@@ -442,15 +467,14 @@
                 <td><input type="number" id="net-dollar"></td>
                 <td><input type="number" id="lobista"></td>
                 <td><input type="number" id="quantidade"></td>
-                <td id="total-dollar"></td>
-                <td id="net-real"></td>
+                <td id="total-dollar">Calculando...</td>
+                <td id="net-real">Calculando...</td>
                 <td><input type="number" id="margem" step="0.01"></td>
-                <td id="total-pix"></td>
+                <td id="total-pix">Calculando...</td>
                 <td><input type="number" id="taxa" step="0.01"></td>
-                <td id="total-10x"></td>
+                <td id="total-10x">Calculando...</td>
             </tr>
-        </thead>
-        <tbody id="spreadsheet-info-2"></tbody>
+        </tbody>
     </table>
     <button id="add-row-button" class="add-row-button">Adicionar Linha</button>
     </div>
@@ -713,57 +737,194 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
   </script>
+  <!DOCTYPE html>
+  <html lang="pt-BR">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planilha do Pedido - Magic Travel</title>
+  <style>
+      @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+  
+      body {
+          font-family: 'Montserrat', sans-serif;
+          margin: 0;
+          background-color: #f4f4f9;
+          color: #333;
+          padding: 20px;
+      }
+  
+      .planilha-tabela {
+          width: 100%;
+          border-collapse: collapse;
+          margin-bottom: 20px;
+          border-radius: 12px;
+          overflow: hidden;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          table-layout: fixed;
+      }
+  
+      .planilha-tabela thead th {
+          text-align: center;
+          background-color: #4a90e2;
+          color: #fff;
+          font-size: 14px;
+          font-weight: 600;
+          border: 1px solid #d9d9d9;
+          padding: 10px;
+      }
+  
+      .planilha-tabela tbody td {
+          text-align: center;
+          padding: 10px;
+          border: 1px solid #d9d9d9;
+          background-color: #f9f9f9;
+      }
+  
+      .planilha-tabela input, .planilha-tabela select {
+          width: 100%;
+          padding: 8px;
+          box-sizing: border-box;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+      }
+  
+      .planilha-tabela thead th:nth-child(1) { width: 16%; } /* Produto */
+      .planilha-tabela thead th:nth-child(2) { width: 8%; } /* Idade */
+      .planilha-tabela thead th:nth-child(3) { width: 8%; } /* Net U$ */
+      .planilha-tabela thead th:nth-child(4) { width: 8%; } /* Lobista */
+      .planilha-tabela thead th:nth-child(5) { width: 8%; } /* Número */
+      .planilha-tabela thead th:nth-child(6) { width: 8%; } /* Total U$ */
+      .planilha-tabela thead th:nth-child(7) { width: 8%; } /* Net R$ */
+      .planilha-tabela thead th:nth-child(8) { width: 8%; } /* Margem */
+      .planilha-tabela thead th:nth-child(9) { width: 10%; } /* Pix */
+      .planilha-tabela thead th:nth-child(10) { width: 8%; } /* Taxa */
+      .planilha-tabela thead th:nth-child(11) { width: 10%; } /* 10x */
+  </style>
+  </head>
+  <body>
+      <h3>Planilha do Pedido</h3>
+  
+      <!-- Primeira Linha: Dólar Câmbio e Dólar Magic -->
+      <table class="planilha-tabela">
+          <thead>
+              <tr>
+                  <th>Dólar Câmbio</th>
+                  <th>Dólar Magic</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td><input type="number" id="dolar-cambio" placeholder="Digite o câmbio"></td>
+                  <td id="dolar-magic">Calculando...</td>
+              </tr>
+          </tbody>
+      </table>
+  
+      <!-- Segunda Linha: Planilha Completa -->
+      <table class="planilha-tabela">
+          <thead>
+              <tr>
+                  <th>Produto</th>
+                  <th>Idade</th>
+                  <th>Net U$</th>
+                  <th>Lobista</th>
+                  <th>Número</th>
+                  <th>Total U$</th>
+                  <th>Net R$</th>
+                  <th>Margem</th>
+                  <th>Pix</th>
+                  <th>Taxa</th>
+                  <th>10x</th>
+              </tr>
+          </thead>
+          <tbody id="spreadsheet-info">
+              <tr>
+                  <td><input type="text" id="produto"></td>
+                  <td>
+                      <select id="idade">
+                          <option value="ADT">ADT</option>
+                          <option value="CHD">CHD</option>
+                      </select>
+                  </td>
+                  <td><input type="number" id="net-dollar"></td>
+                  <td><input type="number" id="lobista"></td>
+                  <td><input type="number" id="quantidade"></td>
+                  <td id="total-dollar">Calculando...</td>
+                  <td id="net-real">Calculando...</td>
+                  <td><input type="number" id="margem" step="0.01"></td>
+                  <td id="total-pix">Calculando...</td>
+                  <td><input type="number" id="taxa" step="0.01"></td>
+                  <td id="total-10x">Calculando...</td>
+              </tr>
+          </tbody>
+      </table>
+  
   <script>
-    async function fetchPlanilhaData() {
-        const apiUrl = "https://www.magictraveltur.com/api_planilhas.php";
-        try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-
-            // Preenche os campos caso a API retorne dados
-            document.getElementById("produto").value = data.produto || "";
-            document.getElementById("net-dollar").value = data.net_dollar || "";
-            document.getElementById("lobista").value = data.intermediario || "";
-            document.getElementById("quantidade").value = data.quantidade || "";
-        } catch (error) {
-            console.log("Erro ao carregar dados da API:", error);
-        }
-    }
-
-    function calcularCampos() {
-        const netDollar = parseFloat(document.getElementById("net-dollar").value) || 0;
-        const lobista = parseFloat(document.getElementById("lobista").value) || 0;
-        const quantidade = parseFloat(document.getElementById("quantidade").value) || 0;
-        const margem = parseFloat(document.getElementById("margem").value) || 0;
-        const taxa = parseFloat(document.getElementById("taxa").value) || 0;
-        
-        // Simulação de valores vindos da API para o Dólar
-        const dolarCambio = 6.0; // Substitua pelo valor da API caso implementado
-        const dolarMagic = dolarCambio + 0.98;
-
-        // Cálculos
-        const totalDollar = (netDollar + lobista) * quantidade;
-        const netReal = totalDollar * dolarMagic;
-        const totalPix = netReal / (1 - margem);
-        const total10x = totalPix / (1 - taxa);
-
-        // Atualiza os campos com os resultados
-        document.getElementById("total-dollar").textContent = totalDollar.toFixed(2);
-        document.getElementById("net-real").textContent = netReal.toFixed(2);
-        document.getElementById("total-pix").textContent = totalPix.toFixed(2);
-        document.getElementById("total-10x").textContent = total10x.toFixed(2);
-    }
-
-    // Eventos para recalcular ao mudar qualquer campo
-    document.querySelectorAll("input, select").forEach(el => {
-        el.addEventListener("input", calcularCampos);
-    });
-
-    // Inicializa
-    document.addEventListener("DOMContentLoaded", () => {
-        fetchPlanilhaData();
-        calcularCampos();
-    });
-</script>
+      // Função para buscar dados da API
+      async function fetchApiData(endpoint) {
+          try {
+              const response = await fetch(endpoint);
+              const data = await response.json();
+              return data;
+          } catch (error) {
+              console.error("Erro ao buscar dados da API:", error);
+              return null;
+          }
+      }
+  
+      // Atualiza os campos com os dados da API
+      async function carregarPlanilha() {
+          const apiUrl = "https://www.magictraveltur.com/api_planilhas.php";
+          const apiData = await fetchApiData(apiUrl);
+  
+          if (apiData) {
+              document.getElementById("dolar-cambio").value = apiData.dolar_cambio || "";
+              document.getElementById("produto").value = apiData.produto || "";
+              document.getElementById("net-dollar").value = apiData.net_dollar || "";
+              document.getElementById("lobista").value = apiData.lobista || "";
+              document.getElementById("quantidade").value = apiData.quantidade || "";
+          }
+  
+          calcularDolarMagic();
+          calcularCampos();
+      }
+  
+      // Calcula o Dólar Magic
+      function calcularDolarMagic() {
+          const dolarCambio = parseFloat(document.getElementById("dolar-cambio").value) || 0;
+          const dolarMagic = dolarCambio + 0.98;
+          document.getElementById("dolar-magic").textContent = dolarMagic.toFixed(2);
+          return dolarMagic;
+      }
+  
+      // Calcula os valores na planilha
+      function calcularCampos() {
+          const netDollar = parseFloat(document.getElementById("net-dollar").value) || 0;
+          const lobista = parseFloat(document.getElementById("lobista").value) || 0;
+          const quantidade = parseFloat(document.getElementById("quantidade").value) || 0;
+          const margem = parseFloat(document.getElementById("margem").value) || 0;
+          const taxa = parseFloat(document.getElementById("taxa").value) || 0;
+  
+          const dolarMagic = calcularDolarMagic();
+  
+          const totalDollar = (netDollar + lobista) * quantidade;
+          const netReal = totalDollar * dolarMagic;
+          const totalPix = netReal / (1 - margem);
+          const total10x = totalPix / (1 - taxa);
+  
+          document.getElementById("total-dollar").textContent = totalDollar.toFixed(2);
+          document.getElementById("net-real").textContent = netReal.toFixed(2);
+          document.getElementById("total-pix").textContent = totalPix.toFixed(2);
+          document.getElementById("total-10x").textContent = total10x.toFixed(2);
+      }
+  
+      // Eventos
+      document.getElementById("dolar-cambio").addEventListener("input", calcularCampos);
+      document.querySelectorAll("input, select").forEach(el => el.addEventListener("input", calcularCampos));
+  
+      // Inicialização
+      document.addEventListener("DOMContentLoaded", carregarPlanilha);
+  </script>  
 </body>
 </html>
