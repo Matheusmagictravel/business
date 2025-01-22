@@ -668,49 +668,44 @@
     });
 </script>
 <script>
-    function updateDropdownColor(dropdown) {
-    dropdown.classList.remove(
-        'status-primary',
-        'status-info',
-        'status-warning',
-        'status-danger',
-        'status-secondary',
-        'status-success'
-    );
+    // Função para atualizar a cor do dropdown
+function updateDropdownColor() {
+    // Seleciona o dropdown
+    const dropdown = document.getElementById('status-dropdown');
 
+    // Remove todas as classes previamente aplicadas
+    dropdown.className = 'dropdown-status'; // Reseta para a classe base
+
+    // Adiciona a classe com base no valor selecionado
     switch (dropdown.value) {
         case 'Pagamento recebido':
-            dropdown.classList.add('status-primary');
+            dropdown.classList.add('status-primary'); // Azul
             break;
         case 'Envio de contrato':
-            dropdown.classList.add('status-info');
+            dropdown.classList.add('status-info'); // Azul claro
             break;
         case 'Aguardando Emissão':
-            dropdown.classList.add('status-warning');
+            dropdown.classList.add('status-warning'); // Amarelo
             break;
         case 'Pendente de Pagamento':
-            dropdown.classList.add('status-danger');
+            dropdown.classList.add('status-danger'); // Vermelho
             break;
         case 'Envio de Brindes':
-            dropdown.classList.add('status-secondary');
+            dropdown.classList.add('status-secondary'); // Cinza
             break;
         case 'Concluído':
-            dropdown.classList.add('status-success');
+            dropdown.classList.add('status-success'); // Verde
             break;
     }
 }
 
-function attachDropdownEvents() {
-    const dropdowns = document.querySelectorAll('.dropdown-status');
-    dropdowns.forEach((dropdown) => {
-        updateDropdownColor(dropdown);
-        dropdown.addEventListener('change', () => updateDropdownColor(dropdown));
-    });
-}
-
+// Adiciona evento de 'change' ao dropdown para atualizar a classe ao mudar o valor
 document.addEventListener('DOMContentLoaded', () => {
-    attachDropdownEvents();
+    const dropdown = document.getElementById('status-dropdown');
+    updateDropdownColor(); // Aplica a cor inicial com base no valor
+    dropdown.addEventListener('change', updateDropdownColor); // Atualiza a cor ao mudar
 });
+
   </script>            
 </body>
 </html>
