@@ -852,9 +852,9 @@ document.addEventListener('DOMContentLoaded', () => {
                   <td><input type="number" id="quantidade"></td>
                   <td id="total-dollar">Calculando...</td>
                   <td id="net-real">Calculando...</td>
-                  <td><input type="number" id="margem" step="0.01"></td>
+                  <td><input type="text" id="margem" placeholder="Digite a margem (%)"></td>
                   <td id="total-pix">Calculando...</td>
-                  <td><input type="number" id="taxa" step="0.01"></td>
+                  <td><input type="text" id="taxa" placeholder="Digite a taxa (%)"></td>
                   <td id="total-10x">Calculando...</td>
               </tr>
           </tbody>
@@ -893,31 +893,31 @@ document.addEventListener('DOMContentLoaded', () => {
       // Calcula o Dólar Magic
       function calcularDolarMagic() {
           const dolarCambio = parseFloat(document.getElementById("dolar-cambio").value) || 0;
-          const dolarMagic = dolarCambio + 0.98;
+          const dolarMagic = dolarCambio / (1 - 0.0098);
           document.getElementById("dolar-magic").textContent = dolarMagic.toFixed(2);
           return dolarMagic;
       }
   
       // Calcula os valores na planilha
       function calcularCampos() {
-          const netDollar = parseFloat(document.getElementById("net-dollar").value) || 0;
-          const lobista = parseFloat(document.getElementById("lobista").value) || 0;
-          const quantidade = parseFloat(document.getElementById("quantidade").value) || 0;
-          const margem = parseFloat(document.getElementById("margem").value) || 0;
-          const taxa = parseFloat(document.getElementById("taxa").value) || 0;
-  
-          const dolarMagic = calcularDolarMagic();
-  
-          const totalDollar = (netDollar + lobista) * quantidade;
-          const netReal = totalDollar * dolarMagic;
-          const totalPix = netReal / (1 - margem);
-          const total10x = totalPix / (1 - taxa);
-  
-          document.getElementById("total-dollar").textContent = totalDollar.toFixed(2);
-          document.getElementById("net-real").textContent = netReal.toFixed(2);
-          document.getElementById("total-pix").textContent = totalPix.toFixed(2);
-          document.getElementById("total-10x").textContent = total10x.toFixed(2);
-      }
+        const netDollar = parseFloat(document.getElementById("net-dollar").value) || 0;
+        const lobista = parseFloat(document.getElementById("lobista").value) || 0;
+        const quantidade = parseFloat(document.getElementById("quantidade").value) || 0;
+        const margem = parseFloat(document.getElementById("margem").value.replace("%", "").trim()) / 100 || 0;
+        const taxa = parseFloat(document.getElementById("taxa").value.replace("%", "").trim()) / 100 || 0;
+
+        const dolarMagic = calcularDolarMagic();
+
+        const totalDollar = (netDollar + lobista) * quantidade;
+        const netReal = totalDollar * dolarMagic;
+        const totalPix = netReal / (1 - margem);
+        const total10x = totalPix / (1 - taxa);
+
+        document.getElementById("total-dollar").textContent = totalDollar.toFixed(2);
+        document.getElementById("net-real").textContent = netReal.toFixed(2);
+        document.getElementById("total-pix").textContent = totalPix.toFixed(2);
+        document.getElementById("total-10x").textContent = total10x.toFixed(2);
+    }
   
       // Eventos
       document.getElementById("dolar-cambio").addEventListener("input", calcularCampos);
@@ -925,6 +925,50 @@ document.addEventListener('DOMContentLoaded', () => {
   
       // Inicialização
       document.addEventListener("DOMContentLoaded", carregarPlanilha);
+
+      // Função para formatar campos como porcentagem
+    function formatarPorcentagem(valor) {
+        if (!valor) return "0%";
+        const numero = parseFloat(valor.replace("%", "").trim());
+        if (isNaN(numero)) return "0%";
+        return numero.toFixed(2) + "%";
+    }
+
+    // Atualiza os campos com os dados da API
+    async function carregarPlanilha() {
+        const apiUrl = "https://www.magictraveltur.com/api_planilhas.php";
+        const apiData = await fetchApiData(apiUrl);
+
+        if (apiData) {
+            document.getElementById("dolar-cambio").value = apiData.dolar_cambio || "";
+            document.getElementById("produto").value = apiData.produto || "";
+            document.getElementById("net-dollar").value = apiData.net_dollar || "";
+            document.getElementById("lobista").value = apiData.lobista || "";
+            document.getElementById("quantidade").value = apiData.quantidade || "";
+            document.getElementById("margem").value = apiData.margem ? formatarPorcentagem(apiData.margem) : "";
+            document.getElementById("taxa").value = apiData.gateway ? formatarPorcentagem(apiData.gateway) : "";
+        }
+
+        calcularDolarMagic();
+        calcularCampos();
+    }
+
+    // Função para processar a entrada do usuário e garantir que é uma porcentagem
+    function tratarEntradaPorcentagem(event) {
+        const input = event.target;
+        const valor = input.value.replace("%", "").trim();
+        const numero = parseFloat(valor);
+        if (!isNaN(numero)) {
+            input.value = numero.toFixed(2) + "%";
+        } else {
+            input.value = "0%";
+        }
+    }
+
+    // Eventos para garantir que a entrada de porcentagem seja corretamente formatada
+    document.getElementById("margem").addEventListener("blur", tratarEntradaPorcentagem);
+    document.getElementById("taxa").addEventListener("blur", tratarEntradaPorcentagem);
+
   </script>  
 </body>
 </html>
