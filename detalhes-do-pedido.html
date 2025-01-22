@@ -211,17 +211,36 @@
 
     /* Ajustes para a tabela ficar como na "Foto 1" */
     .planilha-tabela {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+        table-layout: fixed; /* Largura fixa para as colunas */
     }
 
-    .planilha-tabela thead {
-    background-color: #4a90e2; /* Fundo azul */
+    .planilha-tabela thead th {
+        text-align: center; /* Centralizar os textos */
+        background-color: #4a90e2; /* Fundo azul */
+        color: #fff; /* Texto branco */
+        font-size: 14px;
+        font-weight: 600;
+        border: 1px solid #d9d9d9;
+        padding: 10px;
     }
+
+    .planilha-tabela thead th:nth-child(1) { width: 10%; } /* Produto */
+    .planilha-tabela thead th:nth-child(2) { width: 10%; } /* Idade */
+    .planilha-tabela thead th:nth-child(3) { width: 15%; } /* Net U$ */
+    .planilha-tabela thead th:nth-child(4) { width: 10%; } /* Lobista */
+    .planilha-tabela thead th:nth-child(5) { width: 10%; } /* Número */
+    .planilha-tabela thead th:nth-child(6) { width: 15%; } /* Total U$ */
+    .planilha-tabela thead th:nth-child(7) { width: 10%; } /* Net R$ */
+    .planilha-tabela thead th:nth-child(8) { width: 10%; } /* Margem */
+    .planilha-tabela thead th:nth-child(9) { width: 10%; } /* Pix */
+    .planilha-tabela thead th:nth-child(10) { width: 5%; } /* Taxa */
+    .planilha-tabela thead th:nth-child(11) { width: 5%; } /* 10x */
 
     .planilha-tabela th, .planilha-tabela td {
     padding: 14px 16px;
