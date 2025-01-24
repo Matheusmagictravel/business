@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -221,17 +222,18 @@
       padding: 10px;
     }
     
-    .planilha-tabela thead th:nth-child(1) { width: 16%; }
-    .planilha-tabela thead th:nth-child(2) { width: 8%; }
+    .planilha-tabela thead th:nth-child(1) { width: 14%; }
+    .planilha-tabela thead th:nth-child(2) { width: 10%; }
     .planilha-tabela thead th:nth-child(3) { width: 8%; }
     .planilha-tabela thead th:nth-child(4) { width: 8%; }
     .planilha-tabela thead th:nth-child(5) { width: 8%; }
     .planilha-tabela thead th:nth-child(6) { width: 8%; }
     .planilha-tabela thead th:nth-child(7) { width: 8%; }
     .planilha-tabela thead th:nth-child(8) { width: 8%; }
-    .planilha-tabela thead th:nth-child(9) { width: 10%; }
-    .planilha-tabela thead th:nth-child(10) { width: 8%; }
-    .planilha-tabela thead th:nth-child(11) { width: 10%; }
+    .planilha-tabela thead th:nth-child(9) { width: 8%; }
+    .planilha-tabela thead th:nth-child(10) { width: 9%; }
+    .planilha-tabela thead th:nth-child(11) { width: 8%; }
+    .planilha-tabela thead th:nth-child(12) { width: 9%; }
     
     .planilha-tabela td {
       color: #333;
@@ -417,6 +419,7 @@
         <thead>
             <tr>
                 <th>Produto</th>
+                <th>Data</th>
                 <th>Idade</th>
                 <th>Net U$</th>
                 <th>Lobista</th>
@@ -432,6 +435,7 @@
         <tbody id="spreadsheet-info">
             <tr>
                 <td><input type="text" name="produto"></td>
+                <td><input type="date" name="data"></td>
                 <td>
                     <select name="idade">
                         <option value="ADT">ADT</option>
@@ -744,6 +748,12 @@
 
       // Recalcula os valores ao alterar o câmbio
       calcularValores();
+    });
+
+    document.querySelectorAll('input[name="data"]').forEach((input) => {
+        input.addEventListener('change', (event) => {
+            console.log(`Data selecionada: ${event.target.value}`);
+        });
     });
   </script>
 </body>
