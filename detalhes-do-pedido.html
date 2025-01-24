@@ -24,7 +24,7 @@
       top: 0;
       left: 0;
       height: 100%;
-      background-color: #0d112d;
+      background-color: #2b3947;
       color: #fff;
       overflow-y: auto;
       box-shadow: 3px 0 6px rgba(0, 0, 0, 0.2);
@@ -32,7 +32,7 @@
     }
     
     #sidebar-container:hover {
-      background-color: #101740;
+      background-color: #2b3947;
     }
     
     .sidebar-loading {
@@ -73,27 +73,31 @@
     
     /* Estilização do ID do Pedido */
     .order-details p {
-        font-size: 16px; /* Tamanho menor */
+        font-size: 14px; /* Tamanho menor */
         color: #6c757d; /* Cinza */
         margin: 0 0 20px;
         text-align: left; /* Alinhamento à esquerda */
     }
     
     .back-button {
-        display: inline-block;
-        margin-bottom: 20px;
+        background-color: #FF6F61; /* Laranja */
+        color: #fff; /* Branco */
+        border: none;
+        border-radius: 8px;
         padding: 10px 20px;
         font-size: 14px;
-        font-weight: 500;
-        color: #fff;
-        background-color: #ff6f61;
-        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
         text-decoration: none;
-        transition: background-color 0.3s;
+        display: inline-block;
+        margin-bottom: 20px;
+        transition: background-color 0.3s ease;
+        margin-right: auto;
     }
 
     .back-button:hover {
-        background-color: #E65C50; /* Tom mais escuro ao passar o mouse */
+        background-color: #17a2b8; /* Tom mais escuro ao passar o mouse */
+        color: white;
     }
     
     table {
@@ -131,7 +135,7 @@
     }
     
     .section {
-      margin-bottom: 40px;
+      margin-bottom: 20px;
     }
     
     @media (max-width: 768px) {
@@ -462,6 +466,7 @@
         </tfoot>
     </table>
     <button id="add-row-button" class="add-row-button">Adicionar Linha</button>
+    <button class="add-row-button" onclick="salvarPlanilha()">Salvar Planilha</button>
     </div>
 
     <!-- Emissão -->
@@ -751,6 +756,78 @@
             console.log(`Data selecionada: ${event.target.value}`);
         });
     });
+
+    async function salvarPlanilha() {
+        // Captura o ID do pedido
+        const pedidoId = document.getElementById("pedido-id").textContent;
+        const linhas = document.querySelectorAll("#spreadsheet-info tr");
+
+        const dados = []; // Array para armazenar os dados da tabela
+
+        // Percorre cada linha da tabela para capturar os dados
+        linhas.forEach((linha) => {
+            const produto = linha.querySelector('input[name="produto"]').value;
+            const data = linha.querySelector('input[name="data"]').value;
+            const idade = linha.querySelector('select[name="idade"]').value;
+            const netDollar = parseFloat(linha.querySelector('input[name="netDollar"]').value) || 0;
+            const lobista = parseFloat(linha.querySelector('input[name="lobista"]').value) || 0;
+            const quantidade = parseInt(linha.querySelector('input[name="quantidade"]').value) || 0;
+            const margem = parseFloat(linha.querySelector('input[name="margem"]').value) || 0;
+            const taxa = parseFloat(linha.querySelector('input[name="taxa"]').value) || 0;
+            const totalDollar = parseFloat(linha.querySelector('td[name="totalDollar"]').textContent) || 0;
+            const netReal = parseFloat(linha.querySelector('td[name="netReal"]').textContent) || 0;
+            const totalPix = parseFloat(linha.querySelector('td[name="totalPix"]').textContent) || 0;
+            const total10x = parseFloat(linha.querySelector('td[name="total10x"]').textContent) || 0;
+
+            // Verifica se o produto e a data estão preenchidos
+            if (produto && data) {
+                dados.push({
+                    id: pedidoId, // ID do pedido
+                    produto,
+                    data,
+                    idade,
+                    net_usd: netDollar,
+                    lobista,
+                    quantidade,
+                    net_brl: netReal,
+                    margem,
+                    total_pix: totalPix,
+                    taxa,
+                    total_10x: total10x,
+                });
+            }
+        });
+
+        // Verifica se há dados para enviar
+        if (dados.length === 0) {
+            alert("Nenhuma linha válida para salvar.");
+            return;
+        }
+
+        try {
+            // Envia os dados para a API
+            const response = await fetch("api_planilhas.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(dados),
+            });
+
+            const result = await response.json(); // Converte a resposta para JSON
+            console.log("Resposta da API:", result);
+
+            if (result.status === "success") {
+                alert("Planilha salva com sucesso!");
+            } else {
+                alert("Erro ao salvar a planilha: " + (result.message || "Erro desconhecido"));
+            }
+        } catch (error) {
+            console.error("Erro ao salvar a planilha:", error);
+            alert("Erro ao salvar a planilha. Verifique o console para mais detalhes.");
+        }
+    }
+
   </script>
 </body>
 </html>
