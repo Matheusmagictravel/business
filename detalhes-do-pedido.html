@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -464,6 +463,7 @@
                 <th>Pix</th>
                 <th>Taxa</th>
                 <th>10x</th>
+                <th>Ações</th>
             </tr>
         </thead>
         <tbody id="spreadsheet-info">
@@ -502,13 +502,13 @@
             <td id="resumo-total-pix">0.00</td>
             <td></td>
             <td id="resumo-total-10x">0.00</td>
+            <td></td>
           </tr>
         </tfoot>
     </table>
     <button id="add-row-button" class="add-row-button">Adicionar Linha</button>
     <button class="add-row-button" onclick="salvarPlanilha()">Salvar Planilha</button>
     </div>
-
     <!-- Emissão -->
     <div class="section">
       <h3>Emissão</h3>
@@ -690,6 +690,11 @@
             <td name="totalPix">0.00</td>
             <td><input type="number" name="taxa" placeholder="Taxa (%)" step="0.01"></td>
             <td name="total10x">0.00</td>
+            <td>
+              <button class="delete-row-button" onclick="deleteRow(this)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
           </tr>`;
           document.getElementById('spreadsheet-info').insertAdjacentHTML('beforeend', newRow);
 
@@ -709,28 +714,38 @@
 
         // Preenche a planilha do pedido (primeira linha)
         const dolarCambio = pedido.cambio_dia || '<input type="number" id="dolar-cambio" placeholder="Digite o câmbio">';
-        const dolarMagic = pedido.cambio_dia ? (parseFloat(pedido.cambio_dia.replace(",", ".")) * 1.0098).toFixed(2) : '0.00...';
-        document.getElementById('spreadsheet-info-1').innerHTML = `
-          <tr>
-            <td>${dolarCambio}</td>
-            <td id="dolar-magic">${dolarMagic}</td>
-          </tr>`;
+        const dolarMagic = pedido.cambio_dia ? (parseFloat(pedido.cambio_dia.replace(",", ".")) * 1.0098).toFixed(2) : '0.00';
+        document.getElementById('dolar-magic').textContent = dolarMagic;
 
         // Preenche a planilha do pedido (segunda linha)
-        document.getElementById('spreadsheet-info').innerHTML = `
+        pedido.planilha.forEach((item) => {
+          const newRow = `
           <tr>
-            <td>${pedido.produto || '<input type="text" placeholder="Produto">'}</td>
-            <td>${pedido.idade || '<select name="idade"><option value="ADT">ADT</option><option value="CHD">CHD</option></select>'}</td>
-            <td>${pedido.net_dollar || '<input type="number" placeholder="Net U$" name="netDollar">'}</td>
-            <td>${pedido.lobista || '<input type="number" placeholder="Lobista" name="lobista">'}</td>
-            <td>${pedido.quantidade || '<input type="number" placeholder="Número" name="quantidade">'}</td>
-            <td name="totalDollar">0.00...</td>
-            <td name="netReal">0.00...</td>
-            <td>${pedido.margem || '<input type="number" placeholder="Margem (%)" name="margem" step="0.01">'}</td>
-            <td name="totalPix">0.00...</td>
-            <td>${pedido.taxa || '<input type="number" placeholder="Taxa (%)" name="taxa" step="0.01">'}</td>
-            <td name="total10x">0.00...</td>
+            <td>${item.produto || '<input type="text" placeholder="Produto">'}</td>
+            <td><input type="date" name="data" value="${item.data || ''}"></td>
+            <td>
+              <select name="idade">
+                <option value="ADT" ${item.idade === "ADT" ? "selected" : ""}>ADT</option>
+                <option value="CHD" ${item.idade === "CHD" ? "selected" : ""}>CHD</option>
+              </select>
+            </td>
+            <td><input type="number" name="netDollar" value="${item.net_usd || ''}" placeholder="Net U$"></td>
+            <td><input type="number" name="lobista" value="${item.lobista || ''}" placeholder="Lobista"></td>
+            <td><input type="number" name="quantidade" value="${item.quantidade || ''}" placeholder="Número"></td>
+            <td name="totalDollar">0.00</td>
+            <td name="netReal">0.00</td>
+            <td><input type="number" name="margem" value="${item.margem || ''}" placeholder="Margem (%)" step="0.01"></td>
+            <td name="totalPix">0.00</td>
+            <td><input type="number" name="taxa" value="${item.taxa || ''}" placeholder="Taxa (%)" step="0.01"></td>
+            <td name="total10x">0.00</td>
+            <td>
+              <button class="delete-row-button" onclick="deleteRow(this)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
           </tr>`;
+          document.getElementById('spreadsheet-info').insertAdjacentHTML('beforeend', newRow);
+        });
 
         // Adiciona eventos para recalcular os valores ao alterar os campos relevantes
         document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
@@ -837,7 +852,7 @@
         }
     });
 
-
+    // Função para recalcular os valores ao alterar o câmbio
     document.getElementById('dolar-cambio').addEventListener('input', function() {
       const dolarCambio = parseFloat(this.value) || 0;
       const dolarMagic = (dolarCambio * 1.0098).toFixed(2);
@@ -845,16 +860,8 @@
   
       // Recalcula os valores ao alterar o câmbio
       calcularValores();
-  });  
-
-
-    document.querySelectorAll('input[name="data"]').forEach((input) => {
-        input.addEventListener('change', (event) => {
-            console.log(`Data selecionada: ${event.target.value}`);
-        });
     });
-  </script>
-  <script>
+
     // Função para excluir uma linha da planilha e do banco de dados
     async function deleteRow(button) {
       const row = button.closest('tr');
@@ -894,7 +901,7 @@
           console.error('Erro ao excluir a linha:', error);
           alert('Erro ao excluir a linha. Verifique o console para mais detalhes.');
       }
-  }  
+    }  
   </script>
 </body>
 </html>
