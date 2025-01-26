@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Detalhes do Pedido - Magic Travel">
   <title>Detalhes do Pedido - Magic Travel</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
     
@@ -654,43 +654,47 @@
   
       // Função para calcular os valores da planilha
       function calcularValores() {
+        const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
+      
         document.querySelectorAll('#spreadsheet-info tr').forEach((row) => {
           const netDollar = parseFloat(row.querySelector('input[name="netDollar"]').value) || 0;
           const lobista = parseFloat(row.querySelector('input[name="lobista"]').value) || 0;
           const quantidade = parseInt(row.querySelector('input[name="quantidade"]').value) || 0;
-          const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
           const margem = parseFloat(row.querySelector('input[name="margem"]').value) / 100 || 0;
           const taxa = parseFloat(row.querySelector('input[name="taxa"]').value) / 100 || 0;
-  
+      
           const totalDollar = (netDollar + lobista) * quantidade;
           const netReal = totalDollar * dolarMagic;
           const totalPix = netReal / (1 - margem);
           const total10x = totalPix / (1 - taxa);
-  
+      
+          // Atualiza os valores na tabela
           row.querySelector('td[name="totalDollar"]').textContent = totalDollar.toFixed(2);
           row.querySelector('td[name="netReal"]').textContent = netReal.toFixed(2);
           row.querySelector('td[name="totalPix"]').textContent = totalPix.toFixed(2);
           row.querySelector('td[name="total10x"]').textContent = total10x.toFixed(2);
         });
+      
+        // Recalcula os totais gerais
         calcularResumo();
-      }
+      }      
   
       // Função para calcular os valores totais da planilha
       function calcularResumo() {
         let totalDollar = 0, totalReal = 0, totalPix = 0, total10x = 0;
-  
-        document.querySelectorAll('#spreadsheet-info tr').forEach(row => {
+      
+        document.querySelectorAll('#spreadsheet-info tr').forEach((row) => {
           totalDollar += parseFloat(row.querySelector('td[name="totalDollar"]').textContent) || 0;
           totalReal += parseFloat(row.querySelector('td[name="netReal"]').textContent) || 0;
           totalPix += parseFloat(row.querySelector('td[name="totalPix"]').textContent) || 0;
           total10x += parseFloat(row.querySelector('td[name="total10x"]').textContent) || 0;
         });
-  
+      
         document.getElementById('resumo-total-dollar').textContent = totalDollar.toFixed(2);
         document.getElementById('resumo-net-real').textContent = totalReal.toFixed(2);
         document.getElementById('resumo-total-pix').textContent = totalPix.toFixed(2);
         document.getElementById('resumo-total-10x').textContent = total10x.toFixed(2);
-      }
+      }      
   
       // Adiciona eventos para recalcular os valores ao alterar os campos relevantes
       document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
@@ -898,7 +902,7 @@
   }
   
   // Função para adicionar uma nova linha na planilha do pedido
-function addNewRow() {
+  function addNewRow() {
     const newRow = `
       <tr>
         <td><input type="text" name="produto" placeholder="Produto"></td>
@@ -926,11 +930,11 @@ function addNewRow() {
       </tr>`;
     document.getElementById('spreadsheet-info').insertAdjacentHTML('beforeend', newRow);
   
-    // Adiciona eventos para recalcular os valores na nova linha
-    document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
+    // Associa os eventos novamente
+    document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach((element) => {
       element.addEventListener('input', calcularValores);
     });
-  }
+  }  
   
   // Função para atualizar o valor do dólar magic
   function updateDolarMagic() {
