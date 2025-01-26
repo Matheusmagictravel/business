@@ -558,22 +558,23 @@
     // Função para carregar os detalhes do pedido e planilha
     async function loadOrderDetails() {
       const pedidoId = getPedidoId();
-      if (pedidoId === 'Não informado') {
-        alert('ID do pedido não informado!');
-        return;
+  
+      if (pedidoId === "Não informado") {
+          alert("ID do pedido não informado!");
+          return;
       }
-
+  
       try {
-        const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?pedido=${pedidoId}`;
-        const response = await fetch(apiUrl);
-        const pedidos = await response.json();
-
-        if (!response.ok || !pedidos || pedidos.length === 0) {
-          throw new Error(`Erro ao buscar os detalhes do pedido. Status: ${response.status}`);
-        }
-
-        const pedido = pedidos[0];
-        document.getElementById('pedido-id').textContent = pedidoId;
+          const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?pedido=${pedidoId}`;
+          const response = await fetch(apiUrl);
+          const pedidos = await response.json();
+  
+          if (!response.ok || !pedidos || pedidos.length === 0) {
+              throw new Error(`Erro ao buscar os detalhes do pedido. Status: ${response.status}`);
+          }
+  
+          const pedido = pedidos[0];
+          document.getElementById("pedido-id").textContent = pedidoId;  
 
         // Preenche as informações do pedido
         document.getElementById('order-info').innerHTML = 
@@ -741,66 +742,80 @@
           </tr>`;
 
         // Função para carregar a planilha do pedido
+        // Função para carregar a planilha do pedido
         async function loadPlanilhaPedido() {
-          const planilhaApiUrl = `https://magictraveltur.com/api_planilhas.php?pedido=${pedidoId}`;
-          const response = await fetch(planilhaApiUrl);
-          const planilhas = await response.json();
+            const pedidoId = document.getElementById("pedido-id").textContent; // ID do pedido
 
-          if (!response.ok || !planilhas || planilhas.length === 0) {
-            throw new Error(`Erro ao buscar os detalhes da planilha. Status: ${response.status}`);
-          }
+            if (!pedidoId || pedidoId === "Carregando...") {
+                alert("Erro: ID do pedido não encontrado.");
+                return;
+            }
 
-          const spreadsheetInfo = document.getElementById('spreadsheet-info');
-          spreadsheetInfo.innerHTML = '';
+            try {
+                const planilhaApiUrl = `https://magictraveltur.com/api_planilhas.php?id_pedido=${pedidoId}`;
+                const response = await fetch(planilhaApiUrl);
 
-          planilhas.forEach((linha) => {
-            const newRow = 
-            `<tr>
-              <td><input type="text" name="produto" value="${linha.produto || ''}"></td>
-              <td><input type="date" name="data" value="${linha.data || ''}"></td>
-              <td>
-                <select name="idade">
-                  <option value="ADT" ${linha.idade === "ADT" ? "selected" : ""}>ADT</option>
-                  <option value="CHD" ${linha.idade === "CHD" ? "selected" : ""}>CHD</option>
-                </select>
-              </td>
-              <td><input type="number" name="netDollar" value="${linha.net_usd || 0}"></td>
-              <td><input type="number" name="lobista" value="${linha.lobista || 0}"></td>
-              <td><input type="number" name="quantidade" value="${linha.quantidade || 0}"></td>
-              <td name="totalDollar">${linha.total_usd || '0.00'}</td>
-              <td name="netReal">${linha.net_brl || '0.00'}</td>
-              <td><input type="number" name="margem" value="${linha.margem || 0}" step="0.01"></td>
-              <td name="totalPix">${linha.total_pix || '0.00'}</td>
-              <td><input type="number" name="taxa" value="${linha.taxa || 0}" step="0.01"></td>
-              <td name="total10x">${linha.total_10x || '0.00'}</td>
-              <td>
-                <button class="delete-row-button" onclick="deleteRow(this)">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </td>
-            </tr>`;
-            spreadsheetInfo.insertAdjacentHTML('beforeend', newRow);
-          });
+                if (!response.ok) {
+                    throw new Error(`Erro ao buscar os detalhes da planilha. Status: ${response.status}`);
+                }
 
-          document.getElementById('dolar-cambio').value = planilhas[0].dolar_cambio || '';
-          document.getElementById('dolar-magic').textContent = planilhas[0].dolar_magic || '0.00';
+                const planilhas = await response.json();
 
-          // Adiciona eventos para recalcular os valores ao alterar os campos relevantes
-          document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
-            element.addEventListener('input', calcularValores);
-          });
+                if (!planilhas || planilhas.length === 0) {
+                    console.warn("Nenhuma planilha encontrada para o pedido:", pedidoId);
+                    return; // Nenhum dado encontrado, não faz nada
+                }
 
-          calcularValores();
+                const spreadsheetInfo = document.getElementById("spreadsheet-info");
+                spreadsheetInfo.innerHTML = ""; // Limpa a tabela antes de preencher
+
+                // Itera sobre os registros e preenche a tabela
+                planilhas.forEach((linha) => {
+                    const newRow = `
+                    <tr>
+                        <td><input type="text" name="produto" value="${linha.produto || ''}"></td>
+                        <td><input type="date" name="data" value="${linha.data || ''}"></td>
+                        <td>
+                            <select name="idade">
+                                <option value="ADT" ${linha.idade === "ADT" ? "selected" : ""}>ADT</option>
+                                <option value="CHD" ${linha.idade === "CHD" ? "selected" : ""}>CHD</option>
+                            </select>
+                        </td>
+                        <td><input type="number" name="netDollar" value="${linha.net_usd || 0}"></td>
+                        <td><input type="number" name="lobista" value="${linha.lobista || 0}"></td>
+                        <td><input type="number" name="quantidade" value="${linha.quantidade || 0}"></td>
+                        <td name="totalDollar">${linha.total_usd || '0.00'}</td>
+                        <td name="netReal">${linha.net_brl || '0.00'}</td>
+                        <td><input type="number" name="margem" value="${linha.margem || 0}" step="0.01"></td>
+                        <td name="totalPix">${linha.total_pix || '0.00'}</td>
+                        <td><input type="number" name="taxa" value="${linha.taxa || 0}" step="0.01"></td>
+                        <td name="total10x">${linha.total_10x || '0.00'}</td>
+                        <td>
+                            <button class="delete-row-button" onclick="deleteRow(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+                    spreadsheetInfo.insertAdjacentHTML("beforeend", newRow);
+                });
+
+                // Preenche o campo de câmbio com os valores vindos da API
+                document.getElementById("dolar-cambio").value = planilhas[0].dolar_cambio || 0;
+                document.getElementById("dolar-magic").textContent = planilhas[0].dolar_magic || "0.00";
+
+                // Adiciona eventos para recalcular os valores ao alterar os campos relevantes
+                document.querySelectorAll("#spreadsheet-info input, #spreadsheet-info select").forEach((element) => {
+                    element.addEventListener("input", calcularValores);
+                });
+
+                // Recalcula os valores ao carregar os dados
+                calcularValores();
+            } catch (error) {
+                console.error("Erro ao carregar a planilha do pedido:", error);
+                alert(`Erro ao carregar os dados da planilha: ${error.message}`);
+            }
         }
 
-        // Chama a função para carregar a planilha do pedido
-        loadPlanilhaPedido();
-
-      } catch (error) {
-        console.error('Erro ao carregar os detalhes do pedido:', error);
-        alert(`Erro ao carregar os dados do pedido: ${error.message}`);
-      }
-    }
 
     async function salvarPlanilha() {
         const pedidoId = document.getElementById("pedido-id").textContent;
