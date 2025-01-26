@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -496,7 +495,7 @@
         <!-- Linha de resumo dos totais -->
         <tfoot>
           <tr style="font-weight: bold; background-color: #f0f0f0;">
-            <td colspan="6" style="text-align: right;">Totais:</td>
+            <td colspan="5" style="text-align: right;">Totais:</td>
             <td id="resumo-total-dollar">0.00</td>
             <td id="resumo-net-real">0.00</td>
             <td></td>
@@ -530,176 +529,146 @@
   </div>
 
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById('sidebar-container')) {
-      loadSidebar();
+    // Função para capturar o ID do pedido na URL
+    function getPedidoId() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('pedido') || 'Não informado';
     }
-    if (document.getElementById('order-info')) {
-      loadOrderDetails();
+
+    // Função para formatar datas
+    function formatDate(date) {
+      return date ? new Date(date).toLocaleDateString('pt-BR') : 'N/A';
     }
-    document.getElementById('dolar-cambio').addEventListener('input', updateDolarMagic);
-    document.getElementById('add-row-button').addEventListener('click', addNewRow);
-  });
-  
-  function getPedidoId() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('pedido') || 'Não informado';
-  }
-  
-  function formatDate(date) {
-    return date ? new Date(date).toLocaleDateString('pt-BR') : 'N/A';
-  }
-  
-  // Função para carregar a sidebar
-  async function loadSidebar() {
-    try {
-      const response = await fetch('sidebar.html');
-      if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
-  
-      const sidebarContent = await response.text();
-      document.getElementById('sidebar-container').innerHTML = sidebarContent;
-    } catch (error) {
-      console.error('Erro ao carregar a sidebar:', error);
-      document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
-    }
-  }
-  
-  // Função para carregar os detalhes do pedido e planilha
-  async function loadOrderDetails() {
-    const pedidoId = getPedidoId();
-  
-    if (pedidoId === "Não informado") {
-      alert("ID do pedido não informado!");
-      return;
-    }
-  
-    try {
-      const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?pedido=${pedidoId}`;
-      const response = await fetch(apiUrl);
-      const pedidos = await response.json();
-  
-      if (!response.ok || !pedidos || pedidos.length === 0) {
-        throw new Error(`Erro ao buscar os detalhes do pedido. Status: ${response.status}`);
+
+    // Função para carregar a sidebar
+    async function loadSidebar() {
+      try {
+        const response = await fetch('sidebar.html');
+        if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
+
+        const sidebarContent = await response.text();
+        document.getElementById('sidebar-container').innerHTML = sidebarContent;
+      } catch (error) {
+        console.error('Erro ao carregar a sidebar:', error);
+        document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
       }
-  
-      const pedido = pedidos[0];
-      document.getElementById("pedido-id").textContent = pedidoId;
-  
-      // Preenche as informações do pedido
-      document.getElementById('order-info').innerHTML =
-        `<tr>
-          <td><select>
-            <option value="Pagamento recebido" ${pedido.status === "Pagamento recebido" ? "selected" : ""}>Pagamento recebido</option>
-            <option value="Envio de contrato" ${pedido.status === "Envio de contrato" ? "selected" : ""}>Envio de contrato</option>
-            <option value="Aguardando Emissão" ${pedido.status === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
-            <option value="Pendente de Pagamento" ${pedido.status === "Pendente de Pagamento" ? "selected" : ""}>Pendente de Pagamento</option>
-            <option value="Envio de Brindes" ${pedido.status === "Envio de Brindes" ? "selected" : ""}>Envio de Brindes</option>
-            <option value="Concluído" ${pedido.status === "Concluído" ? "selected" : ""}>Concluído</option>
-          </select></td>
-          <td>${pedido.destino || 'N/A'}</td>
-          <td>${pedido.item || 'N/A'}</td>
-          <td>${formatDate(pedido.data_venda)}</td>
-        </tr>`;
-  
-      // Preenche as informações do cliente
-      document.getElementById('customer-info').innerHTML =
-        `<tr>
-          <td>${pedido.nome_comprador || 'N/A'}</td>
-          <td>${pedido.email || 'N/A'}</td>
-          <td>${pedido.telefone || 'N/A'}</td>
-          <td>${pedido.cpf || 'N/A'}</td>
-          <td>${formatDate(pedido.data_nascimento)}</td>
-          <td>${pedido.uf || 'N/A'}</td>
-        </tr>`;
-  
-      // Preenche as informações financeiras (primeira linha)
-      document.getElementById('financial-info').innerHTML =
-        `<tr>
-          <td>${pedido.gateway || '<input type="text" placeholder="Gateway">'}</td>
-          <td>${formatDate(pedido.data_pgto) || '<input type="date">'}</td>
-          <td>${pedido.recebido ? `R$ ${parseFloat(pedido.recebido).toFixed(2)}` : '<input type="number" placeholder="Recebido">'}</td>
-          <td>${pedido.valor_repassado ? `R$ ${parseFloat(pedido.valor_repassado).toFixed(2)}` : '<input type="number" placeholder="Valor Repassado">'}</td>
-          <td>${formatDate(pedido.data_repasse) || '<input type="date">'}</td>
-          <td>${pedido.cambio_dia || '<input type="number" placeholder="Cambio do Dia">'}</td>
-        </tr>`;
-  
-      // Preenche as informações financeiras (segunda linha)
-      document.getElementById('financial-info-2').innerHTML =
-        `<tr>
-          <td>${pedido.valor_comissao ? `R$ ${parseFloat(pedido.valor_comissao).toFixed(2)}` : '<input type="number" placeholder="Valor Comissão">'}</td>
-          <td>${pedido.meio_pgto || '<input type="text" placeholder="Meio Pgto">'}</td>
-          <td>${pedido.bandeira_cartao || '<input type="text" placeholder="Bandeira Cartão">'}</td>
-          <td>${pedido.parcelas || '<input type="number" placeholder="Parcelas">'}</td>
-          <td>${pedido.valor_venda ? `R$ ${parseFloat(pedido.valor_venda).toFixed(2)}` : '<input type="number" placeholder="Valor Venda">'}</td>
-          <td>${pedido.custo ? `R$ ${parseFloat(pedido.custo).toFixed(2)}` : '<input type="number" placeholder="Custo">'}</td>
-          <td>${pedido.fornecedor || '<input type="text" placeholder="Fornecedor">'}</td>
-        </tr>`;
-  
-      // Preenche as informações comerciais
-      document.getElementById('commercial-info').innerHTML =
-        `<tr>
-          <td>${pedido.origem_cliente || '<input type="text" placeholder="Origem do Cliente">'}</td>
-          <td>${pedido.cliente_de || '<input type="text" placeholder="Cliente de (30%)">'}</td>
-          <td>${pedido.efetivado_por || '<input type="text" placeholder="Efetivado por (70%)">'}</td>
-          <td>${pedido.comissao_do_agente || '<input type="text" placeholder="Comissão Agente">'}</td>
-        </tr>`;
-  
-      // Preenche as informações adicionais
-      document.getElementById('additional-info').innerHTML =
-        `<tr>
-          <td>${pedido.observacoes_operacionais || '<input type="text" placeholder="Observações Operacionais">'}</td>
-          <td>${pedido.observacoes_financeiras || '<input type="text" placeholder="Observações Financeiras">'}</td>
-        </tr>`;
-  
-      loadPlanilhaPedido();
-  
-      // Função para calcular os valores da planilha
-      function calcularValores() {
-        const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
-    
-        document.querySelectorAll('#spreadsheet-info tr').forEach((row) => {
-          const netDollar = parseFloat(row.querySelector('input[name="netDollar"]').value) || 0;
-          const lobista = parseFloat(row.querySelector('input[name="lobista"]').value) || 0;
-          const quantidade = parseInt(row.querySelector('input[name="quantidade"]').value) || 0;
-          const margem = parseFloat(row.querySelector('input[name="margem"]').value) / 100 || 0;
-          const taxa = parseFloat(row.querySelector('input[name="taxa"]').value) / 100 || 0;
-    
-          const totalDollar = (netDollar + lobista) * quantidade;
-          const netReal = totalDollar * dolarMagic;
-          const totalPix = netReal / (1 - margem);
-          const total10x = totalPix / (1 - taxa);
-    
-          // Atualiza os valores na tabela
-          row.querySelector('td[name="totalDollar"]').textContent = totalDollar.toFixed(2);
-          row.querySelector('td[name="netReal"]').textContent = netReal.toFixed(2);
-          row.querySelector('td[name="totalPix"]').textContent = totalPix.toFixed(2);
-          row.querySelector('td[name="total10x"]').textContent = total10x.toFixed(2);
-        });
-    
-        calcularResumo();
+    }
+
+    // Função para carregar os detalhes do pedido e planilha
+    async function loadOrderDetails() {
+      const pedidoId = getPedidoId();
+      if (pedidoId === 'Não informado') {
+        alert('ID do pedido não informado!');
+        return;
       }
-    
-      function calcularResumo() {
-        let totalDollar = 0, totalReal = 0, totalPix = 0, total10x = 0;
-    
-        document.querySelectorAll('#spreadsheet-info tr').forEach((row) => {
-          totalDollar += parseFloat(row.querySelector('td[name="totalDollar"]').textContent) || 0;
-          totalReal += parseFloat(row.querySelector('td[name="netReal"]').textContent) || 0;
-          totalPix += parseFloat(row.querySelector('td[name="totalPix"]').textContent) || 0;
-          total10x += parseFloat(row.querySelector('td[name="total10x"]').textContent) || 0;
-        });
-    
-        document.getElementById('resumo-total-dollar').textContent = totalDollar.toFixed(2);
-        document.getElementById('resumo-net-real').textContent = totalReal.toFixed(2);
-        document.getElementById('resumo-total-pix').textContent = totalPix.toFixed(2);
-        document.getElementById('resumo-total-10x').textContent = total10x.toFixed(2);
-      }
-    
-      function addNewRow() {
-        const newRow = `
-          <tr>
+
+      try {
+        const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?pedido=${pedidoId}`;
+        const response = await fetch(apiUrl);
+        const pedidos = await response.json();
+
+        if (!response.ok || !pedidos || pedidos.length === 0) {
+          throw new Error(`Erro ao buscar os detalhes do pedido. Status: ${response.status}`);
+        }
+
+        const pedido = pedidos[0];
+        document.getElementById('pedido-id').textContent = pedidoId;
+
+        // Preenche as informações do pedido
+        document.getElementById('order-info').innerHTML = 
+          `<tr>
+            <td><select>
+              <option value="Pagamento recebido" ${pedido.status === "Pagamento recebido" ? "selected" : ""}>Pagamento recebido</option>
+              <option value="Envio de contrato" ${pedido.status === "Envio de contrato" ? "selected" : ""}>Envio de contrato</option>
+              <option value="Aguardando Emissão" ${pedido.status === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
+              <option value="Pendente de Pagamento" ${pedido.status === "Pendente de Pagamento" ? "selected" : ""}>Pendente de Pagamento</option>
+              <option value="Envio de Brindes" ${pedido.status === "Envio de Brindes" ? "selected" : ""}>Envio de Brindes</option>
+              <option value="Concluído" ${pedido.status === "Concluído" ? "selected" : ""}>Concluído</option>
+            </select></td>
+            <td>${pedido.destino || 'N/A'}</td>
+            <td>${pedido.item || 'N/A'}</td>
+            <td>${formatDate(pedido.data_venda)}</td>
+          </tr>`;
+
+        // Preenche as informações do cliente
+        document.getElementById('customer-info').innerHTML = 
+          `<tr>
+            <td>${pedido.nome_comprador || 'N/A'}</td>
+            <td>${pedido.email || 'N/A'}</td>
+            <td>${pedido.telefone || 'N/A'}</td>
+            <td>${pedido.cpf || 'N/A'}</td>
+            <td>${formatDate(pedido.data_nascimento)}</td>
+            <td>${pedido.uf || 'N/A'}</td>
+          </tr>`;
+
+        // Preenche as informações financeiras (primeira linha)
+        document.getElementById('financial-info').innerHTML = 
+          `<tr>
+            <td>${pedido.gateway || '<input type="text" placeholder="Gateway">'}</td>
+            <td>${formatDate(pedido.data_pgto) || '<input type="date">'}</td>
+            <td>${pedido.recebido ? `R$ ${parseFloat(pedido.recebido).toFixed(2)}` : '<input type="number" placeholder="Recebido">'}</td>
+            <td>${pedido.valor_repassado ? `R$ ${parseFloat(pedido.valor_repassado).toFixed(2)}` : '<input type="number" placeholder="Valor Repassado">'}</td>
+            <td>${formatDate(pedido.data_repasse) || '<input type="date">'}</td>
+            <td>${pedido.cambio_dia || '<input type="number" placeholder="Cambio do Dia">'}</td>
+          </tr>`;
+
+        // Preenche as informações financeiras (segunda linha)
+        document.getElementById('financial-info-2').innerHTML = 
+          `<tr>
+            <td>${pedido.valor_comissao ? `R$ ${parseFloat(pedido.valor_comissao).toFixed(2)}` : '<input type="number" placeholder="Valor Comissão">'}</td>
+            <td>${pedido.meio_pgto || '<input type="text" placeholder="Meio Pgto">'}</td>
+            <td>${pedido.bandeira_cartao || '<input type="text" placeholder="Bandeira Cartão">'}</td>
+            <td>${pedido.parcelas || '<input type="number" placeholder="Parcelas">'}</td>
+            <td>${pedido.valor_venda ? `R$ ${parseFloat(pedido.valor_venda).toFixed(2)}` : '<input type="number" placeholder="Valor Venda">'}</td>
+            <td>${pedido.custo ? `R$ ${parseFloat(pedido.custo).toFixed(2)}` : '<input type="number" placeholder="Custo">'}</td>
+            <td>${pedido.fornecedor || '<input type="text" placeholder="Fornecedor">'}</td>
+          </tr>`;
+
+        // Preenche as informações comerciais
+        document.getElementById('commercial-info').innerHTML = 
+          `<tr>
+            <td>${pedido.origem_cliente || '<input type="text" placeholder="Origem do Cliente">'}</td>
+            <td>${pedido.cliente_de || '<input type="text" placeholder="Cliente de (30%)">'}</td>
+            <td>${pedido.efetivado_por || '<input type="text" placeholder="Efetivado por (70%)">'}</td>
+            <td>${pedido.comissao_do_agente || '<input type="text" placeholder="Comissão Agente">'}</td>
+          </tr>`;
+
+        // Preenche as informações adicionais
+        document.getElementById('additional-info').innerHTML = 
+          `<tr>
+            <td>${pedido.observacoes_operacionais || '<input type="text" placeholder="Observações Operacionais">'}</td>
+            <td>${pedido.observacoes_financeiras || '<input type="text" placeholder="Observações Financeiras">'}</td>
+          </tr>`;
+
+        // Função para calcular os valores da planilha
+        function calcularValores() {
+          document.querySelectorAll('#spreadsheet-info tr').forEach((row) => {
+            const netDollar = parseFloat(row.querySelector('input[name="netDollar"]').value) || 0;
+            const lobista = parseFloat(row.querySelector('input[name="lobista"]').value) || 0;
+            const quantidade = parseInt(row.querySelector('input[name="quantidade"]').value) || 0;
+            const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
+            const margem = parseFloat(row.querySelector('input[name="margem"]').value) / 100 || 0;
+            const taxa = parseFloat(row.querySelector('input[name="taxa"]').value) / 100 || 0;
+
+            const totalDollar = (netDollar + lobista) * quantidade;
+            const netReal = totalDollar * dolarMagic;
+            const totalPix = netReal / (1 - margem);
+            const total10x = totalPix / (1 - taxa);
+
+            row.querySelector('td[name="totalDollar"]').textContent = totalDollar.toFixed(2);
+            row.querySelector('td[name="netReal"]').textContent = netReal.toFixed(2);
+            row.querySelector('td[name="totalPix"]').textContent = totalPix.toFixed(2);
+            row.querySelector('td[name="total10x"]').textContent = total10x.toFixed(2);
+          });
+          calcularResumo();
+        }
+
+        // Função para adicionar uma nova linha na planilha do pedido (segunda linha)
+        function addNewRow() {
+          const newRow = 
+          `<tr>
             <td><input type="text" name="produto" placeholder="Produto"></td>
-            <td><input type="date" name="data"></td>
+            <td><input type="date" name="data"></td> <!-- Input de data -->
             <td>
               <select name="idade">
                 <option value="ADT">ADT</option>
@@ -721,100 +690,245 @@
               </button>
             </td>
           </tr>`;
-        document.getElementById('spreadsheet-info').insertAdjacentHTML('beforeend', newRow);
-    
-        // Associe os eventos aos novos inputs
-        document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach((element) => {
+          document.getElementById('spreadsheet-info').insertAdjacentHTML('beforeend', newRow);
+
+          // Adiciona eventos para recalcular os valores na nova linha
+          document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
+            element.addEventListener('input', calcularValores);
+          });
+        }
+
+        // Adiciona evento ao botão para incluir nova linha
+        document.getElementById('add-row-button').addEventListener('click', addNewRow);
+
+        // Adiciona eventos para recalcular os valores ao alterar os campos relevantes
+        document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
           element.addEventListener('input', calcularValores);
         });
+
+        // Função para calcular os valores totais da planilha
+        function calcularResumo() {
+          let totalDollar = 0, totalReal = 0, totalPix = 0, total10x = 0;
+
+          document.querySelectorAll('#spreadsheet-info tr').forEach(row => {
+            totalDollar += parseFloat(row.querySelector('td[name="totalDollar"]').textContent) || 0;
+            totalReal += parseFloat(row.querySelector('td[name="netReal"]').textContent) || 0;
+            totalPix += parseFloat(row.querySelector('td[name="totalPix"]').textContent) || 0;
+            total10x += parseFloat(row.querySelector('td[name="total10x"]').textContent) || 0;
+          });
+
+          document.getElementById('resumo-total-dollar').textContent = totalDollar.toFixed(2);
+          document.getElementById('resumo-net-real').textContent = totalReal.toFixed(2);
+          document.getElementById('resumo-total-pix').textContent = totalPix.toFixed(2);
+          document.getElementById('resumo-total-10x').textContent = total10x.toFixed(2);
+        }
+
+        // Preenche as informações de emissão
+        document.getElementById('emission-info').innerHTML = 
+          `<tr>
+            <td>${pedido.nf || '<input type="text" placeholder="Invoice">'}</td>
+            <td>${pedido.nome_passageiros || '<input type="text" placeholder="Nome dos Passageiros">'}</td>
+            <td>${pedido.itens || '<input type="text" placeholder="Itens">'}</td>
+            <td>${pedido.identificador || '<input type="text" placeholder="Identificador">'}</td>
+            <td>${formatDate(pedido.data_pagamento) || '<input type="date">'}</td>
+            <td>
+              <select>
+                <option value="Em aberto" ${pedido.status === "Em aberto" ? "selected" : ""}>Em aberto</option>
+                <option value="Concluído" ${pedido.status === "Concluído" ? "selected" : ""}>Concluído</option>
+              </select>
+            </td>
+          </tr>`;
+
+        // Função para carregar a planilha do pedido
+        async function loadPlanilhaPedido() {
+          const planilhaApiUrl = `https://magictraveltur.com/api_planilhas.php?pedido=${pedidoId}`;
+          const response = await fetch(planilhaApiUrl);
+          const planilhas = await response.json();
+
+          if (!response.ok || !planilhas || planilhas.length === 0) {
+            throw new Error(`Erro ao buscar os detalhes da planilha. Status: ${response.status}`);
+          }
+
+          const spreadsheetInfo = document.getElementById('spreadsheet-info');
+          spreadsheetInfo.innerHTML = '';
+
+          planilhas.forEach((linha) => {
+            const newRow = 
+            `<tr>
+              <td><input type="text" name="produto" value="${linha.produto || ''}"></td>
+              <td><input type="date" name="data" value="${linha.data || ''}"></td>
+              <td>
+                <select name="idade">
+                  <option value="ADT" ${linha.idade === "ADT" ? "selected" : ""}>ADT</option>
+                  <option value="CHD" ${linha.idade === "CHD" ? "selected" : ""}>CHD</option>
+                </select>
+              </td>
+              <td><input type="number" name="netDollar" value="${linha.net_usd || 0}"></td>
+              <td><input type="number" name="lobista" value="${linha.lobista || 0}"></td>
+              <td><input type="number" name="quantidade" value="${linha.quantidade || 0}"></td>
+              <td name="totalDollar">${linha.total_usd || '0.00'}</td>
+              <td name="netReal">${linha.net_brl || '0.00'}</td>
+              <td><input type="number" name="margem" value="${linha.margem || 0}" step="0.01"></td>
+              <td name="totalPix">${linha.total_pix || '0.00'}</td>
+              <td><input type="number" name="taxa" value="${linha.taxa || 0}" step="0.01"></td>
+              <td name="total10x">${linha.total_10x || '0.00'}</td>
+              <td>
+                <button class="delete-row-button" onclick="deleteRow(this)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>`;
+            spreadsheetInfo.insertAdjacentHTML('beforeend', newRow);
+          });
+
+          document.getElementById('dolar-cambio').value = planilhas[0].dolar_cambio || '';
+          document.getElementById('dolar-magic').textContent = planilhas[0].dolar_magic || '0.00';
+
+          // Adiciona eventos para recalcular os valores ao alterar os campos relevantes
+          document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
+            element.addEventListener('input', calcularValores);
+          });
+
+          calcularValores();
+        }
+
+        // Chama a função para carregar a planilha do pedido
+        loadPlanilhaPedido();
+
+      } catch (error) {
+        console.error('Erro ao carregar os detalhes do pedido:', error);
+        alert(`Erro ao carregar os dados do pedido: ${error.message}`);
       }
-    
-      function updateDolarMagic() {
-        const dolarCambio = parseFloat(document.getElementById('dolar-cambio').value) || 0;
-        const dolarMagic = (dolarCambio * 1.0098).toFixed(2);
-        document.getElementById('dolar-magic').textContent = dolarMagic;
-    
-        calcularValores();
+    }
+
+    async function salvarPlanilha() {
+        const pedidoId = document.getElementById("pedido-id").textContent;
+        const linhas = document.querySelectorAll("#spreadsheet-info tr");
+      
+        const dados = [];
+      
+        linhas.forEach((linha) => {
+          const produto = linha.querySelector('input[name="produto"]').value;
+          const data = linha.querySelector('input[name="data"]').value;
+          const idade = linha.querySelector('select[name="idade"]').value;
+          const netDollar = parseFloat(linha.querySelector('input[name="netDollar"]').value) || 0;
+          const lobista = parseFloat(linha.querySelector('input[name="lobista"]').value) || 0;
+          const quantidade = parseInt(linha.querySelector('input[name="quantidade"]').value) || 0;
+          const margem = parseFloat(linha.querySelector('input[name="margem"]').value) || null;
+          const taxa = parseFloat(linha.querySelector('input[name="taxa"]').value) || null;
+      
+          // Verifica se os campos obrigatórios estão preenchidos
+          if (!produto || !data) {
+            alert("Erro: Campos obrigatórios (produto, data) não foram preenchidos.");
+            return;
+          }
+      
+          dados.push({
+            id_pedido: pedidoId,
+            produto,
+            data,
+            idade,
+            net_usd: netDollar,
+            lobista,
+            quantidade,
+            margem,
+            taxa,
+          });
+        });
+      
+        // Verifica se há dados para serem enviados
+        if (dados.length === 0) {
+          alert("Erro: Nenhuma linha válida para salvar.");
+          return;
+        }
+      
+        // Envia os dados para a API
+        try {
+          const response = await fetch("https://magictraveltur.com/api_planilhas.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(dados),
+          });
+      
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Erro na API: ${response.status} - ${errorText}`);
+          }
+      
+          const result = await response.json();
+          alert("Planilha salva com sucesso!");
+        } catch (error) {
+          console.error("Erro ao salvar a planilha:", error);
+          alert("Erro ao salvar a planilha. Verifique o console para mais detalhes.");
+        }
       }
-    
-      function deleteRow(button) {
-        const row = button.closest('tr');
-        row.remove();
-        calcularValores();
-      }
-  
-  // Função para salvar a planilha do pedido
-  async function salvarPlanilha() {
-    const pedidoId = document.getElementById("pedido-id").textContent;
-    const linhas = document.querySelectorAll("#spreadsheet-info tr");
-    const dolarCambio = parseFloat(document.getElementById("dolar-cambio").value) || 0;
-    const dolarMagic = parseFloat(document.getElementById("dolar-magic").textContent) || 0;
-  
-    const dados = [];
-  
-    linhas.forEach((linha) => {
-      const produto = linha.querySelector('input[name="produto"]').value;
-      const data = linha.querySelector('input[name="data"]').value;
-      const idade = linha.querySelector('select[name="idade"]').value;
-      const netDollar = parseFloat(linha.querySelector('input[name="netDollar"]').value) || 0;
-      const lobista = parseFloat(linha.querySelector('input[name="lobista"]').value) || 0;
-      const quantidade = parseInt(linha.querySelector('input[name="quantidade"]').value) || 0;
-      const margem = parseFloat(linha.querySelector('input[name="margem"]').value) || 0;
-      const taxa = parseFloat(linha.querySelector('input[name="taxa"]').value) || 0;
-  
-      const totalUsd = (netDollar + lobista) * quantidade;
-      const netBrl = totalUsd * dolarMagic;
-      const totalPix = netBrl / (1 - margem / 100);
-      const total10x = totalPix / (1 - taxa / 100);
-  
-      if (!produto || !data) {
-        alert("Erro: Campos obrigatórios (produto, data) não foram preenchidos.");
+
+    // Função para excluir uma linha da planilha
+    async function deleteRow(button) {
+      const row = button.closest('tr');
+      const produto = row.querySelector('input[name="produto"]').value;
+
+      if (!produto) {
+        alert('Produto não encontrado na linha. Exclusão cancelada.');
         return;
       }
-  
-      dados.push({
-        id_pedido: pedidoId,
-        produto,
-        data,
-        idade,
-        net_usd: netDollar,
-        lobista,
-        quantidade,
-        total_usd: totalUsd,
-        net_brl: netBrl,
-        margem,
-        total_pix: totalPix,
-        taxa,
-        total_10x: total10x,
-        dolar_cambio: dolarCambio,
-        dolar_magic: dolarMagic,
+
+      if (!confirm('Tem certeza que deseja excluir esta linha?')) {
+        return; // Cancela a exclusão
+      }
+
+      const pedidoId = document.getElementById('pedido-id').textContent;
+
+      try {
+        const response = await fetch('https://magictraveltur.com/api_planilhas.php', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id_pedido: pedidoId, produto }),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`Erro na exclusão: ${response.status} - ${errorText}`);
+        }
+
+        const result = await response.json();
+        if (result.status === 'success') {
+          alert('Linha excluída com sucesso!');
+          row.remove(); // Remove a linha do DOM
+          calcularValores(); // Recalcula os valores após a exclusão
+        } else {
+          alert('Erro ao excluir: ' + (result.message || 'Erro desconhecido'));
+        }
+      } catch (error) {
+        console.error('Erro ao excluir a linha:', error);
+        alert('Erro ao excluir a linha. Verifique o console para mais detalhes.');
+      }
+    }
+
+    // Inicializa o carregamento da página
+    document.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('sidebar-container')) {
+        loadSidebar();
+      }
+      if (document.getElementById('order-info')) {
+        loadOrderDetails();
+      }
+    });
+
+    document.getElementById('dolar-cambio').addEventListener('input', function() {
+      const dolarCambio = parseFloat(this.value) || 0;
+      const dolarMagic = (dolarCambio * 1.0098).toFixed(2);
+      document.getElementById('dolar-magic').textContent = dolarMagic;
+
+      // Recalcula os valores ao alterar o câmbio
+      calcularValores();
+    });
+
+    document.querySelectorAll('input[name="data"]').forEach((input) => {
+      input.addEventListener('change', (event) => {
+        console.log(`Data selecionada: ${event.target.value}`);
       });
     });
-  
-    if (dados.length === 0) {
-      alert("Erro: Nenhuma linha válida para salvar.");
-      return;
-    }
-  
-    try {
-      const response = await fetch("https://magictraveltur.com/api_planilhas.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(dados),
-      });
-  
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Erro na API: ${response.status} - ${errorText}`);
-      }
-  
-      const result = await response.json();
-      alert("Planilha salva com sucesso!");
-    } catch (error) {
-      console.error("Erro ao salvar a planilha:", error);
-      alert("Erro ao salvar a planilha. Verifique o console para mais detalhes.");
-    }
-  }
   </script>
 </body>
 </html>
