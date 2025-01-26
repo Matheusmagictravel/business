@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Detalhes do Pedido - Magic Travel">
   <title>Detalhes do Pedido - Magic Travel</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
     
@@ -705,7 +705,7 @@
           // Adiciona eventos para recalcular os valores na nova linha
           document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
             element.addEventListener('input', calcularValores);
-          });
+          });          
         }
     
         // Adiciona evento ao botão para incluir nova linha
@@ -719,19 +719,26 @@
         // Função para calcular os valores totais da planilha
         function calcularResumo() {
           let totalDollar = 0, totalReal = 0, totalPix = 0, total10x = 0;
-    
+        
+          // Itera sobre cada linha da tabela e soma os valores
           document.querySelectorAll('#spreadsheet-info tr').forEach(row => {
-            totalDollar += parseFloat(row.querySelector('td[name="totalDollar"]').textContent) || 0;
-            totalReal += parseFloat(row.querySelector('td[name="netReal"]').textContent) || 0;
-            totalPix += parseFloat(row.querySelector('td[name="totalPix"]').textContent) || 0;
-            total10x += parseFloat(row.querySelector('td[name="total10x"]').textContent) || 0;
+            const totalDollarValue = parseFloat(row.querySelector('td[name="totalDollar"]').textContent) || 0;
+            const netRealValue = parseFloat(row.querySelector('td[name="netReal"]').textContent) || 0;
+            const totalPixValue = parseFloat(row.querySelector('td[name="totalPix"]').textContent) || 0;
+            const total10xValue = parseFloat(row.querySelector('td[name="total10x"]').textContent) || 0;
+        
+            totalDollar += totalDollarValue;
+            totalReal += netRealValue;
+            totalPix += totalPixValue;
+            total10x += total10xValue;
           });
-    
+        
+          // Atualiza os valores nos campos de resumo
           document.getElementById('resumo-total-dollar').textContent = totalDollar.toFixed(2);
           document.getElementById('resumo-net-real').textContent = totalReal.toFixed(2);
           document.getElementById('resumo-total-pix').textContent = totalPix.toFixed(2);
           document.getElementById('resumo-total-10x').textContent = total10x.toFixed(2);
-        }
+        }        
     
         // Preenche as informações de emissão
         document.getElementById('emission-info').innerHTML =
