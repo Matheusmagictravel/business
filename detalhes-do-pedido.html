@@ -623,10 +623,46 @@
           </tr>`;
 
         // Preenche a planilha do pedido
-        const dolarCambio = pedidoDetalhes.cambio_dia || '<input type="number" id="dolar-cambio" placeholder="Digite o câmbio">';
-        const dolarMagic = pedidoDetalhes.cambio_dia ? (parseFloat(pedidoDetalhes.cambio_dia.replace(",", ".")) * 1.0098).toFixed(2) : '0.00';
-        document.getElementById('dolar-cambio').value = dolarCambio;
-        document.getElementById('dolar-magic').textContent = dolarMagic;
+        document.getElementById('dolar-cambio').value = pedidoDetalhes.cambio_dia || '';
+        document.getElementById('dolar-magic').textContent = pedidoDetalhes.cambio_dia ? (parseFloat(pedidoDetalhes.cambio_dia.replace(",", ".")) * 1.0098).toFixed(2) : '0.00';
+
+        // Função para adicionar uma nova linha na planilha do pedido
+        function addNewRow(produto = '', data = '', idade = 'ADT', netDollar = '', lobista = '', quantidade = '', margem = '', taxa = '') {
+          const newRow = 
+          `<tr>
+            <td><input type="text" name="produto" value="${produto}" placeholder="Produto"></td>
+            <td><input type="date" name="data" value="${data}"></td>
+            <td>
+              <select name="idade">
+                <option value="ADT" ${idade === "ADT" ? "selected" : ""}>ADT</option>
+                <option value="CHD" ${idade === "CHD" ? "selected" : ""}>CHD</option>
+              </select>
+            </td>
+            <td><input type="number" name="netDollar" value="${netDollar}" placeholder="Net U$"></td>
+            <td><input type="number" name="lobista" value="${lobista}" placeholder="Lobista"></td>
+            <td><input type="number" name="quantidade" value="${quantidade}" placeholder="Número"></td>
+            <td name="totalDollar">0.00</td>
+            <td name="netReal">0.00</td>
+            <td><input type="number" name="margem" value="${margem}" placeholder="Margem (%)" step="0.01"></td>
+            <td name="totalPix">0.00</td>
+            <td><input type="number" name="taxa" value="${taxa}" placeholder="Taxa (%)" step="0.01"></td>
+            <td name="total10x">0.00</td>
+            <td>
+              <button class="delete-row-button" onclick="deleteRow(this)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>`;
+          document.getElementById('spreadsheet-info').insertAdjacentHTML('beforeend', newRow);
+
+          // Adiciona eventos para recalcular os valores na nova linha
+          document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
+            element.addEventListener('input', calcularValores);
+          });
+        }
+
+        // Adiciona evento ao botão para incluir nova linha
+        document.getElementById('add-row-button').addEventListener('click', addNewRow);
 
         // Preenche as linhas da planilha do pedido
         pedidoDetalhes.planilha.forEach(item => {
@@ -698,41 +734,6 @@
         console.error("Erro ao salvar a planilha:", error);
         alert("Erro ao salvar a planilha. Verifique o console para mais detalhes.");
       }
-    }
-
-    // Função para adicionar uma nova linha na planilha do pedido
-    function addNewRow(produto = '', data = '', idade = 'ADT', netDollar = '', lobista = '', quantidade = '', margem = '', taxa = '') {
-      const newRow = 
-      `<tr>
-        <td><input type="text" name="produto" value="${produto}" placeholder="Produto"></td>
-        <td><input type="date" name="data" value="${data}"></td>
-        <td>
-          <select name="idade">
-            <option value="ADT" ${idade === "ADT" ? "selected" : ""}>ADT</option>
-            <option value="CHD" ${idade === "CHD" ? "selected" : ""}>CHD</option>
-          </select>
-        </td>
-        <td><input type="number" name="netDollar" value="${netDollar}" placeholder="Net U$"></td>
-        <td><input type="number" name="lobista" value="${lobista}" placeholder="Lobista"></td>
-        <td><input type="number" name="quantidade" value="${quantidade}" placeholder="Número"></td>
-        <td name="totalDollar">0.00</td>
-        <td name="netReal">0.00</td>
-        <td><input type="number" name="margem" value="${margem}" placeholder="Margem (%)" step="0.01"></td>
-        <td name="totalPix">0.00</td>
-        <td><input type="number" name="taxa" value="${taxa}" placeholder="Taxa (%)" step="0.01"></td>
-        <td name="total10x">0.00</td>
-        <td>
-          <button class="delete-row-button" onclick="deleteRow(this)">
-            <i class="fas fa-trash"></i>
-          </button>
-        </td>
-      </tr>`;
-      document.getElementById('spreadsheet-info').insertAdjacentHTML('beforeend', newRow);
-
-      // Adiciona eventos para recalcular os valores na nova linha
-      document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
-        element.addEventListener('input', calcularValores);
-      });
     }
 
     // Função para excluir uma linha da planilha e do banco de dados
