@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -1010,6 +1011,16 @@
       alert("Erro ao salvar a planilha. Verifique o console para mais detalhes.");
     }
   }
+
+    function updateDolarMagic() {
+    const dolarCambio = parseFloat(document.getElementById('dolar-cambio').value) || 0;
+    const dolarMagic = (dolarCambio * 1.0098).toFixed(2);
+    document.getElementById('dolar-magic').textContent = dolarMagic;
+
+    // Recalcula os valores sempre que o dólar magic é atualizado
+    calcularValores();
+    }
+
   </script>
 </body>
 </html>
