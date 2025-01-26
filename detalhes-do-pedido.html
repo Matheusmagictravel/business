@@ -316,6 +316,8 @@
         padding: 8px 16px;
       }
     }
+
+
   </style>
 </head>
 <body>
@@ -465,7 +467,30 @@
             </tr>
         </thead>
         <tbody id="spreadsheet-info">
-            <!-- Linhas da planilha são adicionadas dinamicamente -->
+            <tr>
+                <td><input type="text" name="produto"></td>
+                <td><input type="date" name="data"></td>
+                <td>
+                    <select name="idade">
+                        <option value="ADT">ADT</option>
+                        <option value="CHD">CHD</option>
+                    </select>
+                </td>
+                <td><input type="number" name="netDollar"></td>
+                <td><input type="number" name="lobista"></td>
+                <td><input type="number" name="quantidade"></td>
+                <td name="totalDollar">0.00</td>
+                <td name="netReal">0.00</td>
+                <td><input type="number" name="margem" step="0.01"></td>
+                <td name="totalPix">0.00</td>
+                <td><input type="number" name="taxa" step="0.01"></td>
+                <td name="total10x">0.00</td>
+                <td>
+                  <button class="delete-row-button" onclick="deleteRow(this)">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </td>
+            </tr>   
         </tbody>
         <!-- Linha de resumo dos totais -->
         <tfoot>
@@ -477,7 +502,6 @@
             <td id="resumo-total-pix">0.00</td>
             <td></td>
             <td id="resumo-total-10x">0.00</td>
-            <td></td>
           </tr>
         </tfoot>
     </table>
@@ -495,7 +519,7 @@
             <th>Nome dos Passageiros</th>
             <th>Itens</th>
             <th>Identificador</th>
-            <th>Data de Pagamento</th>
+            <th>Data</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -530,7 +554,7 @@
       }
     }
 
-    // Função para carregar os detalhes do pedido
+    // Função para carregar os detalhes do pedido e planilha
     async function loadOrderDetails() {
       const pedidoId = getPedidoId();
       if (pedidoId === 'Não informado') {
@@ -540,112 +564,125 @@
 
       try {
         const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?pedido=${pedidoId}`;
-        console.log('Fetching data from API URL:', apiUrl);
-
-        // Chama a API para obter os dados do pedido
         const response = await fetch(apiUrl);
-        const pedido = await response.json();
-        console.log('API Response Data:', pedido);
+        const pedidos = await response.json();
 
-        if (!response.ok || !pedido || pedido.length === 0) {
+        if (!response.ok || !pedidos || pedidos.length === 0) {
           throw new Error(`Erro ao buscar os detalhes do pedido. Status: ${response.status}`);
         }
 
-        const pedidoDetalhes = pedido[0];
-
-        // Atualiza o ID do pedido na página
+        const pedido = pedidos[0];
         document.getElementById('pedido-id').textContent = pedidoId;
 
         // Preenche as informações do pedido
         document.getElementById('order-info').innerHTML = 
           `<tr>
             <td><select>
-              <option value="Pagamento recebido" ${pedidoDetalhes.status === "Pagamento recebido" ? "selected" : ""}>Pagamento recebido</option>
-              <option value="Envio de contrato" ${pedidoDetalhes.status === "Envio de contrato" ? "selected" : ""}>Envio de contrato</option>
-              <option value="Aguardando Emissão" ${pedidoDetalhes.status === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
-              <option value="Pendente de Pagamento" ${pedidoDetalhes.status === "Pendente de Pagamento" ? "selected" : ""}>Pendente de Pagamento</option>
-              <option value="Envio de Brindes" ${pedidoDetalhes.status === "Envio de Brindes" ? "selected" : ""}>Envio de Brindes</option>
-              <option value="Concluído" ${pedidoDetalhes.status === "Concluído" ? "selected" : ""}>Concluído</option>
+              <option value="Pagamento recebido" ${pedido.status === "Pagamento recebido" ? "selected" : ""}>Pagamento recebido</option>
+              <option value="Envio de contrato" ${pedido.status === "Envio de contrato" ? "selected" : ""}>Envio de contrato</option>
+              <option value="Aguardando Emissão" ${pedido.status === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
+              <option value="Pendente de Pagamento" ${pedido.status === "Pendente de Pagamento" ? "selected" : ""}>Pendente de Pagamento</option>
+              <option value="Envio de Brindes" ${pedido.status === "Envio de Brindes" ? "selected" : ""}>Envio de Brindes</option>
+              <option value="Concluído" ${pedido.status === "Concluído" ? "selected" : ""}>Concluído</option>
             </select></td>
-            <td>${pedidoDetalhes.destino || 'N/A'}</td>
-            <td>${pedidoDetalhes.item || 'N/A'}</td>
-            <td>${formatDate(pedidoDetalhes.data_venda)}</td>
+            <td>${pedido.destino || 'N/A'}</td>
+            <td>${pedido.item || 'N/A'}</td>
+            <td>${formatDate(pedido.data_venda)}</td>
           </tr>`;
 
         // Preenche as informações do cliente
         document.getElementById('customer-info').innerHTML = 
           `<tr>
-            <td>${pedidoDetalhes.nome_comprador || 'N/A'}</td>
-            <td>${pedidoDetalhes.email || 'N/A'}</td>
-            <td>${pedidoDetalhes.telefone || 'N/A'}</td>
-            <td>${pedidoDetalhes.cpf || 'N/A'}</td>
-            <td>${formatDate(pedidoDetalhes.data_nascimento)}</td>
-            <td>${pedidoDetalhes.uf || 'N/A'}</td>
+            <td>${pedido.nome_comprador || 'N/A'}</td>
+            <td>${pedido.email || 'N/A'}</td>
+            <td>${pedido.telefone || 'N/A'}</td>
+            <td>${pedido.cpf || 'N/A'}</td>
+            <td>${formatDate(pedido.data_nascimento)}</td>
+            <td>${pedido.uf || 'N/A'}</td>
           </tr>`;
 
         // Preenche as informações financeiras (primeira linha)
         document.getElementById('financial-info').innerHTML = 
           `<tr>
-            <td>${pedidoDetalhes.gateway || '<input type="text" placeholder="Gateway">'}</td>
-            <td>${formatDate(pedidoDetalhes.data_pgto) || '<input type="date">'}</td>
-            <td>${pedidoDetalhes.recebido ? `R$ ${parseFloat(pedidoDetalhes.recebido).toFixed(2)}` : '<input type="number" placeholder="Recebido">'}</td>
-            <td>${pedidoDetalhes.valor_repassado ? `R$ ${parseFloat(pedidoDetalhes.valor_repassado).toFixed(2)}` : '<input type="number" placeholder="Valor Repassado">'}</td>
-            <td>${formatDate(pedidoDetalhes.data_repasse) || '<input type="date">'}</td>
-            <td>${pedidoDetalhes.cambio_dia || '<input type="number" placeholder="Cambio do Dia">'}</td>
+            <td>${pedido.gateway || '<input type="text" placeholder="Gateway">'}</td>
+            <td>${formatDate(pedido.data_pgto) || '<input type="date">'}</td>
+            <td>${pedido.recebido ? `R$ ${parseFloat(pedido.recebido).toFixed(2)}` : '<input type="number" placeholder="Recebido">'}</td>
+            <td>${pedido.valor_repassado ? `R$ ${parseFloat(pedido.valor_repassado).toFixed(2)}` : '<input type="number" placeholder="Valor Repassado">'}</td>
+            <td>${formatDate(pedido.data_repasse) || '<input type="date">'}</td>
+            <td>${pedido.cambio_dia || '<input type="number" placeholder="Cambio do Dia">'}</td>
           </tr>`;
 
         // Preenche as informações financeiras (segunda linha)
         document.getElementById('financial-info-2').innerHTML = 
           `<tr>
-            <td>${pedidoDetalhes.valor_comissao ? `R$ ${parseFloat(pedidoDetalhes.valor_comissao).toFixed(2)}` : '<input type="number" placeholder="Valor Comissão">'}</td>
-            <td>${pedidoDetalhes.meio_pgto || '<input type="text" placeholder="Meio Pgto">'}</td>
-            <td>${pedidoDetalhes.bandeira_cartao || '<input type="text" placeholder="Bandeira Cartão">'}</td>
-            <td>${pedidoDetalhes.parcelas || '<input type="number" placeholder="Parcelas">'}</td>
-            <td>${pedidoDetalhes.valor_venda ? `R$ ${parseFloat(pedidoDetalhes.valor_venda).toFixed(2)}` : '<input type="number" placeholder="Valor Venda">'}</td>
-            <td>${pedidoDetalhes.custo ? `R$ ${parseFloat(pedidoDetalhes.custo).toFixed(2)}` : '<input type="number" placeholder="Custo">'}</td>
-            <td>${pedidoDetalhes.fornecedor || '<input type="text" placeholder="Fornecedor">'}</td>
+            <td>${pedido.valor_comissao ? `R$ ${parseFloat(pedido.valor_comissao).toFixed(2)}` : '<input type="number" placeholder="Valor Comissão">'}</td>
+            <td>${pedido.meio_pgto || '<input type="text" placeholder="Meio Pgto">'}</td>
+            <td>${pedido.bandeira_cartao || '<input type="text" placeholder="Bandeira Cartão">'}</td>
+            <td>${pedido.parcelas || '<input type="number" placeholder="Parcelas">'}</td>
+            <td>${pedido.valor_venda ? `R$ ${parseFloat(pedido.valor_venda).toFixed(2)}` : '<input type="number" placeholder="Valor Venda">'}</td>
+            <td>${pedido.custo ? `R$ ${parseFloat(pedido.custo).toFixed(2)}` : '<input type="number" placeholder="Custo">'}</td>
+            <td>${pedido.fornecedor || '<input type="text" placeholder="Fornecedor">'}</td>
           </tr>`;
 
         // Preenche as informações comerciais
         document.getElementById('commercial-info').innerHTML = 
           `<tr>
-            <td>${pedidoDetalhes.origem_cliente || '<input type="text" placeholder="Origem do Cliente">'}</td>
-            <td>${pedidoDetalhes.cliente_de || '<input type="text" placeholder="Cliente de (30%)">'}</td>
-            <td>${pedidoDetalhes.efetivado_por || '<input type="text" placeholder="Efetivado por (70%)">'}</td>
-            <td>${pedidoDetalhes.comissao_do_agente || '<input type="text" placeholder="Comissão Agente">'}</td>
+            <td>${pedido.origem_cliente || '<input type="text" placeholder="Origem do Cliente">'}</td>
+            <td>${pedido.cliente_de || '<input type="text" placeholder="Cliente de (30%)">'}</td>
+            <td>${pedido.efetivado_por || '<input type="text" placeholder="Efetivado por (70%)">'}</td>
+            <td>${pedido.comissao_do_agente || '<input type="text" placeholder="Comissão Agente">'}</td>
           </tr>`;
 
         // Preenche as informações adicionais
         document.getElementById('additional-info').innerHTML = 
           `<tr>
-            <td>${pedidoDetalhes.observacoes_operacionais || '<input type="text" placeholder="Observações Operacionais">'}</td>
-            <td>${pedidoDetalhes.observacoes_financeiras || '<input type="text" placeholder="Observações Financeiras">'}</td>
+            <td>${pedido.observacoes_operacionais || '<input type="text" placeholder="Observações Operacionais">'}</td>
+            <td>${pedido.observacoes_financeiras || '<input type="text" placeholder="Observações Financeiras">'}</td>
           </tr>`;
 
-        // Preenche a planilha do pedido
-        document.getElementById('dolar-cambio').value = pedidoDetalhes.cambio_dia || '';
-        document.getElementById('dolar-magic').textContent = pedidoDetalhes.cambio_dia ? (parseFloat(pedidoDetalhes.cambio_dia.replace(",", ".")) * 1.0098).toFixed(2) : '0.00';
+        // Função para calcular os valores da planilha
+        function calcularValores() {
+          document.querySelectorAll('#spreadsheet-info tr').forEach((row) => {
+            const netDollar = parseFloat(row.querySelector('input[name="netDollar"]').value) || 0;
+            const lobista = parseFloat(row.querySelector('input[name="lobista"]').value) || 0;
+            const quantidade = parseInt(row.querySelector('input[name="quantidade"]').value) || 0;
+            const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
+            const margem = parseFloat(row.querySelector('input[name="margem"]').value) / 100 || 0;
+            const taxa = parseFloat(row.querySelector('input[name="taxa"]').value) / 100 || 0;
 
-        // Função para adicionar uma nova linha na planilha do pedido
-        function addNewRow(produto = '', data = '', idade = 'ADT', netDollar = '', lobista = '', quantidade = '', margem = '', taxa = '') {
+            const totalDollar = (netDollar + lobista) * quantidade;
+            const netReal = totalDollar * dolarMagic;
+            const totalPix = netReal / (1 - margem);
+            const total10x = totalPix / (1 - taxa);
+
+            row.querySelector('td[name="totalDollar"]').textContent = totalDollar.toFixed(2);
+            row.querySelector('td[name="netReal"]').textContent = netReal.toFixed(2);
+            row.querySelector('td[name="totalPix"]').textContent = totalPix.toFixed(2);
+            row.querySelector('td[name="total10x"]').textContent = total10x.toFixed(2);
+          });
+          calcularResumo();
+        }
+
+        // Função para adicionar uma nova linha na planilha do pedido (segunda linha)
+        function addNewRow() {
           const newRow = 
           `<tr>
-            <td><input type="text" name="produto" value="${produto}" placeholder="Produto"></td>
-            <td><input type="date" name="data" value="${data}"></td>
+            <td><input type="text" name="produto" placeholder="Produto"></td>
+            <td><input type="date" name="data"></td> <!-- Input de data -->
             <td>
               <select name="idade">
-                <option value="ADT" ${idade === "ADT" ? "selected" : ""}>ADT</option>
-                <option value="CHD" ${idade === "CHD" ? "selected" : ""}>CHD</option>
+                <option value="ADT">ADT</option>
+                <option value="CHD">CHD</option>
               </select>
             </td>
-            <td><input type="number" name="netDollar" value="${netDollar}" placeholder="Net U$"></td>
-            <td><input type="number" name="lobista" value="${lobista}" placeholder="Lobista"></td>
-            <td><input type="number" name="quantidade" value="${quantidade}" placeholder="Número"></td>
+            <td><input type="number" name="netDollar" placeholder="Net U$"></td>
+            <td><input type="number" name="lobista" placeholder="Lobista"></td>
+            <td><input type="number" name="quantidade" placeholder="Número"></td>
             <td name="totalDollar">0.00</td>
             <td name="netReal">0.00</td>
-            <td><input type="number" name="margem" value="${margem}" placeholder="Margem (%)" step="0.01"></td>
+            <td><input type="number" name="margem" placeholder="Margem (%)" step="0.01"></td>
             <td name="totalPix">0.00</td>
-            <td><input type="number" name="taxa" value="${taxa}" placeholder="Taxa (%)" step="0.01"></td>
+            <td><input type="number" name="taxa" placeholder="Taxa (%)" step="0.01"></td>
             <td name="total10x">0.00</td>
             <td>
               <button class="delete-row-button" onclick="deleteRow(this)">
@@ -664,10 +701,100 @@
         // Adiciona evento ao botão para incluir nova linha
         document.getElementById('add-row-button').addEventListener('click', addNewRow);
 
-        // Preenche as linhas da planilha do pedido
-        pedidoDetalhes.planilha.forEach(item => {
-          addNewRow(item.produto, item.data, item.idade, item.net_usd, item.lobista, item.quantidade, item.margem, item.taxa);
+        // Adiciona eventos para recalcular os valores ao alterar os campos relevantes
+        document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
+          element.addEventListener('input', calcularValores);
         });
+
+        // Função para calcular os valores totais da planilha
+        function calcularResumo() {
+          let totalDollar = 0, totalReal = 0, totalPix = 0, total10x = 0;
+
+          document.querySelectorAll('#spreadsheet-info tr').forEach(row => {
+            totalDollar += parseFloat(row.querySelector('td[name="totalDollar"]').textContent) || 0;
+            totalReal += parseFloat(row.querySelector('td[name="netReal"]').textContent) || 0;
+            totalPix += parseFloat(row.querySelector('td[name="totalPix"]').textContent) || 0;
+            total10x += parseFloat(row.querySelector('td[name="total10x"]').textContent) || 0;
+          });
+
+          document.getElementById('resumo-total-dollar').textContent = totalDollar.toFixed(2);
+          document.getElementById('resumo-net-real').textContent = totalReal.toFixed(2);
+          document.getElementById('resumo-total-pix').textContent = totalPix.toFixed(2);
+          document.getElementById('resumo-total-10x').textContent = total10x.toFixed(2);
+        }
+
+        // Preenche as informações de emissão
+        document.getElementById('emission-info').innerHTML = 
+          `<tr>
+            <td>${pedido.nf || '<input type="text" placeholder="Invoice">'}</td>
+            <td>${pedido.nome_passageiros || '<input type="text" placeholder="Nome dos Passageiros">'}</td>
+            <td>${pedido.itens || '<input type="text" placeholder="Itens">'}</td>
+            <td>${pedido.identificador || '<input type="text" placeholder="Identificador">'}</td>
+            <td>${formatDate(pedido.data_pagamento) || '<input type="date">'}</td>
+            <td>
+              <select>
+                <option value="Em aberto" ${pedido.status === "Em aberto" ? "selected" : ""}>Em aberto</option>
+                <option value="Concluído" ${pedido.status === "Concluído" ? "selected" : ""}>Concluído</option>
+              </select>
+            </td>
+          </tr>`;
+
+        // Função para carregar a planilha do pedido
+        async function loadPlanilhaPedido() {
+          const planilhaApiUrl = `https://magictraveltur.com/api_planilhas.php?pedido=${pedidoId}`;
+          const response = await fetch(planilhaApiUrl);
+          const planilhas = await response.json();
+
+          if (!response.ok || !planilhas || planilhas.length === 0) {
+            throw new Error(`Erro ao buscar os detalhes da planilha. Status: ${response.status}`);
+          }
+
+          const planilha = planilhas[0];
+          document.getElementById('dolar-cambio').value = planilha.dolar_cambio || '';
+          document.getElementById('dolar-magic').textContent = planilha.dolar_magic || '0.00';
+
+          const spreadsheetInfo = document.getElementById('spreadsheet-info');
+          spreadsheetInfo.innerHTML = '';
+
+          planilhas.forEach((linha) => {
+            const newRow = 
+            `<tr>
+              <td><input type="text" name="produto" value="${linha.produto || ''}"></td>
+              <td><input type="date" name="data" value="${linha.data || ''}"></td>
+              <td>
+                <select name="idade">
+                  <option value="ADT" ${linha.idade === "ADT" ? "selected" : ""}>ADT</option>
+                  <option value="CHD" ${linha.idade === "CHD" ? "selected" : ""}>CHD</option>
+                </select>
+              </td>
+              <td><input type="number" name="netDollar" value="${linha.net_usd || 0}"></td>
+              <td><input type="number" name="lobista" value="${linha.lobista || 0}"></td>
+              <td><input type="number" name="quantidade" value="${linha.quantidade || 0}"></td>
+              <td name="totalDollar">${linha.total_usd || '0.00'}</td>
+              <td name="netReal">${linha.net_brl || '0.00'}</td>
+              <td><input type="number" name="margem" value="${linha.margem || 0}" step="0.01"></td>
+              <td name="totalPix">${linha.total_pix || '0.00'}</td>
+              <td><input type="number" name="taxa" value="${linha.taxa || 0}" step="0.01"></td>
+              <td name="total10x">${linha.total_10x || '0.00'}</td>
+              <td>
+                <button class="delete-row-button" onclick="deleteRow(this)">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </td>
+            </tr>`;
+            spreadsheetInfo.insertAdjacentHTML('beforeend', newRow);
+          });
+
+          // Adiciona eventos para recalcular os valores ao alterar os campos relevantes
+          document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
+            element.addEventListener('input', calcularValores);
+          });
+
+          calcularValores();
+        }
+
+        // Chama a função para carregar a planilha do pedido
+        loadPlanilhaPedido();
 
       } catch (error) {
         console.error('Erro ao carregar os detalhes do pedido:', error);
@@ -691,27 +818,16 @@
         const margem = parseFloat(linha.querySelector('input[name="margem"]').value) || null;
         const taxa = parseFloat(linha.querySelector('input[name="taxa"]').value) || null;
 
-        const totalDollar = (netDollar + lobista) * quantidade;
-        const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
-        const netReal = totalDollar * dolarMagic;
-        const totalPix = netReal / (1 - (margem / 100));
-        const total10x = totalPix / (1 - (taxa / 100));
-
-        // Adiciona a linha ao array de dados
         dados.push({
-          id_pedido: pedidoId, // ID do pedido
+          id_pedido: pedidoId,
           produto,
           data,
           idade,
           net_usd: netDollar,
           lobista,
           quantidade,
-          total_usd: totalDollar.toFixed(2),
-          net_brl: netReal.toFixed(2),
           margem,
-          total_pix: totalPix.toFixed(2),
           taxa,
-          total_10x: total10x.toFixed(2),
         });
       });
 
@@ -735,6 +851,31 @@
         alert("Erro ao salvar a planilha. Verifique o console para mais detalhes.");
       }
     }
+
+    // Inicializa o carregamento da página
+    document.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('sidebar-container')) {
+        loadSidebar();
+      }
+      if (document.getElementById('order-info')) {
+        loadOrderDetails();
+      }
+    });
+
+    document.getElementById('dolar-cambio').addEventListener('input', function() {
+      const dolarCambio = parseFloat(this.value) || 0;
+      const dolarMagic = (dolarCambio * 1.0098).toFixed(2);
+      document.getElementById('dolar-magic').textContent = dolarMagic;
+
+      // Recalcula os valores ao alterar o câmbio
+      calcularValores();
+    });
+
+    document.querySelectorAll('input[name="data"]').forEach((input) => {
+      input.addEventListener('change', (event) => {
+        console.log(`Data selecionada: ${event.target.value}`);
+      });
+    });
 
     // Função para excluir uma linha da planilha e do banco de dados
     async function deleteRow(button) {
@@ -776,71 +917,6 @@
         alert('Erro ao excluir a linha. Verifique o console para mais detalhes.');
       }
     }
-
-    // Função para calcular os valores da planilha
-    function calcularValores() {
-      document.querySelectorAll('#spreadsheet-info tr').forEach((row) => {
-        const netDollar = parseFloat(row.querySelector('input[name="netDollar"]').value) || 0;
-        const lobista = parseFloat(row.querySelector('input[name="lobista"]').value) || 0;
-        const quantidade = parseInt(row.querySelector('input[name="quantidade"]').value) || 0;
-        const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
-        const margem = parseFloat(row.querySelector('input[name="margem"]').value) / 100 || 0;
-        const taxa = parseFloat(row.querySelector('input[name="taxa"]').value) / 100 || 0;
-
-        const totalDollar = (netDollar + lobista) * quantidade;
-        const netReal = totalDollar * dolarMagic;
-        const totalPix = netReal / (1 - margem);
-        const total10x = totalPix / (1 - taxa);
-
-        row.querySelector('td[name="totalDollar"]').textContent = totalDollar.toFixed(2);
-        row.querySelector('td[name="netReal"]').textContent = netReal.toFixed(2);
-        row.querySelector('td[name="totalPix"]').textContent = totalPix.toFixed(2);
-        row.querySelector('td[name="total10x"]').textContent = total10x.toFixed(2);
-      });
-      calcularResumo();
-    }
-
-    // Função para calcular os valores totais da planilha
-    function calcularResumo() {
-      let totalDollar = 0, totalReal = 0, totalPix = 0, total10x = 0;
-
-      document.querySelectorAll('#spreadsheet-info tr').forEach(row => {
-        totalDollar += parseFloat(row.querySelector('td[name="totalDollar"]').textContent) || 0;
-        totalReal += parseFloat(row.querySelector('td[name="netReal"]').textContent) || 0;
-        totalPix += parseFloat(row.querySelector('td[name="totalPix"]').textContent) || 0;
-        total10x += parseFloat(row.querySelector('td[name="total10x"]').textContent) || 0;
-      });
-
-      document.getElementById('resumo-total-dollar').textContent = totalDollar.toFixed(2);
-      document.getElementById('resumo-net-real').textContent = totalReal.toFixed(2);
-      document.getElementById('resumo-total-pix').textContent = totalPix.toFixed(2);
-      document.getElementById('resumo-total-10x').textContent = total10x.toFixed(2);
-    }
-
-    document.getElementById('dolar-cambio').addEventListener('input', function() {
-      const dolarCambio = parseFloat(this.value) || 0;
-      const dolarMagic = (dolarCambio * 1.0098).toFixed(2);
-      document.getElementById('dolar-magic').textContent = dolarMagic;
-  
-      // Recalcula os valores ao alterar o câmbio
-      calcularValores();
-    });
-
-    document.querySelectorAll('input[name="data"]').forEach((input) => {
-      input.addEventListener('change', (event) => {
-        console.log(`Data selecionada: ${event.target.value}`);
-      });
-    });
-
-    // Inicializa o carregamento da página
-    document.addEventListener('DOMContentLoaded', () => {
-      if (document.getElementById('sidebar-container')) {
-        loadSidebar();
-      }
-      if (document.getElementById('order-info')) {
-        loadOrderDetails();
-      }
-    });
   </script>
 </body>
 </html>
