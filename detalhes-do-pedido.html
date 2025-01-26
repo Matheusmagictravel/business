@@ -805,64 +805,78 @@
     async function salvarPlanilha() {
         const pedidoId = document.getElementById("pedido-id").textContent;
         const linhas = document.querySelectorAll("#spreadsheet-info tr");
-      
+        const dolarCambio = parseFloat(document.getElementById("dolar-cambio").value) || 0;
+        const dolarMagic = parseFloat(document.getElementById("dolar-magic").textContent) || 0;
+    
         const dados = [];
-      
+    
         linhas.forEach((linha) => {
-          const produto = linha.querySelector('input[name="produto"]').value;
-          const data = linha.querySelector('input[name="data"]').value;
-          const idade = linha.querySelector('select[name="idade"]').value;
-          const netDollar = parseFloat(linha.querySelector('input[name="netDollar"]').value) || 0;
-          const lobista = parseFloat(linha.querySelector('input[name="lobista"]').value) || 0;
-          const quantidade = parseInt(linha.querySelector('input[name="quantidade"]').value) || 0;
-          const margem = parseFloat(linha.querySelector('input[name="margem"]').value) || null;
-          const taxa = parseFloat(linha.querySelector('input[name="taxa"]').value) || null;
-      
-          // Verifica se os campos obrigatórios estão preenchidos
-          if (!produto || !data) {
-            alert("Erro: Campos obrigatórios (produto, data) não foram preenchidos.");
-            return;
-          }
-      
-          dados.push({
-            id_pedido: pedidoId,
-            produto,
-            data,
-            idade,
-            net_usd: netDollar,
-            lobista,
-            quantidade,
-            margem,
-            taxa,
-          });
+            const produto = linha.querySelector('input[name="produto"]').value;
+            const data = linha.querySelector('input[name="data"]').value;
+            const idade = linha.querySelector('select[name="idade"]').value;
+            const netDollar = parseFloat(linha.querySelector('input[name="netDollar"]').value) || 0;
+            const lobista = parseFloat(linha.querySelector('input[name="lobista"]').value) || 0;
+            const quantidade = parseInt(linha.querySelector('input[name="quantidade"]').value) || 0;
+            const margem = parseFloat(linha.querySelector('input[name="margem"]').value) || 0;
+            const taxa = parseFloat(linha.querySelector('input[name="taxa"]').value) || 0;
+    
+            // Calculando os valores adicionais
+            const totalUsd = (netDollar + lobista) * quantidade;
+            const netBrl = totalUsd * dolarMagic;
+            const totalPix = netBrl / (1 - margem / 100);
+            const total10x = totalPix / (1 - taxa / 100);
+    
+            // Verifica se os campos obrigatórios estão preenchidos
+            if (!produto || !data) {
+                alert("Erro: Campos obrigatórios (produto, data) não foram preenchidos.");
+                return;
+            }
+    
+            dados.push({
+                id_pedido: pedidoId,
+                produto,
+                data,
+                idade,
+                net_usd: netDollar,
+                lobista,
+                quantidade,
+                total_usd: totalUsd,
+                net_brl: netBrl,
+                margem,
+                total_pix: totalPix,
+                taxa,
+                total_10x: total10x,
+                dolar_cambio: dolarCambio,
+                dolar_magic: dolarMagic,
+            });
         });
-      
+    
         // Verifica se há dados para serem enviados
         if (dados.length === 0) {
-          alert("Erro: Nenhuma linha válida para salvar.");
-          return;
+            alert("Erro: Nenhuma linha válida para salvar.");
+            return;
         }
-      
+    
         // Envia os dados para a API
         try {
-          const response = await fetch("https://magictraveltur.com/api_planilhas.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(dados),
-          });
-      
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Erro na API: ${response.status} - ${errorText}`);
-          }
-      
-          const result = await response.json();
-          alert("Planilha salva com sucesso!");
+            const response = await fetch("https://magictraveltur.com/api_planilhas.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dados),
+            });
+    
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro na API: ${response.status} - ${errorText}`);
+            }
+    
+            const result = await response.json();
+            alert("Planilha salva com sucesso!");
         } catch (error) {
-          console.error("Erro ao salvar a planilha:", error);
-          alert("Erro ao salvar a planilha. Verifique o console para mais detalhes.");
+            console.error("Erro ao salvar a planilha:", error);
+            alert("Erro ao salvar a planilha. Verifique o console para mais detalhes.");
         }
-      }
+    }    
 
     // Função para excluir uma linha da planilha
     async function deleteRow(button) {
