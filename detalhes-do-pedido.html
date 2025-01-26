@@ -749,10 +749,6 @@
             throw new Error(`Erro ao buscar os detalhes da planilha. Status: ${response.status}`);
           }
 
-          const planilha = planilhas[0];
-          document.getElementById('dolar-cambio').value = planilha.dolar_cambio || '';
-          document.getElementById('dolar-magic').textContent = planilha.dolar_magic || '0.00';
-
           const spreadsheetInfo = document.getElementById('spreadsheet-info');
           spreadsheetInfo.innerHTML = '';
 
@@ -784,6 +780,9 @@
             </tr>`;
             spreadsheetInfo.insertAdjacentHTML('beforeend', newRow);
           });
+
+          document.getElementById('dolar-cambio').value = planilhas[0].dolar_cambio || '';
+          document.getElementById('dolar-magic').textContent = planilhas[0].dolar_magic || '0.00';
 
           // Adiciona eventos para recalcular os valores ao alterar os campos relevantes
           document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
@@ -852,32 +851,7 @@
       }
     }
 
-    // Inicializa o carregamento da página
-    document.addEventListener('DOMContentLoaded', () => {
-      if (document.getElementById('sidebar-container')) {
-        loadSidebar();
-      }
-      if (document.getElementById('order-info')) {
-        loadOrderDetails();
-      }
-    });
-
-    document.getElementById('dolar-cambio').addEventListener('input', function() {
-      const dolarCambio = parseFloat(this.value) || 0;
-      const dolarMagic = (dolarCambio * 1.0098).toFixed(2);
-      document.getElementById('dolar-magic').textContent = dolarMagic;
-
-      // Recalcula os valores ao alterar o câmbio
-      calcularValores();
-    });
-
-    document.querySelectorAll('input[name="data"]').forEach((input) => {
-      input.addEventListener('change', (event) => {
-        console.log(`Data selecionada: ${event.target.value}`);
-      });
-    });
-
-    // Função para excluir uma linha da planilha e do banco de dados
+    // Função para excluir uma linha da planilha
     async function deleteRow(button) {
       const row = button.closest('tr');
       const produto = row.querySelector('input[name="produto"]').value;
@@ -909,6 +883,7 @@
         if (result.status === 'success') {
           alert('Linha excluída com sucesso!');
           row.remove(); // Remove a linha do DOM
+          calcularValores(); // Recalcula os valores após a exclusão
         } else {
           alert('Erro ao excluir: ' + (result.message || 'Erro desconhecido'));
         }
@@ -917,6 +892,31 @@
         alert('Erro ao excluir a linha. Verifique o console para mais detalhes.');
       }
     }
+
+    // Inicializa o carregamento da página
+    document.addEventListener('DOMContentLoaded', () => {
+      if (document.getElementById('sidebar-container')) {
+        loadSidebar();
+      }
+      if (document.getElementById('order-info')) {
+        loadOrderDetails();
+      }
+    });
+
+    document.getElementById('dolar-cambio').addEventListener('input', function() {
+      const dolarCambio = parseFloat(this.value) || 0;
+      const dolarMagic = (dolarCambio * 1.0098).toFixed(2);
+      document.getElementById('dolar-magic').textContent = dolarMagic;
+
+      // Recalcula os valores ao alterar o câmbio
+      calcularValores();
+    });
+
+    document.querySelectorAll('input[name="data"]').forEach((input) => {
+      input.addEventListener('change', (event) => {
+        console.log(`Data selecionada: ${event.target.value}`);
+      });
+    });
   </script>
 </body>
 </html>
