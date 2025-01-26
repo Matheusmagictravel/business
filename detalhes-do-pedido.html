@@ -538,7 +538,7 @@
       }
       document.getElementById('dolar-cambio').addEventListener('input', updateDolarMagic);
       document.getElementById('add-row-button').addEventListener('click', addNewRow);
-    });
+    });  
     
     function getPedidoId() {
       const urlParams = new URLSearchParams(window.location.search);
@@ -659,19 +659,20 @@
             const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
             const margem = parseFloat(row.querySelector('input[name="margem"]').value) / 100 || 0;
             const taxa = parseFloat(row.querySelector('input[name="taxa"]').value) / 100 || 0;
-    
+        
             const totalDollar = (netDollar + lobista) * quantidade;
             const netReal = totalDollar * dolarMagic;
             const totalPix = netReal / (1 - margem);
             const total10x = totalPix / (1 - taxa);
-    
+        
             row.querySelector('td[name="totalDollar"]').textContent = totalDollar.toFixed(2);
             row.querySelector('td[name="netReal"]').textContent = netReal.toFixed(2);
             row.querySelector('td[name="totalPix"]').textContent = totalPix.toFixed(2);
             row.querySelector('td[name="total10x"]').textContent = total10x.toFixed(2);
           });
+        
           calcularResumo();
-        }
+        }        
     
         // Função para adicionar uma nova linha na planilha do pedido (segunda linha)
         function addNewRow() {
@@ -701,12 +702,12 @@
               </td>
             </tr>`;
           document.getElementById('spreadsheet-info').insertAdjacentHTML('beforeend', newRow);
-    
+        
           // Adiciona eventos para recalcular os valores na nova linha
           document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(element => {
             element.addEventListener('input', calcularValores);
-          });          
-        }
+          });
+        }        
     
         // Adiciona evento ao botão para incluir nova linha
         document.getElementById('add-row-button').addEventListener('click', addNewRow);
