@@ -25,6 +25,9 @@
         #sidebar-container {
             flex-shrink: 0;
             width: 260px;
+            overflow-y: auto;
+            background: #222e3c;
+            position: fixed;
         }
 
         .container {
@@ -33,10 +36,13 @@
             background: #ffffff;
             border-radius: 16px;
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            margin: 80px; /* Margem superior aumentada */
+            margin: 1100px; /* Margem superior aumentada */
             margin-left: 20px;
             margin-right: 20px;
             max-width: 600px; /* Largura reduzida */
+            margin-top: 1100px;
+            padding-left: 30px;
+            padding-right: 30px;
         }
 
         h1 {
@@ -134,6 +140,15 @@
 
             .btn {
                 font-size: 1rem;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .container, .container-lg, .container-md, .container-sm, .container-xl {
+                max-width: 1100px;
+                margin-top: 1100px;
+                padding-left: 30px;
+                padding-right: 30px;
             }
         }
     </style>
