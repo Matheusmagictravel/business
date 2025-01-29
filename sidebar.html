@@ -350,13 +350,16 @@
         document.addEventListener("DOMContentLoaded", function () {
         // Remove 'active' de todos os itens antes de adicionar no correto
         document.querySelectorAll(".sidebar-item").forEach(item => item.classList.remove("active"));
-    
-        // Pega a URL da página atual
+
+        // Obtém o caminho da URL atual (sem o domínio)
         let currentPath = window.location.pathname;
-    
-        // Itera sobre os links do menu e adiciona 'active' no item correto
+
+        // Itera sobre os links do menu
         document.querySelectorAll(".sidebar-item a").forEach(link => {
-            if (link.getAttribute("href") === currentPath) {
+            let linkPath = new URL(link.href).pathname; // Pega apenas o caminho do link sem domínio
+            
+            // Compara o caminho atual com o caminho do link
+            if (linkPath === currentPath) {
                 link.closest(".sidebar-item").classList.add("active");
             }
         });
