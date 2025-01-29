@@ -348,24 +348,16 @@
         // ]]>
 
         document.addEventListener("DOMContentLoaded", function () {
-        // Seleciona todos os links do menu
-        const menuItems = document.querySelectorAll(".sidebar-item a");
+        // Remove 'active' de todos os itens antes de adicionar no correto
+        document.querySelectorAll(".sidebar-item").forEach(item => item.classList.remove("active"));
     
-        menuItems.forEach(item => {
-            item.addEventListener("click", function () {
-                // Remove a classe 'active' de todos os itens do menu
-                document.querySelectorAll(".sidebar-item").forEach(el => el.classList.remove("active"));
-                
-                // Adiciona a classe 'active' ao item pai do link clicado
-                this.closest(".sidebar-item").classList.add("active");
-            });
-        });
-    
-        // Mantém a classe 'active' mesmo após recarregar a página
+        // Pega a URL da página atual
         let currentPath = window.location.pathname;
-        menuItems.forEach(item => {
-            if (item.getAttribute("href").includes(currentPath)) {
-                item.closest(".sidebar-item").classList.add("active");
+    
+        // Itera sobre os links do menu e adiciona 'active' no item correto
+        document.querySelectorAll(".sidebar-item a").forEach(link => {
+            if (link.getAttribute("href") === currentPath) {
+                link.closest(".sidebar-item").classList.add("active");
             }
         });
     });
