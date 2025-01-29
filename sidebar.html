@@ -346,6 +346,29 @@
             console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
         }
         // ]]>
+
+        document.addEventListener("DOMContentLoaded", function () {
+        // Seleciona todos os links do menu
+        const menuItems = document.querySelectorAll(".sidebar-item a");
+    
+        menuItems.forEach(item => {
+            item.addEventListener("click", function () {
+                // Remove a classe 'active' de todos os itens do menu
+                document.querySelectorAll(".sidebar-item").forEach(el => el.classList.remove("active"));
+                
+                // Adiciona a classe 'active' ao item pai do link clicado
+                this.closest(".sidebar-item").classList.add("active");
+            });
+        });
+    
+        // Mantém a classe 'active' mesmo após recarregar a página
+        let currentPath = window.location.pathname;
+        menuItems.forEach(item => {
+            if (item.getAttribute("href").includes(currentPath)) {
+                item.closest(".sidebar-item").classList.add("active");
+            }
+        });
+    });
     </script>
 </body>
 </html>
