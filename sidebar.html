@@ -348,22 +348,27 @@
         // ]]>
 
         document.addEventListener("DOMContentLoaded", function () {
-        // Remove 'active' de todos os itens antes de adicionar no correto
-        document.querySelectorAll(".sidebar-item").forEach(item => item.classList.remove("active"));
+            console.log("Script de ativação do menu carregado.");
 
-        // Obtém o caminho da URL atual (sem o domínio)
-        let currentPath = window.location.pathname;
+            // Remove a classe 'active' de todos os itens antes de adicionar no correto
+            document.querySelectorAll(".sidebar-item").forEach(item => item.classList.remove("active"));
 
-        // Itera sobre os links do menu
-        document.querySelectorAll(".sidebar-item a").forEach(link => {
-            let linkPath = new URL(link.href).pathname; // Pega apenas o caminho do link sem domínio
-            
-            // Compara o caminho atual com o caminho do link
-            if (linkPath === currentPath) {
-                link.closest(".sidebar-item").classList.add("active");
-            }
+            // Obtém o caminho da URL atual (sem o domínio)
+            let currentPath = window.location.pathname;
+            console.log("Caminho atual da URL:", currentPath);
+
+            // Itera sobre os links do menu
+            document.querySelectorAll(".sidebar-item a").forEach(link => {
+                let linkPath = new URL(link.href).pathname; // Pega apenas o caminho do link sem domínio
+                console.log("Verificando link:", link.href, "Path:", linkPath);
+
+                // Compara o caminho atual com o caminho do link
+                if (linkPath === currentPath) {
+                    link.closest(".sidebar-item").classList.add("active");
+                    console.log("Ativando item do menu:", linkPath);
+                }
+            });
         });
-    });
     </script>
 </body>
 </html>
