@@ -345,12 +345,13 @@
         padding: 10px;
     }
     
-    .emissao-tabela th:nth-child(1) { width: 20%; } /* Itens */
-    .emissao-tabela th:nth-child(2) { width: 15%; } /* Data de Uso */
-    .emissao-tabela th:nth-child(3) { width: 15%; } /* Data de Pagamento */
-    .emissao-tabela th:nth-child(4) { width: 15%; } /* Identificador */
-    .emissao-tabela th:nth-child(5) { width: 15%; } /* Invoice */
-    .emissao-tabela th:nth-child(6) { width: 20%; } /* Status */
+    .emissao-tabela th:nth-child(1) { width: 18%; } /* Itens */
+    .emissao-tabela th:nth-child(2) { width: 12%; } /* Valor (U$) */
+    .emissao-tabela th:nth-child(3) { width: 15%; } /* Data de Uso */
+    .emissao-tabela th:nth-child(4) { width: 15%; } /* Data de Pagamento */
+    .emissao-tabela th:nth-child(5) { width: 15%; } /* Identificador */
+    .emissao-tabela th:nth-child(6) { width: 15%; } /* Invoice */
+    .emissao-tabela th:nth-child(7) { width: 20%; } /* Status */
     
     .emissao-tabela td {
         color: #333;
@@ -584,6 +585,7 @@
         <thead>
           <tr>
             <th>Itens</th>
+            <th>Valor (U$)</th>
             <th>Data de Uso</th>
             <th>Data de Pagamento</th>
             <th>Identificador</th>
@@ -605,6 +607,12 @@
       if (document.getElementById('order-info')) {
         loadOrderDetails();
       }
+
+      // Converte qualquer data já carregada para dd/mm/yyyy
+      document.querySelectorAll("#emission-info td:nth-child(2) span").forEach(cell => {
+            cell.textContent = formatDateToBR(cell.textContent);
+      });
+
       // Evento para recalcular Dólar Magic
       document.getElementById('dolar-cambio').addEventListener('input', updateDolarMagic);
       // Botão de adicionar linha na planilha principal
@@ -744,6 +752,13 @@
     /* ------------------------------------------------------------
        CARREGA A PLANILHA (API_Planilhas) E MONTA TABELAS
     ------------------------------------------------------------ */
+    // Converte datas no formato yyyy-mm-dd para dd/mm/yyyy
+    function formatDateToBR(dateString) {
+        if (!dateString) return "";
+        const [year, month, day] = dateString.split("-");
+        return `${day}/${month}/${year}`;
+    }
+
     function montarEmissao(planilhas) {
         const emissionInfo = document.getElementById('emission-info');
         emissionInfo.innerHTML = ''; // Limpa antes
@@ -766,7 +781,8 @@
             `;
     
             // Exibe a data de uso do item (não editável)
-            const dataUsoCell = `<span>${item.data}</span>`;
+            const valorCell = `<span>U$ ${item.total_usd ? parseFloat(item.total_usd).toFixed(2) : '0.00'}</span>`;
+            const dataUsoCell = `<span>${formatDateToBR(item.data)}</span>`;
     
             // Adiciona a data de pagamento, se disponível (outra API pode ser usada para recuperar isso)
             const dataPagamentoCell = `<input type="date" name="dataPagamento" value="${item.data_pagamento || ''}">`;
@@ -775,6 +791,7 @@
             emissionInfo.insertAdjacentHTML("beforeend", `
                 <tr>
                     <td>${item.produto}</td>
+                    <td>${valorCell}</td> <!-- NOVA COLUNA -->
                     <td>${dataUsoCell}</td>
                     <td>${dataPagamentoCell}</td>
                     <td>${identificadorCell}</td>
