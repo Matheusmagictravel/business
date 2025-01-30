@@ -941,9 +941,9 @@
             const result = await response.json();
             if (result.status === 'success') {
                 alert('Linha excluída com sucesso!');
-                row.remove();
                 calcularValoresPlanilha();
-                window.location.reload();
+                window.location.reload(true);
+                row.remove();
 
             } else {
                 alert('Erro ao excluir: ' + (result.message || 'Erro desconhecido'));
