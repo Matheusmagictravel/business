@@ -771,51 +771,52 @@
     ------------------------------------------------------------ */
     function montarEmissao(planilhas) {
         const emissionInfo = document.getElementById('emission-info');
-        emissionInfo.innerHTML = ''; // Limpa antes
-      
+        emissionInfo.innerHTML = ''; // Limpa antes de adicionar os dados
+    
         if (!planilhas || planilhas.length === 0) {
-          emissionInfo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhuma informação disponível</td></tr>';
-          return;
+            emissionInfo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhuma informação disponível</td></tr>';
+            return;
         }
-      
-        // 1) Invoice se vazio -> Input
+    
+        // Invoice - Se vazio, gera um input
         const invoiceCell = '<input type="text" placeholder="Digite o Invoice">';
-      
-        // 2) Nome dos Passageiros se vazio -> Input
+    
+        // Nome dos Passageiros - Se vazio, gera um input
         const passageirosCell = '<input type="text" placeholder="Digite o Nome dos Passageiros">';
-      
-        // 3) Itens (Deduplicando os produtos)
+    
+        // Itens - Pega os produtos únicos da planilha
         let produtosUnicos = new Set();
         planilhas.forEach(item => produtosUnicos.add(item.produto));
         const itensCell = [...produtosUnicos].join(" | ");
-      
-        // 4) Identificador se vazio -> Input
+    
+        // Identificador - Se vazio, gera um input
         const identificadorCell = '<input type="text" placeholder="Digite o Identificador">';
-      
-        // 5) Data (Pegando a menor data de todos os produtos como referência)
+    
+        // Data - Pega a menor data dos produtos como referência
         let datas = planilhas.map(item => item.data).filter(data => data);
-        const dataCell = datas.length > 0 ? datas.sort()[0] : '<input type="date">';
-      
-        // 6) Status se vazio -> Select
+        const dataCell = datas.length > 0 ? `<input type="date" value="${datas.sort()[0]}">` : '<input type="date">';
+    
+        // Status - Se vazio, gera um select
         const statusCell = `
-          <select name="statusEmissao">
-            <option value="Aguardando Emissão">Aguardando Emissão</option>
-            <option value="Pendente de Pagamento">Pendente de Pagamento</option>
-          </select>
+            <select name="statusEmissao">
+                <option value="Aguardando Emissão">Aguardando Emissão</option>
+                <option value="Pendente de Pagamento">Pendente de Pagamento</option>
+            </select>
         `;
-      
-        // Adiciona a linha à tabela
+    
+        // Adiciona a linha de emissão
         emissionInfo.innerHTML = `
-          <tr>
-            <td>${invoiceCell}</td>
-            <td>${passageirosCell}</td>
-            <td>${itensCell}</td>
-            <td>${identificadorCell}</td>
-            <td>${dataCell}</td>
-            <td>${statusCell}</td>
-          </tr>
+            <tr>
+                <td>${invoiceCell}</td>
+                <td>${passageirosCell}</td>
+                <td>${itensCell}</td>
+                <td>${identificadorCell}</td>
+                <td>${dataCell}</td>
+                <td>${statusCell}</td>
+            </tr>
         `;
-      }      
+    }
+              
 
     /* ------------------------------------------------------------
        ADICIONA UMA NOVA LINHA NA TABELA DA PLANILHA (FRONT)
