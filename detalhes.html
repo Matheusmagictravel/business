@@ -324,6 +324,66 @@
         margin-top: 10px; /* Espaçamento superior */
     }      
 
+    /* Aplicar os mesmos estilos da planilha à emissão */
+    .emissao-tabela {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        table-layout: fixed;
+    }
+    
+    .emissao-tabela thead th {
+        text-align: center;
+        background-color: #222e3c;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 600;
+        border: 1px solid #d9d9d9;
+        padding: 10px;
+    }
+    
+    .emissao-tabela th:nth-child(1) { width: 20%; } /* Itens */
+    .emissao-tabela th:nth-child(2) { width: 15%; } /* Data de Uso */
+    .emissao-tabela th:nth-child(3) { width: 15%; } /* Data de Pagamento */
+    .emissao-tabela th:nth-child(4) { width: 15%; } /* Identificador */
+    .emissao-tabela th:nth-child(5) { width: 15%; } /* Invoice */
+    .emissao-tabela th:nth-child(6) { width: 20%; } /* Status */
+    
+    .emissao-tabela td {
+        color: #333;
+        background-color: #f9f9f9;
+        text-align: center;
+        padding: 8px;
+        border: 1px solid #d9d9d9;
+    }
+    
+    .emissao-tabela input, .emissao-tabela select {
+        width: 100%;
+        padding: 8px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    
+    .emissao-tabela thead th:first-child {
+        border-top-left-radius: 12px;
+    }
+    
+    .emissao-tabela thead th:last-child {
+        border-top-right-radius: 12px;
+    }
+    
+    .emissao-tabela tbody tr:last-child td:first-child {
+        border-bottom-left-radius: 12px;
+    }
+    
+    .emissao-tabela tbody tr:last-child td:last-child {
+        border-bottom-right-radius: 12px;
+    }
+  
   </style>
 </head>
 <body>
@@ -520,7 +580,7 @@
     <!-- Emissão -->
     <div class="section">
       <h3>Emissão</h3>
-      <table>
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Itens</th>
