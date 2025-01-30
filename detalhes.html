@@ -1073,30 +1073,27 @@
     /* ------------------------------------------------------------
        RE-CALCULA OS VALORES DA PLANILHA (FRONT-END)
     ------------------------------------------------------------ */
-    function calcularValoresPlanilha() {
-      const dolarMagic = parseFloat(document.getElementById("dolar-magic").textContent) || 0;
-      const rows = document.querySelectorAll("#spreadsheet-info tr");
+    function calcularValores() {
+        document.querySelectorAll('#spreadsheet-info tr').forEach((row) => {
+          const netDollar = parseFloat(row.querySelector('input[name="netDollar"]').value) || 0;
+          const lobista = parseFloat(row.querySelector('input[name="lobista"]').value) || 0;
+          const quantidade = parseInt(row.querySelector('input[name="quantidade"]').value) || 0;
+          const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
+          const margem = parseFloat(row.querySelector('input[name="margem"]').value) / 100 || 0;
+          const taxa = parseFloat(row.querySelector('input[name="taxa"]').value) / 100 || 0;
 
-      rows.forEach((row) => {
-        const netDollar  = parseFloat(row.querySelector('input[name="netDollar"]')?.value) || 0;
-        const lobista    = parseFloat(row.querySelector('input[name="lobista"]')?.value) || 0;
-        const quantidade = parseInt(row.querySelector('input[name="quantidade"]')?.value) || 0;
-        const margem     = parseFloat(row.querySelector('input[name="margem"]')?.value) / 100 || 0;
-        const taxa       = parseFloat(row.querySelector('input[name="taxa"]')?.value) / 100 || 0;
+          const totalDollar = (netDollar + lobista) * quantidade;
+          const netReal = totalDollar * dolarMagic;
+          const totalPix = netReal / (1 - margem);
+          const total10x = totalPix / (1 - taxa);
 
-        const totalDollar = (netDollar + lobista) * quantidade;
-        const netReal     = totalDollar * dolarMagic;
-        const totalPix    = netReal / (1 - margem);
-        const total10x    = totalPix / (1 - taxa);
-
-        row.querySelector('td[name="totalDollar"]').textContent = totalDollar.toFixed(2);
-        row.querySelector('td[name="netReal"]').textContent     = netReal.toFixed(2);
-        row.querySelector('td[name="totalPix"]').textContent    = totalPix.toFixed(2);
-        row.querySelector('td[name="total10x"]').textContent    = total10x.toFixed(2);
-      });
-
-      calcularResumo();
-    }
+          row.querySelector('td[name="totalDollar"]').textContent = totalDollar.toFixed(2);
+          row.querySelector('td[name="netReal"]').textContent = netReal.toFixed(2);
+          row.querySelector('td[name="totalPix"]').textContent = totalPix.toFixed(2);
+          row.querySelector('td[name="total10x"]').textContent = total10x.toFixed(2);
+        });
+        calcularResumo();
+      }
 
     /* ------------------------------------------------------------
        CALCULA O RESUMO DE TODAS AS LINHAS (TOTAIS)
