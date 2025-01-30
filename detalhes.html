@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -694,53 +693,36 @@
             return;
         }
     
-        // 1) Invoice - Se vazio, gera um input editável
-        const invoiceCell = '<input type="text" placeholder="Digite o Invoice">';
+        // Percorre cada item da planilha e cria uma linha correspondente na emissão
+        planilhas.forEach((item) => {
+            const invoiceCell = '<input type="text" placeholder="Digite o Invoice">';
+            const passageirosCell = '<input type="text" placeholder="Digite o Nome dos Passageiros">';
+            const identificadorCell = '<input type="text" placeholder="Digite o Identificador">';
+            const statusCell = `
+                <select name="statusEmissao">
+                    <option value="Aguardando Emissão">Aguardando Emissão</option>
+                    <option value="Pendente de Pagamento">Pendente de Pagamento</option>
+                </select>
+            `;
     
-        // 2) Nome dos Passageiros - Se vazio, gera um input editável
-        const passageirosCell = '<input type="text" placeholder="Digite o Nome dos Passageiros">';
+            // Exibe a data do item (não editável)
+            const dataCell = `<span>${item.data}</span>`;
     
-        // 3) Itens - Captura todos os produtos da planilha e evita duplicação
-        let produtosUnicos = new Set();
-        planilhas.forEach(item => {
-            if (item.produto) {
-                produtosUnicos.add(item.produto);
-            }
+            // Adiciona uma linha para cada item
+            emissionInfo.insertAdjacentHTML("beforeend", `
+                <tr>
+                    <td>${invoiceCell}</td>
+                    <td>${passageirosCell}</td>
+                    <td>${item.produto}</td>
+                    <td>${identificadorCell}</td>
+                    <td>${dataCell}</td>
+                    <td>${statusCell}</td>
+                </tr>
+            `);
         });
-        const itensCell = [...produtosUnicos].join(" | ");
-    
-        // 4) Identificador - Se vazio, gera um input editável
-        const identificadorCell = '<input type="text" placeholder="Digite o Identificador">';
-    
-        // 5) Data - Captura a menor data disponível nos produtos da planilha
-        let datas = planilhas
-            .map(item => item.data)
-            .filter(data => data) // Remove vazios
-            .sort(); // Ordena as datas
-        const dataCell = datas.length > 0 ? `<input type="date" value="${datas[0]}">` : '<input type="date">';
-    
-        // 6) Status - Campo selecionável com valores padrão
-        const statusCell = `
-            <select name="statusEmissao">
-                <option value="Aguardando Emissão">Aguardando Emissão</option>
-                <option value="Pendente de Pagamento">Pendente de Pagamento</option>
-            </select>
-        `;
-    
-        // Adiciona a linha preenchida à tabela de emissão
-        emissionInfo.innerHTML = `
-            <tr>
-                <td>${invoiceCell}</td>
-                <td>${passageirosCell}</td>
-                <td>${itensCell}</td>
-                <td>${identificadorCell}</td>
-                <td>${dataCell}</td>
-                <td>${statusCell}</td>
-            </tr>
-        `;
     }
     
-    // Certifique-se de chamar essa função APÓS carregar a planilha
+    // **Garante que essa função seja chamada após a planilha ser carregada**
     async function loadPlanilhaPedido(pedido) {
         const pedidoId = document.getElementById("pedido-id").textContent;
         if (!pedidoId || pedidoId === "Carregando...") {
@@ -815,7 +797,7 @@
             console.error("Erro ao carregar a planilha do pedido:", error);
             alert(`Erro ao carregar os dados da planilha: ${error.message}`);
         }
-    }    
+    }        
               
 
     /* ------------------------------------------------------------
