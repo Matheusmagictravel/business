@@ -797,8 +797,8 @@
       }
 
       try {
-        const planilhaApiUrl = `https://magictraveltur.com/api_planilhas.php?id_pedido=${pedidoId}`;
-        const response = await fetch(planilhaApiUrl);
+        const planilhaApiUrl = `https://magictraveltur.com/api_planilhas.php?id_pedido=${pedidoId}&v=${Date.now()}`;
+        const response = await fetch(planilhaApiUrl, { cache: 'no-store' });
         if (!response.ok) {
           throw new Error(`Erro ao buscar os detalhes da planilha. Status: ${response.status}`);
         }
@@ -940,13 +940,13 @@
 
             const result = await response.json();
             if (result.status === 'success') {
-            alert('Linha excluída com sucesso!');
-            row.remove();
-            calcularValoresPlanilha();
-            await loadPlanilhaPedido();
+                alert('Linha excluída com sucesso!');
+                row.remove();
+                calcularValoresPlanilha();
+                window.location.reload();
 
             } else {
-            alert('Erro ao excluir: ' + (result.message || 'Erro desconhecido'));
+                alert('Erro ao excluir: ' + (result.message || 'Erro desconhecido'));
             }
         } catch (error) {
             console.error('Erro ao excluir a linha:', error);
