@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -684,119 +685,41 @@
     /* ------------------------------------------------------------
        CARREGA A PLANILHA (API_Planilhas) E MONTA TABELAS
     ------------------------------------------------------------ */
-    async function loadPlanilhaPedido(pedido) {
-      const pedidoId = document.getElementById("pedido-id").textContent;
-      if (!pedidoId || pedidoId === "Carregando...") {
-        alert("Erro: ID do pedido não encontrado.");
-        return;
-      }
-
-      try {
-        // Chama a API da planilha
-        const planilhaApiUrl = `https://magictraveltur.com/api_planilhas.php?id_pedido=${pedidoId}`;
-        const response = await fetch(planilhaApiUrl);
-        if (!response.ok) {
-          throw new Error(`Erro ao buscar os detalhes da planilha. Status: ${response.status}`);
-        }
-        const planilhas = await response.json();
-        const spreadsheetInfo = document.getElementById("spreadsheet-info");
-
-        // Se não houver dados, não faz nada específico
-        if (!planilhas || planilhas.length === 0) {
-          console.warn("Nenhuma planilha encontrada para o pedido:", pedidoId);
-        } else {
-          spreadsheetInfo.innerHTML = "";
-
-          // Preenche cada linha da planilha
-          planilhas.forEach((linha) => {
-            const newRow = `
-              <tr>
-                <td><input type="text" name="produto" value="${linha.produto || ''}"></td>
-                <td><input type="date" name="data" value="${linha.data || ''}"></td>
-                <td>
-                  <select name="idade">
-                    <option value="ADT" ${linha.idade === "ADT" ? "selected" : ""}>ADT</option>
-                    <option value="CHD" ${linha.idade === "CHD" ? "selected" : ""}>CHD</option>
-                  </select>
-                </td>
-                <td><input type="number" name="netDollar" value="${linha.net_usd || 0}"></td>
-                <td><input type="number" name="lobista" value="${linha.lobista || 0}"></td>
-                <td><input type="number" name="quantidade" value="${linha.quantidade || 0}"></td>
-                <td name="totalDollar">${linha.total_usd || '0.00'}</td>
-                <td name="netReal">${linha.net_brl || '0.00'}</td>
-                <td><input type="number" name="margem" value="${linha.margem || 0}" step="0.01"></td>
-                <td name="totalPix">${linha.total_pix || '0.00'}</td>
-                <td><input type="number" name="taxa" value="${linha.taxa || 0}" step="0.01"></td>
-                <td name="total10x">${linha.total_10x || '0.00'}</td>
-                <td>
-                  <button class="delete-row-button" onclick="deleteRow(this)">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            `;
-            spreadsheetInfo.insertAdjacentHTML("beforeend", newRow);
-          });
-
-          // Preenche os campos de câmbio
-          document.getElementById("dolar-cambio").value = planilhas[0].dolar_cambio || 0;
-          document.getElementById("dolar-magic").textContent = planilhas[0].dolar_magic || "0.00";
-        }
-
-        // Atacha eventos para recalcular valores (sempre que mudar algum input)
-        document.querySelectorAll("#spreadsheet-info input, #spreadsheet-info select").forEach((element) => {
-          element.addEventListener("input", calcularValoresPlanilha);
-        });
-
-        // Calcula valores iniciais
-        calcularValoresPlanilha();
-
-        // Monta a parte de Emissão (invoice, passageiros, itens, etc.)
-        montarEmissao(pedido, planilhas);
-
-      } catch (error) {
-        console.error("Erro ao carregar a planilha do pedido:", error);
-        alert(`Erro ao carregar os dados da planilha: ${error.message}`);
-      }
-    }
-
-    /* ------------------------------------------------------------
-       MONTA A SESSÃO DE EMISSÃO
-         - INVOICE (api_pedidos) se vazio -> input
-         - NOME PASSAGEIROS (api_planilhas) se vazio -> input
-         - ITENS (deduplicar nomes da planilha)
-         - IDENTIFICADOR (api_planilhas) se vazio -> input
-         - DATA PGTO (api_planilhas) se vazio -> input
-         - STATUS (api_planilhas) se vazio -> select [Aguardando Emissão / Pendente de Pagamento]
-    ------------------------------------------------------------ */
     function montarEmissao(planilhas) {
         const emissionInfo = document.getElementById('emission-info');
-        emissionInfo.innerHTML = ''; // Limpa antes de adicionar os dados
+        emissionInfo.innerHTML = ''; // Limpa antes
     
         if (!planilhas || planilhas.length === 0) {
             emissionInfo.innerHTML = '<tr><td colspan="6" style="text-align: center;">Nenhuma informação disponível</td></tr>';
             return;
         }
     
-        // Invoice - Se vazio, gera um input
+        // 1) Invoice - Se vazio, gera um input editável
         const invoiceCell = '<input type="text" placeholder="Digite o Invoice">';
     
-        // Nome dos Passageiros - Se vazio, gera um input
+        // 2) Nome dos Passageiros - Se vazio, gera um input editável
         const passageirosCell = '<input type="text" placeholder="Digite o Nome dos Passageiros">';
     
-        // Itens - Pega os produtos únicos da planilha
+        // 3) Itens - Captura todos os produtos da planilha e evita duplicação
         let produtosUnicos = new Set();
-        planilhas.forEach(item => produtosUnicos.add(item.produto));
+        planilhas.forEach(item => {
+            if (item.produto) {
+                produtosUnicos.add(item.produto);
+            }
+        });
         const itensCell = [...produtosUnicos].join(" | ");
     
-        // Identificador - Se vazio, gera um input
+        // 4) Identificador - Se vazio, gera um input editável
         const identificadorCell = '<input type="text" placeholder="Digite o Identificador">';
     
-        // Data - Pega a menor data dos produtos como referência
-        let datas = planilhas.map(item => item.data).filter(data => data);
-        const dataCell = datas.length > 0 ? `<input type="date" value="${datas.sort()[0]}">` : '<input type="date">';
+        // 5) Data - Captura a menor data disponível nos produtos da planilha
+        let datas = planilhas
+            .map(item => item.data)
+            .filter(data => data) // Remove vazios
+            .sort(); // Ordena as datas
+        const dataCell = datas.length > 0 ? `<input type="date" value="${datas[0]}">` : '<input type="date">';
     
-        // Status - Se vazio, gera um select
+        // 6) Status - Campo selecionável com valores padrão
         const statusCell = `
             <select name="statusEmissao">
                 <option value="Aguardando Emissão">Aguardando Emissão</option>
@@ -804,7 +727,7 @@
             </select>
         `;
     
-        // Adiciona a linha de emissão
+        // Adiciona a linha preenchida à tabela de emissão
         emissionInfo.innerHTML = `
             <tr>
                 <td>${invoiceCell}</td>
@@ -816,6 +739,83 @@
             </tr>
         `;
     }
+    
+    // Certifique-se de chamar essa função APÓS carregar a planilha
+    async function loadPlanilhaPedido(pedido) {
+        const pedidoId = document.getElementById("pedido-id").textContent;
+        if (!pedidoId || pedidoId === "Carregando...") {
+            alert("Erro: ID do pedido não encontrado.");
+            return;
+        }
+    
+        try {
+            // Chama a API da planilha
+            const planilhaApiUrl = `https://magictraveltur.com/api_planilhas.php?id_pedido=${pedidoId}`;
+            const response = await fetch(planilhaApiUrl);
+            if (!response.ok) {
+                throw new Error(`Erro ao buscar os detalhes da planilha. Status: ${response.status}`);
+            }
+            const planilhas = await response.json();
+            const spreadsheetInfo = document.getElementById("spreadsheet-info");
+    
+            // Se não houver dados, não faz nada específico
+            if (!planilhas || planilhas.length === 0) {
+                console.warn("Nenhuma planilha encontrada para o pedido:", pedidoId);
+            } else {
+                spreadsheetInfo.innerHTML = "";
+    
+                // Preenche cada linha da planilha
+                planilhas.forEach((linha) => {
+                    const newRow = `
+                    <tr>
+                        <td><input type="text" name="produto" value="${linha.produto || ''}"></td>
+                        <td><input type="date" name="data" value="${linha.data || ''}"></td>
+                        <td>
+                            <select name="idade">
+                                <option value="ADT" ${linha.idade === "ADT" ? "selected" : ""}>ADT</option>
+                                <option value="CHD" ${linha.idade === "CHD" ? "selected" : ""}>CHD</option>
+                            </select>
+                        </td>
+                        <td><input type="number" name="netDollar" value="${linha.net_usd || 0}"></td>
+                        <td><input type="number" name="lobista" value="${linha.lobista || 0}"></td>
+                        <td><input type="number" name="quantidade" value="${linha.quantidade || 0}"></td>
+                        <td name="totalDollar">${linha.total_usd || '0.00'}</td>
+                        <td name="netReal">${linha.net_brl || '0.00'}</td>
+                        <td><input type="number" name="margem" value="${linha.margem || 0}" step="0.01"></td>
+                        <td name="totalPix">${linha.total_pix || '0.00'}</td>
+                        <td><input type="number" name="taxa" value="${linha.taxa || 0}" step="0.01"></td>
+                        <td name="total10x">${linha.total_10x || '0.00'}</td>
+                        <td>
+                            <button class="delete-row-button" onclick="deleteRow(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    `;
+                    spreadsheetInfo.insertAdjacentHTML("beforeend", newRow);
+                });
+    
+                // Preenche os campos de câmbio
+                document.getElementById("dolar-cambio").value = planilhas[0].dolar_cambio || 0;
+                document.getElementById("dolar-magic").textContent = planilhas[0].dolar_magic || "0.00";
+            }
+    
+            // Atacha eventos para recalcular valores (sempre que mudar algum input)
+            document.querySelectorAll("#spreadsheet-info input, #spreadsheet-info select").forEach((element) => {
+                element.addEventListener("input", calcularValoresPlanilha);
+            });
+    
+            // Calcula valores iniciais
+            calcularValoresPlanilha();
+    
+            // **Chama a função montarEmissao() após carregar os dados da planilha**
+            montarEmissao(planilhas);
+    
+        } catch (error) {
+            console.error("Erro ao carregar a planilha do pedido:", error);
+            alert(`Erro ao carregar os dados da planilha: ${error.message}`);
+        }
+    }    
               
 
     /* ------------------------------------------------------------
