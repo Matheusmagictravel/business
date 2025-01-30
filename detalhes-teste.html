@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -792,77 +791,84 @@
     }
 
     async function loadPlanilhaPedido(pedido) {
-      const pedidoId = document.getElementById("pedido-id").textContent;
-      if (!pedidoId || pedidoId === "Carregando...") {
-        alert("Erro: ID do pedido não encontrado.");
-        return;
-      }
-
-      try {
-        const planilhaApiUrl = `https://magictraveltur.com/api_planilhas.php?id_pedido=${pedidoId}&v=${Date.now()}`;
-        const response = await fetch(planilhaApiUrl, { cache: 'no-store' });
-        if (!response.ok) {
-          throw new Error(`Erro ao buscar os detalhes da planilha. Status: ${response.status}`);
+        const pedidoId = document.getElementById("pedido-id").textContent;
+        if (!pedidoId || pedidoId === "Carregando...") {
+            alert("Erro: ID do pedido não encontrado.");
+            return;
         }
-        const planilhas = await response.json();
-        const spreadsheetInfo = document.getElementById("spreadsheet-info");
-
-        if (!planilhas || planilhas.length === 0) {
-          console.warn("Nenhuma planilha encontrada para o pedido:", pedidoId);
-        } else {
-          spreadsheetInfo.innerHTML = "";
-
-          // **AQUI adicionamos data-planilha-id para cada linha**
-          planilhas.forEach((linha) => {
-            const newRow = `
-              <tr data-planilha-id="${linha.id}">
-                <td><input type="text" name="produto" value="${linha.produto || ''}"></td>
-                <td><input type="date" name="data" value="${linha.data || ''}"></td>
-                <td>
-                  <select name="idade">
-                    <option value="ADT" ${linha.idade === "ADT" ? "selected" : ""}>ADT</option>
-                    <option value="CHD" ${linha.idade === "CHD" ? "selected" : ""}>CHD</option>
-                  </select>
-                </td>
-                <td><input type="number" name="netDollar" value="${linha.net_usd || 0}"></td>
-                <td><input type="number" name="lobista" value="${linha.lobista || 0}"></td>
-                <td><input type="number" name="quantidade" value="${linha.quantidade || 0}"></td>
-                <td name="totalDollar">${linha.total_usd || '0.00'}</td>
-                <td name="netReal">${linha.net_brl || '0.00'}</td>
-                <td><input type="number" name="margem" value="${linha.margem || 0}" step="0.01"></td>
-                <td name="totalPix">${linha.total_pix || '0.00'}</td>
-                <td><input type="number" name="taxa" value="${linha.taxa || 0}" step="0.01"></td>
-                <td name="total10x">${linha.total_10x || '0.00'}</td>
-                <td>
-                  <button class="delete-row-button" onclick="deleteRow(this)">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            `;
-            spreadsheetInfo.insertAdjacentHTML("beforeend", newRow);
-          });
-
-          // Preenche os campos de câmbio
-          document.getElementById("dolar-cambio").value = planilhas[0].dolar_cambio || 0;
-          document.getElementById("dolar-magic").textContent = planilhas[0].dolar_magic || "0.00";
+    
+        try {
+            const planilhaApiUrl = `https://magictraveltur.com/api_planilhas.php?id_pedido=${pedidoId}&v=${Date.now()}`;
+            const response = await fetch(planilhaApiUrl, { cache: 'no-store' });
+    
+            if (!response.ok) {
+                throw new Error(`Erro ao buscar os detalhes da planilha. Status: ${response.status}`);
+            }
+    
+            const planilhas = await response.json();
+            const spreadsheetInfo = document.getElementById("spreadsheet-info");
+    
+            spreadsheetInfo.innerHTML = ""; // Limpa a tabela antes de preencher
+    
+            if (!planilhas || planilhas.length === 0) {
+                console.warn("Nenhuma planilha encontrada para o pedido:", pedidoId);
+            } else {
+                planilhas.forEach((linha) => {
+                    const newRow = document.createElement("tr");
+                    newRow.setAttribute("data-planilha-id", linha.id);
+    
+                    newRow.innerHTML = `
+                        <td><input type="text" name="produto" value="${linha.produto || ''}"></td>
+                        <td><input type="date" name="data" value="${linha.data || ''}"></td>
+                        <td>
+                            <select name="idade">
+                                <option value="ADT" ${linha.idade === "ADT" ? "selected" : ""}>ADT</option>
+                                <option value="CHD" ${linha.idade === "CHD" ? "selected" : ""}>CHD</option>
+                            </select>
+                        </td>
+                        <td><input type="number" name="netDollar" value="${linha.net_usd || 0}"></td>
+                        <td><input type="number" name="lobista" value="${linha.lobista || 0}"></td>
+                        <td><input type="number" name="quantidade" value="${linha.quantidade || 0}"></td>
+                        <td name="totalDollar">0.00</td>
+                        <td name="netReal">0.00</td>
+                        <td><input type="number" name="margem" value="${linha.margem || 0}" step="0.01"></td>
+                        <td name="totalPix">0.00</td>
+                        <td><input type="number" name="taxa" value="${linha.taxa || 0}" step="0.01"></td>
+                        <td name="total10x">0.00</td>
+                        <td>
+                            <button class="delete-row-button" onclick="deleteRow(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+    
+                    spreadsheetInfo.appendChild(newRow);
+                });
+    
+                // Preenche os campos de câmbio
+                document.getElementById("dolar-cambio").value = planilhas[0].dolar_cambio || 0;
+                document.getElementById("dolar-magic").textContent = planilhas[0].dolar_magic || "0.00";
+            }
+    
+            // Aplica eventos aos inputs das linhas carregadas
+            applyCalculationEvents();
+    
+            // Recalcula os valores assim que os dados são carregados
+            calcularValoresPlanilha();
+    
+        } catch (error) {
+            console.error("Erro ao carregar a planilha do pedido:", error);
+            alert(`Erro ao carregar os dados da planilha: ${error.message}`);
         }
-
-        // Atacha eventos para recalcular valores
-        document.querySelectorAll("#spreadsheet-info input, #spreadsheet-info select").forEach((element) => {
-            element.removeEventListener("input", calcularValoresPlanilha); // Remove eventos antigos
-            element.addEventListener("input", calcularValoresPlanilha); // Adiciona eventos novos
-        });
-
-        // Calcula valores iniciais
-        calcularValoresPlanilha();
-        montarEmissao(planilhas);
-
-      } catch (error) {
-        console.error("Erro ao carregar a planilha do pedido:", error);
-        alert(`Erro ao carregar os dados da planilha: ${error.message}`);
-      }
     }
+    
+    function applyCalculationEvents() {
+        document.querySelectorAll("#spreadsheet-info input, #spreadsheet-info select").forEach((element) => {
+            element.removeEventListener("input", calcularValoresPlanilha);
+            element.addEventListener("input", calcularValoresPlanilha);
+        });
+    }
+    
 
     /* ------------------------------------------------------------
        ADICIONA UMA NOVA LINHA NA TABELA DA PLANILHA
@@ -870,42 +876,40 @@
     function addNewRow() {
         const spreadsheetInfo = document.getElementById("spreadsheet-info");
         const newRow = document.createElement("tr");
-      
+    
         newRow.innerHTML = `
-          <td><input type="text" name="produto"></td>
-          <td><input type="date" name="data"></td>
-          <td>
-            <select name="idade">
-              <option value="ADT">ADT</option>
-              <option value="CHD">CHD</option>
-            </select>
-          </td>
-          <td><input type="number" name="netDollar"></td>
-          <td><input type="number" name="lobista"></td>
-          <td><input type="number" name="quantidade"></td>
-          <td name="totalDollar">0.00</td>
-          <td name="netReal">0.00</td>
-          <td><input type="number" name="margem" step="0.01"></td>
-          <td name="totalPix">0.00</td>
-          <td><input type="number" name="taxa" step="0.01"></td>
-          <td name="total10x">0.00</td>
-          <td>
-            <button class="delete-row-button" onclick="deleteRow(this)">
-              <i class="fas fa-trash"></i>
-            </button>
-          </td>
+            <td><input type="text" name="produto"></td>
+            <td><input type="date" name="data"></td>
+            <td>
+                <select name="idade">
+                    <option value="ADT">ADT</option>
+                    <option value="CHD">CHD</option>
+                </select>
+            </td>
+            <td><input type="number" name="netDollar"></td>
+            <td><input type="number" name="lobista"></td>
+            <td><input type="number" name="quantidade"></td>
+            <td name="totalDollar">0.00</td>
+            <td name="netReal">0.00</td>
+            <td><input type="number" name="margem" step="0.01"></td>
+            <td name="totalPix">0.00</td>
+            <td><input type="number" name="taxa" step="0.01"></td>
+            <td name="total10x">0.00</td>
+            <td>
+                <button class="delete-row-button" onclick="deleteRow(this)">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
         `;
-      
+    
         spreadsheetInfo.appendChild(newRow);
-      
-        // Adiciona eventos de cálculo aos novos inputs
-        newRow.querySelectorAll("input, select").forEach((element) => {
-          element.addEventListener("input", calcularValoresPlanilha);
-        });
-      
-        // Recalcula valores ao adicionar nova linha
+    
+        // Aplica eventos nos inputs da nova linha
+        applyCalculationEvents();
+    
+        // Recalcula os valores
         calcularValoresPlanilha();
-      }            
+    }                
 
     /* ------------------------------------------------------------
        EXCLUIR UMA LINHA DA PLANILHA
@@ -1078,7 +1082,7 @@
     /* ------------------------------------------------------------
        RE-CALCULA OS VALORES DA PLANILHA (FRONT-END)
     ------------------------------------------------------------ */
-    function calcularValores() {
+    function calcularValoresPlanilha() {
         document.querySelectorAll('#spreadsheet-info tr').forEach((row) => {
           const netDollar = parseFloat(row.querySelector('input[name="netDollar"]').value) || 0;
           const lobista = parseFloat(row.querySelector('input[name="lobista"]').value) || 0;
