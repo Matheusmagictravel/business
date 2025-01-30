@@ -705,24 +705,27 @@
                 </select>
             `;
     
-            // Exibe a data do item (não editável)
-            const dataCell = `<span>${item.data}</span>`;
+            // Exibe a data de uso do item (não editável)
+            const dataUsoCell = `<span>${item.data}</span>`;
+    
+            // Adiciona a data de pagamento, se disponível (outra API pode ser usada para recuperar isso)
+            const dataPagamentoCell = `<input type="date" name="dataPagamento" value="${item.data_pagamento || ''}">`;
     
             // Adiciona uma linha para cada item
             emissionInfo.insertAdjacentHTML("beforeend", `
                 <tr>
-                    <td>${invoiceCell}</td>
-                    <td>${passageirosCell}</td>
                     <td>${item.produto}</td>
+                    <td>${dataUsoCell}</td>
+                    <td>${dataPagamentoCell}</td>
                     <td>${identificadorCell}</td>
-                    <td>${dataCell}</td>
+                    <td>${invoiceCell}</td>
                     <td>${statusCell}</td>
                 </tr>
             `);
         });
     }
     
-    // **Garante que essa função seja chamada após a planilha ser carregada**
+    // **Chamada da função após carregar os dados da planilha**
     async function loadPlanilhaPedido(pedido) {
         const pedidoId = document.getElementById("pedido-id").textContent;
         if (!pedidoId || pedidoId === "Carregando...") {
@@ -797,8 +800,7 @@
             console.error("Erro ao carregar a planilha do pedido:", error);
             alert(`Erro ao carregar os dados da planilha: ${error.message}`);
         }
-    }        
-              
+    }                          
 
     /* ------------------------------------------------------------
        ADICIONA UMA NOVA LINHA NA TABELA DA PLANILHA (FRONT)
