@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Detalhes do Pedido - Magic Travel">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Detalhes do Pedido - Magic Travel" />
   <title>Detalhes do Pedido - Magic Travel</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    rel="stylesheet"
+  />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
-    
+    @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+
     body {
-      font-family: 'Montserrat', sans-serif;
+      font-family: "Montserrat", sans-serif;
       margin: 0;
       background-color: #f4f4f9;
       color: #333;
@@ -18,7 +21,7 @@
       flex-direction: column;
       min-height: 100vh;
     }
-    
+
     #sidebar-container {
       width: 260px;
       position: fixed;
@@ -31,18 +34,18 @@
       box-shadow: 3px 0 6px rgba(0, 0, 0, 0.2);
       transition: background-color 0.3s;
     }
-    
+
     #sidebar-container:hover {
       background-color: #2b3947;
     }
-    
+
     .sidebar-loading {
       padding: 20px;
       text-align: center;
       font-size: 14px;
       color: #ccc;
     }
-    
+
     .order-details {
       margin-left: 260px;
       padding: 40px;
@@ -55,15 +58,15 @@
       display: flex;
       flex-direction: column;
     }
-    
+
     .order-details h1 {
-        font-size: 24px;
-        font-weight: bold;
-        margin: 0 0 10px;
-        color: #0d112d;
-        text-align: left;
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0 0 10px;
+      color: #0d112d;
+      text-align: left;
     }
-    
+
     .order-details h3 {
       font-size: 24px;
       font-weight: 600;
@@ -71,35 +74,35 @@
       color: #4a4a4a;
       animation: fadeIn 1.2s ease-in-out;
     }
-    
+
     .order-details p {
-        font-size: 18px;
-        color: #ff6f61;
-        margin: 0 0 20px;
-        text-align: left;
+      font-size: 16px;
+      color: #ff6f61;
+      margin: 0 0 20px;
+      text-align: left;
     }
-    
+
     .back-button {
-        background-color: #ff6f61;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 20px;
-        font-size: 14px;
-        font-weight: bold;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-        margin-bottom: 20px;
-        transition: background-color 0.3s ease;
-        margin-right: auto;
+      background-color: #ff6f61;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 20px;
+      transition: background-color 0.3s ease;
+      margin-right: auto;
     }
 
     .back-button:hover {
-        background-color: #dc3545;
-        color: white;
+      background-color: #dc3545;
+      color: white;
     }
-    
+
     table {
       width: 100%;
       border-collapse: collapse;
@@ -108,60 +111,67 @@
       overflow: hidden;
       animation: fadeIn 1.8s ease-in-out;
     }
-    
+
     table thead {
       background-color: #f9f9fa;
     }
-    
-    table th, table td {
+
+    table th,
+    table td {
       padding: 16px 18px;
       text-align: left;
       border-bottom: 1px solid #ebebf0;
       text-transform: capitalize;
     }
-    
+
     table th {
       font-weight: 600;
       color: #ffffff;
       background-color: #222e3c;
     }
-    
+
     table td {
       color: #333;
     }
-    
+
     table tr:nth-child(even) {
       background-color: #f7f7fb;
     }
-    
+
+    /* 
+      AQUI substituímos a regra da .section 
+      para ficar igual a .planilha-pedido
+    */
     .section {
-      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 40px;
     }
-    
+
     @media (max-width: 768px) {
       #sidebar-container {
         width: 220px;
       }
-    
+
       .order-details {
         margin-left: 220px;
         width: calc(100% - 220px);
       }
     }
-    
+
     @media (max-width: 576px) {
       #sidebar-container {
         width: 100%;
         position: fixed;
         z-index: 1000;
       }
-    
+
       .order-details {
         margin-left: 0;
         width: 100%;
       }
     }
-    
+
     .add-row-button {
       background-color: #1cbb8c;
       color: white;
@@ -173,12 +183,12 @@
       animation: fadeIn 2s ease-in-out;
       align-self: center;
     }
-    
+
     .add-row-button:hover {
       background-color: #17a37a;
       transform: scale(1.05);
     }
-    
+
     @keyframes fadeIn {
       0% {
         opacity: 0;
@@ -189,25 +199,11 @@
         transform: translateY(0);
       }
     }
-    
+
     .planilha-pedido {
       display: flex;
       flex-direction: column;
       margin-bottom: 40px;
-    }
-    
-    .planilha-pedido h3 {
-      align-self: center;
-      margin-bottom: 20px;
-    }
-    
-    .padrao-tabela {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-        border-radius: 12px;
-        overflow: visible;
-        table-layout: fixed;
     }
 
     .planilha-tabela {
@@ -219,7 +215,7 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       table-layout: fixed;
     }
-    
+
     .planilha-tabela thead th {
       text-align: center;
       background-color: #222e3c;
@@ -229,20 +225,44 @@
       border: 1px solid #d9d9d9;
       padding: 10px;
     }
-    
-    .planilha-tabela thead th:nth-child(1) { width: 14%; }
-    .planilha-tabela thead th:nth-child(2) { width: 10%; }
-    .planilha-tabela thead th:nth-child(3) { width: 8%; }
-    .planilha-tabela thead th:nth-child(4) { width: 8%; }
-    .planilha-tabela thead th:nth-child(5) { width: 8%; }
-    .planilha-tabela thead th:nth-child(6) { width: 8%; }
-    .planilha-tabela thead th:nth-child(7) { width: 8%; }
-    .planilha-tabela thead th:nth-child(8) { width: 8%; }
-    .planilha-tabela thead th:nth-child(9) { width: 8%; }
-    .planilha-tabela thead th:nth-child(10) { width: 9%; }
-    .planilha-tabela thead th:nth-child(11) { width: 8%; }
-    .planilha-tabela thead th:nth-child(12) { width: 9%; }
-    
+
+    .planilha-tabela thead th:nth-child(1) {
+      width: 14%;
+    }
+    .planilha-tabela thead th:nth-child(2) {
+      width: 10%;
+    }
+    .planilha-tabela thead th:nth-child(3) {
+      width: 8%;
+    }
+    .planilha-tabela thead th:nth-child(4) {
+      width: 8%;
+    }
+    .planilha-tabela thead th:nth-child(5) {
+      width: 8%;
+    }
+    .planilha-tabela thead th:nth-child(6) {
+      width: 8%;
+    }
+    .planilha-tabela thead th:nth-child(7) {
+      width: 8%;
+    }
+    .planilha-tabela thead th:nth-child(8) {
+      width: 8%;
+    }
+    .planilha-tabela thead th:nth-child(9) {
+      width: 8%;
+    }
+    .planilha-tabela thead th:nth-child(10) {
+      width: 9%;
+    }
+    .planilha-tabela thead th:nth-child(11) {
+      width: 8%;
+    }
+    .planilha-tabela thead th:nth-child(12) {
+      width: 9%;
+    }
+
     .planilha-tabela td {
       color: #333;
       background-color: #f9f9f9;
@@ -250,31 +270,32 @@
       padding: 8px;
       border: 1px solid #d9d9d9;
     }
-    
-    .planilha-tabela input, .planilha-tabela select {
+
+    .planilha-tabela input,
+    .planilha-tabela select {
       width: 100%;
       padding: 8px;
       box-sizing: border-box;
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-    
+
     .planilha-tabela thead th:first-child {
       border-top-left-radius: 12px;
     }
-    
+
     .planilha-tabela thead th:last-child {
       border-top-right-radius: 12px;
     }
-    
+
     .planilha-tabela tbody tr:last-child td:first-child {
       border-bottom-left-radius: 12px;
     }
-    
+
     .planilha-tabela tbody tr:last-child td:last-child {
       border-bottom-right-radius: 12px;
     }
-    
+
     .delete-row-button {
       position: relative;
       background-color: transparent;
@@ -293,7 +314,7 @@
     .delete-row-button i {
       pointer-events: none;
     }
-    
+
     @media (max-width: 480px) {
       .planilha-tabela th,
       .planilha-tabela td {
@@ -307,70 +328,85 @@
     }
 
     .button-container {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin-top: 10px;
-    }      
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px;
+    }
 
     .emissao-tabela {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        table-layout: fixed;
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      table-layout: fixed;
     }
-    
+
     .emissao-tabela thead th {
-        text-align: center;
-        background-color: #222e3c;
-        color: #fff;
-        font-size: 14px;
-        font-weight: 600;
-        border: 1px solid #d9d9d9;
-        padding: 10px;
+      text-align: center;
+      background-color: #222e3c;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid #d9d9d9;
+      padding: 10px;
     }
-    
-    .emissao-tabela th:nth-child(1) { width: 18%; } 
-    .emissao-tabela th:nth-child(2) { width: 12%; } 
-    .emissao-tabela th:nth-child(3) { width: 15%; } 
-    .emissao-tabela th:nth-child(4) { width: 15%; } 
-    .emissao-tabela th:nth-child(5) { width: 15%; } 
-    .emissao-tabela th:nth-child(6) { width: 15%; } 
-    .emissao-tabela th:nth-child(7) { width: 20%; } 
-    
+
+    .emissao-tabela th:nth-child(1) {
+      width: 18%;
+    }
+    .emissao-tabela th:nth-child(2) {
+      width: 12%;
+    }
+    .emissao-tabela th:nth-child(3) {
+      width: 15%;
+    }
+    .emissao-tabela th:nth-child(4) {
+      width: 15%;
+    }
+    .emissao-tabela th:nth-child(5) {
+      width: 15%;
+    }
+    .emissao-tabela th:nth-child(6) {
+      width: 15%;
+    }
+    .emissao-tabela th:nth-child(7) {
+      width: 20%;
+    }
+
     .emissao-tabela td {
-        color: #333;
-        background-color: #f9f9f9;
-        text-align: center;
-        padding: 8px;
-        border: 1px solid #d9d9d9;
+      color: #333;
+      background-color: #f9f9f9;
+      text-align: center;
+      padding: 8px;
+      border: 1px solid #d9d9d9;
     }
-    
-    .emissao-tabela input, .emissao-tabela select {
-        width: 100%;
-        padding: 8px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
+
+    .emissao-tabela input,
+    .emissao-tabela select {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
-    
+
     .emissao-tabela thead th:first-child {
-        border-top-left-radius: 12px;
+      border-top-left-radius: 12px;
     }
-    
+
     .emissao-tabela thead th:last-child {
-        border-top-right-radius: 12px;
+      border-top-right-radius: 12px;
     }
-    
+
     .emissao-tabela tbody tr:last-child td:first-child {
-        border-bottom-left-radius: 12px;
+      border-bottom-left-radius: 12px;
     }
-    
+
     .emissao-tabela tbody tr:last-child td:last-child {
-        border-bottom-right-radius: 12px;
+      border-bottom-right-radius: 12px;
     }
 
     @keyframes fadeIn {
@@ -383,7 +419,6 @@
         transform: translateY(0);
       }
     }
-
   </style>
 </head>
 <body>
@@ -397,7 +432,7 @@
     <a href="pages-orders.html" class="back-button">Voltar para Página de Pedidos</a>
 
     <h1>Detalhes do Pedido</h1>
-    <p>ID do Pedido - <span id="pedido-id">Carregando...</span></p>
+    <p>ID do Pedido: <span id="pedido-id">Carregando...</span></p>
 
     <!-- Informações do Pedido -->
     <div class="section">
@@ -416,7 +451,7 @@
     </div>
 
     <!-- Informações do Cliente -->
-    <div class="padrao-tabela">
+    <div class="section">
       <h3>Informações do Cliente</h3>
       <table>
         <thead>
@@ -434,7 +469,7 @@
     </div>
 
     <!-- Informações Financeiras -->
-    <div class="padrao-tabela">
+    <div class="section">
       <h3>Informações Financeiras</h3>
       <table>
         <thead>
@@ -466,7 +501,7 @@
     </div>
 
     <!-- Informações Comerciais -->
-    <div class="padrao-tabela">
+    <div class="section">
       <h3>Informações Comerciais</h3>
       <table>
         <thead>
@@ -482,7 +517,7 @@
     </div>
 
     <!-- Informações Adicionais -->
-    <div class="padrao-tabela">
+    <div class="section">
       <h3>Informações Adicionais</h3>
       <table>
         <thead>
@@ -500,40 +535,40 @@
       <h3>Planilha do Pedido</h3>
       <table class="planilha-tabela">
         <thead>
-            <tr>
-                <th>Dólar Câmbio</th>
-                <th>Dólar Magic</th>
-            </tr>
+          <tr>
+            <th>Dólar Câmbio</th>
+            <th>Dólar Magic</th>
+          </tr>
         </thead>
         <tbody>
-            <tr>
-                <td><input type="number" id="dolar-cambio" placeholder="Digite o câmbio"></td>
-                <td id="dolar-magic">0.00</td>
-            </tr>
+          <tr>
+            <td><input type="number" id="dolar-cambio" placeholder="Digite o câmbio" /></td>
+            <td id="dolar-magic">0.00</td>
+          </tr>
         </tbody>
       </table>
 
       <!-- Segunda Linha: Planilha Completa -->
       <table class="planilha-tabela">
         <thead>
-            <tr>
-                <th>Produto</th>
-                <th>Data</th>
-                <th>Idade</th>
-                <th>Net U$</th>
-                <th>Lobista</th>
-                <th>Número</th>
-                <th>Total U$</th>
-                <th>Net R$</th>
-                <th>Margem</th>
-                <th>Pix</th>
-                <th>Taxa</th>
-                <th>10x</th>
-                <th>Ações</th>
-            </tr>
+          <tr>
+            <th>Produto</th>
+            <th>Data</th>
+            <th>Idade</th>
+            <th>Net U$</th>
+            <th>Lobista</th>
+            <th>Número</th>
+            <th>Total U$</th>
+            <th>Net R$</th>
+            <th>Margem</th>
+            <th>Pix</th>
+            <th>Taxa</th>
+            <th>10x</th>
+            <th>Ações</th>
+          </tr>
         </thead>
         <tbody id="spreadsheet-info">
-            <!-- Linhas da planilha são inseridas dinamicamente -->
+          <!-- Linhas da planilha são inseridas dinamicamente -->
         </tbody>
         <!-- Linha de resumo dos totais -->
         <tfoot>
@@ -557,7 +592,7 @@
     <!-- Emissão -->
     <div class="section">
       <h3>Emissão</h3>
-      <table class="section planilha-pedido">
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Itens</th>
