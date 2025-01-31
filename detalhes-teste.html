@@ -104,75 +104,84 @@
       color: white;
     }
 
-    table {
+    /*************************************************************
+     *  TABELA PADRÃO (baseado em .emissao-tabela) para todos os blocos
+     *************************************************************/
+    .emissao-tabela {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       border-radius: 12px;
       overflow: hidden;
-      animation: fadeIn 1.8s ease-in-out;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      table-layout: fixed;
+      animation: fadeIn 1.8s ease-in-out; /* suave fade-in */
     }
 
-    table thead {
-      background-color: #f9f9fa;
-    }
-
-    table th,
-    table td {
-      padding: 16px 18px;
-      text-align: left;
-      border-bottom: 1px solid #ebebf0;
+    .emissao-tabela thead th {
+      text-align: center;
+      background-color: #222e3c; 
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid #d9d9d9;
+      padding: 10px;
       text-transform: capitalize;
     }
 
-    table th {
-      font-weight: 600;
-      color: #ffffff;
-      background-color: #222e3c;
-    }
+    /* Exemplo de col widths se quiser */
+    /* .emissao-tabela th:nth-child(1) { width: 18%; } etc. */
 
-    table td {
+    .emissao-tabela td {
       color: #333;
+      background-color: #f9f9f9;
+      text-align: center;
+      padding: 12px; 
+      border: 1px solid #d9d9d9;
     }
 
-    table tr:nth-child(even) {
-      background-color: #f7f7fb;
+    .emissao-tabela input,
+    .emissao-tabela select {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
 
-    /* 
-      AQUI substituímos a regra da .section 
-      para ficar igual a .planilha-pedido
-    */
+    /* Arredondando cantos (top e bottom) */
+    .emissao-tabela thead th:first-child {
+      border-top-left-radius: 12px;
+    }
+    .emissao-tabela thead th:last-child {
+      border-top-right-radius: 12px;
+    }
+    .emissao-tabela tbody tr:last-child td:first-child {
+      border-bottom-left-radius: 12px;
+    }
+    .emissao-tabela tbody tr:last-child td:last-child {
+      border-bottom-right-radius: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .emissao-tabela th,
+      .emissao-tabela td {
+        font-size: 12px;
+      }
+    }
+
+    /*************************************************************
+     *  Seções
+     *************************************************************/
     .section {
       display: flex;
       flex-direction: column;
       margin-bottom: 40px;
     }
 
-    @media (max-width: 768px) {
-      #sidebar-container {
-        width: 220px;
-      }
-
-      .order-details {
-        margin-left: 220px;
-        width: calc(100% - 220px);
-      }
-    }
-
-    @media (max-width: 576px) {
-      #sidebar-container {
-        width: 100%;
-        position: fixed;
-        z-index: 1000;
-      }
-
-      .order-details {
-        margin-left: 0;
-        width: 100%;
-      }
-    }
-
+    /*************************************************************
+     *  Botões e animações
+     *************************************************************/
     .add-row-button {
       background-color: #1cbb8c;
       color: white;
@@ -201,100 +210,11 @@
       }
     }
 
-    .planilha-pedido {
+    .button-container {
       display: flex;
-      flex-direction: column;
-      margin-bottom: 40px;
-    }
-
-    .planilha-tabela {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-      border-radius: 12px;
-      overflow: visible;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      table-layout: fixed;
-    }
-
-    .planilha-tabela thead td {
-      text-align: center;
-      background-color: #222e3c;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      border: 1px solid #d9d9d9;
-      padding: 10px;
-    }
-
-    .planilha-tabela thead th:nth-child(1) {
-      width: 14%;
-    }
-    .planilha-tabela thead th:nth-child(2) {
-      width: 10%;
-    }
-    .planilha-tabela thead th:nth-child(3) {
-      width: 8%;
-    }
-    .planilha-tabela thead th:nth-child(4) {
-      width: 8%;
-    }
-    .planilha-tabela thead th:nth-child(5) {
-      width: 8%;
-    }
-    .planilha-tabela thead th:nth-child(6) {
-      width: 8%;
-    }
-    .planilha-tabela thead th:nth-child(7) {
-      width: 8%;
-    }
-    .planilha-tabela thead th:nth-child(8) {
-      width: 8%;
-    }
-    .planilha-tabela thead th:nth-child(9) {
-      width: 8%;
-    }
-    .planilha-tabela thead th:nth-child(10) {
-      width: 9%;
-    }
-    .planilha-tabela thead th:nth-child(11) {
-      width: 8%;
-    }
-    .planilha-tabela thead th:nth-child(12) {
-      width: 9%;
-    }
-
-    .planilha-tabela td {
-      color: #333;
-      background-color: #f9f9f9;
-      text-align: center;
-      padding: 8px;
-      border: 1px solid #d9d9d9;
-    }
-
-    .planilha-tabela input,
-    .planilha-tabela select {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    .planilha-tabela thead th:first-child {
-      border-top-left-radius: 12px;
-    }
-
-    .planilha-tabela thead th:last-child {
-      border-top-right-radius: 12px;
-    }
-
-    .planilha-tabela tbody tr:last-child td:first-child {
-      border-bottom-left-radius: 12px;
-    }
-
-    .planilha-tabela tbody tr:last-child td:last-child {
-      border-bottom-right-radius: 12px;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px;
     }
 
     .delete-row-button {
@@ -316,109 +236,14 @@
       pointer-events: none;
     }
 
-    @media (max-width: 480px) {
-      .planilha-tabela th,
-      .planilha-tabela td {
-        font-size: 12px;
-      }
-
-      .add-row-button {
-        font-size: 12px;
-        padding: 8px 16px;
-      }
-    }
-
-    .button-container {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-top: 10px;
-    }
-
-    .emissao-tabela {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      table-layout: fixed;
-    }
-
-    .emissao-tabela thead th {
-      text-align: center;
-      background-color: #222e3c;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      border: 1px solid #d9d9d9;
-      padding: 10px;
-    }
-
-    .emissao-tabela th:nth-child(1) {
-      width: 18%;
-    }
-    .emissao-tabela th:nth-child(2) {
-      width: 12%;
-    }
-    .emissao-tabela th:nth-child(3) {
-      width: 15%;
-    }
-    .emissao-tabela th:nth-child(4) {
-      width: 15%;
-    }
-    .emissao-tabela th:nth-child(5) {
-      width: 15%;
-    }
-    .emissao-tabela th:nth-child(6) {
-      width: 15%;
-    }
-    .emissao-tabela th:nth-child(7) {
-      width: 20%;
-    }
-
-    .emissao-tabela td {
-      color: #333;
-      background-color: #f9f9f9;
-      text-align: center;
-      padding: 8px;
-      border: 1px solid #d9d9d9;
-    }
-
-    .emissao-tabela input,
-    .emissao-tabela select {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-
-    .emissao-tabela thead th:first-child {
-      border-top-left-radius: 12px;
-    }
-
-    .emissao-tabela thead th:last-child {
-      border-top-right-radius: 12px;
-    }
-
-    .emissao-tabela tbody tr:last-child td:first-child {
-      border-bottom-left-radius: 12px;
-    }
-
-    .emissao-tabela tbody tr:last-child td:last-child {
-      border-bottom-right-radius: 12px;
-    }
-
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    /*************************************************************
+     *  Divisória hr3
+     *************************************************************/
+    .hr3 {
+      border: 0;
+      height: 2px;
+      margin: 30px 0;
+      background-image: linear-gradient(to right, transparent, #ccc, transparent);
     }
   </style>
 </head>
@@ -431,14 +256,13 @@
   <!-- Conteúdo principal -->
   <div class="order-details">
     <a href="pages-orders.html" class="back-button">Voltar para Página de Pedidos</a>
-
     <h1>Detalhes do Pedido</h1>
     <p>ID do Pedido: <span id="pedido-id">Carregando...</span></p>
 
     <!-- Informações do Pedido -->
     <div class="section">
       <h3>Informações do Pedido</h3>
-      <table>
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Status</th>
@@ -451,10 +275,12 @@
       </table>
     </div>
 
+    <hr class="hr3">
+
     <!-- Informações do Cliente -->
     <div class="section">
       <h3>Informações do Cliente</h3>
-      <table>
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Nome</th>
@@ -469,10 +295,12 @@
       </table>
     </div>
 
+    <hr class="hr3">
+
     <!-- Informações Financeiras -->
     <div class="section">
       <h3>Informações Financeiras</h3>
-      <table>
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Gateway</th>
@@ -485,7 +313,7 @@
         </thead>
         <tbody id="financial-info"></tbody>
       </table>
-      <table>
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Valor Comissão</th>
@@ -501,10 +329,12 @@
       </table>
     </div>
 
+    <hr class="hr3">
+
     <!-- Informações Comerciais -->
     <div class="section">
       <h3>Informações Comerciais</h3>
-      <table>
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Origem do Cliente</th>
@@ -517,10 +347,12 @@
       </table>
     </div>
 
+    <hr class="hr3">
+
     <!-- Informações Adicionais -->
     <div class="section">
       <h3>Informações Adicionais</h3>
-      <table>
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Observações Operacionais</th>
@@ -531,10 +363,12 @@
       </table>
     </div>
 
+    <hr class="hr3">
+
     <!-- Planilha do Pedido -->
-    <div class="section planilha-pedido">
+    <div class="section">
       <h3>Planilha do Pedido</h3>
-      <table class="planilha-tabela">
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Dólar Câmbio</th>
@@ -549,8 +383,7 @@
         </tbody>
       </table>
 
-      <!-- Segunda Linha: Planilha Completa -->
-      <table class="planilha-tabela">
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Produto</th>
@@ -568,10 +401,7 @@
             <th>Ações</th>
           </tr>
         </thead>
-        <tbody id="spreadsheet-info">
-          <!-- Linhas da planilha são inseridas dinamicamente -->
-        </tbody>
-        <!-- Linha de resumo dos totais -->
+        <tbody id="spreadsheet-info"></tbody>
         <tfoot>
           <tr style="font-weight: bold; background-color: #f0f0f0;">
             <td colspan="6" style="text-align: right;">Totais:</td>
@@ -590,6 +420,8 @@
       </div>
     </div>
 
+    <hr class="hr3">
+
     <!-- Emissão -->
     <div class="section">
       <h3>Emissão</h3>
@@ -607,7 +439,6 @@
         </thead>
         <tbody id="emission-info"></tbody>
       </table>
-      <!-- Botão para salvar dados da Emissão -->
       <button class="add-row-button" onclick="salvarEmissao()">Salvar Emissão</button>
     </div>
   </div>
@@ -615,9 +446,10 @@
   <!-- Scripts -->
   <script>
     /************************************************************
-     * Variáveis globais
+     * JS (igual ao seu anterior, apenas mudamos as classes CSS)
      ************************************************************/
-    window.planilhasEmMemoria = []; // Armazena dados originais do banco
+
+    window.planilhasEmMemoria = [];
 
     document.addEventListener('DOMContentLoaded', () => {
       if (document.getElementById('sidebar-container')) {
@@ -631,17 +463,11 @@
       document.getElementById('add-row-button').addEventListener('click', addNewRow);
     });
 
-    /* ------------------------------------------------------------
-       OBTÉM ID DO PEDIDO VIA URL
-    ------------------------------------------------------------ */
     function getPedidoId() {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get('pedido') || 'Não informado';
     }
 
-    /* ------------------------------------------------------------
-       FORMATA A DATA (yyyy-mm-dd -> dd/mm/yyyy) p/ exibição
-    ------------------------------------------------------------ */
     function formatDate(dateString) {
       if (!dateString) return '';
       const d = new Date(dateString);
@@ -649,9 +475,6 @@
       return d.toLocaleDateString('pt-BR');
     }
 
-    /* ------------------------------------------------------------
-       CARREGA SIDEBAR
-    ------------------------------------------------------------ */
     async function loadSidebar() {
       try {
         const response = await fetch('sidebar.html');
@@ -664,9 +487,6 @@
       }
     }
 
-    /* ------------------------------------------------------------
-       CARREGA DETALHES DO PEDIDO (API_Pedidos)
-    ------------------------------------------------------------ */
     async function loadOrderDetails() {
       const pedidoId = getPedidoId();
       if (pedidoId === "Não informado") {
@@ -686,7 +506,6 @@
         const pedido = pedidos[0];
         document.getElementById("pedido-id").textContent = pedidoId;
 
-        // Preenche Informações do Pedido
         document.getElementById('order-info').innerHTML =
           `<tr>
             <td>
@@ -704,7 +523,6 @@
             <td>${formatDate(pedido.data_venda)}</td>
           </tr>`;
 
-        // Preenche Informações do Cliente
         document.getElementById('customer-info').innerHTML =
           `<tr>
             <td>${pedido.nome_comprador || ''}</td>
@@ -715,7 +533,6 @@
             <td>${pedido.uf || ''}</td>
           </tr>`;
 
-        // Preenche Informações Financeiras
         document.getElementById('financial-info').innerHTML =
           `<tr>
             <td>${pedido.gateway || '<input type="text" placeholder="Gateway">'}</td>
@@ -737,7 +554,6 @@
             <td>${pedido.fornecedor || '<input type="text" placeholder="Fornecedor">'}</td>
           </tr>`;
 
-        // Comerciais
         document.getElementById('commercial-info').innerHTML =
           `<tr>
             <td>${pedido.origem_cliente || '<input type="text" placeholder="Origem do Cliente">'}</td>
@@ -746,14 +562,12 @@
             <td>${pedido.comissao_do_agente || '<input type="text" placeholder="Comissão Agente">'}</td>
           </tr>`;
 
-        // Adicionais
         document.getElementById('additional-info').innerHTML =
           `<tr>
             <td>${pedido.observacoes_operacionais || '<input type="text" placeholder="Observações Operacionais">'}</td>
             <td>${pedido.observacoes_financeiras || '<input type="text" placeholder="Observações Financeiras">'}</td>
           </tr>`;
 
-        // Carrega planilhas
         await loadPlanilhaPedido();
       } catch (error) {
         console.error("Erro ao carregar detalhes do pedido:", error);
@@ -761,9 +575,6 @@
       }
     }
 
-    /* ------------------------------------------------------------
-       CARREGA A PLANILHA DO PEDIDO (API_Planilhas)
-    ------------------------------------------------------------ */
     async function loadPlanilhaPedido() {
       const pedidoId = document.getElementById("pedido-id").textContent;
       if (!pedidoId || pedidoId === "Carregando...") return;
@@ -776,24 +587,18 @@
         }
 
         const planilhas = await response.json();
-        window.planilhasEmMemoria = planilhas || []; // Mantém em memória p/ PUT
+        window.planilhasEmMemoria = planilhas || [];
 
-        // Limpa
         document.getElementById("spreadsheet-info").innerHTML = "";
         document.getElementById("emission-info").innerHTML = "";
 
-        // Monta planilha principal
         if (planilhas && planilhas.length > 0) {
           montarPlanilhaPrincipal(planilhas);
-
           document.getElementById("dolar-cambio").value     = planilhas[0].dolar_cambio || 0;
           document.getElementById("dolar-magic").textContent= planilhas[0].dolar_magic || "0.00";
         }
-
-        // Monta Emissão
         montarEmissao(planilhas);
 
-        // Recalcular quando editar
         document.querySelectorAll("#spreadsheet-info input, #spreadsheet-info select").forEach((el) => {
           el.addEventListener("input", calcularValoresPlanilha);
         });
@@ -804,9 +609,6 @@
       }
     }
 
-    /* ------------------------------------------------------------
-       MONTA A PLANILHA PRINCIPAL NO #spreadsheet-info
-    ------------------------------------------------------------ */
     function montarPlanilhaPrincipal(planilhas) {
       const spreadsheetInfo = document.getElementById("spreadsheet-info");
       spreadsheetInfo.innerHTML = "";
@@ -842,10 +644,6 @@
       });
     }
 
-    /* ------------------------------------------------------------
-       MONTA A TABELA DE EMISSÃO (#emission-info)
-       Itens / Valor(U$) / Data de Uso => somente leitura
-    ------------------------------------------------------------ */
     function montarEmissao(planilhas) {
       const emissionInfo = document.getElementById('emission-info');
       emissionInfo.innerHTML = '';
@@ -877,9 +675,6 @@
       });
     }
 
-    /* ------------------------------------------------------------
-       ADICIONA NOVA LINHA NA PLANILHA
-    ------------------------------------------------------------ */
     function addNewRow() {
       const spreadsheetInfo = document.getElementById("spreadsheet-info");
       const newRow = `
@@ -910,22 +705,17 @@
       `;
       spreadsheetInfo.insertAdjacentHTML("beforeend", newRow);
 
-      // Reatacha evento de cálculo
       spreadsheetInfo.querySelectorAll('input, select').forEach((element) => {
         element.removeEventListener('input', calcularValoresPlanilha);
         element.addEventListener('input', calcularValoresPlanilha);
       });
     }
 
-    /* ------------------------------------------------------------
-       EXCLUIR LINHA (se tiver ID, faz DELETE)
-    ------------------------------------------------------------ */
     async function deleteRow(button) {
       const row = button.closest('tr');
       const planilhaId = row.getAttribute("data-planilha-id");
 
       if (!planilhaId) {
-        // linha nova
         if (confirm("Linha não salva no banco. Remover mesmo assim?")) {
           row.remove();
           calcularValoresPlanilha();
@@ -960,11 +750,6 @@
       }
     }
 
-    /* ------------------------------------------------------------
-       SALVAR PLANILHA COM ATUALIZAÇÃO PARCIAL
-       - Se a linha tiver ID => PUT (mantém dados originais)
-       - Se não tiver ID => POST (inserir)
-    ------------------------------------------------------------ */
     async function salvarPlanilha() {
       const pedidoId = document.getElementById("pedido-id").textContent;
       if (!pedidoId) {
@@ -976,9 +761,8 @@
       const dolarCambio = parseFloat(document.getElementById("dolar-cambio").value) || 0;
       const dolarMagic  = parseFloat(document.getElementById("dolar-magic").textContent) || 0;
 
-      // Arrays separados
-      const novos = [];    // para POST
-      const existentes = [];// para PUT
+      const novos = [];
+      const existentes = [];
 
       for (let linha of linhas) {
         const planilhaId = linha.getAttribute("data-planilha-id");
@@ -991,7 +775,6 @@
         const margem     = parseFloat(linha.querySelector('input[name="margem"]')?.value) || 0;
         const taxa       = parseFloat(linha.querySelector('input[name="taxa"]')?.value) || 0;
 
-        // Recalcula
         const totalUsd = (netDollar + lobista) * quantidade;
         const netBrl   = totalUsd * dolarMagic;
         const totalPix = netBrl / (1 - (margem/100));
@@ -1002,7 +785,6 @@
           return;
         }
 
-        // Se for nova linha, iremos POST
         if (!planilhaId) {
           novos.push({
             id_pedido: pedidoId,
@@ -1022,11 +804,8 @@
             dolar_magic: dolarMagic
           });
         } else {
-          // Já existe => precisamos fazer PUT parcial
-          // 1) achar o original em planilhasEmMemoria
           const original = window.planilhasEmMemoria.find(p => p.id == planilhaId);
           if (!original) {
-            // Se não achou, tratamos como POST normal
             novos.push({
               id_pedido: pedidoId,
               produto,
@@ -1045,9 +824,7 @@
               dolar_magic: dolarMagic
             });
           } else {
-            // 2) clonamos tudo do original
             const atualizado = { ...original };
-            // 3) sobrescrevemos apenas campos da planilha
             atualizado.produto = produto;
             atualizado.data = data;
             atualizado.idade = idade;
@@ -1062,14 +839,12 @@
             atualizado.total_10x = total10x;
             atualizado.dolar_cambio = dolarCambio;
             atualizado.dolar_magic = dolarMagic;
-            // Precisamos do "id" p/ PUT
             existentes.push(atualizado);
           }
         }
       }
 
       try {
-        // 1) Se houver novas linhas, POST
         if (novos.length > 0) {
           const resPost = await fetch("https://magictraveltur.com/api_planilhas.php", {
             method: "POST",
@@ -1082,7 +857,6 @@
           }
         }
 
-        // 2) Se houver existentes, PUT
         if (existentes.length > 0) {
           const resPut = await fetch("https://magictraveltur.com/api_planilhas.php", {
             method: "PUT",
@@ -1108,9 +882,6 @@
       }
     }
 
-    /* ------------------------------------------------------------
-       SALVAR EMISSÃO (PUT parcial)
-    ------------------------------------------------------------ */
     async function salvarEmissao() {
       const pedidoId = document.getElementById("pedido-id").textContent;
       const emissionRows = document.querySelectorAll("#emission-info tr");
@@ -1124,18 +895,16 @@
 
       emissionRows.forEach((row) => {
         const planilhaId = row.getAttribute("data-planilha-id");
-        if (!planilhaId) return; // sem ID => sem update
+        if (!planilhaId) return;
 
         const original = window.planilhasEmMemoria.find(p => p.id == planilhaId);
         if (!original) return;
 
-        // Pega valores editáveis
         const dataPagamento = row.querySelector('input[name="dataPagamento"]')?.value || null;
         const identificador = row.querySelector('input[name="identificador"]')?.value || "";
         const fornecedor    = row.querySelector('input[name="fornecedor"]')?.value || "";
         const status        = row.querySelector('select[name="status"]')?.value || "";
 
-        // Clona original para não perder campos
         const objPUT = { ...original };
         objPUT.data_pagamento = dataPagamento;
         objPUT.identificador  = identificador;
@@ -1169,9 +938,6 @@
       }
     }
 
-    /* ------------------------------------------------------------
-       RE-CALCULA A PLANILHA (FRONT-END)
-    ------------------------------------------------------------ */
     function calcularValoresPlanilha() {
       const dolarMagic = parseFloat(document.getElementById("dolar-magic").textContent) || 0;
       const rows = document.querySelectorAll("#spreadsheet-info tr");
@@ -1197,9 +963,6 @@
       calcularResumo();
     }
 
-    /* ------------------------------------------------------------
-       SOMA TOTAIS GERAIS
-    ------------------------------------------------------------ */
     function calcularResumo() {
       let totalDollar = 0;
       let totalReal   = 0;
@@ -1219,12 +982,9 @@
       document.getElementById("resumo-total-10x").textContent     = total10x.toFixed(2);
     }
 
-    /* ------------------------------------------------------------
-       AO ALTERAR O DÓLAR CÂMBIO, REFAZ O DÓLAR MAGIC
-    ------------------------------------------------------------ */
     function updateDolarMagic() {
       const dolarCambio = parseFloat(document.getElementById('dolar-cambio').value) || 0;
-      const dolarMagic = (dolarCambio * 1.0098).toFixed(2); // Exemplo de fator
+      const dolarMagic = (dolarCambio * 1.0098).toFixed(2);
       document.getElementById('dolar-magic').textContent = dolarMagic;
       calcularValoresPlanilha();
     }
