@@ -1,141 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>AdminKit Demo - Bootstrap 5 Admin Template</title>
-    <link href="https://business.magictraveltur.com/dist/css/app.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Sidebar</title>
+  
+  <!-- Seu CSS -->
+  <link href="https://business.magictraveltur.com/dist/css/app.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 
-    <style>
-        body {
-            place-items: center;
-            background-color: #eaedf2;
-            height: 100vh;
-            font-family: "Nunito", sans-serif;
-            font-size: 14px;
-        }
-    </style>
+  <style>
+    body {
+      place-items: center;
+      background-color: #eaedf2;
+      height: 100vh;
+      font-family: "Nunito", sans-serif;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-    <div class="wrapper">
-        <nav id="sidebar" class="sidebar js-sidebar">
-            <div class="sidebar-content js-simplebar">
-                <a class="sidebar-brand" href="index.html">					
-                    <img src="https://www.magictraveltur.com/wp-content/uploads/2024/11/Escrita-_-Branco.png" 
-                    alt="Logo" 
-                    class="align-middle" 
-                    style="width: 125px; height: auto;">
-                </a>
-                <ul class="sidebar-nav">
-                    <li class="sidebar-header">Pages</li>
-                    <li class="sidebar-item active">
-                        <a class="sidebar-link" href="https://business.magictraveltur.com/">
-                            <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="https://business.magictraveltur.com/pages-orders.html">
-                            <i class="align-middle" data-feather="user"></i> <span class="align-middle">Pedidos</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="https://business.magictraveltur.com/loti.html">
-                            <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Cadastrar Venda</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="https://business.magictraveltur.com/relatorio.html">
-                            <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Relatórios</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="pages-blank.html">
-                            <i class="align-middle" data-feather="book"></i> <span class="align-middle">Blank</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-header">Tools & Components</li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="ui-buttons.html">
-                            <i class="align-middle" data-feather="square"></i> <span class="align-middle">Buttons</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="ui-forms.html">
-                            <i class="align-middle" data-feather="check-square"></i> <span class="align-middle">Forms</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="ui-cards.html">
-                            <i class="align-middle" data-feather="grid"></i> <span class="align-middle">Cards</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="ui-typography.html">
-                            <i class="align-middle" data-feather="align-left"></i> <span class="align-middle">Typography</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="icons-feather.html">
-                            <i class="align-middle" data-feather="coffee"></i> <span class="align-middle">Icons</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-header">Plugins & Addons</li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="charts-chartjs.html">
-                            <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Charts</span>
-                        </a>
-                    </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="maps-google.html">
-                            <i class="align-middle" data-feather="map"></i> <span class="align-middle">Maps</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </div>
+  <div class="wrapper">
+    <nav id="sidebar" class="sidebar js-sidebar">
+      <div class="sidebar-content js-simplebar">
+        <a class="sidebar-brand" href="index.html">
+          <img src="https://www.magictraveltur.com/wp-content/uploads/2024/11/Escrita-_-Branco.png"
+               alt="Logo"
+               class="align-middle"
+               style="width: 125px; height: auto;">
+        </a>
+        <ul class="sidebar-nav">
+          <li class="sidebar-header">Pages</li>
 
-    <script src="https://business.magictraveltur.com/dist/js/app.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-          console.log("Script de ativação do menu carregado.");
-        
-          // Remove a classe 'active' de todos os itens antes de ativar o correto
-          document.querySelectorAll(".sidebar-item").forEach(item => item.classList.remove("active"));
-        
-          // Obtém o pathname atual (ex: "/pages-orders.html", ou "/pages-orders.html?foo=bar", etc.)
-          let currentPath = window.location.pathname;
-          console.log("Caminho atual da URL:", currentPath);
-        
-          // Remove barra final, se houver
-          if (currentPath.endsWith("/") && currentPath !== "/") {
-            currentPath = currentPath.slice(0, -1);
-          }
-        
-          // Extrai só o arquivo (último trecho após a barra)
-          let currentFile = currentPath.substring(currentPath.lastIndexOf("/") + 1);
-          console.log("Arquivo atual:", currentFile);
-        
-          // Agora percorremos cada link do menu e verificamos se o arquivo dele bate com o atual
-          document.querySelectorAll(".sidebar-item a").forEach(link => {
-            let linkPath = new URL(link.href).pathname; // Ex.: "/pages-orders.html"
-            if (linkPath.endsWith("/") && linkPath !== "/") {
-              linkPath = linkPath.slice(0, -1);
-            }
-            // Extrai o arquivo do link
-            let linkFile = linkPath.substring(linkPath.lastIndexOf("/") + 1);
-            //console.log("Verificando link:", linkFile);
-        
-            // Se o nome do arquivo do link == nome do arquivo atual => active
-            if (linkFile === currentFile) {
-              link.closest(".sidebar-item").classList.add("active");
-              console.log("Ativando item do menu:", linkFile);
-            }
-          });
-        });
-</script>
+          <!-- Dashboard: REMOVIDO 'active' fixo -->
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="https://business.magictraveltur.com/">
+              <i class="align-middle" data-feather="sliders"></i> 
+              <span class="align-middle">Dashboard</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="https://business.magictraveltur.com/pages-orders.html">
+              <i class="align-middle" data-feather="user"></i> 
+              <span class="align-middle">Pedidos</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="https://business.magictraveltur.com/loti.html">
+              <i class="align-middle" data-feather="bar-chart-2"></i> 
+              <span class="align-middle">Cadastrar Venda</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="https://business.magictraveltur.com/relatorio.html">
+              <i class="align-middle" data-feather="user-plus"></i> 
+              <span class="align-middle">Relatórios</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="pages-blank.html">
+              <i class="align-middle" data-feather="book"></i>
+              <span class="align-middle">Blank</span>
+            </a>
+          </li>
+
+          <li class="sidebar-header">Tools & Components</li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="ui-buttons.html">
+              <i class="align-middle" data-feather="square"></i> 
+              <span class="align-middle">Buttons</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="ui-forms.html">
+              <i class="align-middle" data-feather="check-square"></i> 
+              <span class="align-middle">Forms</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="ui-cards.html">
+              <i class="align-middle" data-feather="grid"></i> 
+              <span class="align-middle">Cards</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="ui-typography.html">
+              <i class="align-middle" data-feather="align-left"></i> 
+              <span class="align-middle">Typography</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="icons-feather.html">
+              <i class="align-middle" data-feather="coffee"></i> 
+              <span class="align-middle">Icons</span>
+            </a>
+          </li>
+
+          <li class="sidebar-header">Plugins & Addons</li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="charts-chartjs.html">
+              <i class="align-middle" data-feather="bar-chart-2"></i> 
+              <span class="align-middle">Charts</span>
+            </a>
+          </li>
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="maps-google.html">
+              <i class="align-middle" data-feather="map"></i> 
+              <span class="align-middle">Maps</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Scripts do seu tema -->
+  <script src="https://business.magictraveltur.com/dist/js/app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+  <!-- Script de ativação do menu -->
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+    console.log("Script de ativação do menu carregado.");
+    
+    // 1) Remove a classe 'active' de todos antes
+    document.querySelectorAll(".sidebar-item").forEach(item => item.classList.remove("active"));
+    
+    // 2) Pega o pathname atual (ex: "/pages-orders.html")
+    let currentPath = window.location.pathname;
+    console.log("Caminho atual da URL:", currentPath);
+
+    // Se terminar com "/" e não for só "/", remove a barra
+    if (currentPath.endsWith("/") && currentPath !== "/") {
+      currentPath = currentPath.slice(0, -1);
+    }
+
+    // Extrai só o arquivo (trecho após a última "/")
+    let currentFile = currentPath.substring(currentPath.lastIndexOf("/") + 1);
+    console.log("Arquivo atual:", currentFile);
+
+    // Se for raiz ("" ou "index.html"), ativar Dashboard
+    if (currentFile === "" || currentFile === "index.html") {
+      let dashLink = document.querySelector(".sidebar-item a[href='https://business.magictraveltur.com/']");
+      if (dashLink) {
+        dashLink.closest(".sidebar-item").classList.add("active");
+        console.log("Ativando Dashboard");
+      }
+    } else {
+      // 3) Percorre cada link do menu
+      document.querySelectorAll(".sidebar-item a").forEach(link => {
+        let linkPath = new URL(link.href).pathname; // Ex: "/pages-orders.html"
+        if (linkPath.endsWith("/") && linkPath !== "/") {
+          linkPath = linkPath.slice(0, -1);
+        }
+        let linkFile = linkPath.substring(linkPath.lastIndexOf("/") + 1);
+        //console.log("Verificando link:", linkFile);
+
+        // Compara com currentFile
+        if (linkFile === currentFile) {
+          link.closest(".sidebar-item").classList.add("active");
+          console.log("Ativando item do menu:", linkFile);
+        }
+      });
+    }
+  });
+  </script>
 </body>
 </html>
