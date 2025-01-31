@@ -32,7 +32,6 @@
         <ul class="sidebar-nav">
           <li class="sidebar-header">Pages</li>
 
-          <!-- Dashboard: REMOVIDO 'active' fixo -->
           <li class="sidebar-item">
             <a class="sidebar-link" href="https://business.magictraveltur.com/">
               <i class="align-middle" data-feather="sliders"></i> 
@@ -131,40 +130,25 @@
     // 1) Remove a classe 'active' de todos antes
     document.querySelectorAll(".sidebar-item").forEach(item => item.classList.remove("active"));
     
-    // 2) Pega o pathname atual (ex: "/pages-orders.html")
-    let currentPath = window.location.pathname;
+    // 2) Pega o pathname atual, ignorando parâmetros (ex: /pages-orders.html)
+    let currentPath = window.location.pathname.split("/").pop().split("?")[0];
     console.log("Caminho atual da URL:", currentPath);
 
-    // Se terminar com "/" e não for só "/", remove a barra
-    if (currentPath.endsWith("/") && currentPath !== "/") {
-      currentPath = currentPath.slice(0, -1);
-    }
-
-    // Extrai só o arquivo (trecho após a última "/")
-    let currentFile = currentPath.substring(currentPath.lastIndexOf("/") + 1);
-    console.log("Arquivo atual:", currentFile);
-
-    // Se for raiz ("" ou "index.html"), ativar Dashboard
-    if (currentFile === "" || currentFile === "index.html") {
-      let dashLink = document.querySelector(".sidebar-item a[href='https://business.magictraveltur.com/']");
-      if (dashLink) {
-        dashLink.closest(".sidebar-item").classList.add("active");
-        console.log("Ativando Dashboard");
-      }
+    // Se for a raiz ("" ou "index.html"), ativar Dashboard
+    if (currentPath === "" || currentPath === "index.html") {
+      document.querySelector(".sidebar-link[href='https://business.magictraveltur.com/']")
+        ?.closest(".sidebar-item").classList.add("active");
+      console.log("Ativando Dashboard");
     } else {
       // 3) Percorre cada link do menu
       document.querySelectorAll(".sidebar-item a").forEach(link => {
-        let linkPath = new URL(link.href).pathname; // Ex: "/pages-orders.html"
-        if (linkPath.endsWith("/") && linkPath !== "/") {
-          linkPath = linkPath.slice(0, -1);
-        }
-        let linkFile = linkPath.substring(linkPath.lastIndexOf("/") + 1);
-        //console.log("Verificando link:", linkFile);
+        let linkPath = link.getAttribute("href").split("/").pop().split("?")[0]; // Ex: "pages-orders.html"
+        console.log(`Verificando link: ${linkPath}`);
 
-        // Compara com currentFile
-        if (linkFile === currentFile) {
+        // Compara com currentPath
+        if (linkPath === currentPath) {
           link.closest(".sidebar-item").classList.add("active");
-          console.log("Ativando item do menu:", linkFile);
+          console.log("Ativando item do menu:", linkPath);
         }
       });
     }
