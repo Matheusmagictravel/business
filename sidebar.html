@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Sidebar</title>
+  <title>AdminKit Demo - Bootstrap 5 Admin Template</title>
   
   <!-- CSS -->
   <link href="https://business.magictraveltur.com/dist/css/app.css" rel="stylesheet">
@@ -19,17 +19,14 @@
     }
     
     /* Estilo correto para ativar o menu */
-    .sidebar-item.active .sidebar-link:hover,
-    .sidebar-item.active > .sidebar-link {
+    .sidebar-item.active .sidebar-link {
       background: linear-gradient(90deg, rgba(59,125,221,0.1), rgba(59,125,221,0.088) 50%, transparent);
-      border-left-color: #3b7ddd;
+      border-left: 4px solid #3b7ddd;
       color: #e9ecef;
     }
     
-    .sidebar-item.active .sidebar-link:hover i,
-    .sidebar-item.active .sidebar-link:hover svg,
-    .sidebar-item.active > .sidebar-link i,
-    .sidebar-item.active > .sidebar-link svg {
+    .sidebar-item.active .sidebar-link i,
+    .sidebar-item.active .sidebar-link svg {
       color: #e9ecef;
     }
   </style>
@@ -145,16 +142,16 @@
     // Remove a classe 'active' de todos antes de ativar o correto
     document.querySelectorAll(".sidebar-item").forEach(item => item.classList.remove("active"));
     
-    // Obtém apenas o caminho da URL atual (ex: "/pages-orders.html")
-    let currentPath = window.location.pathname;
+    // Obtém apenas o caminho da URL atual sem parâmetros (ex: "/pages-orders.html")
+    let currentPath = window.location.pathname.split("?")[0]; 
     console.log("Caminho atual da URL:", currentPath);
     
     // Percorre cada link do menu
     document.querySelectorAll(".sidebar-item a").forEach(link => {
-      let linkPath = new URL(link.href).pathname; // Obtém apenas o caminho do link (sem domínio)
+      let linkPath = new URL(link.href).pathname.split("?")[0]; // Obtém o caminho base do link
 
-      // Se a URL atual corresponde ao link, ativa o menu
-      if (currentPath === linkPath) {
+      // Se a URL atual contém a URL do link, ativa o menu
+      if (currentPath.endsWith(linkPath)) {
         link.closest(".sidebar-item").classList.add("active");
         console.log("Ativando item do menu:", linkPath);
       }
