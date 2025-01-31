@@ -587,7 +587,7 @@
             <th>Data de Uso</th>
             <th>Data de Pagamento</th>
             <th>Identificador</th>
-            <th>Invoice</th>
+            <th>Fornecedor</th>
             <th>Status</th>
           </tr>
         </thead>
@@ -764,7 +764,7 @@
       }
 
       planilhas.forEach((item) => {
-        const invoiceCell       = '<input type="text" placeholder="Digite o Invoice">';
+        const fornecedorCell = '<input type="text" placeholder="Digite o Fornecedor">';
         const identificadorCell = '<input type="text" placeholder="Digite o Identificador">';
         const statusCell = `
           <select name="statusEmissao">
@@ -783,7 +783,7 @@
             <td>${dataUsoCell}</td>
             <td>${dataPgtoCell}</td>
             <td>${identificadorCell}</td>
-            <td>${invoiceCell}</td>
+            <td>${fornecedorCell}</td>
             <td>${statusCell}</td>
           </tr>
         `);
