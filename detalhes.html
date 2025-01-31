@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Detalhes do Pedido - Magic Travel">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Detalhes do Pedido - Magic Travel" />
   <title>Detalhes do Pedido - Magic Travel</title>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    rel="stylesheet"
+  />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
-    
+    @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+
     body {
-      font-family: 'Montserrat', sans-serif;
+      font-family: "Montserrat", sans-serif;
       margin: 0;
       background-color: #f4f4f9;
       color: #333;
@@ -18,7 +21,7 @@
       flex-direction: column;
       min-height: 100vh;
     }
-    
+
     #sidebar-container {
       width: 260px;
       position: fixed;
@@ -31,18 +34,18 @@
       box-shadow: 3px 0 6px rgba(0, 0, 0, 0.2);
       transition: background-color 0.3s;
     }
-    
+
     #sidebar-container:hover {
       background-color: #2b3947;
     }
-    
+
     .sidebar-loading {
       padding: 20px;
       text-align: center;
       font-size: 14px;
       color: #ccc;
     }
-    
+
     .order-details {
       margin-left: 260px;
       padding: 40px;
@@ -55,113 +58,148 @@
       display: flex;
       flex-direction: column;
     }
-    
+
     .order-details h1 {
-        font-size: 24px;
-        font-weight: bold;
-        margin: 0 0 10px;
-        color: #0d112d;
-        text-align: left;
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0 0 10px;
+      color: #4a4a4a;
+      text-align: left;
     }
-    
+
     .order-details h3 {
       font-size: 24px;
       font-weight: 600;
       margin-bottom: 20px;
       color: #4a4a4a;
       animation: fadeIn 1.2s ease-in-out;
+      text-align: center;
     }
-    
+
     .order-details p {
-        font-size: 14px;
-        color: #6c757d;
-        margin: 0 0 20px;
-        text-align: left;
+      font-size: 16px;
+      color: #ff6f61;
+      margin: 0 0 20px;
+      text-align: left;
     }
-    
+
     .back-button {
-        background-color: #ff6f61;
-        color: #fff;
-        border: none;
-        border-radius: 8px;
-        padding: 10px 20px;
-        font-size: 14px;
-        font-weight: bold;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-        margin-bottom: 20px;
-        transition: background-color 0.3s ease;
-        margin-right: auto;
+      background-color: #ff6f61;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      margin-bottom: 20px;
+      transition: background-color 0.3s ease;
+      margin-right: auto;
     }
 
     .back-button:hover {
-        background-color: #dc3545;
-        color: white;
+      background-color: #dc3545;
+      color: white;
     }
-    
-    table {
+
+    /*************************************************************
+     *  TABELA PADRÃO ( .emissao-tabela ) - mesmo design para tudo
+     *************************************************************/
+    .emissao-tabela {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       border-radius: 12px;
       overflow: hidden;
-      animation: fadeIn 1.8s ease-in-out;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      table-layout: fixed;
+      animation: fadeIn 1.8s ease-in-out; /* suave fade-in */
     }
-    
-    table thead {
-      background-color: #f9f9fa;
-    }
-    
-    table th, table td {
-      padding: 16px 18px;
-      text-align: left;
-      border-bottom: 1px solid #ebebf0;
+
+    .emissao-tabela thead th {
+      text-align: center;
+      background-color: #222e3c; 
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid #d9d9d9;
+      padding: 10px;
       text-transform: capitalize;
     }
-    
-    table th {
-      font-weight: 600;
-      color: #ffffff;
-      background-color: #222e3c;
-    }
-    
-    table td {
+
+    .emissao-tabela td {
       color: #333;
+      background-color: #f9f9f9;
+      text-align: center;
+      padding: 12px; 
+      border: 1px solid #d9d9d9;
     }
-    
-    table tr:nth-child(even) {
-      background-color: #f7f7fb;
+
+    .emissao-tabela input,
+    .emissao-tabela select {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
     }
-    
+
+    /* Arredondar cantos top e bottom */
+    .emissao-tabela thead th:first-child {
+      border-top-left-radius: 12px;
+    }
+    .emissao-tabela thead th:last-child {
+      border-top-right-radius: 12px;
+    }
+    .emissao-tabela tbody tr:last-child td:first-child {
+      border-bottom-left-radius: 12px;
+    }
+    .emissao-tabela tbody tr:last-child td:last-child {
+      border-bottom-right-radius: 12px;
+    }
+
+    @media (max-width: 480px) {
+      .emissao-tabela th,
+      .emissao-tabela td {
+        font-size: 12px;
+      }
+    }
+
+    /*************************************************************
+     *  Seções - padronizadas
+     *************************************************************/
     .section {
-      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
     }
-    
-    @media (max-width: 768px) {
-      #sidebar-container {
-        width: 220px;
-      }
-    
-      .order-details {
-        margin-left: 220px;
-        width: calc(100% - 220px);
-      }
-    }
-    
-    @media (max-width: 576px) {
-      #sidebar-container {
-        width: 100%;
-        position: fixed;
-        z-index: 1000;
-      }
-    
-      .order-details {
-        margin-left: 0;
-        width: 100%;
-      }
-    }
-    
+
+    /*************************************************************
+     *  Ajuste de colunas ESPECÍFICAS na Planilha do Pedido
+     *  (Segundo table dentro da .section planilha)
+     *************************************************************/
+    /* A Planilha do Pedido tem 13 colunas (thead): 
+       1)Produto, 2)Data, 3)Idade, 4)Net U$, 5)Lobista,
+       6)Número, 7)Total U$, 8)Net R$, 9)Margem,
+       10)Pix, 11)Taxa, 12)10x, 13)Ações
+       Então ajustamos as larguras (exemplo do layout antigo) */
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(1)  { width: 14%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(2)  { width: 10%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(3)  { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(4)  { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(5)  { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(6)  { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(7)  { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(8)  { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(9)  { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(10) { width: 9%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(11) { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(12) { width: 9%; }
+
+    /*************************************************************
+     *  Botões e animações
+     *************************************************************/
     .add-row-button {
       background-color: #1cbb8c;
       color: white;
@@ -173,12 +211,12 @@
       animation: fadeIn 2s ease-in-out;
       align-self: center;
     }
-    
+
     .add-row-button:hover {
       background-color: #17a37a;
       transform: scale(1.05);
     }
-    
+
     @keyframes fadeIn {
       0% {
         opacity: 0;
@@ -189,104 +227,16 @@
         transform: translateY(0);
       }
     }
-    
-    .planilha-pedido {
+
+    .button-container {
       display: flex;
-      flex-direction: column;
-      margin-bottom: 40px;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 10px;
     }
-    
-    .planilha-pedido h3 {
-      align-self: center;
-      margin-bottom: 20px;
-    }
-    
-    .planilha-tabela {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-      border-radius: 12px;
-      overflow: visible;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      table-layout: fixed;
-    }
-    
-    .planilha-tabela thead th {
-      text-align: center;
-      background-color: #222e3c;
-      color: #fff;
-      font-size: 14px;
-      font-weight: 600;
-      border: 1px solid #d9d9d9;
-      padding: 10px;
-    }
-    
-    .planilha-tabela thead th:nth-child(1) { width: 14%; }
-    .planilha-tabela thead th:nth-child(2) { width: 10%; }
-    .planilha-tabela thead th:nth-child(3) { width: 8%; }
-    .planilha-tabela thead th:nth-child(4) { width: 8%; }
-    .planilha-tabela thead th:nth-child(5) { width: 8%; }
-    .planilha-tabela thead th:nth-child(6) { width: 8%; }
-    .planilha-tabela thead th:nth-child(7) { width: 8%; }
-    .planilha-tabela thead th:nth-child(8) { width: 8%; }
-    .planilha-tabela thead th:nth-child(9) { width: 8%; }
-    .planilha-tabela thead th:nth-child(10) { width: 9%; }
-    .planilha-tabela thead th:nth-child(11) { width: 8%; }
-    .planilha-tabela thead th:nth-child(12) { width: 9%; }
-    
-    .planilha-tabela td {
-      color: #333;
-      background-color: #f9f9f9;
-      text-align: center;
-      padding: 8px;
-      border: 1px solid #d9d9d9;
-    }
-    
-    .planilha-tabela input, .planilha-tabela select {
-      width: 100%;
-      padding: 8px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    
-    .planilha-tabela thead th:first-child {
-      border-top-left-radius: 12px;
-    }
-    
-    .planilha-tabela thead th:last-child {
-      border-top-right-radius: 12px;
-    }
-    
-    .planilha-tabela tbody tr:last-child td:first-child {
-      border-bottom-left-radius: 12px;
-    }
-    
-    .planilha-tabela tbody tr:last-child td:last-child {
-      border-bottom-right-radius: 12px;
-    }
-    
-    .dropdown-status {
-      padding: 10px 16px;
-      font-size: 14px;
-      font-weight: 600;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      cursor: pointer;
-      text-align: center;
-      color: #fff;
-      transition: background-color 0.3s ease;
-    }
-    
-    .status-primary { background-color: #007bff; }
-    .status-info { background-color: #17a2b8; }
-    .status-warning { background-color: #ffc107; color: #212529; }
-    .status-danger { background-color: #dc3545; }
-    .status-secondary { background-color: #6c757d; }
-    .status-success { background-color: #28a745; }
 
     .delete-row-button {
-      position: relative; /* Mantém o botão dentro da célula */
+      position: relative;
       background-color: transparent;
       border: none;
       cursor: pointer;
@@ -294,95 +244,23 @@
       color: #dc3545;
       transition: transform 0.2s ease, color 0.2s ease;
     }
-
     .delete-row-button:hover {
       transform: scale(1.2);
       color: #a71d2a;
     }
-
     .delete-row-button i {
       pointer-events: none;
     }
-    
-    @media (max-width: 480px) {
-      .planilha-tabela th,
-      .planilha-tabela td {
-        font-size: 12px;
-      }
 
-      .add-row-button {
-        font-size: 12px;
-        padding: 8px 16px;
-      }
+    /*************************************************************
+     *  Divisória hr3
+     *************************************************************/
+    .hr3 {
+      border: 0;
+      height: 2px;
+      margin: 30px 0;
+      background-image: linear-gradient(to right, transparent, #ccc, transparent);
     }
-
-    .button-container {
-        display: flex;
-        gap: 10px;
-        justify-content: center;
-        margin-top: 10px;
-    }      
-
-    .emissao-tabela {
-        width: 100%;
-        border-collapse: collapse;
-        margin-bottom: 20px;
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        table-layout: fixed;
-    }
-    
-    .emissao-tabela thead th {
-        text-align: center;
-        background-color: #222e3c;
-        color: #fff;
-        font-size: 14px;
-        font-weight: 600;
-        border: 1px solid #d9d9d9;
-        padding: 10px;
-    }
-    
-    .emissao-tabela th:nth-child(1) { width: 18%; } 
-    .emissao-tabela th:nth-child(2) { width: 12%; } 
-    .emissao-tabela th:nth-child(3) { width: 15%; } 
-    .emissao-tabela th:nth-child(4) { width: 15%; } 
-    .emissao-tabela th:nth-child(5) { width: 15%; } 
-    .emissao-tabela th:nth-child(6) { width: 15%; } 
-    .emissao-tabela th:nth-child(7) { width: 20%; } 
-    
-    .emissao-tabela td {
-        color: #333;
-        background-color: #f9f9f9;
-        text-align: center;
-        padding: 8px;
-        border: 1px solid #d9d9d9;
-    }
-    
-    .emissao-tabela input, .emissao-tabela select {
-        width: 100%;
-        padding: 8px;
-        box-sizing: border-box;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-    
-    .emissao-tabela thead th:first-child {
-        border-top-left-radius: 12px;
-    }
-    
-    .emissao-tabela thead th:last-child {
-        border-top-right-radius: 12px;
-    }
-    
-    .emissao-tabela tbody tr:last-child td:first-child {
-        border-bottom-left-radius: 12px;
-    }
-    
-    .emissao-tabela tbody tr:last-child td:last-child {
-        border-bottom-right-radius: 12px;
-    }
-  
   </style>
 </head>
 <body>
@@ -394,14 +272,13 @@
   <!-- Conteúdo principal -->
   <div class="order-details">
     <a href="pages-orders.html" class="back-button">Voltar para Página de Pedidos</a>
-
     <h1>Detalhes do Pedido</h1>
     <p>ID do Pedido: <span id="pedido-id">Carregando...</span></p>
 
     <!-- Informações do Pedido -->
     <div class="section">
       <h3>Informações do Pedido</h3>
-      <table>
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Status</th>
@@ -414,10 +291,12 @@
       </table>
     </div>
 
+    <hr class="hr3">
+
     <!-- Informações do Cliente -->
     <div class="section">
       <h3>Informações do Cliente</h3>
-      <table>
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Nome</th>
@@ -432,10 +311,12 @@
       </table>
     </div>
 
+    <hr class="hr3">
+
     <!-- Informações Financeiras -->
     <div class="section">
       <h3>Informações Financeiras</h3>
-      <table>
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Gateway</th>
@@ -448,7 +329,7 @@
         </thead>
         <tbody id="financial-info"></tbody>
       </table>
-      <table>
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Valor Comissão</th>
@@ -464,10 +345,12 @@
       </table>
     </div>
 
+    <hr class="hr3">
+
     <!-- Informações Comerciais -->
     <div class="section">
       <h3>Informações Comerciais</h3>
-      <table>
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Origem do Cliente</th>
@@ -480,10 +363,12 @@
       </table>
     </div>
 
+    <hr class="hr3">
+
     <!-- Informações Adicionais -->
     <div class="section">
       <h3>Informações Adicionais</h3>
-      <table>
+      <table class="emissao-tabela">
         <thead>
           <tr>
             <th>Observações Operacionais</th>
@@ -494,70 +379,48 @@
       </table>
     </div>
 
+    <hr class="hr3">
+
     <!-- Planilha do Pedido -->
     <div class="section planilha-pedido">
       <h3>Planilha do Pedido</h3>
-      <table class="planilha-tabela">
+
+      <!-- Primeira linha: Câmbio -->
+      <table class="emissao-tabela">
         <thead>
-            <tr>
-                <th>Dólar Câmbio</th>
-                <th>Dólar Magic</th>
-            </tr>
+          <tr>
+            <th>Dólar Câmbio</th>
+            <th>Dólar Magic</th>
+          </tr>
         </thead>
         <tbody>
-            <tr>
-                <td><input type="number" id="dolar-cambio" placeholder="Digite o câmbio"></td>
-                <td id="dolar-magic">0.00</td>
-            </tr>
+          <tr>
+            <td><input type="number" id="dolar-cambio" placeholder="Digite o câmbio" /></td>
+            <td id="dolar-magic">0.00</td>
+          </tr>
         </tbody>
       </table>
 
-      <!-- Segunda Linha: Planilha Completa -->
-      <table class="planilha-tabela">
+      <!-- Segunda Linha: Tabela Completa -->
+      <table class="emissao-tabela">
         <thead>
-            <tr>
-                <th>Produto</th>
-                <th>Data</th>
-                <th>Idade</th>
-                <th>Net U$</th>
-                <th>Lobista</th>
-                <th>Número</th>
-                <th>Total U$</th>
-                <th>Net R$</th>
-                <th>Margem</th>
-                <th>Pix</th>
-                <th>Taxa</th>
-                <th>10x</th>
-                <th>Ações</th>
-            </tr>
+          <tr>
+            <th>Produto</th>
+            <th>Data</th>
+            <th>Idade</th>
+            <th>Net U$</th>
+            <th>Lobista</th>
+            <th>Número</th>
+            <th>Total U$</th>
+            <th>Net R$</th>
+            <th>Margem</th>
+            <th>Pix</th>
+            <th>Taxa</th>
+            <th>10x</th>
+            <th>Ações</th>
+          </tr>
         </thead>
-        <tbody id="spreadsheet-info">
-            <tr>
-                <td><input type="text" name="produto"></td>
-                <td><input type="date" name="data"></td>
-                <td>
-                    <select name="idade">
-                        <option value="ADT">ADT</option>
-                        <option value="CHD">CHD</option>
-                    </select>
-                </td>
-                <td><input type="number" name="netDollar"></td>
-                <td><input type="number" name="lobista"></td>
-                <td><input type="number" name="quantidade"></td>
-                <td name="totalDollar">0.00</td>
-                <td name="netReal">0.00</td>
-                <td><input type="number" name="margem" step="0.01"></td>
-                <td name="totalPix">0.00</td>
-                <td><input type="number" name="taxa" step="0.01"></td>
-                <td name="total10x">0.00</td>
-                <td>
-                  <button class="delete-row-button" onclick="deleteRow(this)">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </td>
-            </tr>   
-        </tbody>
-        <!-- Linha de resumo dos totais -->
+        <tbody id="spreadsheet-info"></tbody>
         <tfoot>
           <tr style="font-weight: bold; background-color: #f0f0f0;">
             <td colspan="6" style="text-align: right;">Totais:</td>
@@ -576,6 +439,8 @@
       </div>
     </div>
 
+    <hr class="hr3">
+
     <!-- Emissão -->
     <div class="section">
       <h3>Emissão</h3>
@@ -587,17 +452,23 @@
             <th>Data de Uso</th>
             <th>Data de Pagamento</th>
             <th>Identificador</th>
-            <th>Invoice</th>
+            <th>Fornecedor</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody id="emission-info"></tbody>
       </table>
+      <button class="add-row-button" onclick="salvarEmissao()">Salvar Emissão</button>
     </div>
   </div>
 
   <!-- Scripts -->
   <script>
+    /************************************************************
+     * JS principal (igual ao anterior, apenas mudamos classes)
+     ************************************************************/
+    window.planilhasEmMemoria = [];
+
     document.addEventListener('DOMContentLoaded', () => {
       if (document.getElementById('sidebar-container')) {
         loadSidebar();
@@ -606,40 +477,22 @@
         loadOrderDetails();
       }
 
-      // Converte qualquer data já carregada para dd/mm/yyyy (exemplo de função extra):
-      document.querySelectorAll("#emission-info td:nth-child(2) span").forEach(cell => {
-        cell.textContent = formatDateToBR(cell.textContent);
-      });
-
-      // Evento para recalcular Dólar Magic
       document.getElementById('dolar-cambio').addEventListener('input', updateDolarMagic);
-      // Botão de adicionar linha na planilha principal
       document.getElementById('add-row-button').addEventListener('click', addNewRow);
     });
 
-    /* ------------------------------------------------------------
-       OBTÉM ID DO PEDIDO VIA URL
-    ------------------------------------------------------------ */
     function getPedidoId() {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get('pedido') || 'Não informado';
     }
 
-    /* ------------------------------------------------------------
-       FORMATA A DATA PARA PT-BR
-    ------------------------------------------------------------ */
-    function formatDate(date) {
-      return date ? new Date(date).toLocaleDateString('pt-BR') : '';
-    }
-    function formatDateToBR(dateString) {
-      if (!dateString) return "";
-      const [year, month, day] = dateString.split("-");
-      return `${day}/${month}/${year}`;
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      const d = new Date(dateString);
+      if (isNaN(d)) return '';
+      return d.toLocaleDateString('pt-BR');
     }
 
-    /* ------------------------------------------------------------
-       CARREGA A SIDEBAR
-    ------------------------------------------------------------ */
     async function loadSidebar() {
       try {
         const response = await fetch('sidebar.html');
@@ -652,9 +505,6 @@
       }
     }
 
-    /* ------------------------------------------------------------
-       CARREGA DETALHES DO PEDIDO (API_Pedidos)
-    ------------------------------------------------------------ */
     async function loadOrderDetails() {
       const pedidoId = getPedidoId();
       if (pedidoId === "Não informado") {
@@ -668,13 +518,13 @@
         const pedidos = await response.json();
 
         if (!response.ok || !pedidos || pedidos.length === 0) {
-          throw new Error(`Erro ao buscar os detalhes do pedido. Status: ${response.status}`);
+          throw new Error(`Erro ao buscar detalhes do pedido. Status: ${response.status}`);
         }
 
         const pedido = pedidos[0];
         document.getElementById("pedido-id").textContent = pedidoId;
 
-        // Preenche as informações do pedido
+        // Pedido
         document.getElementById('order-info').innerHTML =
           `<tr>
             <td>
@@ -692,7 +542,7 @@
             <td>${formatDate(pedido.data_venda)}</td>
           </tr>`;
 
-        // Preenche as informações do cliente
+        // Cliente
         document.getElementById('customer-info').innerHTML =
           `<tr>
             <td>${pedido.nome_comprador || ''}</td>
@@ -703,30 +553,29 @@
             <td>${pedido.uf || ''}</td>
           </tr>`;
 
-        // Preenche as informações financeiras (primeira parte)
+        // Financeiras
         document.getElementById('financial-info').innerHTML =
           `<tr>
             <td>${pedido.gateway || '<input type="text" placeholder="Gateway">'}</td>
             <td>${pedido.data_pgto ? formatDate(pedido.data_pgto) : '<input type="date">'}</td>
-            <td>${pedido.recebido ? `R$ ${parseFloat(pedido.recebido).toFixed(2)}` : '<input type="number" placeholder="Recebido">'}</td>
-            <td>${pedido.valor_repassado ? `R$ ${parseFloat(pedido.valor_repassado).toFixed(2)}` : '<input type="number" placeholder="Valor Repassado">'}</td>
+            <td>${pedido.recebido ? 'R$ ' + parseFloat(pedido.recebido).toFixed(2) : '<input type="number" placeholder="Recebido">'}</td>
+            <td>${pedido.valor_repassado ? 'R$ ' + parseFloat(pedido.valor_repassado).toFixed(2) : '<input type="number" placeholder="Valor Repassado">'}</td>
             <td>${pedido.data_repasse ? formatDate(pedido.data_repasse) : '<input type="date">'}</td>
             <td>${pedido.cambio_dia || '<input type="number" placeholder="Câmbio do Dia">'}</td>
           </tr>`;
 
-        // Preenche as informações financeiras (segunda parte)
         document.getElementById('financial-info-2').innerHTML =
           `<tr>
-            <td>${pedido.valor_comissao ? `R$ ${parseFloat(pedido.valor_comissao).toFixed(2)}` : '<input type="number" placeholder="Valor Comissão">'}</td>
+            <td>${pedido.valor_comissao ? 'R$ ' + parseFloat(pedido.valor_comissao).toFixed(2) : '<input type="number" placeholder="Valor Comissão">'}</td>
             <td>${pedido.meio_pgto || '<input type="text" placeholder="Meio Pgto">'}</td>
             <td>${pedido.bandeira_cartao || '<input type="text" placeholder="Bandeira Cartão">'}</td>
             <td>${pedido.parcelas || '<input type="number" placeholder="Parcelas">'}</td>
-            <td>${pedido.valor_venda ? `R$ ${parseFloat(pedido.valor_venda).toFixed(2)}` : '<input type="number" placeholder="Valor Venda">'}</td>
-            <td>${pedido.custo ? `R$ ${parseFloat(pedido.custo).toFixed(2)}` : '<input type="number" placeholder="Custo">'}</td>
+            <td>${pedido.valor_venda ? 'R$ ' + parseFloat(pedido.valor_venda).toFixed(2) : '<input type="number" placeholder="Valor Venda">'}</td>
+            <td>${pedido.custo ? 'R$ ' + parseFloat(pedido.custo).toFixed(2) : '<input type="number" placeholder="Custo">'}</td>
             <td>${pedido.fornecedor || '<input type="text" placeholder="Fornecedor">'}</td>
           </tr>`;
 
-        // Preenche as informações comerciais
+        // Comerciais
         document.getElementById('commercial-info').innerHTML =
           `<tr>
             <td>${pedido.origem_cliente || '<input type="text" placeholder="Origem do Cliente">'}</td>
@@ -735,136 +584,120 @@
             <td>${pedido.comissao_do_agente || '<input type="text" placeholder="Comissão Agente">'}</td>
           </tr>`;
 
-        // Preenche as informações adicionais
+        // Adicionais
         document.getElementById('additional-info').innerHTML =
           `<tr>
             <td>${pedido.observacoes_operacionais || '<input type="text" placeholder="Observações Operacionais">'}</td>
             <td>${pedido.observacoes_financeiras || '<input type="text" placeholder="Observações Financeiras">'}</td>
           </tr>`;
 
-        // Carrega a planilha do pedido
-        await loadPlanilhaPedido(pedido);
-
+        await loadPlanilhaPedido();
       } catch (error) {
-        console.error("Erro ao carregar os detalhes do pedido:", error);
-        alert(`Erro ao carregar os dados do pedido: ${error.message}`);
+        console.error("Erro ao carregar detalhes do pedido:", error);
+        alert(`Erro ao carregar dados do pedido: ${error.message}`);
       }
     }
 
-    /* ------------------------------------------------------------
-       CARREGA A PLANILHA (API_Planilhas) E MONTA TABELAS
-    ------------------------------------------------------------ */
-    function montarEmissao(planilhas) {
-      const emissionInfo = document.getElementById('emission-info');
-      emissionInfo.innerHTML = ''; // Limpa antes
-
-      if (!planilhas || planilhas.length === 0) {
-        emissionInfo.innerHTML = '<tr><td colspan="7" style="text-align: center;">Nenhuma informação disponível</td></tr>';
-        return;
-      }
-
-      planilhas.forEach((item) => {
-        const invoiceCell       = '<input type="text" placeholder="Digite o Invoice">';
-        const identificadorCell = '<input type="text" placeholder="Digite o Identificador">';
-        const statusCell = `
-          <select name="statusEmissao">
-            <option value="Aguardando Emissão">Aguardando Emissão</option>
-            <option value="Pendente de Pagamento">Pendente de Pagamento</option>
-          </select>
-        `;
-        const valorCell    = `<span>U$ ${item.total_usd ? parseFloat(item.total_usd).toFixed(2) : '0.00'}</span>`;
-        const dataUsoCell  = `<span>${formatDateToBR(item.data)}</span>`;
-        const dataPgtoCell = `<input type="date" name="dataPagamento" value="${item.data_pagamento || ''}">`;
-
-        emissionInfo.insertAdjacentHTML("beforeend", `
-          <tr>
-            <td>${item.produto}</td>
-            <td>${valorCell}</td>
-            <td>${dataUsoCell}</td>
-            <td>${dataPgtoCell}</td>
-            <td>${identificadorCell}</td>
-            <td>${invoiceCell}</td>
-            <td>${statusCell}</td>
-          </tr>
-        `);
-      });
-    }
-
-    async function loadPlanilhaPedido(pedido) {
+    async function loadPlanilhaPedido() {
       const pedidoId = document.getElementById("pedido-id").textContent;
-      if (!pedidoId || pedidoId === "Carregando...") {
-        alert("Erro: ID do pedido não encontrado.");
-        return;
-      }
+      if (!pedidoId || pedidoId === "Carregando...") return;
 
       try {
         const planilhaApiUrl = `https://magictraveltur.com/api_planilhas.php?id_pedido=${pedidoId}&v=${Date.now()}`;
         const response = await fetch(planilhaApiUrl, { cache: 'no-store' });
         if (!response.ok) {
-          throw new Error(`Erro ao buscar os detalhes da planilha. Status: ${response.status}`);
+          throw new Error(`Erro ao buscar planilhas. Status: ${response.status}`);
         }
+
         const planilhas = await response.json();
-        const spreadsheetInfo = document.getElementById("spreadsheet-info");
+        window.planilhasEmMemoria = planilhas || [];
 
-        if (!planilhas || planilhas.length === 0) {
-          console.warn("Nenhuma planilha encontrada para o pedido:", pedidoId);
-        } else {
-          spreadsheetInfo.innerHTML = "";
+        document.getElementById("spreadsheet-info").innerHTML = "";
+        document.getElementById("emission-info").innerHTML = "";
 
-          // **AQUI adicionamos data-planilha-id para cada linha**
-          planilhas.forEach((linha) => {
-            const newRow = `
-              <tr data-planilha-id="${linha.id}">
-                <td><input type="text" name="produto" value="${linha.produto || ''}"></td>
-                <td><input type="date" name="data" value="${linha.data || ''}"></td>
-                <td>
-                  <select name="idade">
-                    <option value="ADT" ${linha.idade === "ADT" ? "selected" : ""}>ADT</option>
-                    <option value="CHD" ${linha.idade === "CHD" ? "selected" : ""}>CHD</option>
-                  </select>
-                </td>
-                <td><input type="number" name="netDollar" value="${linha.net_usd || 0}"></td>
-                <td><input type="number" name="lobista" value="${linha.lobista || 0}"></td>
-                <td><input type="number" name="quantidade" value="${linha.quantidade || 0}"></td>
-                <td name="totalDollar">${linha.total_usd || '0.00'}</td>
-                <td name="netReal">${linha.net_brl || '0.00'}</td>
-                <td><input type="number" name="margem" value="${linha.margem || 0}" step="0.01"></td>
-                <td name="totalPix">${linha.total_pix || '0.00'}</td>
-                <td><input type="number" name="taxa" value="${linha.taxa || 0}" step="0.01"></td>
-                <td name="total10x">${linha.total_10x || '0.00'}</td>
-                <td>
-                  <button class="delete-row-button" onclick="deleteRow(this)">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </td>
-              </tr>
-            `;
-            spreadsheetInfo.insertAdjacentHTML("beforeend", newRow);
-          });
-
-          // Preenche os campos de câmbio
+        if (planilhas && planilhas.length > 0) {
+          montarPlanilhaPrincipal(planilhas);
           document.getElementById("dolar-cambio").value = planilhas[0].dolar_cambio || 0;
           document.getElementById("dolar-magic").textContent = planilhas[0].dolar_magic || "0.00";
         }
-
-        // Atacha eventos para recalcular valores
-        document.querySelectorAll("#spreadsheet-info input, #spreadsheet-info select").forEach((element) => {
-          element.addEventListener("input", calcularValoresPlanilha);
-        });
-
-        // Calcula valores iniciais
-        calcularValoresPlanilha();
         montarEmissao(planilhas);
 
+        document.querySelectorAll("#spreadsheet-info input, #spreadsheet-info select").forEach((el) => {
+          el.addEventListener("input", calcularValoresPlanilha);
+        });
+        calcularValoresPlanilha();
       } catch (error) {
-        console.error("Erro ao carregar a planilha do pedido:", error);
-        alert(`Erro ao carregar os dados da planilha: ${error.message}`);
+        console.error("Erro ao carregar planilha do pedido:", error);
+        alert("Erro ao carregar planilha: " + error.message);
       }
     }
 
-    /* ------------------------------------------------------------
-       ADICIONA UMA NOVA LINHA NA TABELA DA PLANILHA
-    ------------------------------------------------------------ */
+    function montarPlanilhaPrincipal(planilhas) {
+      const spreadsheetInfo = document.getElementById("spreadsheet-info");
+      spreadsheetInfo.innerHTML = "";
+
+      planilhas.forEach((linha) => {
+        const newRow = `
+          <tr data-planilha-id="${linha.id}">
+            <td><input type="text" name="produto" value="${linha.produto || ''}"></td>
+            <td><input type="date" name="data" value="${linha.data || ''}"></td>
+            <td>
+              <select name="idade">
+                <option value="ADT" ${linha.idade === "ADT" ? "selected" : ""}>ADT</option>
+                <option value="CHD" ${linha.idade === "CHD" ? "selected" : ""}>CHD</option>
+              </select>
+            </td>
+            <td><input type="number" name="netDollar" value="${linha.net_usd || 0}"></td>
+            <td><input type="number" name="lobista"   value="${linha.lobista || 0}"></td>
+            <td><input type="number" name="quantidade" value="${linha.quantidade || 0}"></td>
+            <td name="totalDollar">${linha.total_usd || '0.00'}</td>
+            <td name="netReal">${linha.net_brl || '0.00'}</td>
+            <td><input type="number" name="margem" step="0.01" value="${linha.margem || 0}"></td>
+            <td name="totalPix">${linha.total_pix || '0.00'}</td>
+            <td><input type="number" name="taxa" step="0.01" value="${linha.taxa || 0}"></td>
+            <td name="total10x">${linha.total_10x || '0.00'}</td>
+            <td>
+              <button class="delete-row-button" onclick="deleteRow(this)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        `;
+        spreadsheetInfo.insertAdjacentHTML("beforeend", newRow);
+      });
+    }
+
+    function montarEmissao(planilhas) {
+      const emissionInfo = document.getElementById('emission-info');
+      emissionInfo.innerHTML = '';
+
+      if (!planilhas || planilhas.length === 0) {
+        emissionInfo.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma informação disponível</td></tr>';
+        return;
+      }
+
+      planilhas.forEach((item) => {
+        const row = `
+          <tr data-planilha-id="${item.id}">
+            <td><span>${item.produto || ''}</span></td>
+            <td><span>${item.net_usd ? parseFloat(item.net_usd).toFixed(2) : '0.00'}</span></td>
+            <td><span>${item.data ? formatDate(item.data) : ''}</span></td>
+            <td><input type="date" name="dataPagamento" value="${item.data_pagamento || ''}"></td>
+            <td><input type="text" name="identificador" value="${item.identificador || ''}"></td>
+            <td><input type="text" name="fornecedor"    value="${item.fornecedor || ''}"></td>
+            <td>
+              <select name="status">
+                <option value="Aguardando Emissão"    ${item.status === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
+                <option value="Pendente de Pagamento" ${item.status === "Pendente de Pagamento" ? "selected" : ""}>Pendente de Pagamento</option>
+                <option value="Concluído"             ${item.status === "Concluído" ? "selected" : ""}>Concluído</option>
+              </select>
+            </td>
+          </tr>
+        `;
+        emissionInfo.insertAdjacentHTML("beforeend", row);
+      });
+    }
+
     function addNewRow() {
       const spreadsheetInfo = document.getElementById("spreadsheet-info");
       const newRow = `
@@ -895,102 +728,88 @@
       `;
       spreadsheetInfo.insertAdjacentHTML("beforeend", newRow);
 
-      // Reatacha o evento de cálculo na nova linha
       spreadsheetInfo.querySelectorAll('input, select').forEach((element) => {
         element.removeEventListener('input', calcularValoresPlanilha);
         element.addEventListener('input', calcularValoresPlanilha);
       });
     }
 
-    /* ------------------------------------------------------------
-       EXCLUIR UMA LINHA DA PLANILHA
-       (ENVIANDO ID REAL DO BANCO, SE EXISTIR)
-    ------------------------------------------------------------ */
     async function deleteRow(button) {
-        const row = button.closest('tr');
-        const planilhaId = row.getAttribute("data-planilha-id"); // <-- Captura o ID do <tr>
-            
-        // Se não tiver ID, pode ser uma linha que ainda não foi salva no banco
-        if (!planilhaId) {
-            if (confirm("Essa linha não possui ID (não está salva no banco). Deseja removê-la mesmo assim?")) {
-            row.remove();
-            calcularValoresPlanilha();
-            }
-            return;
+      const row = button.closest('tr');
+      const planilhaId = row.getAttribute("data-planilha-id");
+
+      if (!planilhaId) {
+        if (confirm("Linha não salva no banco. Remover mesmo assim?")) {
+          row.remove();
+          calcularValoresPlanilha();
         }
+        return;
+      }
 
-        if (!confirm('Tem certeza que deseja excluir esta linha?')) {
-            return;
+      if (!confirm("Tem certeza que deseja excluir esta linha?")) return;
+
+      const pedidoId = document.getElementById('pedido-id').textContent;
+      try {
+        const response = await fetch("https://magictraveltur.com/api_planilhas.php", {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id_pedido: pedidoId, id: planilhaId }),
+        });
+        if (!response.ok) {
+          const textErr = await response.text();
+          throw new Error(`Erro ao excluir: ${response.status} - ${textErr}`);
         }
-
-        const pedidoId = document.getElementById('pedido-id').textContent;
-        try {
-            const response = await fetch('https://magictraveltur.com/api_planilhas.php', {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                id_pedido: pedidoId,
-                id: planilhaId       // <-- CHAVE RENOMEADA
-            }),
-            });
-
-            if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Erro na exclusão: ${response.status} - ${errorText}`);
-            }
-
-            const result = await response.json();
-            if (result.status === 'success') {
-                alert('Linha excluída com sucesso!');
-                calcularValoresPlanilha();
-                window.location.href = window.location.href;
-                row.remove();
-
-            } else {
-                alert('Erro ao excluir: ' + (result.message || 'Erro desconhecido'));
-            }
-        } catch (error) {
-            console.error('Erro ao excluir a linha:', error);
-            alert('Erro ao excluir a linha. Verifique o console para mais detalhes.');
+        const result = await response.json();
+        if (result.status === 'success' || result.message === "Registro excluído com sucesso.") {
+          alert("Linha excluída!");
+          row.remove();
+          calcularValoresPlanilha();
+        } else {
+          alert("Erro ao excluir: " + (result.message || "desconhecido"));
         }
+      } catch (error) {
+        console.error("Erro ao excluir linha:", error);
+        alert("Não foi possível excluir a linha. Veja o console.");
+      }
     }
 
-
-    /* ------------------------------------------------------------
-       SALVA A PLANILHA DO PEDIDO (POST NA API)
-    ------------------------------------------------------------ */
     async function salvarPlanilha() {
-        const pedidoId = document.getElementById("pedido-id").textContent;
-        const linhas = document.querySelectorAll("#spreadsheet-info tr");
-        const dolarCambio = parseFloat(document.getElementById("dolar-cambio").value) || 0;
-        const dolarMagic = parseFloat(document.getElementById("dolar-magic").textContent) || 0;
-      
-        // 1) Monta array de todas as linhas que o usuário preencheu
-        const todasAsLinhas = [];
-        for (let linha of linhas) {
-          const planilhaId = linha.getAttribute("data-planilha-id") || null;
-          const produto    = linha.querySelector('input[name="produto"]')?.value || "";
-          const data       = linha.querySelector('input[name="data"]')?.value || "";
-          const idade      = linha.querySelector('select[name="idade"]')?.value || "";
-          const netDollar  = parseFloat(linha.querySelector('input[name="netDollar"]')?.value) || 0;
-          const lobista    = parseFloat(linha.querySelector('input[name="lobista"]')?.value) || 0;
-          const quantidade = parseInt(linha.querySelector('input[name="quantidade"]')?.value) || 0;
-          const margem     = parseFloat(linha.querySelector('input[name="margem"]')?.value) || 0;
-          const taxa       = parseFloat(linha.querySelector('input[name="taxa"]')?.value) || 0;
-      
-          const totalUsd = (netDollar + lobista) * quantidade;
-          const netBrl   = totalUsd * dolarMagic;
-          const totalPix = netBrl / (1 - (margem / 100));
-          const total10x = totalPix / (1 - (taxa / 100));
-      
-          // Checa campos obrigatórios
-          if (!produto || !data) {
-            alert("Erro: Campos obrigatórios (produto e data) não foram preenchidos em uma das linhas.");
-            return;
-          }
-      
-          todasAsLinhas.push({
-            id: planilhaId, // se tiver valor, é update; se null, é insert
+      const pedidoId = document.getElementById("pedido-id").textContent;
+      if (!pedidoId) {
+        alert("ID do pedido não encontrado.");
+        return;
+      }
+
+      const linhas = document.querySelectorAll("#spreadsheet-info tr");
+      const dolarCambio = parseFloat(document.getElementById("dolar-cambio").value) || 0;
+      const dolarMagic  = parseFloat(document.getElementById("dolar-magic").textContent) || 0;
+
+      const novos = [];
+      const existentes = [];
+
+      for (let linha of linhas) {
+        const planilhaId = linha.getAttribute("data-planilha-id");
+        const produto    = linha.querySelector('input[name="produto"]')?.value || "";
+        const data       = linha.querySelector('input[name="data"]')?.value || "";
+        const idade      = linha.querySelector('select[name="idade"]')?.value || "";
+        const netDollar  = parseFloat(linha.querySelector('input[name="netDollar"]')?.value) || 0;
+        const lobista    = parseFloat(linha.querySelector('input[name="lobista"]')?.value) || 0;
+        const quantidade = parseInt(linha.querySelector('input[name="quantidade"]')?.value) || 0;
+        const margem     = parseFloat(linha.querySelector('input[name="margem"]')?.value) || 0;
+        const taxa       = parseFloat(linha.querySelector('input[name="taxa"]')?.value) || 0;
+
+        const totalUsd = (netDollar + lobista) * quantidade;
+        const netBrl   = totalUsd * dolarMagic;
+        const totalPix = netBrl / (1 - (margem/100));
+        const total10x = totalPix / (1 - (taxa/100));
+
+        if (!produto || !data) {
+          alert("Campos obrigatórios (produto e data) não foram preenchidos em uma linha.");
+          return;
+        }
+
+        if (!planilhaId) {
+          novos.push({
             id_pedido: pedidoId,
             produto,
             data,
@@ -1007,97 +826,166 @@
             dolar_cambio: dolarCambio,
             dolar_magic: dolarMagic
           });
-        }
-      
-        if (todasAsLinhas.length === 0) {
-          alert("Nenhuma linha válida para salvar.");
-          return;
-        }
-      
-        // 2) Separa em novasLinhas (sem ID) e linhasExistentes (com ID)
-        const novasLinhas = todasAsLinhas.filter((item) => !item.id_planilha);
-        const linhasExistentes = todasAsLinhas.filter((item) => item.id_planilha);
-      
-        try {
-          // 3) Faz uma lista de Promises para realizar insert e update
-          const promises = [];
-      
-          // 3.1) Se houver novas linhas, faz requisição POST para inseri-las
-          if (novasLinhas.length > 0) {
-            promises.push(
-              fetch("https://magictraveltur.com/api_planilhas.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(novasLinhas),
-              })
-              .then(async (res) => {
-                if (!res.ok) {
-                  const txt = await res.text();
-                  throw new Error(`Erro ao inserir linhas: ${res.status} - ${txt}`);
-                }
-                return res.json();
-              })
-            );
+        } else {
+          const original = window.planilhasEmMemoria.find(p => p.id == planilhaId);
+          if (!original) {
+            novos.push({
+              id_pedido: pedidoId,
+              produto,
+              data,
+              idade,
+              net_usd: netDollar,
+              lobista,
+              quantidade,
+              total_usd: totalUsd,
+              net_brl: netBrl,
+              margem,
+              total_pix: totalPix,
+              taxa,
+              total_10x: total10x,
+              dolar_cambio: dolarCambio,
+              dolar_magic: dolarMagic
+            });
+          } else {
+            const atualizado = { ...original };
+            atualizado.produto = produto;
+            atualizado.data = data;
+            atualizado.idade = idade;
+            atualizado.net_usd = netDollar;
+            atualizado.lobista = lobista;
+            atualizado.quantidade = quantidade;
+            atualizado.total_usd = totalUsd;
+            atualizado.net_brl = netBrl;
+            atualizado.margem = margem;
+            atualizado.total_pix = totalPix;
+            atualizado.taxa = taxa;
+            atualizado.total_10x = total10x;
+            atualizado.dolar_cambio = dolarCambio;
+            atualizado.dolar_magic = dolarMagic;
+            existentes.push(atualizado);
           }
-      
-          // 3.2) Se houver linhas existentes, faz requisição PUT para atualizá-las
-          if (linhasExistentes.length > 0) {
-            promises.push(
-              fetch("https://magictraveltur.com/api_planilhas.php", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(linhasExistentes),
-              })
-              .then(async (res) => {
-                if (!res.ok) {
-                  const txt = await res.text();
-                  throw new Error(`Erro ao atualizar linhas: ${res.status} - ${txt}`);
-                }
-                return res.json();
-              })
-            );
-          }
-      
-          // 4) Executa todas as promises (insert e update) paralelamente
-          await Promise.all(promises);
-      
-          alert("Planilha salva com sucesso!");
-
-          await loadPlanilhaPedido();
-        } catch (error) {
-          console.error("Erro ao salvar a planilha:", error);
-          alert("Erro ao salvar a planilha. Verifique o console para mais detalhes.");
         }
-      }      
-
-    /* ------------------------------------------------------------
-       RE-CALCULA OS VALORES DA PLANILHA (FRONT-END)
-    ------------------------------------------------------------ */
-    function calcularValores() {
-        document.querySelectorAll('#spreadsheet-info tr').forEach((row) => {
-          const netDollar = parseFloat(row.querySelector('input[name="netDollar"]').value) || 0;
-          const lobista = parseFloat(row.querySelector('input[name="lobista"]').value) || 0;
-          const quantidade = parseInt(row.querySelector('input[name="quantidade"]').value) || 0;
-          const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
-          const margem = parseFloat(row.querySelector('input[name="margem"]').value) / 100 || 0;
-          const taxa = parseFloat(row.querySelector('input[name="taxa"]').value) / 100 || 0;
-
-          const totalDollar = (netDollar + lobista) * quantidade;
-          const netReal = totalDollar * dolarMagic;
-          const totalPix = netReal / (1 - margem);
-          const total10x = totalPix / (1 - taxa);
-
-          row.querySelector('td[name="totalDollar"]').textContent = totalDollar.toFixed(2);
-          row.querySelector('td[name="netReal"]').textContent = netReal.toFixed(2);
-          row.querySelector('td[name="totalPix"]').textContent = totalPix.toFixed(2);
-          row.querySelector('td[name="total10x"]').textContent = total10x.toFixed(2);
-        });
-        calcularResumo();
       }
 
-    /* ------------------------------------------------------------
-       CALCULA O RESUMO DE TODAS AS LINHAS (TOTAIS)
-    ------------------------------------------------------------ */
+      try {
+        if (novos.length > 0) {
+          const resPost = await fetch("https://magictraveltur.com/api_planilhas.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(novos),
+          });
+          if (!resPost.ok) {
+            const txtErr = await resPost.text();
+            throw new Error(`Erro no POST: ${txtErr}`);
+          }
+        }
+
+        if (existentes.length > 0) {
+          const resPut = await fetch("https://magictraveltur.com/api_planilhas.php", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(existentes),
+          });
+          if (!resPut.ok) {
+            const txtErr = await resPut.text();
+            throw new Error(`Erro no PUT: ${txtErr}`);
+          }
+        }
+
+        if (novos.length === 0 && existentes.length === 0) {
+          alert("Nenhuma linha para salvar.");
+          return;
+        }
+
+        alert("Planilha salva com sucesso!");
+        await loadPlanilhaPedido();
+      } catch (error) {
+        console.error("Erro ao salvar planilha:", error);
+        alert("Erro ao salvar planilha: " + error.message);
+      }
+    }
+
+    async function salvarEmissao() {
+      const pedidoId = document.getElementById("pedido-id").textContent;
+      const emissionRows = document.querySelectorAll("#emission-info tr");
+
+      if (!pedidoId) {
+        alert("ID do pedido não encontrado para Emissão.");
+        return;
+      }
+
+      const updates = [];
+
+      emissionRows.forEach((row) => {
+        const planilhaId = row.getAttribute("data-planilha-id");
+        if (!planilhaId) return;
+
+        const original = window.planilhasEmMemoria.find(p => p.id == planilhaId);
+        if (!original) return;
+
+        const dataPagamento = row.querySelector('input[name="dataPagamento"]')?.value || null;
+        const identificador = row.querySelector('input[name="identificador"]')?.value || "";
+        const fornecedor    = row.querySelector('input[name="fornecedor"]')?.value || "";
+        const status        = row.querySelector('select[name="status"]')?.value || "";
+
+        const objPUT = { ...original };
+        objPUT.data_pagamento = dataPagamento;
+        objPUT.identificador  = identificador;
+        objPUT.fornecedor     = fornecedor;
+        objPUT.status         = status;
+
+        updates.push(objPUT);
+      });
+
+      if (updates.length === 0) {
+        alert("Nenhuma linha de Emissão para atualizar.");
+        return;
+      }
+
+      try {
+        const resPut = await fetch("https://magictraveltur.com/api_planilhas.php", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(updates),
+        });
+        if (!resPut.ok) {
+          const txtErr = await resPut.text();
+          throw new Error(`Erro no PUT (Emissão): ${txtErr}`);
+        }
+
+        alert("Emissão atualizada com sucesso!");
+        await loadPlanilhaPedido();
+      } catch (error) {
+        console.error("Erro ao salvar Emissão:", error);
+        alert("Erro ao salvar Emissão: " + error.message);
+      }
+    }
+
+    function calcularValoresPlanilha() {
+      const dolarMagic = parseFloat(document.getElementById("dolar-magic").textContent) || 0;
+      const rows = document.querySelectorAll("#spreadsheet-info tr");
+
+      rows.forEach((row) => {
+        const netDollar  = parseFloat(row.querySelector('input[name="netDollar"]')?.value) || 0;
+        const lobista    = parseFloat(row.querySelector('input[name="lobista"]')?.value) || 0;
+        const quantidade = parseInt(row.querySelector('input[name="quantidade"]')?.value) || 0;
+        const margem     = parseFloat(row.querySelector('input[name="margem"]')?.value) / 100 || 0;
+        const taxa       = parseFloat(row.querySelector('input[name="taxa"]')?.value) / 100 || 0;
+
+        const totalDollar = (netDollar + lobista) * quantidade;
+        const netReal     = totalDollar * dolarMagic;
+        const totalPix    = netReal / (1 - margem);
+        const total10x    = totalPix / (1 - taxa);
+
+        row.querySelector('td[name="totalDollar"]').textContent = totalDollar.toFixed(2);
+        row.querySelector('td[name="netReal"]').textContent     = netReal.toFixed(2);
+        row.querySelector('td[name="totalPix"]').textContent    = totalPix.toFixed(2);
+        row.querySelector('td[name="total10x"]').textContent    = total10x.toFixed(2);
+      });
+
+      calcularResumo();
+    }
+
     function calcularResumo() {
       let totalDollar = 0;
       let totalReal   = 0;
@@ -1105,10 +993,10 @@
       let total10x    = 0;
 
       document.querySelectorAll("#spreadsheet-info tr").forEach((row) => {
-        totalDollar += parseFloat(row.querySelector("td[name='totalDollar']")?.textContent) || 0;
-        totalReal   += parseFloat(row.querySelector("td[name='netReal']")?.textContent)     || 0;
-        totalPix    += parseFloat(row.querySelector("td[name='totalPix']")?.textContent)    || 0;
-        total10x    += parseFloat(row.querySelector("td[name='total10x']")?.textContent)    || 0;
+        totalDollar += parseFloat(row.querySelector('td[name="totalDollar"]')?.textContent) || 0;
+        totalReal   += parseFloat(row.querySelector('td[name="netReal"]')?.textContent) || 0;
+        totalPix    += parseFloat(row.querySelector('td[name="totalPix"]')?.textContent) || 0;
+        total10x    += parseFloat(row.querySelector('td[name="total10x"]')?.textContent) || 0;
       });
 
       document.getElementById("resumo-total-dollar").textContent = totalDollar.toFixed(2);
@@ -1117,12 +1005,8 @@
       document.getElementById("resumo-total-10x").textContent     = total10x.toFixed(2);
     }
 
-    /* ------------------------------------------------------------
-       QUANDO DIGITAR NO CÂMBIO, ATUALIZA O DÓLAR MAGIC
-    ------------------------------------------------------------ */
     function updateDolarMagic() {
       const dolarCambio = parseFloat(document.getElementById('dolar-cambio').value) || 0;
-      // Exemplo de fator de correção
       const dolarMagic = (dolarCambio * 1.0098).toFixed(2);
       document.getElementById('dolar-magic').textContent = dolarMagic;
       calcularValoresPlanilha();
