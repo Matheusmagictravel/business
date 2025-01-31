@@ -606,11 +606,6 @@
         loadOrderDetails();
       }
 
-      // Converte qualquer data já carregada para dd/mm/yyyy (exemplo de função extra):
-      document.querySelectorAll("#emission-info td:nth-child(2) span").forEach(cell => {
-        cell.textContent = formatDateToBR(cell.textContent);
-      });
-
       // Evento para recalcular Dólar Magic
       document.getElementById('dolar-cambio').addEventListener('input', updateDolarMagic);
       // Botão de adicionar linha na planilha principal
@@ -754,42 +749,6 @@
     /* ------------------------------------------------------------
        CARREGA A PLANILHA (API_Planilhas) E MONTA TABELAS
     ------------------------------------------------------------ */
-    function montarEmissao(planilhas) {
-      const emissionInfo = document.getElementById('emission-info');
-      emissionInfo.innerHTML = ''; // Limpa antes
-
-      if (!planilhas || planilhas.length === 0) {
-        emissionInfo.innerHTML = '<tr><td colspan="7" style="text-align: center;">Nenhuma informação disponível</td></tr>';
-        return;
-      }
-
-      planilhas.forEach((item) => {
-        const fornecedorCell = '<input type="text" placeholder="Digite o Fornecedor">';
-        const identificadorCell = '<input type="text" placeholder="Digite o Identificador">';
-        const statusCell = `
-          <select name="statusEmissao">
-            <option value="Aguardando Emissão">Aguardando Emissão</option>
-            <option value="Pendente de Pagamento">Pendente de Pagamento</option>
-          </select>
-        `;
-        const valorCell    = `<span>U$ ${item.total_usd ? parseFloat(item.total_usd).toFixed(2) : '0.00'}</span>`;
-        const dataUsoCell  = `<span>${formatDateToBR(item.data)}</span>`;
-        const dataPgtoCell = `<input type="date" name="dataPagamento" value="${item.data_pagamento || ''}">`;
-
-        emissionInfo.insertAdjacentHTML("beforeend", `
-          <tr>
-            <td>${item.produto}</td>
-            <td>${valorCell}</td>
-            <td>${dataUsoCell}</td>
-            <td>${dataPgtoCell}</td>
-            <td>${identificadorCell}</td>
-            <td>${fornecedorCell}</td>
-            <td>${statusCell}</td>
-          </tr>
-        `);
-      });
-    }
-
     async function loadPlanilhaPedido(pedido) {
       const pedidoId = document.getElementById("pedido-id").textContent;
       if (!pedidoId || pedidoId === "Carregando...") {
@@ -806,12 +765,14 @@
         const planilhas = await response.json();
         const spreadsheetInfo = document.getElementById("spreadsheet-info");
 
+        // Limpa a planilha atual (se houver) e a parte de Emissão
+        spreadsheetInfo.innerHTML = "";
+        document.getElementById('emission-info').innerHTML = "";
+
         if (!planilhas || planilhas.length === 0) {
           console.warn("Nenhuma planilha encontrada para o pedido:", pedidoId);
         } else {
-          spreadsheetInfo.innerHTML = "";
-
-          // **AQUI adicionamos data-planilha-id para cada linha**
+          // Monta as linhas da planilha principal
           planilhas.forEach((linha) => {
             const newRow = `
               <tr data-planilha-id="${linha.id}">
@@ -847,19 +808,75 @@
           document.getElementById("dolar-magic").textContent = planilhas[0].dolar_magic || "0.00";
         }
 
-        // Atacha eventos para recalcular valores
+        // Atacha eventos para recalcular valores na planilha
         document.querySelectorAll("#spreadsheet-info input, #spreadsheet-info select").forEach((element) => {
           element.addEventListener("input", calcularValoresPlanilha);
         });
-
         // Calcula valores iniciais
         calcularValoresPlanilha();
+
+        // Monta a parte de Emissão
         montarEmissao(planilhas);
 
       } catch (error) {
         console.error("Erro ao carregar a planilha do pedido:", error);
         alert(`Erro ao carregar os dados da planilha: ${error.message}`);
       }
+    }
+
+    /* ------------------------------------------------------------
+       MONTA A TABELA DE EMISSÃO
+    ------------------------------------------------------------ */
+    function montarEmissao(planilhas) {
+      const emissionInfo = document.getElementById('emission-info');
+      emissionInfo.innerHTML = ''; // Limpa antes
+
+      if (!planilhas || planilhas.length === 0) {
+        emissionInfo.innerHTML = '<tr><td colspan="7" style="text-align: center;">Nenhuma informação disponível</td></tr>';
+        return;
+      }
+
+      planilhas.forEach((item) => {
+        // Para identificar a mesma linha no banco, usamos item.id
+        // Aqui colocamos data-planilha-id para facilitar o PUT/POST
+        const newRow = `
+          <tr data-planilha-id="${item.id}">
+            <!-- Itens (produto) -->
+            <td>
+              <input type="text" name="produto" value="${item.produto || ''}">
+            </td>
+            <!-- Valor (U$) -->
+            <td>
+              <input type="number" name="valorUsd" value="${item.net_usd || 0}" step="0.01">
+            </td>
+            <!-- Data de Uso (usa "data" do banco) -->
+            <td>
+              <input type="date" name="dataUso" value="${item.data || ''}">
+            </td>
+            <!-- Data de Pagamento (usa "data_pagamento" do banco) -->
+            <td>
+              <input type="date" name="dataPagamento" value="${item.data_pagamento || ''}">
+            </td>
+            <!-- Identificador (coluna 'identificador') -->
+            <td>
+              <input type="text" name="identificador" value="${item.identificador || ''}">
+            </td>
+            <!-- Fornecedor (caso exista no DB) -->
+            <td>
+              <input type="text" name="fornecedor" value="${item.fornecedor || ''}">
+            </td>
+            <!-- Status (coluna 'status') -->
+            <td>
+              <select name="status">
+                <option value="Aguardando Emissão"     ${item.status === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
+                <option value="Pendente de Pagamento"  ${item.status === "Pendente de Pagamento" ? "selected" : ""}>Pendente de Pagamento</option>
+                <option value="Concluído"              ${item.status === "Concluído" ? "selected" : ""}>Concluído</option>
+              </select>
+            </td>
+          </tr>
+        `;
+        emissionInfo.insertAdjacentHTML("beforeend", newRow);
+      });
     }
 
     /* ------------------------------------------------------------
@@ -904,17 +921,17 @@
 
     /* ------------------------------------------------------------
        EXCLUIR UMA LINHA DA PLANILHA
-       (ENVIANDO ID REAL DO BANCO, SE EXISTIR)
+       (enviando ID real do banco, se existir)
     ------------------------------------------------------------ */
     async function deleteRow(button) {
         const row = button.closest('tr');
-        const planilhaId = row.getAttribute("data-planilha-id"); // <-- Captura o ID do <tr>
+        const planilhaId = row.getAttribute("data-planilha-id"); // ID do <tr>
             
-        // Se não tiver ID, pode ser uma linha que ainda não foi salva no banco
+        // Se não tiver ID, é linha não salva
         if (!planilhaId) {
             if (confirm("Essa linha não possui ID (não está salva no banco). Deseja removê-la mesmo assim?")) {
-            row.remove();
-            calcularValoresPlanilha();
+              row.remove();
+              calcularValoresPlanilha();
             }
             return;
         }
@@ -926,26 +943,24 @@
         const pedidoId = document.getElementById('pedido-id').textContent;
         try {
             const response = await fetch('https://magictraveltur.com/api_planilhas.php', {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
+              method: 'DELETE',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
                 id_pedido: pedidoId,
-                id: planilhaId       // <-- CHAVE RENOMEADA
-            }),
+                id: planilhaId
+              }),
             });
 
             if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Erro na exclusão: ${response.status} - ${errorText}`);
+              const errorText = await response.text();
+              throw new Error(`Erro na exclusão: ${response.status} - ${errorText}`);
             }
 
             const result = await response.json();
-            if (result.status === 'success') {
+            if (result.status === 'success' || result.message === "Registro excluído com sucesso.") {
                 alert('Linha excluída com sucesso!');
-                calcularValoresPlanilha();
-                window.location.href = window.location.href;
                 row.remove();
-
+                calcularValoresPlanilha();
             } else {
                 alert('Erro ao excluir: ' + (result.message || 'Erro desconhecido'));
             }
@@ -955,9 +970,10 @@
         }
     }
 
-
     /* ------------------------------------------------------------
        SALVA A PLANILHA DO PEDIDO (POST NA API)
+       (same logic para upsert: se (id_pedido, produto, data) existe,
+        o código do back-end faz UPDATE, senão faz INSERT)
     ------------------------------------------------------------ */
     async function salvarPlanilha() {
         const pedidoId = document.getElementById("pedido-id").textContent;
@@ -965,7 +981,6 @@
         const dolarCambio = parseFloat(document.getElementById("dolar-cambio").value) || 0;
         const dolarMagic = parseFloat(document.getElementById("dolar-magic").textContent) || 0;
       
-        // 1) Monta array de todas as linhas que o usuário preencheu
         const todasAsLinhas = [];
         for (let linha of linhas) {
           const planilhaId = linha.getAttribute("data-planilha-id") || null;
@@ -983,14 +998,16 @@
           const totalPix = netBrl / (1 - (margem / 100));
           const total10x = totalPix / (1 - (taxa / 100));
       
-          // Checa campos obrigatórios
+          // Campos obrigatórios
           if (!produto || !data) {
             alert("Erro: Campos obrigatórios (produto e data) não foram preenchidos em uma das linhas.");
             return;
           }
       
           todasAsLinhas.push({
-            id: planilhaId, // se tiver valor, é update; se null, é insert
+            // O back-end ignora "id" no POST para upsert,
+            // mas mantemos aqui caso seja útil.
+            id: planilhaId,
             id_pedido: pedidoId,
             produto,
             data,
@@ -1014,61 +1031,98 @@
           return;
         }
       
-        // 2) Separa em novasLinhas (sem ID) e linhasExistentes (com ID)
-        const novasLinhas = todasAsLinhas.filter((item) => !item.id_planilha);
-        const linhasExistentes = todasAsLinhas.filter((item) => item.id_planilha);
-      
         try {
-          // 3) Faz uma lista de Promises para realizar insert e update
-          const promises = [];
-      
-          // 3.1) Se houver novas linhas, faz requisição POST para inseri-las
-          if (novasLinhas.length > 0) {
-            promises.push(
-              fetch("https://magictraveltur.com/api_planilhas.php", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(novasLinhas),
-              })
-              .then(async (res) => {
-                if (!res.ok) {
-                  const txt = await res.text();
-                  throw new Error(`Erro ao inserir linhas: ${res.status} - ${txt}`);
-                }
-                return res.json();
-              })
-            );
+          // O mesmo endpoint 'POST' já faz o upsert baseado em (id_pedido, produto, data)
+          const response = await fetch("https://magictraveltur.com/api_planilhas.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(todasAsLinhas),
+          });
+          if (!response.ok) {
+            const txt = await response.text();
+            throw new Error(`Erro ao salvar linhas (Planilha): ${response.status} - ${txt}`);
           }
-      
-          // 3.2) Se houver linhas existentes, faz requisição PUT para atualizá-las
-          if (linhasExistentes.length > 0) {
-            promises.push(
-              fetch("https://magictraveltur.com/api_planilhas.php", {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(linhasExistentes),
-              })
-              .then(async (res) => {
-                if (!res.ok) {
-                  const txt = await res.text();
-                  throw new Error(`Erro ao atualizar linhas: ${res.status} - ${txt}`);
-                }
-                return res.json();
-              })
-            );
-          }
-      
-          // 4) Executa todas as promises (insert e update) paralelamente
-          await Promise.all(promises);
+          await response.json();
       
           alert("Planilha salva com sucesso!");
-
           await loadPlanilhaPedido();
         } catch (error) {
           console.error("Erro ao salvar a planilha:", error);
           alert("Erro ao salvar a planilha. Verifique o console para mais detalhes.");
         }
-      }      
+      }
+
+    /* ------------------------------------------------------------
+       FUNÇÃO PARA SALVAR A PARTE DE EMISSÃO
+       (semelhante ao salvarPlanilha, mas lê #emission-info)
+    ------------------------------------------------------------ */
+    async function salvarEmissao() {
+      const pedidoId = document.getElementById("pedido-id").textContent;
+      const emissionRows = document.querySelectorAll("#emission-info tr");
+
+      if (!pedidoId || pedidoId === "Carregando...") {
+        alert("ID do pedido não encontrado para salvar Emissão.");
+        return;
+      }
+
+      const dadosEmissao = [];
+      emissionRows.forEach((row) => {
+        const planilhaId    = row.getAttribute("data-planilha-id") || null;
+        const produto       = row.querySelector('input[name="produto"]')?.value || "";
+        const valorUsd      = parseFloat(row.querySelector('input[name="valorUsd"]')?.value) || 0;
+        const dataUso       = row.querySelector('input[name="dataUso"]')?.value || "";
+        const dataPagamento = row.querySelector('input[name="dataPagamento"]')?.value || "";
+        const identificador = row.querySelector('input[name="identificador"]')?.value || "";
+        const fornecedor    = row.querySelector('input[name="fornecedor"]')?.value || "";
+        const status        = row.querySelector('select[name="status"]')?.value || "";
+
+        // Campos obrigatórios do upsert: id_pedido, produto, data
+        // Para Emissão, vamos usar dataUso como "data" (coluna do BD)
+        if (!produto || !dataUso) {
+          // Se a linha estiver incompleta, ignore ou alerte
+          console.warn("Linha de Emissão ignorada pois não tem produto ou dataUso.");
+          return;
+        }
+
+        dadosEmissao.push({
+          id: planilhaId,
+          id_pedido: pedidoId,
+          produto: produto,
+          data: dataUso,                  // mapeando dataUso -> data
+          net_usd: valorUsd,             // Valor (U$) será armazenado em net_usd
+          data_pagamento: dataPagamento, // campo adicional no BD
+          identificador: identificador,
+          fornecedor: fornecedor,        // caso exista no BD
+          status: status
+        });
+      });
+
+      if (dadosEmissao.length === 0) {
+        alert("Nenhuma linha de Emissão para salvar.");
+        return;
+      }
+
+      try {
+        // O mesmo endpoint: method POST -> upsert com base em (id_pedido, produto, data)
+        const response = await fetch("https://magictraveltur.com/api_planilhas.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(dadosEmissao),
+        });
+        if (!response.ok) {
+          const txt = await response.text();
+          throw new Error(`Erro ao salvar Emissão: ${response.status} - ${txt}`);
+        }
+        await response.json();
+
+        alert("Emissão salva com sucesso!");
+        // Recarrega as planilhas para refletir possíveis atualizações
+        await loadPlanilhaPedido();
+      } catch (error) {
+        console.error("Erro ao salvar Emissão:", error);
+        alert("Erro ao salvar Emissão. Verifique o console para mais detalhes.");
+      }
+    }
 
     /* ------------------------------------------------------------
        RE-CALCULA OS VALORES DA PLANILHA (FRONT-END)
@@ -1125,8 +1179,7 @@
     ------------------------------------------------------------ */
     function updateDolarMagic() {
       const dolarCambio = parseFloat(document.getElementById('dolar-cambio').value) || 0;
-      // Exemplo de fator de correção
-      const dolarMagic = (dolarCambio * 1.0098).toFixed(2);
+      const dolarMagic = (dolarCambio * 1.0098).toFixed(2); // Exemplo de cálculo
       document.getElementById('dolar-magic').textContent = dolarMagic;
       calcularValoresPlanilha();
     }
