@@ -63,7 +63,7 @@
       font-size: 24px;
       font-weight: bold;
       margin: 0 0 10px;
-      color: #0d112d;
+      color: #4a4a4a;
       text-align: left;
     }
 
@@ -105,7 +105,7 @@
     }
 
     /*************************************************************
-     *  TABELA PADRÃO (baseado em .emissao-tabela) para todos os blocos
+     *  TABELA PADRÃO ( .emissao-tabela ) - mesmo design para tudo
      *************************************************************/
     .emissao-tabela {
       width: 100%;
@@ -129,9 +129,6 @@
       text-transform: capitalize;
     }
 
-    /* Exemplo de col widths se quiser */
-    /* .emissao-tabela th:nth-child(1) { width: 18%; } etc. */
-
     .emissao-tabela td {
       color: #333;
       background-color: #f9f9f9;
@@ -149,7 +146,7 @@
       border-radius: 4px;
     }
 
-    /* Arredondando cantos (top e bottom) */
+    /* Arredondar cantos top e bottom */
     .emissao-tabela thead th:first-child {
       border-top-left-radius: 12px;
     }
@@ -171,13 +168,34 @@
     }
 
     /*************************************************************
-     *  Seções
+     *  Seções - padronizadas
      *************************************************************/
     .section {
       display: flex;
       flex-direction: column;
-      margin-bottom: 40px;
     }
+
+    /*************************************************************
+     *  Ajuste de colunas ESPECÍFICAS na Planilha do Pedido
+     *  (Segundo table dentro da .section planilha)
+     *************************************************************/
+    /* A Planilha do Pedido tem 13 colunas (thead): 
+       1)Produto, 2)Data, 3)Idade, 4)Net U$, 5)Lobista,
+       6)Número, 7)Total U$, 8)Net R$, 9)Margem,
+       10)Pix, 11)Taxa, 12)10x, 13)Ações
+       Então ajustamos as larguras (exemplo do layout antigo) */
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(1)  { width: 14%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(2)  { width: 10%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(3)  { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(4)  { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(5)  { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(6)  { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(7)  { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(8)  { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(9)  { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(10) { width: 9%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(11) { width: 8%; }
+    .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(12) { width: 9%; }
 
     /*************************************************************
      *  Botões e animações
@@ -226,12 +244,10 @@
       color: #dc3545;
       transition: transform 0.2s ease, color 0.2s ease;
     }
-
     .delete-row-button:hover {
       transform: scale(1.2);
       color: #a71d2a;
     }
-
     .delete-row-button i {
       pointer-events: none;
     }
@@ -245,47 +261,6 @@
       margin: 30px 0;
       background-image: linear-gradient(to right, transparent, #ccc, transparent);
     }
-
-    .emissao-tabela thead th:nth-child(1) {
-      width: 14%;
-    }
-    .emissao-tabela thead th:nth-child(2) {
-      width: 10%;
-    }
-    .emissao-tabela thead th:nth-child(3) {
-      width: 7%;
-    }
-    .emissao-tabela thead th:nth-child(4) {
-      width: 7%;
-    }
-    .emissao-tabela thead th:nth-child(5) {
-      width: 7%;
-    }
-    .emissao-tabela thead th:nth-child(6) {
-      width: 7%;
-    }
-    .emissao-tabela thead th:nth-child(7) {
-      width: 7%;
-    }
-    .emissao-tabela thead th:nth-child(8) {
-      width: 7%;
-    }
-    .emissao-tabela thead th:nth-child(9) {
-      width: 7%;
-    }
-    .emissao-tabela thead th:nth-child(10) {
-      width: 7%;
-    }
-    .emissao-tabela thead th:nth-child(11) {
-      width: 7%;
-    }
-    .emissao-tabela thead th:nth-child(12) {
-      width: 8%;
-    }
-    .emissao-tabela thead th:nth-child(13) {
-      width: 8%;
-    }
-
   </style>
 </head>
 <body>
@@ -407,8 +382,10 @@
     <hr class="hr3">
 
     <!-- Planilha do Pedido -->
-    <div class="section">
+    <div class="section planilha-pedido">
       <h3>Planilha do Pedido</h3>
+
+      <!-- Primeira linha: Câmbio -->
       <table class="emissao-tabela">
         <thead>
           <tr>
@@ -424,6 +401,7 @@
         </tbody>
       </table>
 
+      <!-- Segunda Linha: Tabela Completa -->
       <table class="emissao-tabela">
         <thead>
           <tr>
@@ -487,9 +465,8 @@
   <!-- Scripts -->
   <script>
     /************************************************************
-     * JS (igual ao seu anterior, apenas mudamos as classes CSS)
+     * JS principal (igual ao anterior, apenas mudamos classes)
      ************************************************************/
-
     window.planilhasEmMemoria = [];
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -547,6 +524,7 @@
         const pedido = pedidos[0];
         document.getElementById("pedido-id").textContent = pedidoId;
 
+        // Pedido
         document.getElementById('order-info').innerHTML =
           `<tr>
             <td>
@@ -564,6 +542,7 @@
             <td>${formatDate(pedido.data_venda)}</td>
           </tr>`;
 
+        // Cliente
         document.getElementById('customer-info').innerHTML =
           `<tr>
             <td>${pedido.nome_comprador || ''}</td>
@@ -574,6 +553,7 @@
             <td>${pedido.uf || ''}</td>
           </tr>`;
 
+        // Financeiras
         document.getElementById('financial-info').innerHTML =
           `<tr>
             <td>${pedido.gateway || '<input type="text" placeholder="Gateway">'}</td>
@@ -595,6 +575,7 @@
             <td>${pedido.fornecedor || '<input type="text" placeholder="Fornecedor">'}</td>
           </tr>`;
 
+        // Comerciais
         document.getElementById('commercial-info').innerHTML =
           `<tr>
             <td>${pedido.origem_cliente || '<input type="text" placeholder="Origem do Cliente">'}</td>
@@ -603,6 +584,7 @@
             <td>${pedido.comissao_do_agente || '<input type="text" placeholder="Comissão Agente">'}</td>
           </tr>`;
 
+        // Adicionais
         document.getElementById('additional-info').innerHTML =
           `<tr>
             <td>${pedido.observacoes_operacionais || '<input type="text" placeholder="Observações Operacionais">'}</td>
@@ -635,8 +617,8 @@
 
         if (planilhas && planilhas.length > 0) {
           montarPlanilhaPrincipal(planilhas);
-          document.getElementById("dolar-cambio").value     = planilhas[0].dolar_cambio || 0;
-          document.getElementById("dolar-magic").textContent= planilhas[0].dolar_magic || "0.00";
+          document.getElementById("dolar-cambio").value = planilhas[0].dolar_cambio || 0;
+          document.getElementById("dolar-magic").textContent = planilhas[0].dolar_magic || "0.00";
         }
         montarEmissao(planilhas);
 
