@@ -92,17 +92,6 @@
                         </a>
                     </li>
                 </ul>
-                <div class="sidebar-cta">
-                    <div class="sidebar-cta-content">
-                        <strong class="d-inline-block mb-2">Upgrade to Pro</strong>
-                        <div class="mb-3 text-sm">
-                            Are you looking for more components? Check out our premium version.
-                        </div>
-                        <div class="d-grid">
-                            <a href="upgrade-to-pro.html" class="btn btn-primary">Upgrade to Pro</a>
-                        </div>
-                    </div>
-                </div>
             </div>
         </nav>
     </div>
@@ -112,263 +101,41 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
-            var gradient = ctx.createLinearGradient(0, 0, 0, 225);
-            gradient.addColorStop(0, "rgba(215, 227, 244, 1)");
-            gradient.addColorStop(1, "rgba(215, 227, 244, 0)");
-            // Line chart
-            new Chart(document.getElementById("chartjs-dashboard-line"), {
-                type: "line",
-                data: {
-                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                    datasets: [{
-                        label: "Sales ($)",
-                        fill: true,
-                        backgroundColor: gradient,
-                        borderColor: window.theme.primary,
-                        data: [
-                            2115,
-                            1562,
-                            1584,
-                            1892,
-                            1587,
-                            1923,
-                            2566,
-                            2448,
-                            2805,
-                            3438,
-                            2917,
-                            3327
-                        ]
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: { intersect: false },
-                        hover: { intersect: true },
-                        filler: { propagate: false }
-                    },
-                    scales: {
-                        x: {
-                            grid: { color: "rgba(0,0,0,0.0)" },
-                            reverse: true
-                        },
-                        y: {
-                            ticks: { stepSize: 1000 },
-                            grid: { color: "rgba(0,0,0,0.0)", borderDash: [3, 3] }
-                        }
-                    }
-                }
-            });
+          console.log("Script de ativação do menu carregado.");
+        
+          // Remove a classe 'active' de todos os itens antes de ativar o correto
+          document.querySelectorAll(".sidebar-item").forEach(item => item.classList.remove("active"));
+        
+          // Obtém o pathname atual (ex: "/pages-orders.html", ou "/pages-orders.html?foo=bar", etc.)
+          let currentPath = window.location.pathname;
+          console.log("Caminho atual da URL:", currentPath);
+        
+          // Remove barra final, se houver
+          if (currentPath.endsWith("/") && currentPath !== "/") {
+            currentPath = currentPath.slice(0, -1);
+          }
+        
+          // Extrai só o arquivo (último trecho após a barra)
+          let currentFile = currentPath.substring(currentPath.lastIndexOf("/") + 1);
+          console.log("Arquivo atual:", currentFile);
+        
+          // Agora percorremos cada link do menu e verificamos se o arquivo dele bate com o atual
+          document.querySelectorAll(".sidebar-item a").forEach(link => {
+            let linkPath = new URL(link.href).pathname; // Ex.: "/pages-orders.html"
+            if (linkPath.endsWith("/") && linkPath !== "/") {
+              linkPath = linkPath.slice(0, -1);
+            }
+            // Extrai o arquivo do link
+            let linkFile = linkPath.substring(linkPath.lastIndexOf("/") + 1);
+            //console.log("Verificando link:", linkFile);
+        
+            // Se o nome do arquivo do link == nome do arquivo atual => active
+            if (linkFile === currentFile) {
+              link.closest(".sidebar-item").classList.add("active");
+              console.log("Ativando item do menu:", linkFile);
+            }
+          });
         });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Pie chart
-            new Chart(document.getElementById("chartjs-dashboard-pie"), {
-                type: "pie",
-                data: {
-                    labels: ["Chrome", "Firefox", "IE"],
-                    datasets: [{
-                        data: [4306, 3801, 1689],
-                        backgroundColor: [
-                            window.theme.primary,
-                            window.theme.warning,
-                            window.theme.danger
-                        ],
-                        borderWidth: 5
-                    }]
-                },
-                options: {
-                    responsive: !window.MSInputMethodContext,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    cutout: '75%'
-                }
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Bar chart
-            new Chart(document.getElementById("chartjs-dashboard-bar"), {
-                type: "bar",
-                data: {
-                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                    datasets: [{
-                        label: "This year",
-                        backgroundColor: window.theme.primary,
-                        borderColor: window.theme.primary,
-                        hoverBackgroundColor: window.theme.primary,
-                        hoverBorderColor: window.theme.primary,
-                        data: [54, 67, 41, 55, 62, 45, 55, 73, 60, 76, 48, 79],
-                        barPercentage: .75,
-                        categoryPercentage: .5
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            grid: { display: false },
-                            stacked: false,
-                            ticks: { stepSize: 20 }
-                        },
-                        x: {
-                            grid: { color: "transparent" },
-                            stacked: false
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var markers = [{
-                    coords: [31.230391, 121.473701],
-                    name: "Shanghai"
-                },
-                {
-                    coords: [28.704060, 77.102493],
-                    name: "Delhi"
-                },
-                {
-                    coords: [6.524379, 3.379206],
-                    name: "Lagos"
-                },
-                {
-                    coords: [35.689487, 139.691711],
-                    name: "Tokyo"
-                },
-                {
-                    coords: [23.129110, 113.264381],
-                    name: "Guangzhou"
-                },
-                {
-                    coords: [40.7127837, -74.0059413],
-                    name: "New York"
-                },
-                {
-                    coords: [34.052235, -118.243683],
-                    name: "Los Angeles"
-                },
-                {
-                    coords: [41.878113, -87.629799],
-                    name: "Chicago"
-                },
-                {
-                    coords: [51.507351, -0.127758],
-                    name: "London"
-                },
-                {
-                    coords: [40.416775, -3.703790],
-                    name: "Madrid"
-                }
-            ];
-            var map = new jsVectorMap({
-                map: "world",
-                selector: "#world_map",
-                zoomButtons: true,
-                markers: markers,
-                markerStyle: {
-                    initial: {
-                        r: 9,
-                        strokeWidth: 7,
-                        strokeOpacity: .4,
-                        fill: window.theme.primary
-                    },
-                    hover: {
-                        fill: window.theme.primary,
-                        stroke: window.theme.primary
-                    }
-                },
-                zoomOnScroll: false
-            });
-            window.addEventListener("resize", () => {
-                map.updateSize();
-            });
-        });
-    </script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            var date = new Date(Date.now() - 5 * 24 * 60 * 60 * 1000);
-            var defaultDate = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
-            document.getElementById("datetimepicker-dashboard").flatpickr({
-                inline: true,
-                prevArrow: "<span title=\"Previous month\">&laquo;</span>",
-                nextArrow: "<span title=\"Next month\">&raquo;</span>",
-                defaultDate: defaultDate
-            });
-        });
-    </script>
-    <!-- Code injected by live-server -->
-    <script>
-        // <![CDATA[  <-- For SVG support
-        if ('WebSocket' in window) {
-            (function () {
-                function refreshCSS() {
-                    var sheets = [].slice.call(document.getElementsByTagName("link"));
-                    var head = document.getElementsByTagName("head")[0];
-                    for (var i = 0; sheets.length > i; ++i) {
-                        var elem = sheets[i];
-                        var parent = elem.parentElement || head;
-                        parent.removeChild(elem);
-                        var rel = elem.rel;
-                        if (elem.href && (typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet")) {
-                            var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-                            elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-                        }
-                        parent.appendChild(elem);
-                    }
-                }
-                var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-                var address = protocol + window.location.host + window.location.pathname + '/ws';
-                var socket = new WebSocket(address);
-                socket.onmessage = function (msg) {
-                    if (msg.data == 'reload') window.location.reload();
-                    else if (msg.data == 'refreshcss') refreshCSS();
-                };
-                if (!sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-                    console.log('Live reload enabled.');
-                    sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-                }
-            })();
-        }
-        else {
-            console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-        }
-        // ]]>
-
-        document.addEventListener("DOMContentLoaded", function () {
-            console.log("Script de ativação do menu carregado.");
-
-            // Remove a classe 'active' de todos os itens antes de adicionar no correto
-            document.querySelectorAll(".sidebar-item").forEach(item => item.classList.remove("active"));
-
-            // Obtém o caminho da URL atual (sem o domínio)
-            let currentPath = window.location.pathname;
-            console.log("Caminho atual da URL:", currentPath);
-
-            // Itera sobre os links do menu
-            document.querySelectorAll(".sidebar-item a").forEach(link => {
-                let linkPath = new URL(link.href).pathname; // Pega apenas o caminho do link sem domínio
-                console.log("Verificando link:", link.href, "Path:", linkPath);
-
-                // Compara o caminho atual com o caminho do link
-                if (linkPath === currentPath) {
-                    link.closest(".sidebar-item").classList.add("active");
-                    console.log("Ativando item do menu:", linkPath);
-                }
-            });
-        });
-    </script>
+</script>
 </body>
 </html>
