@@ -1,12 +1,4 @@
-<?php
-session_start();
-
-// Verifica se o usuário está logado
-if (!isset($_SESSION['usuario_id'])) {
-    header("Location: https://business.magictraveltur.com/login.html"); // Redireciona para login
-    exit();
-}
-?>
+<?php include 'auth.php'; ?>
 
 <!DOCTYPE html>
 <html lang="en">
