@@ -73,8 +73,8 @@
     }
     
     .order-details p {
-        font-size: 14px;
-        color: #6c757d;
+        font-size: 18px;
+        color: #ff6f61;
         margin: 0 0 20px;
         text-align: left;
     }
@@ -201,6 +201,15 @@
       margin-bottom: 20px;
     }
     
+    .padrao-tabela {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        border-radius: 12px;
+        overflow: visible;
+        table-layout: fixed;
+    }
+
     .planilha-tabela {
       width: 100%;
       border-collapse: collapse;
@@ -388,7 +397,7 @@
     <a href="pages-orders.html" class="back-button">Voltar para Página de Pedidos</a>
 
     <h1>Detalhes do Pedido</h1>
-    <p>ID do Pedido: <span id="pedido-id">Carregando...</span></p>
+    <p>ID do Pedido - <span id="pedido-id">Carregando...</span></p>
 
     <!-- Informações do Pedido -->
     <div class="section">
@@ -407,7 +416,7 @@
     </div>
 
     <!-- Informações do Cliente -->
-    <div class="section">
+    <div class="padrao-tabela">
       <h3>Informações do Cliente</h3>
       <table>
         <thead>
@@ -425,7 +434,7 @@
     </div>
 
     <!-- Informações Financeiras -->
-    <div class="section">
+    <div class="padrao-tabela">
       <h3>Informações Financeiras</h3>
       <table>
         <thead>
@@ -457,7 +466,7 @@
     </div>
 
     <!-- Informações Comerciais -->
-    <div class="section">
+    <div class="padrao-tabela">
       <h3>Informações Comerciais</h3>
       <table>
         <thead>
@@ -473,7 +482,7 @@
     </div>
 
     <!-- Informações Adicionais -->
-    <div class="section">
+    <div class="padrao-tabela">
       <h3>Informações Adicionais</h3>
       <table>
         <thead>
@@ -548,7 +557,7 @@
     <!-- Emissão -->
     <div class="section">
       <h3>Emissão</h3>
-      <table class="emissao-tabela">
+      <table class="section planilha-pedido">
         <thead>
           <tr>
             <th>Itens</th>
