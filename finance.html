@@ -445,9 +445,12 @@
           return {
             nome: pedidosMap[planilha.id_pedido] || 'N/A',
             id_pedido: planilha.id_pedido,
-            itens: planilha.itens,
-            valor: planilha.valor,
-            data_uso: planilha.data_uso,
+            // Ajuste: obtém o produto (campo "produto" na API; fallback para string vazia)
+            produto: planilha.produto || '',
+            // Ajuste: valor em U$ obtido do campo net_usd
+            valor: planilha.net_usd ? parseFloat(planilha.net_usd).toFixed(2) : '0.00',
+            // Ajuste: data de uso obtida do campo "data"
+            data_uso: planilha.data || '',
             data_pagamento: planilha.data_pagamento,
             identificador: planilha.identificador,
             fornecedor: planilha.fornecedor,
@@ -491,9 +494,11 @@
         <tr>
           <td>${order.nome}</td>
           <td>${order.id_pedido}</td>
-          <td>${order.itens}</td>
-          <td>U$ ${parseFloat(order.valor).toFixed(2)}</td>
-          <td>${formatDate(order.data_uso)}</td>
+          <!-- Usando o campo "produto" para exibir os itens -->
+          <td>${order.produto}</td>
+          <td>U$ ${order.valor}</td>
+          <!-- Exibe Data de Uso se existir, formatada -->
+          <td>${order.data_uso ? formatDate(order.data_uso) : ''}</td>
           <td>${formatDate(order.data_pagamento)}</td>
           <td>${order.identificador}</td>
           <td>${order.fornecedor}</td>
@@ -505,7 +510,7 @@
 
     // Função para formatar as datas (de YYYY-MM-DD para DD/MM/YYYY)
     function formatDate(dateString) {
-      if (!dateString) return 'N/A';
+      if (!dateString) return '';
       const [year, month, day] = dateString.split('-').map(Number);
       return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
     }
