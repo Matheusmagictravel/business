@@ -531,14 +531,14 @@
           `<tr>
             <td>
               <select>
-                <option value="Pagamento recebido">Pagamento recebido</option>
-                <option value="Envio de contrato">Envio de contrato</option>
-                <option value="Aguardando Emissão">Aguardando Emissão</option>
-                <option value="Emissão Bloqueada">Emissão Bloqueada</option>
-                <option value="Emitido por Completo">Emitido por Completo</option>
-                <option value="Emissão Parcial">Emissão Parcial</option>
-                <option value="Envio de Brindes">Envio de Brindes</option>
-                <option value="Concluído">Concluído</option>
+                <option value="Pagamento recebido" ${pedido.status === "Pagamento recebido" ? "selected" : ""}>Pagamento recebido</option>
+                <option value="Envio de contrato" ${pedido.status === "Envio de contrato" ? "selected" : ""}>Envio de contrato</option>
+                <option value="Aguardando Emissão" ${pedido.status === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
+                <option value="Emissão Bloqueada" ${pedido.status === "Emissão Bloqueada" ? "selected" : ""}>Emissão Bloqueada</option>
+                <option value="Emitido por Completo" ${pedido.status === "Emitido por Completo" ? "selected" : ""}>Emitido por Completo</option>
+                <option value="Emissão Parcial" ${pedido.status === "Emissão Parcial" ? "selected" : ""}>Emissão Parcial</option>
+                <option value="Envio de Brindes" ${pedido.status === "Envio de Brindes" ? "selected" : ""}>Envio de Brindes</option>
+                <option value="Concluído" ${pedido.status === "Concluído" ? "selected" : ""}>Concluído</option>
               </select>
             </td>
             <td>${pedido.destino || ''}</td>
@@ -691,11 +691,11 @@
             <td><input type="text" name="fornecedor"    value="${item.fornecedor || ''}"></td>
             <td>
               <select name="status">
-                <option value="Aguardando Emissão">Aguardando Emissão</option>
-                <option value="Emissão Bloqueada">Emissão Bloqueada</option>
-                <option value="Emitido – Não Pago">Emitido – Não Pago</option>
-                <option value="Emitido TIF">Emitido TIF</option>
-                <option value="Concluído">Concluído</option>
+                <option value="Aguardando Emissão"    ${item.status === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
+                <option value="⁠Emissão Bloqueada" ${item.status === "⁠Emissão Bloqueada" ? "selected" : ""}>⁠Emissão Bloqueada</option>
+                <option value="⁠Emitido – Não Pago" ${item.status === "⁠Emitido – Não Pago" ? "selected" : ""}>⁠Emitido – Não Pago</option>
+                <option value="Emitido TIF" ${item.status === "Emitido TIF" ? "selected" : ""}>Emitido TIF</option>
+                <option value="Concluído"             ${item.status === "Concluído" ? "selected" : ""}>Concluído</option>
               </select>
             </td>
           </tr>
