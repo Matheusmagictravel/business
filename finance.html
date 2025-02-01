@@ -9,16 +9,58 @@
   <!-- Adicionando o CSS do Bootstrap -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    /* Layout principal com sidebar e conteúdo */
+    /*==================================================
+      Variáveis Globais
+    ==================================================*/
+    :root {
+      --primary-color: #0071e3;
+      --primary-hover: #005bb5;
+      --secondary-color: #1cbb8c;
+      --secondary-hover: #17a2b8;
+      --sidebar-bg: #222e3c;
+      --text-color: #1d1d1f;
+      --header-text: #6e6e73;
+      --header-bg: #f9f9fa;
+      --table-odd: #ffffff;
+      --table-even-gradient: linear-gradient(90deg, rgba(59,125,221,0.1), rgba(59,125,221,0.088) 50%, transparent);
+      --border-color: #e5e5e5;
+      --modal-z-index: 1055;
+      --modal-backdrop-z-index: 1050;
+      --font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      --base-font-size: 14px;
+      --max-width: 1200px;
+      --dashboard-bg: #fff;
+      --dashboard-border-radius: 8px;
+      --dashboard-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      --dashboard-container-border-radius: 12px;
+      --calendar-bg: #fff;
+      --calendar-box-shadow: 0 0 .875rem 0 rgba(33, 37, 41, 0.05);
+      --calendar-width: 280px;
+      --calendar-border-radius: 15px;
+      --calendar-date-height: 30px;
+      --calendar-accent-radius: 10px;
+    }
+
+    /*==================================================
+      Reset e Configurações Globais
+    ==================================================*/
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
       display: flex;
-      margin: 0;
-      font-family: 'San Francisco', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      font-size: 14px;
+      font-family: var(--font-family);
+      font-size: var(--base-font-size);
       height: 100vh;
       overflow: hidden;
     }
-    /* Sidebar */
+
+    /*==================================================
+      Sidebar
+    ==================================================*/
     #sidebar-container {
       width: 260px;
       flex-shrink: 0;
@@ -28,107 +70,135 @@
       left: 0;
       z-index: 1000;
       overflow-y: auto;
-      background: #222e3c;
+      background: var(--sidebar-bg);
     }
-    /* Conteúdo principal */
+
+    /*==================================================
+      Conteúdo Principal
+    ==================================================*/
     main.content {
       margin-left: 260px;
       flex-grow: 1;
       padding: 40px;
       overflow-y: auto;
     }
-    /* Estilização do container dos pedidos */
+
+    /*==================================================
+      Dashboard - Pedidos
+    ==================================================*/
     .dashboard-orders {
       padding: 20px;
       margin: 0 auto;
-      max-width: 1200px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      max-width: var(--max-width);
+      background-color: var(--dashboard-bg);
+      border-radius: var(--dashboard-border-radius);
+      box-shadow: var(--dashboard-box-shadow);
     }
+
     .dashboard-orders-container {
-      max-width: 1200px;
+      max-width: var(--max-width);
       margin: 0 auto;
       padding: 20px;
-      background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      background-color: var(--dashboard-bg);
+      border-radius: var(--dashboard-container-border-radius);
+      box-shadow: var(--dashboard-box-shadow);
     }
+
     .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
     }
-    h1 {
+
+    .dashboard-header h1 {
       font-weight: 600;
-      color: #1d1d1f;
+      color: var(--text-color);
     }
+
     .add-order-button {
-      background-color: #1cbb8c;
-      color: white;
+      background-color: var(--secondary-color);
+      color: #fff;
       border: none;
       border-radius: 8px;
       padding: 10px 15px;
       font-weight: 600;
-      text-align: center;
-      cursor: pointer;
       font-size: 12px;
+      cursor: pointer;
+      text-align: center;
     }
+
     .add-order-button:hover {
-      background-color: #17a2b8;
+      background-color: var(--secondary-hover);
     }
+
+    /*==================================================
+      Tabela de Pedidos
+    ==================================================*/
     table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 20px;
     }
+
     th, td {
       padding: 12px 15px;
       font-size: 12px;
       text-align: left;
     }
+
     th {
       font-weight: 600;
-      color: #6e6e73;
-      background-color: #f9f9fa;
+      color: var(--header-text);
+      background-color: var(--header-bg);
     }
+
     tr:nth-child(odd) {
-      background-color: #ffffff;
+      background-color: var(--table-odd);
     }
+
     tr:nth-child(even) {
-      background: linear-gradient(90deg, rgba(59, 125, 221, .1), rgba(59, 125, 221, .088) 50%, transparent);
+      background: var(--table-even-gradient);
     }
+
     td {
-      color: #1d1d1f;
-      border-bottom: 1px solid #e5e5e5;
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
     }
+
     tr:hover {
       background-color: #cceeff;
       cursor: pointer;
     }
+
     .details-button {
-      background-color: #0071e3;
-      color: white;
+      background-color: var(--primary-color);
+      color: #fff;
       border: none;
       border-radius: 8px;
       padding: 10px 15px;
       font-weight: 600;
-      text-align: center;
-      cursor: pointer;
       font-size: 12px;
+      cursor: pointer;
+      text-align: center;
     }
+
     .details-button:hover {
-      background-color: #005bb5;
+      background-color: var(--primary-hover);
     }
+
+    /*==================================================
+      Paginação
+    ==================================================*/
     .pagination {
       display: flex;
       justify-content: center;
       margin-top: 20px;
     }
+
     .pagination button {
-      background-color: #0071e3;
-      color: white;
+      background-color: var(--primary-color);
+      color: #fff;
       border: none;
       border-radius: 8px;
       padding: 10px 15px;
@@ -136,39 +206,45 @@
       font-weight: 600;
       cursor: pointer;
     }
+
     .pagination button:hover {
-      background-color: #005bb5;
+      background-color: var(--primary-hover);
     }
+
     .pagination button:disabled {
       background-color: #cccccc;
       cursor: not-allowed;
     }
-    /* Estilos do Calendário */
+
+    /*==================================================
+      Calendário
+    ==================================================*/
     .calendar {
-      --side-padding: 5px;
-      --border-radius: 15px;
-      --accent-br: 10px;
-      width: 280px;
+      width: var(--calendar-width);
       margin: auto;
+      background-color: var(--calendar-bg);
+      border-radius: 5px;
+      box-shadow: var(--calendar-box-shadow);
       transform: scale(1);
       transform-origin: top;
-      background-color: white;
-      border-radius: 5px;
-      box-shadow: 0 0 .875rem 0 rgba(33, 37, 41, .05);
+      padding: 0;
     }
+
     .calendar__body {
-      border-radius: var(--border-radius);
+      border-radius: var(--calendar-border-radius);
       padding: 10px;
     }
+
     .calendar__opts {
       background-color: #fff;
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 10px;
       padding: 10px;
-      border-top-left-radius: var(--border-radius);
-      border-top-right-radius: var(--border-radius);
+      border-top-left-radius: var(--calendar-border-radius);
+      border-top-right-radius: var(--calendar-border-radius);
     }
+
     .calendar__days {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -178,100 +254,123 @@
       padding: 0 10px;
       font-size: 0.85rem;
     }
+
     .calendar__dates {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 5px;
       padding: 10px;
     }
+
     .calendar__date {
-      --height: 30px;
+      height: var(--calendar-date-height);
+      line-height: var(--calendar-date-height);
       text-align: center;
-      line-height: var(--height);
-      height: var(--height);
       background-color: #fff;
       color: #333;
-      border-radius: var(--accent-br);
+      border-radius: var(--calendar-accent-radius);
       font-size: 0.9rem;
       cursor: pointer;
       transition: background-color 0.3s, transform 0.2s;
       position: relative;
     }
+
     .calendar__date:hover {
       background-color: #eaeaea;
       transform: scale(1.05);
     }
+
     .calendar__date--selected {
       background-color: #4b37ff;
       color: #fff;
       font-weight: bold;
       box-shadow: 0 3px 6px rgba(75, 55, 255, 0.3);
     }
+
     .calendar__date--range-start {
-      border-top-left-radius: var(--accent-br);
-      border-bottom-left-radius: var(--accent-br);
+      border-top-left-radius: var(--calendar-accent-radius);
+      border-bottom-left-radius: var(--calendar-accent-radius);
     }
+
     .calendar__date--range-end {
-      border-top-right-radius: var(--accent-br);
-      border-bottom-right-radius: var(--accent-br);
+      border-top-right-radius: var(--calendar-accent-radius);
+      border-bottom-right-radius: var(--calendar-accent-radius);
     }
+
     .calendar__date--grey {
-      color: #ccc;
       background-color: #f2f2f2;
+      color: #ccc;
       cursor: not-allowed;
     }
+
+    /* Botões do Calendário */
     .calendar__buttons {
       display: flex;
       justify-content: space-between;
       padding: 10px;
-      border-bottom-left-radius: var(--border-radius);
-      border-bottom-right-radius: var(--border-radius);
+      border-bottom-left-radius: var(--calendar-border-radius);
+      border-bottom-right-radius: var(--calendar-border-radius);
     }
+
     .calendar__button {
       padding: 8px 12px;
       font-size: 0.9rem;
       border: none;
-      border-radius: var(--accent-br);
+      border-radius: var(--calendar-accent-radius);
       cursor: pointer;
     }
+
     .calendar__button--grey {
       background-color: #e0e0e0;
       color: #333;
     }
+
     .calendar__button--primary {
       background-color: #4b37ff;
       color: #fff;
       transition: background-color 0.3s, transform 0.2s;
     }
+
     .calendar__button--primary:hover {
       background-color: #3b27d9;
       transform: scale(1.05);
     }
+
     @media (max-width: 768px) {
       .calendar {
         width: 240px;
       }
       .calendar__date {
-        --height: 35px;
+        height: 35px;
+        line-height: 35px;
         font-size: 0.8rem;
       }
       .calendar__dates {
         gap: 4px;
       }
     }
-    /* Estilos do Modal */
+
+    /*==================================================
+      Modal
+    ==================================================*/
     .modal {
-      z-index: 1055 !important;
+      z-index: var(--modal-z-index) !important;
     }
+
     .modal-backdrop {
-      z-index: 1050;
+      z-index: var(--modal-backdrop-z-index);
     }
+
     .modal-dialog {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
       margin-top: 10px;
     }
+
+    /*==================================================
+      Seletor de Datas (Date Selector)
+    ==================================================*/
     .date-selector-container {
       display: flex;
       align-items: center;
@@ -280,6 +379,7 @@
       right: 63px;
       z-index: 1050;
     }
+
     .selected-date-display {
       margin-right: 10px;
       padding: 8px 12px;
