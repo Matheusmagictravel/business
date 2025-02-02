@@ -408,9 +408,12 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- Não mostra centavos -->
                                         <h1 id="sales-value" class="mt-1 mb-3">0</h1>
                                         <div class="mb-0">
-                                            <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span>
+                                            <span class="text-danger">
+                                                <i class="mdi mdi-arrow-bottom-right"></i> -3.65%
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -426,9 +429,12 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- Não mostra centavos -->
                                         <h1 id="visitors-value" class="mt-1 mb-3">0</h1>
                                         <div class="mb-0">
-                                            <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 5.25% </span>
+                                            <span class="text-success">
+                                                <i class="mdi mdi-arrow-bottom-right"></i> 5.25%
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -446,9 +452,12 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- Não mostra centavos -->
                                         <h1 id="earnings-value" class="mt-1 mb-3">0</h1>
                                         <div class="mb-0">
-                                            <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 6.65% </span>
+                                            <span class="text-success">
+                                                <i class="mdi mdi-arrow-bottom-right"></i> 6.65%
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -466,7 +475,9 @@
                                         </div>
                                         <h1 id="orders-value" class="mt-1 mb-3">0</h1>
                                         <div class="mb-0">
-                                            <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -2.25% </span>
+                                            <span class="text-danger">
+                                                <i class="mdi mdi-arrow-bottom-right"></i> -2.25%
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -491,18 +502,19 @@
 
             <!-- Mapa e Tabela -->
             <div class="row">
-                <div class="col-12 col-md-12 col-xxl-9 d-flex order-2 order-xxl-1">
+                <!-- Removidos os order-* para manter o layout inicial -->
+                <div class="col-12 col-md-12 col-xxl-9 d-flex">
                     <div class="card flex-fill w-100">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Venda por Estado</h5>
                         </div>
                         <div class="card-body px-4">
-                            <!-- Aqui será exibido o mapa via Leaflet -->
+                            <!-- Exibe o mapa via Leaflet com estilo minimalista -->
                             <div id="world_map"></div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 col-xxl-3 d-flex order-3 order-xxl-2">
+                <div class="col-12 col-md-6 col-xxl-3 d-flex">
                     <div class="card flex-fill w-100">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Meio de Pagamento</h5>
@@ -758,9 +770,9 @@
                             <tr>
                                 <td colspan="5">Nesse período não houve pedidos. Verifique a data e tente novamente.</td>
                             </tr>`;
-                        document.getElementById('sales-value').textContent = 'R$ 0.00';
-                        document.getElementById('visitors-value').textContent = 'R$ 0.00';
-                        document.getElementById('earnings-value').textContent = 'R$ 0.00';
+                        document.getElementById('sales-value').textContent = 'R$ 0';
+                        document.getElementById('visitors-value').textContent = 'R$ 0';
+                        document.getElementById('earnings-value').textContent = 'R$ 0';
                         document.getElementById('orders-value').textContent = '0';
 
                         if (window.recentMovementChart) window.recentMovementChart.destroy();
@@ -777,9 +789,10 @@
 
                     // Atualiza os cards conforme solicitado:
                     // Receita = valor_comissao, Faturado = valor_venda, Custo = custo
-                    document.getElementById('sales-value').textContent = `R$ ${totalReceita.toFixed(2)}`;
-                    document.getElementById('visitors-value').textContent = `R$ ${totalFaturamento.toFixed(2)}`;
-                    document.getElementById('earnings-value').textContent = `R$ ${totalDespesa.toFixed(2)}`;
+                    // Não exibe centavos (toFixed(0))
+                    document.getElementById('sales-value').textContent = `R$ ${totalReceita.toFixed(0)}`;
+                    document.getElementById('visitors-value').textContent = `R$ ${totalFaturamento.toFixed(0)}`;
+                    document.getElementById('earnings-value').textContent = `R$ ${totalDespesa.toFixed(0)}`;
                     document.getElementById('orders-value').textContent = totalPedidos;
 
                     // Atualiza a tabela de Pedidos Recentes com apenas os 10 últimos pedidos
@@ -792,7 +805,7 @@
                             <tr>
                                 <td>${pedido.nome || 'N/A'}</td>
                                 <td>${pedido.data_venda || 'N/A'}</td>
-                                <td>R$ ${parseFloat(pedido.valor_venda || 0).toFixed(2)}</td>
+                                <td>R$ ${parseFloat(pedido.valor_venda || 0).toFixed(0)}</td>
                                 <td>${pedido.meio_pgto || 'N/A'}</td>
                                 <td>${pedido.efetivado_por || 'N/A'}</td>
                             </tr>`;
@@ -851,7 +864,7 @@
                 });
             }
 
-            // Nova função de mapa usando Leaflet
+            // Nova função de mapa usando Leaflet com estilo minimalista (CartoDB Light All)
             function updateRealTimeMap(data) {
                 const estados = {};
                 data.forEach(pedido => {
@@ -867,8 +880,8 @@
                 // Se o mapa ainda não foi inicializado, cria-o centralizado no Brasil
                 if (!window.brazilMap) {
                     window.brazilMap = L.map('world_map', { zoomControl: true }).setView([-14.2350, -51.9253], 4);
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        attribution: '© OpenStreetMap contributors'
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+                        attribution: '&copy; <a href="https://carto.com/">CARTO</a> contributors'
                     }).addTo(window.brazilMap);
                     window.ufMarkersLayer = L.layerGroup().addTo(window.brazilMap);
                 }
