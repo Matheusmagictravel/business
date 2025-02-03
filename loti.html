@@ -21,21 +21,20 @@
       width: 100%;
       height: 100%;
     }
-    /* Layout principal */
-    .layout {
-      display: flex;
-      min-height: 100vh;
-    }
-    /* Sidebar */
+    /* Sidebar fixa à esquerda */
     #sidebar-container {
-      background: #222e3c;
+      position: fixed;
+      top: 0;
+      left: 0;
       width: 260px;
-      padding: 20px;
+      height: 100vh;
+      background: #222e3c;
       color: #fff;
+      padding: 0; /* Sem padding */
     }
-    /* Conteúdo Principal */
+    /* Conteúdo Principal com margem para não sobrepor a sidebar */
     .main-content {
-      flex: 1;
+      margin-left: 260px;
       padding: 40px;
       display: flex;
       flex-direction: column;
@@ -127,16 +126,6 @@
     .col-100 {
       flex: 1 1 100%;
     }
-    /* Estilo para Radio Groups */
-    .radio-group label {
-      margin-right: 15px;
-      display: inline-flex;
-      align-items: center;
-      font-weight: normal;
-    }
-    .radio-group input {
-      margin-right: 5px;
-    }
     /* Responsividade */
     @media (max-width: 768px) {
       .row {
@@ -146,189 +135,191 @@
   </style>
 </head>
 <body>
-  <div class="layout">
-    <!-- Sidebar -->
-    <div id="sidebar-container">
-      <!-- O conteúdo do sidebar será carregado via fetch -->
-    </div>
-    <!-- Conteúdo Principal -->
-    <div class="main-content">
-      <div class="form-container">
-        <h1>Cadastro de Vendas</h1>
-        <form id="salesForm">
-          <!-- Seção: Informações Gerais -->
-          <section>
-            <h2>Informações Gerais</h2>
-            <div class="row">
-              <div class="form-group col-50">
-                <label for="data_venda">Data da Venda:</label>
-                <input type="date" id="data_venda" name="data_venda" required>
-              </div>
-              <div class="form-group col-50">
-                <label for="nome">Nome do Passageiro:</label>
-                <input type="text" id="nome" name="nome" placeholder="Nome do Passageiro" required>
-              </div>
+  <!-- Sidebar fixa -->
+  <div id="sidebar-container">
+    <!-- O conteúdo do sidebar será carregado via fetch -->
+  </div>
+  
+  <!-- Conteúdo Principal -->
+  <div class="main-content">
+    <div class="form-container">
+      <h1>Cadastro de Vendas</h1>
+      <form id="salesForm">
+        <!-- Seção: Informações Gerais -->
+        <section>
+          <h2>Informações Gerais</h2>
+          <div class="row">
+            <div class="form-group col-50">
+              <label for="data_venda">Data da Venda:</label>
+              <input type="date" id="data_venda" name="data_venda" required>
             </div>
-            <div class="row">
-              <div class="form-group col-50">
-                <label for="email">E-mail:</label>
-                <input type="email" id="email" name="email" placeholder="E-mail" required>
-              </div>
-              <div class="form-group col-50">
-                <label for="telefone">Telefone:</label>
-                <input type="tel" id="telefone" name="telefone" placeholder="Telefone" required>
-              </div>
+            <div class="form-group col-50">
+              <label for="nome">Nome do Passageiro:</label>
+              <input type="text" id="nome" name="nome" placeholder="Nome do Passageiro" required>
             </div>
-            <div class="row">
-              <div class="form-group col-50">
-                <label for="data_nascimento">Data de Nascimento:</label>
-                <input type="date" id="data_nascimento" name="data_nascimento" required>
-              </div>
-              <div class="form-group col-50">
-                <label for="cpf">CPF:</label>
-                <input type="text" id="cpf" name="cpf" placeholder="CPF" required>
-              </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-50">
+              <label for="email">E-mail:</label>
+              <input type="email" id="email" name="email" placeholder="E-mail" required>
             </div>
-          </section>
+            <div class="form-group col-50">
+              <label for="telefone">Telefone:</label>
+              <input type="tel" id="telefone" name="telefone" placeholder="Telefone" required>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-50">
+              <label for="data_nascimento">Data de Nascimento:</label>
+              <input type="date" id="data_nascimento" name="data_nascimento" required>
+            </div>
+            <div class="form-group col-50">
+              <label for="cpf">CPF:</label>
+              <input type="text" id="cpf" name="cpf" placeholder="CPF" required>
+            </div>
+          </div>
+        </section>
 
-          <!-- Seção: Emissão -->
-          <section>
-            <h2>Emissão</h2>
-            <div class="row">
-              <div class="form-group col-50">
-                <label for="fornecedor">Fornecedor:</label>
-                <input type="text" id="fornecedor" name="fornecedor" required>
-              </div>
-              <div class="form-group col-50">
-                <label for="identificador">Identificador:</label>
-                <input type="text" id="identificador" name="identificador" required>
-              </div>
+        <!-- Seção: Emissão -->
+        <section>
+          <h2>Emissão</h2>
+          <div class="row">
+            <div class="form-group col-50">
+              <label for="fornecedor">Fornecedor:</label>
+              <input type="text" id="fornecedor" name="fornecedor" required>
             </div>
-            <div class="row">
-              <div class="form-group col-50">
-                <label for="data_utilizacao">Data de Utilização:</label>
-                <input type="date" id="data_utilizacao" name="data_utilizacao" required>
-              </div>
-              <div class="form-group col-50">
-                <label for="destino">Destino:</label>
-                <input type="text" id="destino" name="destino" required>
-              </div>
+            <div class="form-group col-50">
+              <label for="identificador">Identificador:</label>
+              <input type="text" id="identificador" name="identificador" required>
             </div>
-            <div class="form-group col-100">
-              <label>Categoria:</label>
-              <div class="radio-group">
-                <label><input type="radio" name="item" value="Ingressos" required> Ingressos</label>
-                <label><input type="radio" name="item" value="Hospedagem"> Hospedagem</label>
-                <label><input type="radio" name="item" value="Aluguel de Carro"> Aluguel de Carro</label>
-                <label><input type="radio" name="item" value="Passagem Aérea"> Passagem Aérea</label>
-                <label><input type="radio" name="item" value="Cruzeiro"> Cruzeiro</label>
-                <label><input type="radio" name="item" value="Guiamento Remoto"> Guiamento Remoto</label>
-                <label><input type="radio" name="item" value="Seguro Viagem"> Seguro Viagem</label>
-              </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-50">
+              <label for="data_utilizacao">Data de Utilização:</label>
+              <input type="date" id="data_utilizacao" name="data_utilizacao" required>
             </div>
-          </section>
+            <div class="form-group col-50">
+              <label for="destino">Destino:</label>
+              <input type="text" id="destino" name="destino" required>
+            </div>
+          </div>
+          <div class="form-group col-100">
+            <label for="item">Categoria:</label>
+            <select id="item" name="item" required>
+              <option value="">Selecione</option>
+              <option value="Ingressos">Ingressos</option>
+              <option value="Hospedagem">Hospedagem</option>
+              <option value="Aluguel de Carro">Aluguel de Carro</option>
+              <option value="Passagem Aérea">Passagem Aérea</option>
+              <option value="Cruzeiro">Cruzeiro</option>
+              <option value="Guiamento Remoto">Guiamento Remoto</option>
+              <option value="Seguro Viagem">Seguro Viagem</option>
+            </select>
+          </div>
+        </section>
 
-          <!-- Seção: Financeiro -->
-          <section>
-            <h2>Financeiro</h2>
-            <div class="row">
-              <div class="form-group col-33">
-                <label for="nome_comprador">Nome do Pagador:</label>
-                <input type="text" id="nome_comprador" name="nome_comprador" required>
-              </div>
-              <div class="form-group col-33">
-                <label for="gateway">Gateway:</label>
-                <select id="gateway" name="gateway" required>
-                  <option value="ValePay">ValePay</option>
-                  <option value="PagBank">PagBank</option>
-                  <option value="Pix Direto">Pix Direto</option>
-                </select>
-              </div>
-              <div class="form-group col-33">
-                <label for="meio_pgto">Meio de Pagamento:</label>
-                <select id="meio_pgto" name="meio_pgto" required>
-                  <option value="Pix">Pix</option>
-                  <option value="Cartão">Cartão</option>
-                  <option value="Boleto">Boleto</option>
-                  <option value="Split">Split</option>
-                </select>
-              </div>
+        <!-- Seção: Financeiro -->
+        <section>
+          <h2>Financeiro</h2>
+          <div class="row">
+            <div class="form-group col-33">
+              <label for="nome_comprador">Nome do Pagador:</label>
+              <input type="text" id="nome_comprador" name="nome_comprador" required>
             </div>
-            <div class="row">
-              <div class="form-group col-25">
-                <label for="bandeira_cartao">Bandeira do Cartão:</label>
-                <input type="text" id="bandeira_cartao" name="bandeira_cartao">
-              </div>
-              <div class="form-group col-25">
-                <label for="parcelas">Parcelas:</label>
-                <input type="number" id="parcelas" name="parcelas" min="1" max="12">
-              </div>
-              <div class="form-group col-25">
-                <label for="valor_venda">Valor da Venda:</label>
-                <input type="number" id="valor_venda" name="valor_venda" step="0.01" required>
-              </div>
-              <div class="form-group col-25">
-                <label for="valor_repassado">Valor Repassado:</label>
-                <input type="number" id="valor_repassado" name="valor_repassado" step="0.01" required>
-              </div>
+            <div class="form-group col-33">
+              <label for="gateway">Gateway:</label>
+              <select id="gateway" name="gateway" required>
+                <option value="ValePay">ValePay</option>
+                <option value="PagBank">PagBank</option>
+                <option value="Pix Direto">Pix Direto</option>
+              </select>
             </div>
-          </section>
+            <div class="form-group col-33">
+              <label for="meio_pgto">Meio de Pagamento:</label>
+              <select id="meio_pgto" name="meio_pgto" required>
+                <option value="Pix">Pix</option>
+                <option value="Cartão">Cartão</option>
+                <option value="Boleto">Boleto</option>
+                <option value="Split">Split</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-25">
+              <label for="bandeira_cartao">Bandeira do Cartão:</label>
+              <input type="text" id="bandeira_cartao" name="bandeira_cartao">
+            </div>
+            <div class="form-group col-25">
+              <label for="parcelas">Parcelas:</label>
+              <input type="number" id="parcelas" name="parcelas" min="1" max="12">
+            </div>
+            <div class="form-group col-25">
+              <label for="valor_venda">Valor da Venda:</label>
+              <input type="number" id="valor_venda" name="valor_venda" step="0.01" required>
+            </div>
+            <div class="form-group col-25">
+              <label for="valor_repassado">Valor Repassado:</label>
+              <input type="number" id="valor_repassado" name="valor_repassado" step="0.01" required>
+            </div>
+          </div>
+        </section>
 
-          <!-- Seção: Comercial -->
-          <section>
-            <h2>Comercial</h2>
-            <div class="row">
-              <div class="form-group col-50">
-                <label for="origem_cliente">Origem do Cliente:</label>
-                <select id="origem_cliente" name="origem_cliente">
-                  <option value="Indicação">Indicação</option>
-                  <option value="Blog">Blog</option>
-                  <option value="Site">Site</option>
-                  <option value="Anúncio">Anúncio</option>
-                  <option value="Direct do Instagram">Direct do Instagram</option>
-                </select>
-              </div>
-              <div class="form-group col-50">
-                <label>Cliente Atendido Por:</label>
-                <div class="radio-group">
-                  <label><input type="radio" name="cliente_de" value="Matheus Alvarenga" required> Matheus Alvarenga</label>
-                  <label><input type="radio" name="cliente_de" value="Raphaela Raposo"> Raphaela Raposo</label>
-                  <label><input type="radio" name="cliente_de" value="Vanessa Barreto"> Vanessa Barreto</label>
-                  <label><input type="radio" name="cliente_de" value="Breno Severiano"> Breno Severiano</label>
-                  <label><input type="radio" name="cliente_de" value="Mariane Nunes"> Mariane Nunes</label>
-                  <label><input type="radio" name="cliente_de" value="Guilherme Raimundi"> Guilherme Raimundi</label>
-                </div>
-              </div>
+        <!-- Seção: Comercial -->
+        <section>
+          <h2>Comercial</h2>
+          <div class="row">
+            <div class="form-group col-50">
+              <label for="origem_cliente">Origem do Cliente:</label>
+              <select id="origem_cliente" name="origem_cliente">
+                <option value="Indicação">Indicação</option>
+                <option value="Blog">Blog</option>
+                <option value="Site">Site</option>
+                <option value="Anúncio">Anúncio</option>
+                <option value="Direct do Instagram">Direct do Instagram</option>
+              </select>
             </div>
-            <div class="row">
-              <div class="form-group col-50">
-                <label>Venda Finalizada Por:</label>
-                <div class="radio-group">
-                  <label><input type="radio" name="efetivado_por" value="Matheus Alvarenga" required> Matheus Alvarenga</label>
-                  <label><input type="radio" name="efetivado_por" value="Raphaela Raposo"> Raphaela Raposo</label>
-                  <label><input type="radio" name="efetivado_por" value="Vanessa Barreto"> Vanessa Barreto</label>
-                  <label><input type="radio" name="efetivado_por" value="Breno Severiano"> Breno Severiano</label>
-                  <label><input type="radio" name="efetivado_por" value="Mariane Nunes"> Mariane Nunes</label>
-                  <label><input type="radio" name="efetivado_por" value="Guilherme Raimundi"> Guilherme Raimundi</label>
-                </div>
-              </div>
+            <div class="form-group col-50">
+              <label for="cliente_de">Cliente Atendido Por:</label>
+              <select id="cliente_de" name="cliente_de" required>
+                <option value="">Selecione</option>
+                <option value="Matheus Alvarenga">Matheus Alvarenga</option>
+                <option value="Raphaela Raposo">Raphaela Raposo</option>
+                <option value="Vanessa Barreto">Vanessa Barreto</option>
+                <option value="Breno Severiano">Breno Severiano</option>
+                <option value="Mariane Nunes">Mariane Nunes</option>
+                <option value="Guilherme Raimundi">Guilherme Raimundi</option>
+              </select>
             </div>
-          </section>
+          </div>
+          <div class="row">
+            <div class="form-group col-50">
+              <label for="efetivado_por">Venda Finalizada Por:</label>
+              <select id="efetivado_por" name="efetivado_por" required>
+                <option value="">Selecione</option>
+                <option value="Matheus Alvarenga">Matheus Alvarenga</option>
+                <option value="Raphaela Raposo">Raphaela Raposo</option>
+                <option value="Vanessa Barreto">Vanessa Barreto</option>
+                <option value="Breno Severiano">Breno Severiano</option>
+                <option value="Mariane Nunes">Mariane Nunes</option>
+                <option value="Guilherme Raimundi">Guilherme Raimundi</option>
+              </select>
+            </div>
+          </div>
+        </section>
 
-          <!-- Campos Ocultos -->
-          <input type="hidden" id="id" name="id">
-          <input type="hidden" id="mes_venda" name="mes_venda">
-          <input type="hidden" id="uf" name="uf">
-          <input type="hidden" id="valor_comissao" name="valor_comissao">
-          <input type="hidden" id="markup" name="markup">
-          <input type="hidden" id="comissao_do_agente" name="comissao_do_agente">
-          <input type="hidden" id="data_pgto" name="data_pgto">
-          <input type="hidden" id="recebido" name="recebido">
-          <input type="hidden" id="data_repasse" name="data_repasse">
+        <!-- Campos Ocultos -->
+        <input type="hidden" id="id" name="id">
+        <input type="hidden" id="mes_venda" name="mes_venda">
+        <input type="hidden" id="uf" name="uf">
+        <input type="hidden" id="valor_comissao" name="valor_comissao">
+        <input type="hidden" id="markup" name="markup">
+        <input type="hidden" id="comissao_do_agente" name="comissao_do_agente">
+        <input type="hidden" id="data_pgto" name="data_pgto">
+        <input type="hidden" id="recebido" name="recebido">
+        <input type="hidden" id="data_repasse" name="data_repasse">
 
-          <button id="submitButton" type="button" class="btn">Salvar</button>
-        </form>
-      </div>
+        <button id="submitButton" type="button" class="btn">Salvar</button>
+      </form>
     </div>
   </div>
 
@@ -416,8 +407,8 @@
           const markup = valorRepassado > 0 ? (receitaAgencia / valorRepassado) * 100 : 0;
           document.getElementById('markup')?.setAttribute('value', markup.toFixed(2));
           
-          // Obter categoria selecionada (dos radio buttons)
-          const categoria = document.querySelector('input[name="item"]:checked')?.value || "";
+          // Obter categoria selecionada a partir do select
+          const categoria = document.getElementById('item')?.value || "";
           
           // Determinar Comissão do Agente
           const comissoes = {
