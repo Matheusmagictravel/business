@@ -515,15 +515,22 @@
       }
 
       try {
-        const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?pedido=${pedidoId}`;
+        // Alterado para utilizar o parâmetro id_pedido
+        const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?id_pedido=${pedidoId}`;
         const response = await fetch(apiUrl);
         const pedidos = await response.json();
 
-        if (!response.ok || !pedidos || pedidos.length === 0) {
-          throw new Error(`Erro ao buscar detalhes do pedido. Status: ${response.status}`);
+        // Se a resposta não for um array, tenta usá-la como objeto único
+        let pedido;
+        if (Array.isArray(pedidos)) {
+          if (pedidos.length === 0) {
+            throw new Error(`Erro ao buscar detalhes do pedido. Status: ${response.status}`);
+          }
+          pedido = pedidos[0];
+        } else {
+          pedido = pedidos;
         }
 
-        const pedido = pedidos[0];
         document.getElementById("pedido-id").textContent = pedidoId;
 
         // Pedido
