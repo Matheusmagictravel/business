@@ -106,23 +106,31 @@
       background: #fff;
       box-shadow: 0 4px 10px rgba(0, 123, 255, 0.1);
     }
+    /* Botão premium aprimorado */
     .btn {
-      display: block;
+      display: inline-block;
       width: 100%;
-      padding: 15px;
-      background: linear-gradient(90deg, #007bff, #0056b3);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
+      padding: 16px 0;
+      background: linear-gradient(90deg, #4a90e2, #007aff);
+      color: #ffffff;
+      text-align: center;
       font-size: 1.2rem;
-      font-weight: 600;
+      font-weight: bold;
+      border: none;
+      border-radius: 50px;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+      letter-spacing: 0.5px;
       margin-top: 30px;
     }
     .btn:hover {
-      background: linear-gradient(90deg, #0056b3, #004080);
-      transform: translateY(-2px);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+    }
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
     }
     /* Colunas específicas */
     .col-25 {
