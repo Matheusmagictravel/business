@@ -215,27 +215,35 @@
 
     <!-- Script para ativar os itens da sidebar conforme a URL atual -->
     <script>
-        var Na=za,Ra=function() {
-            if(document.getElementsByClassName("js-simplebar")[0]) {
-                var e=new Na(document.getElementsByClassName("js-simplebar")[0]);
-                document.querySelectorAll(".js-sidebar [data-bs-parent]").forEach((function(t) {
-                    t.addEventListener("shown.bs.collapse",(function() {
-                        e.recalculate()
-                    })),
-                    t.addEventListener("hidden.bs.collapse",(function() {
-                        e.recalculate()
-                    }))
-                }))
+        document.addEventListener("DOMContentLoaded", function () {
+            var currentUrl = window.location.pathname;
+            document.querySelectorAll(".sidebar-link").forEach(function (link) {
+                var linkPath = new URL(link.href).pathname;
+                if (currentUrl === linkPath) {
+                    var parentItem = link.closest(".sidebar-item");
+                    if (parentItem) {
+                        parentItem.classList.add("active");
+                    }
+                }
+            });
+        });
+    </script>
+
+    <!-- Script para funcionalidade do menu lateral -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var sidebar = document.querySelector(".js-sidebar");
+            var toggleButton = document.querySelector(".js-sidebar-toggle");
+
+            if (sidebar && toggleButton) {
+                toggleButton.addEventListener("click", function () {
+                    sidebar.classList.toggle("collapsed");
+                    sidebar.addEventListener("transitionend", function () {
+                        window.dispatchEvent(new Event("resize"));
+                    });
+                });
             }
-        },
-        Va=function() {
-            var e=document.getElementsByClassName("js-sidebar")[0],t=document.getElementsByClassName("js-sidebar-toggle")[0];
-            e&&t&&t.addEventListener("click",(function() {
-                e.classList.toggle("collapsed"),e.addEventListener("transitionend",(function() {
-                    window.dispatchEvent(new Event("resize"))
-                }))
-            }))
-        };
+        });
     </script>
 </body>
 </html>
