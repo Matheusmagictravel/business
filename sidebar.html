@@ -216,10 +216,13 @@
     <!-- Script para ativar os itens da sidebar conforme a URL atual -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var currentUrl = window.location.pathname;
+            var currentUrl = window.location.href; // Obtém a URL completa
+    
             document.querySelectorAll(".sidebar-link").forEach(function (link) {
-                var linkPath = new URL(link.href).pathname;
-                if (currentUrl === linkPath) {
+                var linkUrl = new URL(link.href, window.location.origin).href; // Normaliza a URL do link
+    
+                if (currentUrl === linkUrl || currentUrl.startsWith(linkUrl)) { 
+                    // Se a URL atual for exatamente igual ao link ou começar com ela
                     var parentItem = link.closest(".sidebar-item");
                     if (parentItem) {
                         parentItem.classList.add("active");
