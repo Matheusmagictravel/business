@@ -132,7 +132,7 @@
                         var linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, "");
                         console.log("🔎 Verificando:", linkPath); 
 
-                        if (currentPath === linkPath) { 
+                        if (currentPath === linkPath || currentPath.includes(linkPath)) { 
                             item.classList.add("active");
                             ativado = true;
                             console.log("✅ Ativado:", linkPath);
