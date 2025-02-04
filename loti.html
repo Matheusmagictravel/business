@@ -6,6 +6,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro de Vendas - Premium</title>
+  <!-- Meta tags para evitar cache -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
   <style>
     /* Reset e configurações básicas */
@@ -211,7 +215,7 @@
         <!-- Seção: Emissão -->
         <section>
           <h2>Emissão</h2>
-          <!-- As linhas para Fornecedor e Identificador foram removidas -->
+          <!-- Linhas para Fornecedor e Identificador removidas -->
           <div class="row">
             <div class="form-group col-50">
               <label for="data_utilizacao">Data de Utilização:</label>
@@ -324,7 +328,7 @@
               </select>
             </div>
           </div>
-          <!-- Novas linhas para Observações -->
+          <!-- Linhas para Observações -->
           <div class="row">
             <div class="form-group col-100">
               <label for="observacoes_operacionais">Observações Operacionais:</label>
@@ -488,7 +492,11 @@
                 }
                 return response.json();
               })
-              .then(result => alert(result.success ? 'Dados salvos com sucesso!' : result.error || 'Erro ao salvar os dados.'))
+              .then(result => {
+                alert(result.success ? 'Dados salvos com sucesso!' : result.error || 'Erro ao salvar os dados.');
+                // Após salvar, recarrega a página para limpar o cache
+                window.location.reload(true);
+              })
               .catch(error => alert('Erro ao processar os dados: ' + error.message));
           } else {
             console.error("Formulário 'salesForm' não encontrado.");
