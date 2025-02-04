@@ -65,10 +65,6 @@
             font-size: .75rem;
             padding: 1.5rem 1.5rem .375rem;
         }
-
-        .sidebar-brand {
-            padding: 25px;
-        }
     </style>
 </head>
 <body>
@@ -117,17 +113,17 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => {
-                var currentPath = window.location.pathname.replace(/\/$/, ""); // Remove barra no final, se houver
-
+                var currentUrl = window.location.href.split(/[?#]/)[0]; // Remove parâmetros e fragmentos
+                var currentPath = new URL(currentUrl).pathname.replace(/\/$/, ""); // Remove barra no final, se houver
+                
                 console.log("URL Atual:", currentPath); // Debug para verificar a URL capturada
 
                 document.querySelectorAll(".sidebar-link").forEach(function (link) {
                     var linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, ""); // Normaliza o caminho do link
-
+                    
                     console.log("Comparando com:", linkPath); // Debug para ver os links da sidebar
 
-                    if (currentPath === linkPath || currentPath.includes(linkPath)) { 
-                        // Se a URL atual for exatamente igual ao link ou contiver o link
+                    if (currentPath === linkPath) { 
                         var parentItem = link.closest(".sidebar-item");
                         if (parentItem) {
                             parentItem.classList.add("active");
@@ -135,29 +131,7 @@
                         }
                     }
                 });
-
-                // Mantém o item ativo mesmo após o clique
-                localStorage.setItem("sidebarActivePath", currentPath);
-            }, 200);
-        });
-
-        // 🔥 Recupera o item ativo após o carregamento da página
-        document.addEventListener("DOMContentLoaded", function () {
-            setTimeout(() => {
-                var storedPath = localStorage.getItem("sidebarActivePath");
-                if (storedPath) {
-                    document.querySelectorAll(".sidebar-link").forEach(function (link) {
-                        var linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, "");
-
-                        if (storedPath === linkPath || storedPath.includes(linkPath)) {
-                            var parentItem = link.closest(".sidebar-item");
-                            if (parentItem) {
-                                parentItem.classList.add("active");
-                            }
-                        }
-                    });
-                }
-            }, 300);
+            }, 100);
         });
     </script>
 
