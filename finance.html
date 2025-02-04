@@ -78,6 +78,7 @@
     ==================================================*/
     main.content {
       margin-left: 260px;
+      margin-top: 300px; /* Alteração solicitada */
       flex-grow: 1;
       padding: 40px;
       overflow-y: auto;
@@ -568,7 +569,7 @@
       }
     }
 
-    // Função para filtrar os pedidos com base na Data de Pagamento
+    // Função para filtrar os pedidos com base na Data de Pagamento (data_pagamento das planilhas)
     function filterOrders() {
       let filteredOrders = combinedOrders;
       if (selectedStartDate && selectedEndDate) {
