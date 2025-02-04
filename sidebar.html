@@ -154,17 +154,14 @@
         </nav>
     </div>
 
-    <!-- 🔥 Script para ativar os itens da sidebar conforme a URL atual -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var currentUrl = window.location.href; // Obtém a URL completa incluindo domínio e parâmetros
-            var currentPath = window.location.pathname; // Obtém apenas o caminho (ex: "/pages-orders.html")
-
+            var currentPath = window.location.pathname; // Obtém o caminho da URL (ex: "/pages-orders.html")
+    
             document.querySelectorAll(".sidebar-link").forEach(function (link) {
-                var linkUrl = new URL(link.href, window.location.origin).href; // Obtém a URL completa do link
                 var linkPath = new URL(link.href, window.location.origin).pathname; // Obtém apenas o caminho do link
-
-                if (currentUrl === linkUrl || currentPath === linkPath || currentUrl.startsWith(linkUrl)) { 
+    
+                if (currentPath === linkPath || currentPath.startsWith(linkPath)) { 
                     // Se a URL atual for exatamente igual ao link ou começar com ele
                     var parentItem = link.closest(".sidebar-item");
                     if (parentItem) {
@@ -172,6 +169,13 @@
                     }
                 }
             });
+    
+            // Garante que a classe "active" seja aplicada corretamente após a renderização
+            setTimeout(() => {
+                document.querySelectorAll(".sidebar-item.active").forEach(item => {
+                    item.classList.add("force-active");
+                });
+            }, 100);
         });
     </script>
 
