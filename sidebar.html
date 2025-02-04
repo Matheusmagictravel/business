@@ -6,12 +6,15 @@
     <title>Sidebar</title>
 
     <style>
+        /* 🔹 Correção do scroll */
         body {
-            place-items: center;
+            display: flex;
+            flex-direction: column;
             background-color: #eaedf2;
-            height: 100vh;
+            min-height: 100vh; /* Permite o scroll caso o conteúdo ultrapasse a tela */
             font-family: "Nunito", sans-serif;
             font-size: 14px;
+            overflow-y: auto; /* Garante que o scroll funcione */
         }
 
         .sidebar {
@@ -139,38 +142,28 @@
                         </a>
                     </li>
                 </ul>
-                <div class="sidebar-cta">
-                    <div class="sidebar-cta-content">
-                        <strong class="d-inline-block mb-2">Upgrade to Pro</strong>
-                        <div class="mb-3 text-sm">
-                            Are you looking for more components? Check out our premium version.
-                        </div>
-                        <div class="d-grid">
-                            <a href="upgrade-to-pro.html" class="btn btn-primary">Upgrade to Pro</a>
-                        </div>
-                    </div>
-                </div>
             </div>
         </nav>
     </div>
 
+    <!-- 🔥 Script para ativar os itens da sidebar conforme a URL atual -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var currentPath = window.location.pathname; // Obtém o caminho da URL (ex: "/pages-orders.html")
+            var currentPath = window.location.pathname.replace(/\/$/, ""); // Remove barra no final, se houver
     
             document.querySelectorAll(".sidebar-link").forEach(function (link) {
-                var linkPath = new URL(link.href, window.location.origin).pathname; // Obtém apenas o caminho do link
-    
-                if (currentPath === linkPath || currentPath.startsWith(linkPath)) { 
-                    // Se a URL atual for exatamente igual ao link ou começar com ele
+                var linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, ""); // Normaliza o caminho do link
+
+                if (currentPath === linkPath || currentPath.includes(linkPath)) { 
+                    // Se a URL atual for exatamente igual ao link ou contiver o link
                     var parentItem = link.closest(".sidebar-item");
                     if (parentItem) {
                         parentItem.classList.add("active");
                     }
                 }
             });
-    
-            // Garante que a classe "active" seja aplicada corretamente após a renderização
+
+            // Força a ativação caso o navegador tenha delays na renderização
             setTimeout(() => {
                 document.querySelectorAll(".sidebar-item.active").forEach(item => {
                     item.classList.add("force-active");
