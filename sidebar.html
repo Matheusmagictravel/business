@@ -74,7 +74,7 @@
     <div class="wrapper">
         <nav id="sidebar" class="sidebar js-sidebar">
             <div class="sidebar-content js-simplebar">
-                <a class="sidebar-brand" href="index.html">					
+                <a class="sidebar-brand" href="index.html">                    
                     <img src="https://www.magictraveltur.com/wp-content/uploads/2024/11/Escrita-_-Branco.png" 
                          alt="Logo" 
                          class="align-middle" 
@@ -115,78 +115,32 @@
     <!-- SimpleBar JS -->
     <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
 
-    <!-- 🔥 Script para ativar os itens da sidebar conforme a URL atual -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             console.log("🔍 Iniciando ativação da sidebar...");
             
-            setTimeout(() => {
-                var currentPath = window.location.pathname.replace(/\/$/, ""); // Remove barra no final
-                console.log("📌 URL Atual:", currentPath); 
+            var currentPath = window.location.pathname.replace(/\/$/, ""); // Remove barra no final
+            console.log("📌 URL Atual:", currentPath);
+            
+            let ativado = false;
+            
+            document.querySelectorAll(".sidebar-item").forEach(function (item) {
+                var link = item.querySelector(".sidebar-link");
+                if (link) {
+                    var linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, "");
+                    console.log("🔎 Verificando:", linkPath); 
 
-                let ativado = false;
-
-                document.querySelectorAll(".sidebar-item").forEach(function (item) {
-                    var link = item.querySelector(".sidebar-link");
-                    if (link) {
-                        var linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, "");
-                        console.log("🔎 Verificando:", linkPath); 
-
-                        if (currentPath === linkPath || currentPath.includes(linkPath)) { 
-                            item.classList.add("active");
-                            ativado = true;
-                            console.log("✅ Ativado:", linkPath);
-                        }
+                    if (currentPath === linkPath || (currentPath.includes(linkPath) && linkPath !== "/")) { 
+                        item.classList.add("active");
+                        ativado = true;
+                        console.log("✅ Ativado:", linkPath);
                     }
-                });
-
-                if (!ativado) {
-                    console.log("⚠️ Nenhum item foi ativado! Verifique se as URLs batem corretamente.");
                 }
-            }, 200);
-        });
+            });
 
-        // Inicializa SimpleBar
-        const initializeSimplebar = () => {
-            const simplebarElement = document.getElementsByClassName("js-simplebar")[0];
-
-            if(simplebarElement){
-                const simplebarInstance = new SimpleBar(simplebarElement);
-                console.log("✅ SimpleBar inicializado!");
-
-                /* Recalcula SimpleBar ao abrir/fechar menus */
-                const sidebarDropdowns = document.querySelectorAll(".js-sidebar [data-bs-parent]");
-                sidebarDropdowns.forEach(link => {
-                    link.addEventListener("shown.bs.collapse", () => {
-                        simplebarInstance.recalculate();
-                    });
-                    link.addEventListener("hidden.bs.collapse", () => {
-                        simplebarInstance.recalculate();
-                    });
-                });
+            if (!ativado) {
+                console.log("⚠️ Nenhum item foi ativado! Verifique se as URLs batem corretamente.");
             }
-        };
-
-        // Inicializa Toggle da Sidebar
-        const initializeSidebarCollapse = () => {
-            const sidebarElement = document.getElementsByClassName("js-sidebar")[0];
-            const sidebarToggleElement = document.getElementsByClassName("js-sidebar-toggle")[0];
-
-            if(sidebarElement && sidebarToggleElement) {
-                sidebarToggleElement.addEventListener("click", () => {
-                    sidebarElement.classList.toggle("collapsed");
-
-                    sidebarElement.addEventListener("transitionend", () => {
-                        window.dispatchEvent(new Event("resize"));
-                    });
-                });
-            }
-        };
-
-        // Espera a página carregar antes de inicializar os scripts
-        document.addEventListener("DOMContentLoaded", () => {
-            initializeSimplebar();
-            initializeSidebarCollapse();
         });
     </script>
 </body>
