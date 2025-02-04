@@ -15,118 +15,59 @@
         }
 
         .sidebar {
-            direction:ltr;
-            max-width:260px;
-            min-width:260px
-        }
-        .sidebar,.sidebar-content {
-            background:#222e3c;
-            transition:margin-left .35s ease-in-out,left .35s ease-in-out,margin-right .35s ease-in-out,right .35s ease-in-out
+            direction: ltr;
+            max-width: 260px;
+            min-width: 260px;
+            background: #222e3c;
+            transition: margin-left .35s ease-in-out, left .35s ease-in-out, margin-right .35s ease-in-out, right .35s ease-in-out;
         }
         .sidebar-content {
-            display:flex;
-            flex-direction:column;
-            height:100vh
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
         }
         .sidebar-nav {
-            flex-grow:1;
-            list-style:none;
-            margin-bottom:0;
-            padding-left:0
+            flex-grow: 1;
+            list-style: none;
+            margin-bottom: 0;
+            padding-left: 0;
         }
-        .sidebar-link,a.sidebar-link {
-            background:#222e3c;
-            border-left:3px solid transparent;
-            color:rgba(233,236,239,.5);
-            cursor:pointer;
-            display:block;
-            font-weight:400;
-            padding:.625rem 1.625rem;
-            position:relative;
-            text-decoration:none;
-            transition:background .1s ease-in-out
+        .sidebar-link {
+            background: #222e3c;
+            border-left: 3px solid transparent;
+            color: rgba(233, 236, 239, .5);
+            cursor: pointer;
+            display: block;
+            font-weight: 400;
+            padding: .625rem 1.625rem;
+            text-decoration: none;
+            transition: background .1s ease-in-out;
         }
-        .sidebar-link i,.sidebar-link svg,a.sidebar-link i,a.sidebar-link svg {
-            color:rgba(233,236,239,.5);
-            margin-right:.75rem
-        }
-        .sidebar-link:focus {
-            outline:0
+        .sidebar-link i {
+            color: rgba(233, 236, 239, .5);
+            margin-right: .75rem;
         }
         .sidebar-link:hover {
-            background:#222e3c;
-            border-left-color:transparent
+            background: #2C3E50;
+            border-left-color: #3b7ddd;
+            color: white;
         }
-        .sidebar-link:hover,.sidebar-link:hover i,.sidebar-link:hover svg {
-            color:rgba(233,236,239,.75)
-        }
-        .sidebar-item.active .sidebar-link:hover,.sidebar-item.active>.sidebar-link {
-            background:linear-gradient(90deg,rgba(59,125,221,.1),rgba(59,125,221,.088) 50%,transparent);
-            border-left-color:#3b7ddd;
-            color:#e9ecef
-        }
-        .sidebar-item.active .sidebar-link:hover i,.sidebar-item.active .sidebar-link:hover svg,.sidebar-item.active>.sidebar-link i,.sidebar-item.active>.sidebar-link svg {
-            color:#e9ecef
-        }
-        .sidebar-brand {
-            color:#f8f9fa;
-            display:block;
-            font-size:1.15rem;
-            font-weight:600;
-            padding:1.15rem 1.5rem
-        }
-        .sidebar-brand:hover {
-            color:#f8f9fa;
-            text-decoration:none
-        }
-        .sidebar-brand:focus {
-            outline:0
-        }
-        .sidebar-toggle {
-            cursor:pointer;
-            display:flex;
-            height:26px;
-            width:26px
-        }
-        .sidebar.collapsed {
-            margin-left:-260px
-        }
-        @media(min-width:1px)and (max-width:991.98px) {
-            .sidebar {
-                margin-left:-260px
-            }
-            .sidebar.collapsed {
-                margin-left:0
-            }
-        }
-        .sidebar-toggle {
-            margin-right:1rem
+        .sidebar-item.active .sidebar-link {
+            background: linear-gradient(90deg, rgba(59,125,221,.1), rgba(59,125,221,.088) 50%, transparent);
+            border-left-color: #3b7ddd;
+            color: #e9ecef;
         }
         .sidebar-header {
-            background:transparent;
-            color:#ced4da;
-            font-size:.75rem;
-            padding:1.5rem 1.5rem .375rem
-        }
-        .sidebar-badge {
-            position:absolute;
-            right:15px;
-            top:14px;
-            z-index:1
-        }
-        .sidebar-cta-content {
-            background:#2b3947;
-            border-radius:.3rem;
-            color:#e9ecef;
-            margin:1.75rem;
-            padding:1.5rem
+            color: #ced4da;
+            font-size: .75rem;
+            padding: 1.5rem 1.5rem .375rem;
         }
     </style>
 </head>
 <body>
     <div class="wrapper">
         <nav id="sidebar" class="sidebar js-sidebar">
-            <div class="sidebar-content js-simplebar">
+            <div class="sidebar-content">
                 <a class="sidebar-brand" href="index.html">					
                     <img src="https://www.magictraveltur.com/wp-content/uploads/2024/11/Escrita-_-Branco.png" 
                          alt="Logo" 
@@ -136,7 +77,7 @@
                 <ul class="sidebar-nav">
                     <li class="sidebar-header">Pages</li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="https://business.magictraveltur.com/">
+                        <a class="sidebar-link" href="https://business.magictraveltur.com/index.html">
                             <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
                         </a>
                     </li>
@@ -213,16 +154,18 @@
         </nav>
     </div>
 
-    <!-- Script para ativar os itens da sidebar conforme a URL atual -->
+    <!-- 🔥 Script para ativar os itens da sidebar conforme a URL atual -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            var currentUrl = window.location.href; // Obtém a URL completa
-    
+            var currentUrl = window.location.href; // Obtém a URL completa incluindo domínio e parâmetros
+            var currentPath = window.location.pathname; // Obtém apenas o caminho (ex: "/pages-orders.html")
+
             document.querySelectorAll(".sidebar-link").forEach(function (link) {
-                var linkUrl = new URL(link.href, window.location.origin).href; // Normaliza a URL do link
-    
-                if (currentUrl === linkUrl || currentUrl.startsWith(linkUrl)) { 
-                    // Se a URL atual for exatamente igual ao link ou começar com ela
+                var linkUrl = new URL(link.href, window.location.origin).href; // Obtém a URL completa do link
+                var linkPath = new URL(link.href, window.location.origin).pathname; // Obtém apenas o caminho do link
+
+                if (currentUrl === linkUrl || currentPath === linkPath || currentUrl.startsWith(linkUrl)) { 
+                    // Se a URL atual for exatamente igual ao link ou começar com ele
                     var parentItem = link.closest(".sidebar-item");
                     if (parentItem) {
                         parentItem.classList.add("active");
@@ -232,7 +175,7 @@
         });
     </script>
 
-    <!-- Script para funcionalidade do menu lateral -->
+    <!-- 🔥 Script para funcionalidade do menu lateral -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             var sidebar = document.querySelector(".js-sidebar");
