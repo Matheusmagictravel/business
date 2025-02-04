@@ -6,23 +6,22 @@
     <title>Sidebar</title>
 
     <style>
-        /* 🔹 Correção do scroll */
+        /* 🔹 Garante que o scroll funcione */
         body {
             display: flex;
             flex-direction: column;
             background-color: #eaedf2;
-            min-height: 100vh; /* Permite o scroll caso o conteúdo ultrapasse a tela */
+            min-height: 100vh;
             font-family: "Nunito", sans-serif;
             font-size: 14px;
-            overflow-y: auto; /* Garante que o scroll funcione */
+            overflow-y: auto;
         }
 
         .sidebar {
             direction: ltr;
-            max-width: 260px;
-            min-width: 260px;
+            width: 260px;
             background: #222e3c;
-            transition: margin-left .35s ease-in-out, left .35s ease-in-out, margin-right .35s ease-in-out, right .35s ease-in-out;
+            transition: margin-left .35s ease-in-out;
         }
         .sidebar-content {
             display: flex;
@@ -39,7 +38,6 @@
             background: #222e3c;
             border-left: 3px solid transparent;
             color: rgba(233, 236, 239, .5);
-            cursor: pointer;
             display: block;
             font-weight: 400;
             padding: .625rem 1.625rem;
@@ -80,27 +78,27 @@
                 <ul class="sidebar-nav">
                     <li class="sidebar-header">Pages</li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="https://business.magictraveltur.com/index.html">
+                        <a class="sidebar-link" href="/index.html">
                             <i class="align-middle" data-feather="sliders"></i> <span class="align-middle">Dashboard</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="https://business.magictraveltur.com/pages-orders.html">
+                        <a class="sidebar-link" href="/pages-orders.html">
                             <i class="align-middle" data-feather="user"></i> <span class="align-middle">Pedidos</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="https://business.magictraveltur.com/loti.html">
+                        <a class="sidebar-link" href="/loti.html">
                             <i class="align-middle" data-feather="bar-chart-2"></i> <span class="align-middle">Cadastrar Venda</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="https://business.magictraveltur.com/relatorio.html">
+                        <a class="sidebar-link" href="/relatorio.html">
                             <i class="align-middle" data-feather="user-plus"></i> <span class="align-middle">Relatórios</span>
                         </a>
                     </li>
                     <li class="sidebar-item">
-                        <a class="sidebar-link" href="https://business.magictraveltur.com/finance.html">
+                        <a class="sidebar-link" href="/finance.html">
                             <i class="align-middle" data-feather="book"></i> <span class="align-middle">Emissão</span>
                         </a>
                     </li>
@@ -113,8 +111,7 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => {
-                var currentUrl = window.location.href.split(/[?#]/)[0]; // Remove parâmetros e fragmentos
-                var currentPath = new URL(currentUrl).pathname.replace(/\/$/, ""); // Remove barra no final, se houver
+                var currentPath = window.location.pathname.replace(/\/$/, ""); // Remove barra no final se houver
                 
                 console.log("URL Atual:", currentPath); // Debug para verificar a URL capturada
 
