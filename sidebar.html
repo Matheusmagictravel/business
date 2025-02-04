@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <title>Magic Travel - Sidebar</title>
+  <title>Magic Travel - Sidebar Dinâmica</title>
 
   <!-- SimpleBar CSS (Para rolagem customizada) -->
   <link
@@ -11,59 +11,50 @@
     href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.css"
   />
 
-  <!--
-    Fonte recomendada (ex: Google Fonts)
-    Usei "Nunito" apenas como exemplo; ajuste se quiser outra.
-  -->
+  <!-- Fonte recomendada (ex: Google Fonts) -->
   <link
     href="https://fonts.googleapis.com/css?family=Nunito:400,600,700&display=swap"
     rel="stylesheet"
   />
 
   <style>
-    /* 
-      Reset rápido para garantir maior consistência 
-      Aplique somente se quiser que este código seja isolado.
-      Caso já possua reset global, pode remover.
-    */
+    /* Reset rápido */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    /* Corpo com fundo suave e fonte Nunito */
+    /* Corpo */
     body {
       display: flex;
       flex-direction: column;
       min-height: 100vh;
       font-family: "Nunito", sans-serif;
       background: #eaedf2;
-      overflow-x: hidden; /* Evita barra lateral horizontal */
+      overflow-x: hidden;
     }
 
-    /* Container geral da página */
+    /* Container principal (engloba sidebar + conteúdo) */
     .page-container {
       display: flex;
       flex: 1;
     }
 
-    /* Sidebar wrapper */
+    /* SIDEBAR */
     .sidebar {
       width: 260px;
       background: linear-gradient(150deg, #222e3c 0%, #1b2733 100%);
       transition: all 0.35s ease-in-out;
       box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
       position: relative;
-      z-index: 999; /* Garantindo que fique sobre o conteúdo se estiver colapsada */
+      z-index: 999;
     }
 
-    /* Quando a sidebar estiver colapsada, escondemos ela à esquerda */
     .sidebar.collapsed {
       margin-left: -260px;
     }
 
-    /* Área interna da sidebar com SimpleBar (rolagem customizada) */
     .sidebar-content {
       display: flex;
       flex-direction: column;
@@ -71,24 +62,21 @@
       overflow-y: auto;
     }
 
-    /* Logo / Área superior da sidebar */
+    /* Topo da sidebar (logo + botão toggle) */
     .sidebar-brand {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 1rem;
       background-color: rgba(255, 255, 255, 0.05);
-      /* Pequena transição quando colapsar */
       transition: padding 0.35s ease-in-out;
     }
 
-    /* Logo em si */
     .sidebar-brand img {
       height: auto;
       max-width: 125px;
     }
 
-    /* Botão que fará a sidebar colapsar/expandir */
     .sidebar-toggle {
       background: none;
       border: none;
@@ -98,6 +86,7 @@
       outline: none;
       transition: transform 0.3s ease;
     }
+
     .sidebar-toggle:hover {
       transform: scale(1.1);
     }
@@ -109,7 +98,6 @@
       padding: 0;
     }
 
-    /* Cabeçalho das seções */
     .sidebar-header {
       color: #ced4da;
       font-size: 0.75rem;
@@ -118,13 +106,25 @@
       letter-spacing: 1px;
     }
 
-    /* Cada item da sidebar */
     .sidebar-item {
       transition: background 0.3s ease, border-left-color 0.3s ease;
       position: relative;
+      opacity: 0;
+      transform: translateX(-10px);
+      animation: slideIn 0.4s forwards;
+    }
+    /* Pequenino delay para cada item */
+    .sidebar-item:nth-child(n) {
+      animation-delay: calc(0.05s * var(--i));
     }
 
-    /* Link interno do item */
+    @keyframes slideIn {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
     .sidebar-link {
       display: flex;
       align-items: center;
@@ -136,14 +136,12 @@
       transition: background 0.3s ease, color 0.3s ease, padding 0.3s ease;
     }
 
-    /* Ícones (usaremos data-feather) */
     .sidebar-link i {
       margin-right: 0.75rem;
       color: rgba(233, 236, 239, 0.6);
       transition: color 0.3s ease;
     }
 
-    /* Hover no item de navegação */
     .sidebar-link:hover {
       background: rgba(255, 255, 255, 0.05);
       color: #ffffff;
@@ -153,7 +151,7 @@
       color: #ffffff;
     }
 
-    /* Item ativo */
+    /* Estado ativo genérico (DEFAULT) */
     .sidebar-item.active > .sidebar-link {
       background: rgba(255, 255, 255, 0.1);
       color: #ffffff;
@@ -163,43 +161,45 @@
       color: #ffffff;
     }
 
-    /* Animação suave nos itens ao carregar */
-    .sidebar-item {
-      opacity: 0;
-      transform: translateX(-10px);
-      animation: slideIn 0.4s forwards;
-    }
-    /* Pequeno delay progressivo para cada item, fica bacana */
-    .sidebar-item:nth-child(n) {
-      animation-delay: calc(0.05s * var(--i));
+    /*
+      ESTILOS ESPECÍFICOS para cada página.
+      .active-orders: quando for a página "pages-orders.html"
+      .active-loti:   quando for a página "loti.html"
+    */
+
+    /* Exemplo:
+       "Pedidos" com borda vermelha
+       "Cadastrar Venda (loti)" com borda verde
+       Ajuste ao seu gosto
+    */
+    .sidebar-item.active-orders > .sidebar-link {
+      background: rgba(255, 0, 0, 0.1);
+      color: #fff;
+      border-left: 3px solid #e74c3c; /* tom de vermelho */
     }
 
-    /* Keyframes da animação de entrada */
-    @keyframes slideIn {
-      to {
-        opacity: 1;
-        transform: translateX(0);
-      }
+    .sidebar-item.active-loti > .sidebar-link {
+      background: rgba(0, 255, 0, 0.1);
+      color: #fff;
+      border-left: 3px solid #2ecc71; /* tom de verde */
     }
 
-    /* Conteúdo principal da página (ao lado da sidebar) */
+    /* Conteúdo principal */
     .main-content {
       flex: 1;
       padding: 2rem;
       transition: margin-left 0.35s ease-in-out;
     }
 
-    /* Quando a sidebar está colapsada, empurramos o conteúdo para usar mais espaço */
     .collapsed ~ .main-content {
       margin-left: 0;
     }
 
-    /* Opcional: se quiser diminuir a padding do brand ao colapsar */
     .sidebar.collapsed .sidebar-brand {
       padding: 1rem;
     }
 
-    /* Ajuste do scroll bar de SimpleBar para ficar mais elegante (opcional) */
+    /* Barra de rolagem customizada do SimpleBar */
     .js-simplebar .simplebar-track.simplebar-vertical .simplebar-scrollbar {
       background: rgba(255, 255, 255, 0.2) !important;
       width: 6px;
@@ -209,7 +209,7 @@
       background: rgba(255, 255, 255, 0.5) !important;
     }
 
-    /* Responsividade básica: colapsa a sidebar em telas menores */
+    /* Responsividade básica */
     @media (max-width: 768px) {
       .sidebar {
         position: fixed;
@@ -228,38 +228,29 @@
 </head>
 <body>
   <div class="page-container">
-    <!-- Início da Sidebar -->
+    <!-- Sidebar -->
     <nav id="sidebar" class="sidebar js-sidebar">
       <div class="sidebar-content js-simplebar">
         <div class="sidebar-brand">
-          <!-- Logo -->
           <a href="https://business.magictraveltur.com/">
             <img
               src="https://www.magictraveltur.com/wp-content/uploads/2024/11/Escrita-_-Branco.png"
               alt="Magic Travel"
             />
           </a>
-          <!-- Botão toggle -->
+          <!-- Botão Toggle -->
           <button class="sidebar-toggle" id="sidebarToggle">
             <i data-feather="menu"></i>
           </button>
         </div>
 
         <ul class="sidebar-nav">
-          <!-- Para criar um pequeno delay de animação, 
-               usaremos a variável --i no nth-child.
-               A cada item incrementamos manualmente:
-               style="--i:1"  style="--i:2" etc.
-          -->
-          <li class="sidebar-header" style="--i:1">Pages</li>
+          <li class="sidebar-header" style="--i:1">Páginas</li>
 
           <li class="sidebar-item active" style="--i:2">
-            <a
-              class="sidebar-link"
-              href="https://business.magictraveltur.com/"
-            >
+            <a class="sidebar-link" href="https://business.magictraveltur.com/">
               <i data-feather="sliders"></i>
-              <span class="align-middle">Dashboard</span>
+              <span>Dashboard</span>
             </a>
           </li>
 
@@ -269,7 +260,7 @@
               href="https://business.magictraveltur.com/pages-orders.html"
             >
               <i data-feather="user"></i>
-              <span class="align-middle">Pedidos</span>
+              <span>Pedidos</span>
             </a>
           </li>
 
@@ -279,7 +270,7 @@
               href="https://business.magictraveltur.com/loti.html"
             >
               <i data-feather="bar-chart-2"></i>
-              <span class="align-middle">Cadastrar Venda</span>
+              <span>Cadastrar Venda</span>
             </a>
           </li>
 
@@ -289,51 +280,51 @@
               href="https://business.magictraveltur.com/relatorio.html"
             >
               <i data-feather="user-plus"></i>
-              <span class="align-middle">Relatórios</span>
+              <span>Relatórios</span>
             </a>
           </li>
 
           <li class="sidebar-item" style="--i:6">
             <a class="sidebar-link" href="pages-blank.html">
               <i data-feather="book"></i>
-              <span class="align-middle">Blank</span>
+              <span>Blank</span>
             </a>
           </li>
 
-          <li class="sidebar-header" style="--i:7">Tools & Components</li>
+          <li class="sidebar-header" style="--i:7">Ferramentas & Componentes</li>
 
           <li class="sidebar-item" style="--i:8">
             <a class="sidebar-link" href="ui-buttons.html">
               <i data-feather="square"></i>
-              <span class="align-middle">Buttons</span>
+              <span>Buttons</span>
             </a>
           </li>
 
           <li class="sidebar-item" style="--i:9">
             <a class="sidebar-link" href="ui-forms.html">
               <i data-feather="check-square"></i>
-              <span class="align-middle">Forms</span>
+              <span>Forms</span>
             </a>
           </li>
 
           <li class="sidebar-item" style="--i:10">
             <a class="sidebar-link" href="ui-cards.html">
               <i data-feather="grid"></i>
-              <span class="align-middle">Cards</span>
+              <span>Cards</span>
             </a>
           </li>
 
           <li class="sidebar-item" style="--i:11">
             <a class="sidebar-link" href="ui-typography.html">
               <i data-feather="align-left"></i>
-              <span class="align-middle">Typography</span>
+              <span>Typography</span>
             </a>
           </li>
 
           <li class="sidebar-item" style="--i:12">
             <a class="sidebar-link" href="icons-feather.html">
               <i data-feather="coffee"></i>
-              <span class="align-middle">Icons</span>
+              <span>Icons</span>
             </a>
           </li>
 
@@ -342,37 +333,33 @@
           <li class="sidebar-item" style="--i:14">
             <a class="sidebar-link" href="charts-chartjs.html">
               <i data-feather="bar-chart-2"></i>
-              <span class="align-middle">Charts</span>
+              <span>Charts</span>
             </a>
           </li>
 
           <li class="sidebar-item" style="--i:15">
             <a class="sidebar-link" href="maps-google.html">
               <i data-feather="map"></i>
-              <span class="align-middle">Maps</span>
+              <span>Maps</span>
             </a>
           </li>
         </ul>
       </div>
     </nav>
-    <!-- Fim da Sidebar -->
   </div>
 
-  <!-- SimpleBar JS (Para rolagem customizada) -->
+  <!-- SimpleBar JS (rolagem customizada) -->
   <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
-
-  <!-- Feather Icons (Para exibir os ícones) -->
+  <!-- Feather Icons -->
   <script src="https://unpkg.com/feather-icons"></script>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      console.log("🔍 Iniciando ativação da sidebar...");
-
-      // Substitui data-feather="..." por SVGs
+      // Ativa feather icons
       feather.replace();
 
-      // Lógica de highlight dos itens com base na URL
-      var currentPath = window.location.pathname.replace(/\/$/, ""); // Remove barra no final
+      // Identifica a URL atual (sem barra final)
+      var currentPath = window.location.pathname.replace(/\/$/, "");
       console.log("📌 URL Atual:", currentPath);
 
       let ativado = false;
@@ -382,7 +369,7 @@
           var linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, "");
           console.log("🔎 Verificando:", linkPath);
 
-          // Se a URL atual for igual ao link ou "contiver" o link
+          // Se a URL atual for igual ou contiver o linkPath
           if (
             currentPath === linkPath ||
             (currentPath.includes(linkPath) && linkPath !== "/")
@@ -390,14 +377,22 @@
             item.classList.add("active");
             ativado = true;
             console.log("✅ Ativado:", linkPath);
+
+            // Regras específicas para cada página
+            if (linkPath.includes("pages-orders.html")) {
+              item.classList.add("active-orders");
+            } else if (linkPath.includes("loti.html")) {
+              item.classList.add("active-loti");
+            }
           }
         }
       });
+
       if (!ativado) {
         console.log("⚠️ Nenhum item foi ativado! Verifique se as URLs batem corretamente.");
       }
 
-      // Botão de toggle para colapsar/expandir a sidebar
+      // Botão de colapsar/expandir sidebar
       var toggleButton = document.getElementById("sidebarToggle");
       var sidebar = document.getElementById("sidebar");
       toggleButton.addEventListener("click", function () {
