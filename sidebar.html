@@ -6,7 +6,6 @@
     <title>Sidebar</title>
 
     <style>
-        /* 🔹 Garante que o scroll funcione */
         body {
             display: flex;
             flex-direction: column;
@@ -53,6 +52,7 @@
             border-left-color: #3b7ddd;
             color: white;
         }
+        /* 🔥 Correção para manter o item ativo */
         .sidebar-item.active .sidebar-link {
             background: linear-gradient(90deg, rgba(59,125,221,.1), rgba(59,125,221,.088) 50%, transparent);
             border-left-color: #3b7ddd;
@@ -111,20 +111,20 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => {
-                var currentPath = window.location.pathname.replace(/\/$/, ""); // Remove barra no final se houver
+                var currentPath = window.location.pathname.replace(/\/$/, ""); // Remove barra no final, se houver
                 
                 console.log("URL Atual:", currentPath); // Debug para verificar a URL capturada
 
-                document.querySelectorAll(".sidebar-link").forEach(function (link) {
-                    var linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, ""); // Normaliza o caminho do link
-                    
-                    console.log("Comparando com:", linkPath); // Debug para ver os links da sidebar
+                document.querySelectorAll(".sidebar-item").forEach(function (item) {
+                    var link = item.querySelector(".sidebar-link");
+                    if (link) {
+                        var linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, ""); // Normaliza o caminho do link
 
-                    if (currentPath === linkPath) { 
-                        var parentItem = link.closest(".sidebar-item");
-                        if (parentItem) {
-                            parentItem.classList.add("active");
-                            console.log("Ativando:", parentItem); // Debug para ver qual item foi ativado
+                        console.log("Comparando:", linkPath); // Debug
+
+                        if (currentPath === linkPath) { 
+                            item.classList.add("active"); // 🔥 Corrigido: Agora ativa o <li class="sidebar-item">
+                            console.log("Ativando:", item); // Debug
                         }
                     }
                 });
