@@ -14,12 +14,10 @@
             background-color: #eaedf2;
             min-height: 100vh;
             font-family: "Nunito", sans-serif;
-            font-size: 14px;
             overflow-y: auto;
         }
 
         .sidebar {
-            direction: ltr;
             width: 260px;
             background: #222e3c;
             transition: margin-left .35s ease-in-out;
@@ -32,10 +30,12 @@
             overflow-y: auto;
         }
         .sidebar-nav {
-            flex-grow: 1;
             list-style: none;
             margin-bottom: 0;
             padding-left: 0;
+        }
+        .sidebar-item {
+            transition: background .1s ease-in-out;
         }
         .sidebar-link {
             display: block;
@@ -46,7 +46,6 @@
             border-left: 3px solid transparent;
             color: rgba(233, 236, 239, .5);
             background: #222e3c;
-            transition: background .1s ease-in-out;
         }
         .sidebar-link i {
             margin-right: .75rem;
@@ -57,10 +56,12 @@
             background: #2C3E50;
             border-left-color: #3b7ddd;
         }
+        .sidebar-item.active {
+            background: #2C3E50;
+            border-left: 3px solid #3b7ddd;
+        }
         .sidebar-item.active > .sidebar-link {
-            color: #e9ecef;
-            background: linear-gradient(90deg, rgba(59,125,221,.1), rgba(59,125,221,.088) 50%, transparent);
-            border-left-color: #3b7ddd;
+            color: white;
         }
         .sidebar-header {
             color: #ced4da;
@@ -119,14 +120,17 @@
         document.addEventListener("DOMContentLoaded", function () {
             setTimeout(() => {
                 var currentPath = window.location.pathname.replace(/\/$/, ""); // Remove barra no final
-                
+                console.log("Página atual:", currentPath); // DEBUG
+
                 document.querySelectorAll(".sidebar-item").forEach(function (item) {
                     var link = item.querySelector(".sidebar-link");
                     if (link) {
                         var linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, "");
-                        
+                        console.log("Comparando:", linkPath); // DEBUG
+
                         if (currentPath === linkPath) { 
                             item.classList.add("active"); 
+                            console.log("Ativando:", linkPath); // DEBUG
                         }
                     }
                 });
