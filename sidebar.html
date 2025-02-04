@@ -118,23 +118,32 @@
     <!-- 🔥 Script para ativar os itens da sidebar conforme a URL atual -->
     <script>
         document.addEventListener("DOMContentLoaded", function () {
+            console.log("🔍 Iniciando ativação da sidebar...");
+            
             setTimeout(() => {
                 var currentPath = window.location.pathname.replace(/\/$/, ""); // Remove barra no final
-                console.log("Página atual:", currentPath); // DEBUG
+                console.log("📌 URL Atual:", currentPath); 
+
+                let ativado = false;
 
                 document.querySelectorAll(".sidebar-item").forEach(function (item) {
                     var link = item.querySelector(".sidebar-link");
                     if (link) {
                         var linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, "");
-                        console.log("Comparando:", linkPath); // DEBUG
+                        console.log("🔎 Verificando:", linkPath); 
 
                         if (currentPath === linkPath) { 
-                            item.classList.add("active"); 
-                            console.log("Ativando:", linkPath); // DEBUG
+                            item.classList.add("active");
+                            ativado = true;
+                            console.log("✅ Ativado:", linkPath);
                         }
                     }
                 });
-            }, 100);
+
+                if (!ativado) {
+                    console.log("⚠️ Nenhum item foi ativado! Verifique se as URLs batem corretamente.");
+                }
+            }, 200);
         });
 
         // Inicializa SimpleBar
@@ -143,6 +152,7 @@
 
             if(simplebarElement){
                 const simplebarInstance = new SimpleBar(simplebarElement);
+                console.log("✅ SimpleBar inicializado!");
 
                 /* Recalcula SimpleBar ao abrir/fechar menus */
                 const sidebarDropdowns = document.querySelectorAll(".js-sidebar [data-bs-parent]");
