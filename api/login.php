@@ -19,9 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id']   = $user['id'];
             $_SESSION['user_name'] = $user['name'];
 
-            // Redirecionar para área logada ou retornar dados
-            echo "Login bem-sucedido!";
-            // header("Location: /area-logada.php");
+            // Redirecionar para a área logada (subdomínio)
+            header("Location: https://business.magictraveltur.com");
             exit;
         } else {
             echo "Senha incorreta.";
