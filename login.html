@@ -1,62 +1,164 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login - Magic Travel</title>
+  
   <style>
-    /* From Uiverse.io by glisovic01 */
+    /* 
+      Usando a paleta de cores do site:
+      - Gradiente principal: #222e3c -> #1b2733
+      - Cor de destaque (hover, bordas, foco): #3b7ddd
+      - Fundo escurecido na login-box: base #222e3c
+      - Texto claro (#fff)
+    */
+
+    /* Fundo com gradiente, seguindo o padrão do sidebar */
     body {
+      margin: 0;
+      padding: 0;
       font-family: Arial, sans-serif;
-      background-color: #121212;
+      background: linear-gradient(135deg, #222e3c, #1b2733);
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
+      overflow: hidden; /* Esconde barra de rolagem (opcional) */
+      position: relative;
     }
 
-    .login-box {
+    /* Bolhas animadas de fundo (bubbles), agora em cor azul #3b7ddd */
+    .bg-bubbles {
       position: absolute;
-      top: 50%;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      overflow: hidden;
+      top: 0;
+      left: 0;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .bg-bubbles li {
+      position: absolute;
+      display: block;
+      width: 40px;
+      height: 40px;
+      background: rgba(59, 125, 221, 0.2); /* Azul #3b7ddd transparente */
+      bottom: -160px;
+      animation: square 25s infinite;
+      transition-timing-function: linear;
+    }
+    /* Vários offsets para as bolhas */
+    .bg-bubbles li:nth-child(1) { left: 10%; }
+    .bg-bubbles li:nth-child(2) {
+      left: 20%;
+      width: 60px; height: 60px;
+      animation-delay: 2s;
+      animation-duration: 20s;
+    }
+    .bg-bubbles li:nth-child(3) { left: 25%; animation-delay: 4s; }
+    .bg-bubbles li:nth-child(4) {
+      left: 40%;
+      width: 60px; height: 60px;
+      animation-duration: 22s;
+      background: rgba(59, 125, 221, 0.3);
+    }
+    .bg-bubbles li:nth-child(5) { left: 70%; }
+    .bg-bubbles li:nth-child(6) {
+      left: 80%;
+      width: 70px; height: 70px;
+      animation-delay: 3s;
+      background: rgba(59, 125, 221, 0.3);
+    }
+    .bg-bubbles li:nth-child(7) {
       left: 50%;
+      width: 80px; height: 80px;
+      animation-delay: 7s;
+    }
+    .bg-bubbles li:nth-child(8) {
+      left: 65%;
+      animation-delay: 15s;
+    }
+    .bg-bubbles li:nth-child(9) {
+      left: 90%;
+      width: 60px; height: 60px;
+      animation-delay: 8s;
+    }
+    .bg-bubbles li:nth-child(10) {
+      left: 85%;
+      width: 100px; height: 100px;
+      animation-delay: 5s;
+      background: rgba(59, 125, 221, 0.4);
+    }
+
+    @keyframes square {
+      0% {
+        transform: translateY(0);
+      }
+      100% {
+        transform: translateY(-1000px) rotate(600deg);
+      }
+    }
+
+    /* Container do login */
+    .login-box {
+      position: relative;
       width: 400px;
       padding: 40px;
-      margin: 20px auto;
-      transform: translate(-50%, -50%);
-      background: rgba(0,0,0,.9);
-      box-sizing: border-box;
-      box-shadow: 0 15px 25px rgba(0,0,0,.6);
+      background: rgba(34, 46, 60, 0.95); /* #222e3c levemente transparente */
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
       border-radius: 10px;
+      z-index: 1;
+      animation: fadeInUp 0.8s forwards;
+      opacity: 0;
+      transform: translateY(20px);
     }
 
+    /* Animação de fade in para a .login-box */
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Título */
     .login-box p {
       margin: 0 0 30px;
-      padding: 0;
       color: #fff;
       text-align: center;
-      font-size: 1.5rem;
+      font-size: 1.7rem;
       font-weight: bold;
       letter-spacing: 1px;
     }
 
+    /* Container para cada input */
     .login-box .user-box {
       position: relative;
+      margin-bottom: 30px;
     }
 
     .login-box .user-box input {
       width: 100%;
-      padding: 10px 0;
+      padding: 10px 8px;
       font-size: 16px;
       color: #fff;
-      margin-bottom: 30px;
       border: none;
-      border-bottom: 1px solid #fff;
-      outline: none;
+      border-bottom: 2px solid #fff;
       background: transparent;
+      outline: none;
+      transition: border-color 0.3s;
     }
 
+    /* Foco do input realçado em azul #3b7ddd */
+    .login-box .user-box input:focus {
+      border-color: #3b7ddd;
+    }
+
+    /* Label flutuante */
     .login-box .user-box label {
       position: absolute;
       top: 0;
@@ -65,42 +167,48 @@
       font-size: 16px;
       color: #fff;
       pointer-events: none;
-      transition: .5s;
+      transition: 0.5s;
     }
-
     .login-box .user-box input:focus ~ label,
     .login-box .user-box input:valid ~ label {
       top: -20px;
-      left: 0;
-      color: #fff;
       font-size: 12px;
+      color: #3b7ddd;
     }
 
+    /* Botão de login */
     .login-box button {
       position: relative;
       display: inline-block;
-      padding: 10px 20px;
+      width: 100%;
+      padding: 12px 20px;
       font-weight: bold;
       color: #fff;
       font-size: 16px;
       text-decoration: none;
       text-transform: uppercase;
-      overflow: hidden;
-      transition: .5s;
-      margin-top: 40px;
       letter-spacing: 3px;
       background: transparent;
       border: 2px solid #fff;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    .login-box button:hover {
-      background: #fff;
-      color: #272727;
       border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.4s;
+    }
+    .login-box button:hover {
+      background: #3b7ddd;
+      border-color: #3b7ddd;
+      color: #fff;
     }
 
+    /* Mensagem de erro */
+    .error-message {
+      color: #ff6565;
+      text-align: center;
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    /* Texto menor ao final */
     .login-box p:last-child {
       color: #aaa;
       font-size: 14px;
@@ -108,49 +216,69 @@
       margin-top: 15px;
     }
 
+    /* Link "Cadastre-se" */
     .login-box .a2 {
-      color: #fff;
+      color: #3b7ddd;
       text-decoration: none;
+      font-weight: bold;
     }
-
     .login-box .a2:hover {
-      background: transparent;
-      color: #aaa;
-      border-radius: 5px;
+      color: #fff;
+      text-decoration: underline;
     }
 
-    .error-message {
-      color: red;
-      text-align: center;
-      margin-top: 10px;
+    /* Responsividade para telas pequenas */
+    @media (max-width: 480px) {
+      .login-box {
+        width: 90%;
+        padding: 20px;
+      }
+      .login-box p {
+        font-size: 1.3rem;
+        margin-bottom: 20px;
+      }
     }
   </style>
 </head>
 
 <body>
+  <!-- Bolhas animadas de fundo -->
+  <ul class="bg-bubbles">
+    <li></li><li></li><li></li><li></li><li></li>
+    <li></li><li></li><li></li><li></li><li></li>
+  </ul>
+
   <div class="login-box">
     <p>Login</p>
     <form id="loginForm">
       <div class="user-box">
-        <input type="email" id="email" name="email" required>
+        <input type="email" id="email" name="email" required />
         <label>Email</label>
       </div>
       <div class="user-box">
-        <input type="password" id="password" name="password" required>
+        <input type="password" id="password" name="password" required />
         <label>Senha</label>
       </div>
       <button type="submit">Entrar</button>
     </form>
+
     <div class="error-message" id="errorMessage"></div>
-    <p>Não tem uma conta? <a href="register.html" class="a2">Cadastre-se!</a></p>
+
+    <p>Não tem uma conta?
+      <a href="register.html" class="a2">Cadastre-se!</a>
+    </p>
   </div>
 
   <script>
     document.getElementById("loginForm").addEventListener("submit", async function(event) {
       event.preventDefault(); // Impede o envio padrão do formulário
 
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const errorMessageEl = document.getElementById("errorMessage");
+
+      // Limpa a mensagem de erro anterior
+      errorMessageEl.textContent = "";
 
       try {
         const response = await fetch("https://magictraveltur.com/process_login.php", {
@@ -164,15 +292,16 @@
         const result = await response.json();
 
         if (response.ok && result.success) {
-          window.location.href = result.redirect; // Redireciona o usuário
+          // Redireciona se tudo estiver correto
+          window.location.href = result.redirect;
         } else {
-          document.getElementById("errorMessage").textContent = result.message || "E-mail ou senha inválidos.";
+          // Exibe mensagem de erro retornada
+          errorMessageEl.textContent = result.message || "E-mail ou senha inválidos.";
         }
       } catch (error) {
-        document.getElementById("errorMessage").textContent = "Erro ao conectar ao servidor.";
+        errorMessageEl.textContent = "Erro ao conectar ao servidor.";
       }
     });
   </script>
 </body>
-
 </html>
