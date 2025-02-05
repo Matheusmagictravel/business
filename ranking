@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard - Exemplo Completo</title>
+  <!-- Inserindo Chart.js CDN para os gráficos -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
+  <style>
+    /************************************************************
+     * Reseta alguns estilos básicos para evitar conflitos gerais
+     ************************************************************/
+    .dashboard-container * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    .dashboard-container {
+      /* Ajuste a cor de fundo conforme a preferência */
+      background-color: #F7F8FC;
+      padding: 20px;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      color: #333;
+    }
+
+    /************************************************************
+     * Cabeçalho
+     ************************************************************/
+    .dashboard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .dashboard-header h1 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+    .header-icons {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    .header-icons .icon {
+      cursor: pointer;
+      font-size: 18px;
+    }
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    /************************************************************
+     * Cartões de estatísticas (Currency, Bills, Balance, etc.)
+     ************************************************************/
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .stat-card:hover {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      background-color: #e7e7e7;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+      font-size: 20px;
+    }
+    .stat-info h2 {
+      font-size: 20px;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    .stat-info p {
+      font-size: 14px;
+      color: #777;
+    }
+
+    /************************************************************
+     * Seção principal com Gráfico de Barras e Sidebar
+     ************************************************************/
+    .charts-section {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    /* Container do gráfico de barras (Activity) */
+    .bar-chart-container {
+      flex: 1 1 60%;
+      min-width: 300px;
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .bar-chart-container h3 {
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #333;
+    }
+    /* Ajuste para o canvas ocupar toda a largura */
+    .bar-chart-container canvas {
+      width: 100% !important;
+      height: 300px !important;
+    }
+
+    /* Sidebar (Obligações, Agenda, Monthly Billing) */
+    .sidebar {
+      flex: 1 1 35%;
+      min-width: 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Box de obrigações */
+    .obligations-box {
+      background-color: #333;
+      color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .obligations-box h4 {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+    .obligations-box p {
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .obligations-box span {
+      display: block;
+      margin-top: 5px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    /* Box de agenda */
+    .calendar-box {
+      background-color: #fff;
+      color: #333;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .calendar-box h4 {
+      font-size: 16px;
+      margin-bottom: 15px;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      margin-bottom: 15px;
+    }
+    .calendar-grid div {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      border-radius: 4px;
+      cursor: default;
+      color: #333;
+    }
+    .calendar-grid .active-day {
+      background-color: #333;
+      color: #fff;
+    }
+    .meeting-box p {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .meeting-box span {
+      font-size: 12px;
+      color: #666;
+    }
+
+    /* Box de billing (gráfico de donut) */
+    .monthly-billing {
+      background-color: #fff;
+      color: #333;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .monthly-billing h4 {
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+    .monthly-billing canvas {
+      width: 100% !important;
+      max-width: 280px;
+      margin: 0 auto;
+      display: block;
+    }
+
+    /************************************************************
+     * Tabela de Clientes
+     ************************************************************/
+    .customers-section {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .customers-section h3 {
+      margin-bottom: 15px;
+      font-size: 18px;
+      color: #333;
+    }
+    .customers-section table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .customers-section thead {
+      background-color: #fafafa;
+    }
+    .customers-section thead th {
+      text-align: left;
+      padding: 10px;
+      font-size: 14px;
+      color: #666;
+    }
+    .customers-section tbody tr {
+      border-bottom: 1px solid #eee;
+    }
+    .customers-section tbody tr:last-child {
+      border-bottom: none;
+    }
+    .customers-section tbody td {
+      padding: 10px;
+      font-size: 14px;
+      color: #333;
+    }
+  </style>
+</head>
+
+<body>
+<div class="dashboard-container">
+  <!-- Cabeçalho -->
+  <header class="dashboard-header">
+    <h1>Dashboard</h1>
+    <div class="header-icons">
+      <span class="icon">🔍</span>
+      <span class="icon">📅</span>
+      <!-- Substitua por sua imagem de avatar -->
+      <img class="user-avatar" src="https://via.placeholder.com/40" alt="User Avatar">
+    </div>
+  </header>
+
+  <!-- Cartões de estatísticas -->
+  <div class="stats-grid">
+    <!-- Card 1 -->
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <div class="stat-info">
+        <h2>$2700</h2>
+        <p>Currency income</p>
+      </div>
+    </div>
+    <!-- Card 2 -->
+    <div class="stat-card">
+      <div class="stat-icon">📄</div>
+      <div class="stat-info">
+        <h2>$1250</h2>
+        <p>Bills</p>
+      </div>
+    </div>
+    <!-- Card 3 -->
+    <div class="stat-card">
+      <div class="stat-icon">⚖️</div>
+      <div class="stat-info">
+        <h2>$1450</h2>
+        <p>Balance</p>
+      </div>
+    </div>
+    <!-- Card 4 -->
+    <div class="stat-card">
+      <div class="stat-icon">💼</div>
+      <div class="stat-info">
+        <h2>$3428</h2>
+        <p>Pending payment</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Seção de gráficos e agenda -->
+  <section class="charts-section">
+    <!-- Gráfico de barras (Activity) -->
+    <div class="bar-chart-container">
+      <h3>Activity</h3>
+      <canvas id="activityChart"></canvas>
+    </div>
+
+    <!-- Sidebar (Obligações, Agenda, Billing) -->
+    <div class="sidebar">
+      <!-- Box preto de obrigações -->
+      <div class="obligations-box">
+        <h4>Upcoming obligations</h4>
+        <p>VAT declaration</p>
+        <span>Hey! You have 27 days left to submit the documentation</span>
+      </div>
+
+      <!-- Agenda (calendário + reunião) -->
+      <div class="calendar-box">
+        <h4>Agenda</h4>
+        <div class="calendar-grid">
+          <!-- Exemplo de dias em grid. Ajuste conforme necessário -->
+          <div>1</div>
+          <div>2</div>
+          <div>3</div>
+          <div>4</div>
+          <div>5</div>
+          <div>6</div>
+          <div>7</div>
+          <div>8</div>
+          <div class="active-day">9</div>
+          <div>10</div>
+          <div>11</div>
+          <div>12</div>
+          <div>13</div>
+          <div>14</div>
+          <div>15</div>
+          <div>16</div>
+          <div>17</div>
+          <div>18</div>
+          <div>19</div>
+          <div>20</div>
+          <div>21</div>
+          <div>22</div>
+          <div>23</div>
+          <div>24</div>
+          <div>25</div>
+          <div>26</div>
+          <div>27</div>
+          <div>28</div>
+          <div>29</div>
+          <div>30</div>
+          <div>31</div>
+        </div>
+        <div class="meeting-box">
+          <p>Meeting with Everis</p>
+          <span>Zoom meeting | 9:00</span>
+        </div>
+      </div>
+
+      <!-- Monthly billing (gráfico donut) -->
+      <div class="monthly-billing">
+        <h4>Monthly billing</h4>
+        <canvas id="billingChart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabela de Clientes -->
+  <section class="customers-section">
+    <h3>Customers</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Register</th>
+          <th>Billing</th>
+          <th>Burden</th>
+          <th>Last contact</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Arquetipo Influence</td>
+          <td>14/04/2022</td>
+          <td>$1200</td>
+          <td>2</td>
+          <td>2 days</td>
+        </tr>
+        <tr>
+          <td>Everis</td>
+          <td>21/01/2022</td>
+          <td>$2060</td>
+          <td>1</td>
+          <td>4 days</td>
+        </tr>
+        <tr>
+          <td>Cecotec</td>
+          <td>03/01/2022</td>
+          <td>$980</td>
+          <td>1</td>
+          <td>1 week</td>
+        </tr>
+        <tr>
+          <td>Luatop Technics</td>
+          <td>09/12/2021</td>
+          <td>$1560</td>
+          <td>5</td>
+          <td>1 month</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+</div>
+
+<!-- Scripts JS para os gráficos -->
+<script>
+  // =============================
+  // Gráfico de Barras (Activity)
+  // =============================
+  const ctxActivity = document.getElementById('activityChart').getContext('2d');
+  const activityChart = new Chart(ctxActivity, {
+    type: 'bar',
+    data: {
+      labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+      datasets: [
+        {
+          label: 'Income',
+          data: [40, 35, 25, 50, 30, 20, 60, 20, 45, 70, 50, 30], 
+          backgroundColor: '#000',
+          borderRadius: 5,
+          barPercentage: 0.6
+        },
+        {
+          label: 'Spent',
+          data: [50, 40, 30, 40, 25, 15, 45, 15, 35, 55, 40, 25], 
+          backgroundColor: '#CFCFCF',
+          borderRadius: 5,
+          barPercentage: 0.6
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: '#666'
+          },
+          grid: {
+            color: '#eee'
+          }
+        },
+        x: {
+          ticks: {
+            color: '#666'
+          },
+          grid: {
+            display: false
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            color: '#333'
+          }
+        }
+      }
+    }
+  });
+
+  // =============================
+  // Gráfico Donut (Monthly Billing)
+  // =============================
+  const ctxBilling = document.getElementById('billingChart').getContext('2d');
+  const billingChart = new Chart(ctxBilling, {
+    type: 'doughnut',
+    data: {
+      labels: ['Charged', 'Pending', 'Received'],
+      datasets: [{
+        data: [1450, 500, 800],
+        backgroundColor: ['#000', '#CFCFCF', '#666'],
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          labels: {
+            color: '#333'
+          }
+        }
+      }
+    }
+  });
+</script>
+</body>
+</html>
