@@ -24,11 +24,36 @@
     body {
       background-color: var(--bg-page);
       color: var(--text-color);
+      min-height: 100vh; /* Para ocupar toda a tela */
     }
+
+    /*************************************************************
+     * Layout principal: Sidebar fixa à esquerda + Conteúdo
+     *************************************************************/
+    .dashboard {
+      display: flex;
+      min-height: 100vh;
+    }
+    /* SIDEBAR fixo à esquerda */
+    .sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: var(--bg-white);
+      box-shadow: var(--shadow);
+      /* Conteúdo será inserido via fetch('sidebar.html') */
+    }
+    /* CONTEÚDO principal */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    /*************************************************************
+     * Container geral do dashboard (onde já estava seu conteúdo)
+     *************************************************************/
     .dashboard-container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 20px;
     }
 
     /* ========= Cabeçalho ========= */
@@ -129,7 +154,7 @@
       height: 300px !important;
     }
 
-    /* ========= Seção de Pedidos + Meta (duas colunas) ========= */
+    /* ========= Seção de Pedidos + Biling (duas colunas) ========= */
     .bottom-section {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -172,157 +197,197 @@
       color: var(--text-color);
     }
 
-    /* Gráfico de Meta (Donut) */
-    .meta-chart-container {
+    /* Gráfico "Monthly billing" (half donut) */
+    .monthly-billing-container {
       background-color: var(--bg-white);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 20px;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
     }
-    .meta-chart-container h4 {
+    .monthly-billing-container h4 {
       font-size: 16px;
       margin-bottom: 15px;
     }
-    .meta-percentage {
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      margin: 10px 0;
-    }
-    .meta-chart-container canvas {
-      display: block;
+    /* Ajuste para deixar uma “meia-lua” */
+    .monthly-billing-container canvas {
       width: 100% !important;
       max-width: 220px;
+      height: 180px !important;
       margin: 0 auto;
-      height: 180px !important; 
+      display: block;
+    }
+    .billing-total {
+      font-size: 20px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    /* Legend textual */
+    .billing-legend {
+      display: flex;
+      gap: 15px;
+      margin-top: 10px;
+      font-size: 14px;
+      color: #666;
+    }
+    .billing-legend div {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
     }
   </style>
 </head>
+
 <body>
-<div class="dashboard-container">
-  <!-- Cabeçalho -->
-  <header class="dashboard-header">
-    <h1>Dashboard</h1>
-    <div class="header-tools">
-      <img src="https://via.placeholder.com/40" alt="Avatar">
-    </div>
-  </header>
+<!-- LAYOUT PRINCIPAL: SIDEBAR + CONTEÚDO -->
+<div class="dashboard">
+  <!-- SIDEBAR (carregado via sidebar.html) -->
+  <div class="sidebar" id="sidebar"></div>
 
-  <!-- Linha superior: 4 cartões + box preto tudo na mesma linha -->
-  <div class="top-row">
-    <!-- Card 1 -->
-    <div class="stat-card">
-      <div class="stat-icon">💸</div>
-      <div class="stat-info">
-        <h2>R$ 3.200</h2>
-        <p>Comissão</p>
+  <!-- CONTEÚDO PRINCIPAL -->
+  <div class="main-content">
+    <div class="dashboard-container">
+
+      <!-- Cabeçalho -->
+      <header class="dashboard-header">
+        <h1>Dashboard</h1>
+        <div class="header-tools">
+          <img src="https://via.placeholder.com/40" alt="Avatar">
+        </div>
+      </header>
+
+      <!-- Linha superior: 4 cartões + box preto -->
+      <div class="top-row">
+        <!-- Card 1 -->
+        <div class="stat-card">
+          <div class="stat-icon">💸</div>
+          <div class="stat-info">
+            <h2>R$ 3.200</h2>
+            <p>Comissão</p>
+          </div>
+        </div>
+        <!-- Card 2 -->
+        <div class="stat-card">
+          <div class="stat-icon">📈</div>
+          <div class="stat-info">
+            <h2>25%</h2>
+            <p>Margem</p>
+          </div>
+        </div>
+        <!-- Card 3 -->
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-info">
+            <h2>R$ 18.500</h2>
+            <p>Faturamento</p>
+          </div>
+        </div>
+        <!-- Card 4 -->
+        <div class="stat-card">
+          <div class="stat-icon">🔗</div>
+          <div class="stat-info">
+            <h2>3.5%</h2>
+            <p>Take Rate</p>
+          </div>
+        </div>
+        <!-- Box Preto -->
+        <div class="dark-box">
+          <h4>Categoria de Vendedor</h4>
+          <p>Vendedor Premium</p>
+          <span>Você possui 27 dias para atualização de informações</span>
+        </div>
       </div>
-    </div>
-    <!-- Card 2 -->
-    <div class="stat-card">
-      <div class="stat-icon">📈</div>
-      <div class="stat-info">
-        <h2>25%</h2>
-        <p>Margem</p>
-      </div>
-    </div>
-    <!-- Card 3 -->
-    <div class="stat-card">
-      <div class="stat-icon">💰</div>
-      <div class="stat-info">
-        <h2>R$ 18.500</h2>
-        <p>Faturamento</p>
-      </div>
-    </div>
-    <!-- Card 4 -->
-    <div class="stat-card">
-      <div class="stat-icon">🔗</div>
-      <div class="stat-info">
-        <h2>3.5%</h2>
-        <p>Take Rate</p>
-      </div>
-    </div>
-    <!-- Box Preto -->
-    <div class="dark-box">
-      <h4>Categoria de Vendedor</h4>
-      <p>Vendedor Premium</p>
-      <span>Você possui 27 dias para atualização de informações</span>
-    </div>
-  </div>
 
-  <!-- Gráfico de Barras: Faturamento x Margem -->
-  <section class="bar-chart-container">
-    <h3>Faturamento x Margem</h3>
-    <canvas id="faturamentoMargemChart"></canvas>
-  </section>
+      <!-- Gráfico de Barras: Faturamento x Margem -->
+      <section class="bar-chart-container">
+        <h3>Faturamento x Margem</h3>
+        <canvas id="faturamentoMargemChart"></canvas>
+      </section>
 
-  <!-- Parte inferior: Últimos Pedidos + Meta (lado a lado) -->
-  <section class="bottom-section">
-    <!-- Últimos Pedidos -->
-    <div class="orders-section">
-      <h3>Últimos Pedidos</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Pedido</th>
-            <th>Data</th>
-            <th>Valor</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>#2540</td>
-            <td>01/02/2025</td>
-            <td>R$ 450,00</td>
-            <td>Enviado</td>
-          </tr>
-          <tr>
-            <td>#2539</td>
-            <td>30/01/2025</td>
-            <td>R$ 1.200,00</td>
-            <td>Pago</td>
-          </tr>
-          <tr>
-            <td>#2538</td>
-            <td>28/01/2025</td>
-            <td>R$ 320,00</td>
-            <td>Pendente</td>
-          </tr>
-          <tr>
-            <td>#2537</td>
-            <td>27/01/2025</td>
-            <td>R$ 2.100,00</td>
-            <td>Pago</td>
-          </tr>
-          <tr>
-            <td>#2536</td>
-            <td>25/01/2025</td>
-            <td>R$ 980,00</td>
-            <td>Pendente</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <!-- Parte inferior: Últimos Pedidos + Monthly Billing (half donut) -->
+      <section class="bottom-section">
+        <!-- Últimos Pedidos -->
+        <div class="orders-section">
+          <h3>Últimos Pedidos</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Data</th>
+                <th>Valor</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#2540</td>
+                <td>01/02/2025</td>
+                <td>R$ 450,00</td>
+                <td>Enviado</td>
+              </tr>
+              <tr>
+                <td>#2539</td>
+                <td>30/01/2025</td>
+                <td>R$ 1.200,00</td>
+                <td>Pago</td>
+              </tr>
+              <tr>
+                <td>#2538</td>
+                <td>28/01/2025</td>
+                <td>R$ 320,00</td>
+                <td>Pendente</td>
+              </tr>
+              <tr>
+                <td>#2537</td>
+                <td>27/01/2025</td>
+                <td>R$ 2.100,00</td>
+                <td>Pago</td>
+              </tr>
+              <tr>
+                <td>#2536</td>
+                <td>25/01/2025</td>
+                <td>R$ 980,00</td>
+                <td>Pendente</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
-    <!-- Gráfico de Meta (Donut) -->
-    <div class="meta-chart-container">
-      <h4>Meta</h4>
-      <canvas id="metaChart"></canvas>
-      <div class="meta-percentage" id="metaPercentage">80%</div>
-    </div>
-  </section>
-</div>
+        <!-- Monthly Billing (Half Donut) -->
+        <div class="monthly-billing-container">
+          <h4>Monthly billing</h4>
+          <canvas id="monthlyBillingChart"></canvas>
+          <div class="billing-total" id="billingTotal">Total $1450</div>
+          <div class="billing-legend">
+            <div><span class="legend-color" style="background: #000;"></span> Charged</div>
+            <div><span class="legend-color" style="background: #DDD;"></span> Pending</div>
+          </div>
+        </div>
+      </section>
+    </div><!-- /dashboard-container -->
+  </div><!-- /main-content -->
+</div><!-- /dashboard -->
 
-<!-- Scripts para os gráficos -->
+<!-- 1) Carrega o sidebar.html -->
 <script>
-  /***************************************************
-   * GRÁFICO 1: Faturamento x Margem (barras)
-   ***************************************************/
+  fetch('sidebar.html')
+    .then(resp => resp.text())
+    .then(html => {
+      document.getElementById('sidebar').innerHTML = html;
+    })
+    .catch(err => console.error('Erro ao carregar sidebar:', err));
+</script>
+
+<!-- 2) Gráfico de Barras: Faturamento x Margem -->
+<script>
   const ctxFM = document.getElementById('faturamentoMargemChart').getContext('2d');
   new Chart(ctxFM, {
     type: 'bar',
@@ -364,20 +429,21 @@
       }
     }
   });
+</script>
 
-  /***************************************************
-   * GRÁFICO 2: Meta (Donut)
-   ***************************************************/
-  const ctxMeta = document.getElementById('metaChart').getContext('2d');
-  const metaBatida = 80; // Exemplo: 80% da meta atingida
-  const restanteMeta = 100 - metaBatida;
+<!-- 3) Gráfico Half-Donut: Monthly billing -->
+<script>
+  const ctxMB = document.getElementById('monthlyBillingChart').getContext('2d');
+  // Exemplo: $1450 Charged e $600 Pending
+  let chargedValue = 1450;
+  let pendingValue = 600;
 
-  new Chart(ctxMeta, {
+  new Chart(ctxMB, {
     type: 'doughnut',
     data: {
-      labels: ['Batido', 'Restante'],
+      labels: ['Charged', 'Pending'],
       datasets: [{
-        data: [metaBatida, restanteMeta],
+        data: [chargedValue, pendingValue],
         backgroundColor: ['#000', '#DDD'],
         hoverOffset: 4
       }]
@@ -385,13 +451,16 @@
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      cutout: '60%',
+      cutout: '60%',        // furo interno
+      rotation: -90,        // começa de cima
+      circumference: 180,   // 180° => meia-lua
       plugins: {
         legend: { display: false }
       }
     }
   });
-  document.getElementById('metaPercentage').textContent = metaBatida + '%';
+
+  document.getElementById('billingTotal').textContent = `Total $${chargedValue}`;
 </script>
 </body>
 </html>
