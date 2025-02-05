@@ -205,6 +205,7 @@
       text-align: center;
       margin-top: 10px;
       font-weight: bold;
+      min-height: 20px; /* para manter espaço mesmo sem mensagem */
     }
 
     /* Texto menor ao final */
@@ -249,8 +250,8 @@
 
   <div class="login-box">
     <p>Login</p>
-    <!-- Ajustamos o formulário para fazer POST diretamente ao seu script de login -->
-    <form id="loginForm" action="https://magictraveltur.com/api/login.php" method="POST">
+    <!-- Removemos o "action" para tratar via JavaScript -->
+    <form id="loginForm" method="POST">
       <div class="user-box">
         <input type="email" id="email" name="email" required />
         <label>Email</label>
@@ -269,5 +270,54 @@
     </p>
   </div>
 
+  <script>
+    // Captura o evento de envio do form
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Impede o submit padrão
+
+      // Coletar valores do form
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const errorMessageDiv = document.getElementById('errorMessage');
+
+      // Limpa mensagem anterior
+      errorMessageDiv.textContent = '';
+
+      // Verificação básica de campos vazios (opcional, pois já tem required no HTML)
+      if (!email || !password) {
+        errorMessageDiv.textContent = 'Preencha todos os campos.';
+        return;
+      }
+
+      // Envia requisição para login.php
+      fetch('https://magictraveltur.com/api/login.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        // Passamos os dados no corpo, no formato típico de formulário
+        body: new URLSearchParams({
+          email: email,
+          password: password
+        })
+      })
+      .then(response => response.text()) // esperamos texto
+      .then(data => {
+        // data deve ser algo como "Login bem-sucedido!" ou "Senha incorreta."
+        if (data.includes('Login bem-sucedido')) {
+          // Redireciona para a área logada
+          window.location.href = 'https://business.magictraveltur.com';
+        } else {
+          // Exibe mensagem de erro retornada pelo servidor
+          errorMessageDiv.textContent = data;
+        }
+      })
+      .catch(error => {
+        // Se houver erro de rede ou algo assim
+        console.error('Erro na requisição:', error);
+        errorMessageDiv.textContent = 'Ocorreu um erro. Tente novamente.';
+      });
+    });
+  </script>
 </body>
 </html>
