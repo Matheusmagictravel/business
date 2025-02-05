@@ -250,7 +250,7 @@
 
   <div class="login-box">
     <p>Login</p>
-    <!-- Removemos o "action" para tratar via JavaScript -->
+    <!-- Observe que NÃO definimos action aqui, pois vamos tratar via JavaScript -->
     <form id="loginForm" method="POST">
       <div class="user-box">
         <input type="email" id="email" name="email" required />
@@ -283,32 +283,25 @@
       // Limpa mensagem anterior
       errorMessageDiv.textContent = '';
 
-      // Verificação básica de campos vazios (opcional, pois já tem required no HTML)
-      if (!email || !password) {
-        errorMessageDiv.textContent = 'Preencha todos os campos.';
-        return;
-      }
-
       // Envia requisição para login.php
       fetch('https://magictraveltur.com/api/login.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
-        // Passamos os dados no corpo, no formato típico de formulário
         body: new URLSearchParams({
           email: email,
           password: password
         })
       })
-      .then(response => response.text()) // esperamos texto
+      .then(response => response.text())
       .then(data => {
-        // data deve ser algo como "Login bem-sucedido!" ou "Senha incorreta."
+        // Se o PHP retornar "Login bem-sucedido!", fazemos o redirecionamento
         if (data.includes('Login bem-sucedido')) {
-          // Redireciona para a área logada
+          // Redireciona para a área logada (ou home) em business.magictraveltur.com
           window.location.href = 'https://business.magictraveltur.com';
         } else {
-          // Exibe mensagem de erro retornada pelo servidor
+          // Caso contrário, exibe mensagem de erro retornada pelo servidor
           errorMessageDiv.textContent = data;
         }
       })
