@@ -2,52 +2,60 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard Rápido</title>
+  <title>Dashboard com Sidebar Fixa</title>
 
-  <!-- Chart.js: Remova se não precisar de gráficos -->
+  <!-- Chart.js (remova se não precisar de gráficos) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 
-  <!-- FontAwesome para ícones: Remova se não precisar de ícones -->
-  <!--
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-    integrity="sha512-dKdTTlFi2pRWgq2Z9VX8z8G3ZYy2FJV2ld0C+JD4z0Zz4H6U63HQS7i6hDVwhgsZCiE3ViR1cE2zK3tgKTSNGA=="
-    crossorigin="anonymous"
-    referrerpolicy="no-referrer"
-  />
-  -->
-
   <style>
-    /* =======================
-       Reseta estilos básicos
-    ======================== */
+    /********************************************************
+     * Reset básico e fonte padrão
+     ********************************************************/
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
     }
-
     body {
-      background: #F5F6FA; /* Fundo geral mais claro */
+      background-color: #F5F6FA;
       color: #333;
     }
 
-    /* =======================
-       Container principal
-    ======================== */
-    .dashboard-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px;
-      background: #F5F6FA;
+    /********************************************************
+     * Layout principal
+     ********************************************************/
+    .dashboard {
+      display: flex;
+      min-height: 100vh; /* ocupa a altura total da tela */
+      /* Se quiser forçar scrollbar sempre, pode usar height: 100vh; overflow-y: auto; */
+    }
+
+    /********************************************************
+     * Sidebar fixa na esquerda
+     ********************************************************/
+    .sidebar {
+      width: 260px;
+      min-width: 260px; /* garante que não diminua em telas menores */
+      background-color: #FFF;
+      /* Zero padding conforme pedido */
+      padding: 0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      /* Conteúdo do sidebar será inserido via fetch() */
+    }
+
+    /********************************************************
+     * Conteúdo principal
+     ********************************************************/
+    .main-content {
+      flex: 1; /* ocupa o resto do espaço */
+      padding: 20px; /* padding interno do conteúdo */
     }
 
     .dashboard-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       margin-bottom: 20px;
     }
     .dashboard-header h1 {
@@ -66,9 +74,9 @@
       object-fit: cover;
     }
 
-    /* =======================
-       Cartões de estatísticas
-    ======================== */
+    /********************************************************
+     * Cartões de estatísticas
+     ********************************************************/
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -79,7 +87,7 @@
       background: #FFF;
       border-radius: 8px;
       padding: 15px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Sombra leve */
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       display: flex;
       align-items: center;
     }
@@ -92,11 +100,11 @@
       align-items: center;
       justify-content: center;
       margin-right: 10px;
-      font-size: 18px; /* Se usar ícones (FontAwesome ou emoji) */
+      font-size: 16px;
     }
     .stat-info h2 {
       font-size: 18px;
-      margin-bottom: 2px;
+      margin-bottom: 4px;
       color: #333;
     }
     .stat-info p {
@@ -104,43 +112,34 @@
       color: #666;
     }
 
-    /* =======================
-       Seção de gráficos + Sidebar
-    ======================== */
-    .charts-section {
+    /********************************************************
+     * Seção de gráficos
+     ********************************************************/
+    .chart-section {
       display: flex;
       flex-wrap: wrap;
       gap: 15px;
       margin-bottom: 20px;
     }
-
-    /* Gráfico de barras */
-    .bar-chart-container {
-      flex: 1 1 60%;
-      min-width: 300px;
+    .chart-box {
       background: #FFF;
       border-radius: 8px;
       padding: 15px;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      flex: 1 1 300px; /* cresce e diminui conforme o espaço */
     }
-    .bar-chart-container h3 {
+    .chart-box h3 {
       font-size: 16px;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
     }
-    .bar-chart-container canvas {
+    .chart-box canvas {
       width: 100%;
-      height: 260px; /* Ajuste conforme precisar */
+      height: 240px; /* ajuste conforme necessidade */
     }
 
-    /* Sidebar importada via fetch (sidebar.html) */
-    #sidebar {
-      flex: 1 1 35%;
-      min-width: 280px;
-    }
-
-    /* =======================
-       Tabela de Clientes
-    ======================== */
+    /********************************************************
+     * Tabela de clientes
+     ********************************************************/
     .customers-section {
       background: #FFF;
       border-radius: 8px;
@@ -150,6 +149,7 @@
     .customers-section h3 {
       font-size: 16px;
       margin-bottom: 10px;
+      color: #333;
     }
     table {
       width: 100%;
@@ -178,174 +178,180 @@
 </head>
 
 <body>
-<div class="dashboard-container">
-  <!-- Cabeçalho -->
-  <header class="dashboard-header">
-    <h1>Dashboard</h1>
-    <div class="header-tools">
-      <!-- Ícones removidos para ficar leve. Se quiser FontAwesome, descomente o link e use <i class="fas fa-..."></i> -->
-      <!-- Exemplo: <i class="fas fa-search"></i> -->
-      <img src="https://via.placeholder.com/40" alt="Avatar">
-    </div>
-  </header>
+  <div class="dashboard">
+    <!-- Sidebar externa: carregada via fetch de sidebar.html -->
+    <div class="sidebar" id="sidebar"></div>
 
-  <!-- Cartões de estatísticas -->
-  <div class="stats-grid">
-    <div class="stat-card">
-      <div class="stat-icon">💰</div>
-      <div class="stat-info">
-        <h2>$2700</h2>
-        <p>Currency</p>
+    <!-- Conteúdo principal -->
+    <div class="main-content">
+      <!-- Cabeçalho -->
+      <header class="dashboard-header">
+        <h1>Dashboard</h1>
+        <div class="header-tools">
+          <!-- Exemplo de ferramenta/ícone -->
+          <!-- <i class="fas fa-search"></i> (se usar FontAwesome) -->
+          <img src="https://via.placeholder.com/40" alt="Avatar">
+        </div>
+      </header>
+
+      <!-- Cartões de estatísticas -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">💰</div>
+          <div class="stat-info">
+            <h2>$2700</h2>
+            <p>Currency</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">📄</div>
+          <div class="stat-info">
+            <h2>$1250</h2>
+            <p>Bills</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚖️</div>
+          <div class="stat-info">
+            <h2>$1450</h2>
+            <p>Balance</p>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">💼</div>
+          <div class="stat-info">
+            <h2>$3428</h2>
+            <p>Pending</p>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">📄</div>
-      <div class="stat-info">
-        <h2>$1250</h2>
-        <p>Bills</p>
+
+      <!-- Gráficos -->
+      <div class="chart-section">
+        <div class="chart-box">
+          <h3>Activity</h3>
+          <canvas id="activityChart"></canvas>
+        </div>
+        <!-- Se quiser outro gráfico, crie outra .chart-box -->
       </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">⚖️</div>
-      <div class="stat-info">
-        <h2>$1450</h2>
-        <p>Balance</p>
+
+      <!-- Tabela de clientes -->
+      <div class="customers-section">
+        <h3>Customers</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>Register</th>
+              <th>Billing</th>
+              <th>Burden</th>
+              <th>Last contact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Arquetipo Influence</td>
+              <td>14/04/2022</td>
+              <td>$1200</td>
+              <td>2</td>
+              <td>2 days</td>
+            </tr>
+            <tr>
+              <td>Everis</td>
+              <td>21/01/2022</td>
+              <td>$2060</td>
+              <td>1</td>
+              <td>4 days</td>
+            </tr>
+            <tr>
+              <td>Cecotec</td>
+              <td>03/01/2022</td>
+              <td>$980</td>
+              <td>1</td>
+              <td>1 week</td>
+            </tr>
+            <tr>
+              <td>Luatop Technics</td>
+              <td>09/12/2021</td>
+              <td>$1560</td>
+              <td>5</td>
+              <td>1 month</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-icon">💼</div>
-      <div class="stat-info">
-        <h2>$3428</h2>
-        <p>Pending</p>
-      </div>
-    </div>
-  </div>
+    </div><!-- /main-content -->
+  </div><!-- /dashboard -->
 
-  <!-- Área de gráficos e sidebar -->
-  <div class="charts-section">
-    <!-- Gráfico de Barras -->
-    <div class="bar-chart-container">
-      <h3>Activity</h3>
-      <canvas id="activityChart"></canvas>
-    </div>
+  <!-- Carrega a sidebar externa (sidebar.html) -->
+  <script>
+    fetch('sidebar.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('sidebar').innerHTML = html;
+      })
+      .catch(error => {
+        console.error('Erro ao carregar sidebar:', error);
+      });
+  </script>
 
-    <!-- Sidebar externo (carregado de sidebar.html) -->
-    <div id="sidebar"></div>
-  </div>
-
-  <!-- Tabela de Clientes -->
-  <section class="customers-section">
-    <h3>Customers</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Company</th>
-          <th>Register</th>
-          <th>Billing</th>
-          <th>Burden</th>
-          <th>Last contact</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Arquetipo Influence</td>
-          <td>14/04/2022</td>
-          <td>$1200</td>
-          <td>2</td>
-          <td>2 days</td>
-        </tr>
-        <tr>
-          <td>Everis</td>
-          <td>21/01/2022</td>
-          <td>$2060</td>
-          <td>1</td>
-          <td>4 days</td>
-        </tr>
-        <tr>
-          <td>Cecotec</td>
-          <td>03/01/2022</td>
-          <td>$980</td>
-          <td>1</td>
-          <td>1 week</td>
-        </tr>
-        <tr>
-          <td>Luatop Technics</td>
-          <td>09/12/2021</td>
-          <td>$1560</td>
-          <td>5</td>
-          <td>1 month</td>
-        </tr>
-      </tbody>
-    </table>
-  </section>
-</div>
-
-<!-- Script para carregar o sidebar de outro arquivo -->
-<script>
-  // Carrega o sidebar.html e insere no div#sidebar
-  fetch('sidebar.html')
-    .then(response => response.text())
-    .then(html => {
-      document.getElementById('sidebar').innerHTML = html;
-    })
-    .catch(err => console.log('Erro ao carregar sidebar:', err));
-</script>
-
-<!-- Script do gráfico (Chart.js) - remova se não precisar -->
-<script>
-  const ctxActivity = document.getElementById('activityChart').getContext('2d');
-  const activityChart = new Chart(ctxActivity, {
-    type: 'bar',
-    data: {
-      labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
-      datasets: [
-        {
-          label: 'Income',
-          data: [40, 35, 25, 50, 30, 20, 60, 20, 45, 70, 50, 30],
-          backgroundColor: '#000',
-          borderRadius: 4,
-          barPercentage: 0.6
+  <!-- Gráfico (Chart.js) - remova se não precisar -->
+  <script>
+    const ctxActivity = document.getElementById('activityChart')?.getContext('2d');
+    if (ctxActivity) {
+      new Chart(ctxActivity, {
+        type: 'bar',
+        data: {
+          labels: ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'],
+          datasets: [
+            {
+              label: 'Income',
+              data: [40, 35, 25, 50, 30, 20, 60, 20, 45, 70, 50, 30],
+              backgroundColor: '#000',
+              borderRadius: 4,
+              barPercentage: 0.6
+            },
+            {
+              label: 'Spent',
+              data: [50, 40, 30, 40, 25, 15, 45, 15, 35, 55, 40, 25],
+              backgroundColor: '#CCC',
+              borderRadius: 4,
+              barPercentage: 0.6
+            }
+          ]
         },
-        {
-          label: 'Spent',
-          data: [50, 40, 30, 40, 25, 15, 45, 15, 35, 55, 40, 25],
-          backgroundColor: '#CCC',
-          borderRadius: 4,
-          barPercentage: 0.6
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            color: '#666'
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                color: '#666'
+              },
+              grid: {
+                color: '#eee'
+              }
+            },
+            x: {
+              ticks: {
+                color: '#666'
+              },
+              grid: {
+                display: false
+              }
+            }
           },
-          grid: {
-            color: '#eee'
-          }
-        },
-        x: {
-          ticks: {
-            color: '#666'
-          },
-          grid: {
-            display: false
+          plugins: {
+            legend: {
+              labels: {
+                color: '#333'
+              }
+            }
           }
         }
-      },
-      plugins: {
-        legend: {
-          labels: {
-            color: '#333'
-          }
-        }
-      }
+      });
     }
-  });
-</script>
+  </script>
 </body>
 </html>
