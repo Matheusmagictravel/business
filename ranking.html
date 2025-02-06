@@ -2,13 +2,12 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard Integrado - MagicTravelTur</title>
+  <title>Dashboard Integrado - MagicTravelTur (Finalizado por)</title>
   <!-- Chart.js via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 
   <style>
     :root {
-      /* Paleta e variáveis básicas */
       --bg-page: #F5F6FA;
       --bg-white: #FFFFFF;
       --bg-dark: #1C1C1C;
@@ -324,8 +323,8 @@
           <label>Data Final:
             <input type="date" id="dataFinal">
           </label>
-          <label>Agente:
-            <select id="agenteSelect">
+          <label>Finalizado por:
+            <select id="finalizadoPorSelect">
               <option value="">Todos</option>
               <option value="João">João</option>
               <option value="Maria">Maria</option>
@@ -385,7 +384,7 @@
         <canvas id="faturamentoMargemChart"></canvas>
       </section>
 
-      <!-- Linha inferior: Tabela + Monthly billing -->
+      <!-- Linha inferior: Tabela (Customers) + Monthly billing -->
       <div class="bottom-row">
         <!-- Tabela (Customers) -->
         <div class="customers-section">
@@ -434,7 +433,7 @@
 </div><!-- /dashboard -->
 
 <script>
-// SIDEBAR
+// Carregar SIDEBAR
 fetch('sidebar.html')
   .then(resp => resp.text())
   .then(html => {
@@ -442,11 +441,10 @@ fetch('sidebar.html')
   })
   .catch(err => console.error('Erro ao carregar sidebar:', err));
 
-
 /***************************************
  * Variáveis / Estado
  ***************************************/
-let chartFM;           // Gráfico de Barras
+let chartFM;             // Gráfico de Barras
 let currentChartBilling; // Half-donut
 let modoBilling = 'faturamento'; // "faturamento" ou "margem"
 
@@ -480,36 +478,14 @@ document.getElementById('tabMargem').addEventListener('click', ()=>{
 async function carregarDados(){
   const dataInicial = document.getElementById('dataInicial').value || '';
   const dataFinal   = document.getElementById('dataFinal').value || '';
-  const agente      = document.getElementById('agenteSelect').value || '';
+  const finalizadoPor = document.getElementById('finalizadoPorSelect').value || '';
 
-  const url = `https://www.magictraveltur.com/api_pedidos.php?data_inicial=${dataInicial}&data_final=${dataFinal}&agente=${agente}`;
+  // Monta a URL com finalizado_por
+  const url = `https://www.magictraveltur.com/api_pedidos.php?start_date=${dataInicial}&end_date=${dataFinal}&finalizado_por=${finalizadoPor}`;
   
   try {
     const resp = await fetch(url);
     const json = await resp.json();
-
-    // Exemplo de formato JSON esperado:
-    /**
-     * {
-     *   "pedidos": [
-     *     {
-     *       "id": "1001",
-     *       "data_venda": "2025-02-01",
-     *       "nome_comprador": "Arquetipo Influence",
-     *       "valor_venda": 4500.00,
-     *       "meio_pgto": "Cartão",
-     *       "comissao_do_agente": 900.00,
-     *       "status": "Pago"
-     *     }, ...
-     *   ],
-     *   "soma_faturamento_por_mes": [ ... 12 valores ... ],
-     *   "soma_margem_por_mes": [ ... 12 valores ... ],
-     *   "soma_faturamento_total": 180000,
-     *   "soma_margem_total": 30000,
-     *   "comissao_do_agente_total": 15000,
-     *   ...
-     * }
-     */
 
     // 1) Preencher tabela
     preencherTabela(json.pedidos || []);
@@ -518,8 +494,8 @@ async function carregarDados(){
     atualizarCartoes(json);
 
     // 3) Atualizar Gráfico de Barras
-    const arrFat = json.soma_faturamento_por_mes || [0,0,0,0,0,0,0,0,0,0,0,0];
-    const arrMarg= json.soma_margem_por_mes       || [0,0,0,0,0,0,0,0,0,0,0,0];
+    const arrFat  = json.soma_faturamento_por_mes || [0,0,0,0,0,0,0,0,0,0,0,0];
+    const arrMarg = json.soma_margem_por_mes      || [0,0,0,0,0,0,0,0,0,0,0,0];
     renderGraficoBarras(arrFat, arrMarg);
 
     // 4) Monthly billing (ver qual aba está selecionada)
@@ -530,7 +506,7 @@ async function carregarDados(){
     }
   } catch(e) {
     console.error(e);
-    alert('Erro ao carregar dados.');
+    alert('Erro ao carregar dados: ' + e.message);
   }
 }
 
@@ -562,8 +538,6 @@ function atualizarCartoes(json){
     'R$ ' + Number(comissaoAgente).toLocaleString('pt-BR');
 
   // Margem
-  // (Se preferir exibir em R$, ajuste, mas pedido diz "margem" => % ou valor)
-  // Aqui, supomos que "margem" é alguma % (depende da API)
   document.getElementById('cardMargem').textContent = 
     Number(margem).toLocaleString('pt-BR') + '%';
 
@@ -572,13 +546,13 @@ function atualizarCartoes(json){
     'R$ ' + Number(faturamento).toLocaleString('pt-BR');
 
   // Take Rate => (comissao / faturamento)*100
-  let take = (faturamento>0) ? (comissaoAgente/faturamento)*100 :0;
+  let take = (faturamento>0) ? (comissaoAgente/faturamento)*100 : 0;
   document.getElementById('cardTakeRate').textContent = 
-    take.toFixed(2)+'%';
+    take.toFixed(2) + '%';
 
   // Categoria do Vendedor (exemplo fictício)
   let categoria = 'Vendedor Bronze';
-  if(take>30) categoria='Vendedor Diamante'; 
+  if(take > 30) categoria='Vendedor Diamante'; 
   document.getElementById('vendedorCategoria').textContent = categoria;
 }
 
@@ -624,7 +598,6 @@ function renderGraficoBarras(arrFat, arrMarg){
  **************************************/
 function calcularTierEExibir(valor, tipo){
   /**
-   * Exemplo:
    * Tiers Faturamento:
    *  - Bronze: 0..294000
    *  - Prata: 294000..534000
@@ -651,26 +624,25 @@ function calcularTierEExibir(valor, tipo){
   ];
   let tiers = (tipo==='faturamento') ? tiersFat : tiersMarg;
 
-  // Encontra tier e %:
+  // Encontra tier e %
   let tierAtual = tiers[0];
   let perc=0;
   for(let i=0;i<tiers.length;i++){
     let t=tiers[i];
     if(valor>= t.min && valor<t.max){
       tierAtual=t;
-      perc=((valor-t.min)/(t.max-t.min))*100;
+      perc=((valor - t.min)/(t.max - t.min))*100;
       break;
     } else if(valor>= tiers[tiers.length-1].max){
-      // Ultrapassou o black
+      // Passou do black
       tierAtual=tiers[tiers.length-1];
       perc=100;
       break;
     }
   }
-  // Render half donut com perc
   renderBillingChart(perc, tierAtual.cor);
 
-  // Exibir no center
+  // Exibir no centro
   document.getElementById('billingTotal').textContent=perc.toFixed(1)+'%';
   document.getElementById('legendColor').style.background= tierAtual.cor;
 }
