@@ -1,36 +1,39 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Dashboard Estilo Apple - Date Range + Gráfico Filtrado</title>
-
-  <!-- Chart.js (gráficos) -->
+  <meta charset="UTF-8">
+  <title>Dashboard - Apple Style</title>
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-
   <style>
     :root {
-      /* Paleta inspirada em tons suaves e minimalistas */
-      --bg-page: #EFF0F3;       /* fundo global */
-      --bg-white: #FFFFFF;      /* cartões */
+      /* Paleta minimalista, inspirada na Apple */
+      --bg-page: #F9FAFB;      /* fundo claríssimo */
+      --bg-white: #FFFFFF;     /* cartões/branco */
       --bg-dark: #1C1C1C;
-      --primary-color: #0071E3; /* azul estilo Apple */
       --text-color: #333333;
       --text-muted: #777777;
-      --radius: 12px;           /* cantos ainda mais arredondados */
-      --shadow: 0 8px 20px rgba(0,0,0,0.08); /* sombra sutil e maior */
+      --primary-color: #007aff; /* Azul iOS */
+      --radius: 12px;          /* bordas levemente maiores */
+      --shadow: 0 4px 10px rgba(0,0,0,0.06); /* sombra suave */
+      --transition: 0.2s ease; 
     }
+
     * {
       margin: 0; 
       padding: 0; 
       box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+      font-family: Arial, sans-serif; /* Mantivemos a fonte, sem alterar tamanho */
     }
     body {
-      background-color: var(--bg-page);
+      background: var(--bg-page);
       color: var(--text-color);
       min-height: 100vh;
     }
-    /* Layout principal: Sidebar + Conteúdo */
+
+    /*********************************************************
+     * Layout principal: Sidebar + Conteúdo
+     *********************************************************/
     .dashboard {
       display: flex;
       min-height: 100vh;
@@ -38,88 +41,81 @@
     .sidebar {
       width: 260px;
       min-width: 260px;
-      background: var(--bg-white);
+      background: #FFFFFF;
       box-shadow: var(--shadow);
+      padding: 20px;
     }
     .main-content {
       flex: 1;
-      padding: 30px;
+      padding: 20px;
     }
     .dashboard-container {
-      max-width: 1300px;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
     /*********************************************************
-     * Cabeçalho minimalista
+     * Cabeçalho + Filtros
      *********************************************************/
     .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
     .dashboard-header h1 {
-      font-size: 28px;
-      font-weight: 600;
-      color: #000;
+      font-size: 24px;
+      color: #111;
+      letter-spacing: 0.5px;
     }
-
-    /* Filtros (data range + finalizadoPor + botão Filtrar) */
     .filters {
       display: flex;
+      gap: 12px;
       align-items: center;
-      gap: 15px;
     }
-    .date-range-wrapper {
-      display: flex;
-      align-items: center;
-      background: var(--bg-white);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 4px 10px;
-    }
-    .date-range-wrapper input[type="date"] {
-      background: transparent;
-      border: none;
-      outline: none;
+    .filters label {
       font-size: 14px;
       color: var(--text-color);
-      padding: 5px;
-      width: 120px;
+      font-weight: 500;
     }
-    .date-range-wrapper span.separator {
-      font-size: 14px;
-      color: #999;
-      margin: 0 5px;
+    /* Botão de Selecionar Período */
+    .date-range-btn {
+      background: #FFF;
+      border: 1px solid #CCC;
+      padding: 5px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .date-range-btn:hover {
+      background: #F0F0F0;
     }
     .filters select {
-      padding: 6px 12px;
-      border: none;
-      background: var(--bg-white);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      outline: none;
+      padding: 5px 8px;
+      border-radius: 8px;
+      border: 1px solid #CCC;
       font-size: 14px;
-      color: #666;
+      transition: border var(--transition);
+    }
+    .filters select:focus {
+      outline: none;
+      border-color: var(--primary-color);
     }
     .filters button {
       background: var(--primary-color);
       color: #FFF;
       border: none;
-      border-radius: var(--radius);
-      padding: 8px 16px;
-      font-size: 14px;
+      padding: 6px 14px;
+      border-radius: 8px;
       cursor: pointer;
-      box-shadow: var(--shadow);
-      transition: background 0.2s ease;
+      transition: background var(--transition);
     }
     .filters button:hover {
-      background: #005BB5; /* escurece um pouco */
+      background: #005bb5;
     }
 
     /*********************************************************
-     * Linha superior: 4 cartões + box preto
+     * Linha superior (5 colunas)
      *********************************************************/
     .top-row {
       display: grid;
@@ -128,34 +124,34 @@
       margin-bottom: 30px;
     }
     .stat-card {
-      background-color: var(--bg-white);
+      background: var(--bg-white);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 20px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      transition: transform 0.2s ease;
+      transition: transform var(--transition);
     }
     .stat-card:hover {
       transform: translateY(-2px);
     }
     .stat-icon {
-      font-size: 32px;
+      font-size: 28px;
       margin-bottom: 10px;
       color: #666;
     }
     .stat-info h2 {
-      font-size: 24px;
+      font-size: 20px;
       margin-bottom: 5px;
-      color: #000;
+      color: #111;
     }
     .stat-info p {
-      font-size: 15px;
+      font-size: 14px;
       color: var(--text-muted);
     }
     .dark-box {
-      background-color: #000;
+      background: #111;
       color: #fff;
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -163,14 +159,15 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      transition: transform 0.2s ease;
     }
-    .dark-box:hover {
-      transform: translateY(-2px);
+    .dark-box h4 {
+      font-size: 16px;
+      margin-bottom: 8px;
+      font-weight: 600;
     }
 
     /*********************************************************
-     * Gráfico de Barras
+     * Gráfico de barras
      *********************************************************/
     .bar-chart-container {
       background: var(--bg-white);
@@ -178,26 +175,30 @@
       box-shadow: var(--shadow);
       padding: 20px;
       margin-bottom: 30px;
+      transition: transform var(--transition);
+    }
+    .bar-chart-container:hover {
+      transform: translateY(-2px);
     }
     .bar-chart-container h3 {
-      font-size: 18px;
+      font-size: 16px;
       margin-bottom: 15px;
-      color: #000;
+      color: #111;
     }
     .bar-chart-container canvas {
       width: 100% !important;
-      height: 320px !important;
+      height: 300px !important;
     }
 
     /*********************************************************
-     * Linha inferior: Pedidos + Monthly Billing
+     * Parte inferior: Pedidos + Monthly Billing
      *********************************************************/
     .bottom-row {
       display: flex;
       gap: 20px;
     }
 
-    /* Pedidos (tabela) */
+    /* Pedidos (5 por página) */
     .pedidos-section {
       flex: 3;
       background: var(--bg-white);
@@ -206,60 +207,66 @@
       padding: 20px;
       display: flex;
       flex-direction: column;
+      transition: transform var(--transition);
+    }
+    .pedidos-section:hover {
+      transform: translateY(-2px);
     }
     .pedidos-section h3 {
-      font-size: 18px;
+      font-size: 16px;
       margin-bottom: 10px;
-      color: #000;
+      color: #111;
+      font-weight: 600;
     }
-    .pedidos-section table {
+    table {
       width: 100%;
       border-collapse: collapse;
-      margin-bottom: 10px;
     }
-    .pedidos-section thead {
+    thead {
       background: #f0f0f0;
     }
-    .pedidos-section thead th {
+    thead th {
       text-align: left;
       padding: 8px;
-      font-size: 14px;
+      font-size: 13px;
       color: var(--text-muted);
     }
-    .pedidos-section tbody tr {
+    tbody tr {
       border-bottom: 1px solid #eee;
+      transition: background var(--transition);
     }
-    .pedidos-section tbody tr:last-child {
-      border-bottom: none;
+    tbody tr:hover {
+      background: #fafafa;
     }
-    .pedidos-section tbody td {
+    tbody td {
       padding: 8px;
       font-size: 14px;
+      color: #333;
     }
-    /* Paginação */
     .pagination {
       display: flex;
       gap: 10px;
       margin-top: 10px;
       align-items: center;
-      justify-content: flex-end;
     }
     .pagination button {
       background: var(--primary-color);
+      color: #fff;
       border: none;
-      color: #FFF;
-      border-radius: var(--radius);
-      padding: 6px 12px;
-      font-size: 14px;
+      padding: 5px 10px;
+      border-radius: 8px;
       cursor: pointer;
-      box-shadow: var(--shadow);
+      transition: background var(--transition);
+    }
+    .pagination button:hover {
+      background: #005bb5;
     }
     .pagination span {
       font-size: 14px;
-      color: #666;
+      color: #444;
     }
 
-    /* Monthly billing (half donut) */
+    /* Monthly Billing (half-donut) */
     .billing-section {
       flex: 2;
       background: var(--bg-white);
@@ -268,6 +275,10 @@
       padding: 20px;
       display: flex;
       flex-direction: column;
+      transition: transform var(--transition);
+    }
+    .billing-section:hover {
+      transform: translateY(-2px);
     }
     .billing-header {
       display: flex;
@@ -277,24 +288,24 @@
       margin-bottom: 15px;
     }
     .billing-header h4 {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
-      color: #000;
-      margin: 0;
+      color: #111;
     }
     .tabs {
       display: flex;
       gap: 20px;
     }
     .tabs span {
-      font-size: 15px;
+      font-size: 14px;
       color: #777;
       cursor: pointer;
       padding-bottom: 5px;
+      transition: color var(--transition);
     }
     .tabs span.active {
       color: #000;
-      border-bottom: 2px solid var(--primary-color);
+      border-bottom: 2px solid #000;
     }
     .donut-container {
       position: relative;
@@ -306,7 +317,7 @@
       flex: 1;
     }
     #billingChart {
-      max-width: 200px;
+      max-width: 220px;
       height: 200px !important;
     }
     .donut-center-text {
@@ -317,11 +328,11 @@
       text-align: center;
     }
     .donut-center-text .total-label {
-      font-size: 13px;
+      font-size: 12px;
       color: #999;
     }
     .donut-center-text .total-value {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 600;
       color: #333;
       margin-top: 2px;
@@ -344,36 +355,89 @@
       height: 12px;
       border-radius: 2px;
     }
+
+    /*********************************************************
+     * Overlay do "Selecionar Período"
+     *********************************************************/
+    .date-range-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.3);
+      display: none; /* oculto por padrão */
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .date-range-content {
+      background: var(--bg-white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      min-width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .date-range-content h4 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #111;
+      font-weight: 600;
+    }
+    .date-range-inputs {
+      display: flex;
+      gap: 10px;
+    }
+    .date-range-inputs input[type="date"] {
+      flex: 1;
+      padding: 5px 8px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .date-range-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .date-range-actions button {
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .date-range-actions button:hover {
+      background: #005bb5;
+    }
   </style>
 </head>
-
 <body>
 <div class="dashboard">
-  <!-- SIDEBAR (carregado via fetch) -->
-  <div class="sidebar" id="sidebar"></div>
+  <!-- SIDEBAR (carregada via fetch) -->
+  <div class="sidebar" id="sidebar">Sidebar</div>
 
   <div class="main-content">
     <div class="dashboard-container">
-
-      <!-- Cabeçalho -->
+      <!-- Cabeçalho com filtros -->
       <header class="dashboard-header">
         <h1>Dashboard</h1>
-        <!-- Filtros: Data (unidos) + efetivadoPor + Filtrar -->
         <div class="filters">
-          <!-- Date Range wrapper => single “botão” -->
-          <div class="date-range-wrapper">
-            <input type="date" id="dataInicial" />
-            <span class="separator">–</span>
-            <input type="date" id="dataFinal" />
-          </div>
-          <select id="efetivadoPorSelect"></select>
+          <!-- BOTÃO UNIFICADO DE DATA RANGE -->
+          <button class="date-range-btn" id="btnDateRange">Selecionar Período</button>
+
+          <label>efetivado por:
+            <select id="efetivadoPorSelect"></select>
+          </label>
           <button id="btnFiltrar">Filtrar</button>
         </div>
       </header>
 
-      <!-- Linha superior: 5 colunas -->
+      <!-- Linha superior (5 colunas) -->
       <div class="top-row">
-        <!-- Comissão -->
         <div class="stat-card">
           <div class="stat-icon">💸</div>
           <div class="stat-info">
@@ -381,7 +445,6 @@
             <p>Comissão</p>
           </div>
         </div>
-        <!-- Margem -->
         <div class="stat-card">
           <div class="stat-icon">📈</div>
           <div class="stat-info">
@@ -389,7 +452,6 @@
             <p>Margem</p>
           </div>
         </div>
-        <!-- Faturamento -->
         <div class="stat-card">
           <div class="stat-icon">💰</div>
           <div class="stat-info">
@@ -397,7 +459,6 @@
             <p>Faturamento</p>
           </div>
         </div>
-        <!-- Take Rate -->
         <div class="stat-card">
           <div class="stat-icon">🔗</div>
           <div class="stat-info">
@@ -405,7 +466,6 @@
             <p>Take Rate</p>
           </div>
         </div>
-        <!-- Box preto -->
         <div class="dark-box">
           <h4>Categoria de Vendedor</h4>
           <p id="vendedorCategoria">Vendedor Bronze</p>
@@ -413,7 +473,7 @@
         </div>
       </div>
 
-      <!-- Gráfico de barras: Faturamento x Margem -->
+      <!-- Gráfico de Barras (Faturamento x Margem) -->
       <section class="bar-chart-container">
         <h3>Faturamento x Margem</h3>
         <canvas id="faturamentoMargemChart"></canvas>
@@ -421,7 +481,6 @@
 
       <!-- Linha inferior: Pedidos + Monthly billing -->
       <div class="bottom-row">
-        <!-- Pedidos (paginado) -->
         <div class="pedidos-section">
           <h3>Pedidos</h3>
           <table>
@@ -437,10 +496,9 @@
               </tr>
             </thead>
             <tbody id="tableBodyPedidos">
-              <!-- Linhas, 5 p/ página -->
+              <!-- 5 por página -->
             </tbody>
           </table>
-          <!-- Paginação -->
           <div class="pagination">
             <button id="btnAnterior">Anterior</button>
             <span id="paginationInfo">Página 1 de 1</span>
@@ -448,7 +506,7 @@
           </div>
         </div>
 
-        <!-- Monthly Billing (Half Donut) -->
+        <!-- Monthly Billing (half-donut) -->
         <div class="billing-section">
           <div class="billing-header">
             <h4>Monthly billing</h4>
@@ -469,40 +527,128 @@
           </div>
         </div>
       </div><!-- /bottom-row -->
-
     </div><!-- /dashboard-container -->
   </div><!-- /main-content -->
 </div><!-- /dashboard -->
 
+<!-- OVERLAY DE SELECIONAR PERÍODO -->
+<div class="date-range-overlay" id="overlayRange">
+  <div class="date-range-content">
+    <h4>Selecionar Período</h4>
+    <div class="date-range-inputs">
+      <input type="date" id="rangeStart">
+      <input type="date" id="rangeEnd">
+    </div>
+    <div class="date-range-actions">
+      <button id="btnCancelarOverlay">Cancelar</button>
+      <button id="btnAplicarOverlay">Aplicar</button>
+    </div>
+  </div>
+</div>
+
 <script>
-// =============== SIDEBAR ===============
-fetch('sidebar.html')
-  .then(resp=>resp.text())
-  .then(html => {
-    document.getElementById('sidebar').innerHTML= html;
-  })
-  .catch(err=> console.error('Sidebar error:', err));
-
+// --------------------------
 // Variáveis globais
-let chartFM; 
-let currentChartBilling;
-let modoBilling='faturamento';
+// --------------------------
+let chartFM; // gráfico de barras
+let currentChartBilling; // donut
+let modoBilling = 'faturamento';
 
-let pedidosGlobal=[];
-let currentPage=1;
-const pageSize=5;
+// Pedidos
+let pedidosGlobal = []; 
+let currentPage = 1;
+const pageSize = 5;
 
-// Ao carregar, só carrega a lista de "efetivado_por"
-window.addEventListener('load', async ()=>{
-  await carregarListaEfetivadoPor();
+// Armazenar datas escolhidas
+let dataInicial = ''; 
+let dataFinal   = '';
+
+// Ao carregar:
+window.addEventListener('load', ()=>{
+  carregarListaEfetivadoPor();
 });
 
-// Botão Filtrar => carrega dados
+// 1) Carregar distinct "efetivado_por"
+async function carregarListaEfetivadoPor(){
+  try {
+    const url = 'https://www.magictraveltur.com/api_pedidos.php?distinct_efetivado_por=1';
+    let resp = await fetch(url);
+    if(!resp.ok) throw new Error('HTTP '+resp.status);
+    let arr = await resp.json(); // ex.: ["Vanessa","Breno",...]
+    let sel = document.getElementById('efetivadoPorSelect');
+    sel.innerHTML = '<option value="">Todos</option>';
+    arr.forEach(nome=>{
+      let opt = document.createElement('option');
+      opt.value=nome; opt.textContent=nome;
+      sel.appendChild(opt);
+    });
+  } catch(e){
+    console.log('Erro ao carregar distinct_efetivado_por:', e);
+  }
+}
+
+// 2) Overlays (abrir/fechar) e datas
+const overlayRange = document.getElementById('overlayRange');
+const btnDateRange = document.getElementById('btnDateRange');
+const btnAplicarOverlay = document.getElementById('btnAplicarOverlay');
+const btnCancelarOverlay= document.getElementById('btnCancelarOverlay');
+const rangeStart = document.getElementById('rangeStart');
+const rangeEnd   = document.getElementById('rangeEnd');
+
+btnDateRange.addEventListener('click', ()=>{
+  overlayRange.style.display='flex';
+});
+btnCancelarOverlay.addEventListener('click', ()=>{
+  overlayRange.style.display='none';
+});
+btnAplicarOverlay.addEventListener('click', ()=>{
+  // Pega os valores
+  dataInicial= rangeStart.value;
+  dataFinal  = rangeEnd.value;
+  overlayRange.style.display='none';
+});
+
+// 3) Botão Filtrar => carregaDados
 document.getElementById('btnFiltrar').addEventListener('click', ()=>{
   carregarDados();
 });
 
-// Paginação
+// 4) Carregar dados
+async function carregarDados(){
+  // Se nenhum param (datas ou efetivadoPor), não carrega
+  let efetivado = document.getElementById('efetivadoPorSelect').value||'';
+  if(!dataInicial && !dataFinal && !efetivado){
+    alert('Selecione um período e/ou Efetivado Por.');
+    return;
+  }
+  let url = `https://www.magictraveltur.com/api_pedidos.php?start_date=${dataInicial}&end_date=${dataFinal}&efetivado_por=${efetivado}`;
+  try{
+    let resp= await fetch(url);
+    if(!resp.ok) throw new Error('HTTP '+ resp.status);
+    let dados= await resp.json();
+    if(!Array.isArray(dados)){
+      console.warn('Resposta não é array:', dados);
+      return;
+    }
+    pedidosGlobal = dados;
+    // Exibe paginado
+    currentPage=1;
+    exibirPagina(pedidosGlobal, currentPage);
+    // Somar cartoes
+    somarCartoes(pedidosGlobal);
+    // Grafico de barras
+    let {arrFat, arrMarg} = agruparPorMes(pedidosGlobal);
+    renderGraficoBarras(arrFat, arrMarg);
+    // Monthly billing
+    calcularTierEExibirNoBilling(arrFat, arrMarg);
+
+  } catch(e){
+    console.error('Erro ao carregar dados:', e);
+    alert('Erro: '+ e.message);
+  }
+}
+
+// 5) Paginação
 document.getElementById('btnAnterior').addEventListener('click', ()=>{
   if(currentPage>1){
     currentPage--;
@@ -510,95 +656,24 @@ document.getElementById('btnAnterior').addEventListener('click', ()=>{
   }
 });
 document.getElementById('btnProximo').addEventListener('click', ()=>{
-  let totalPages= Math.ceil(pedidosGlobal.length/pageSize);
-  if(currentPage<totalPages){
+  let totalPages= Math.ceil(pedidosGlobal.length / pageSize);
+  if(currentPage< totalPages){
     currentPage++;
     exibirPagina(pedidosGlobal, currentPage);
   }
 });
 
-// Aba Faturamento
-document.getElementById('tabFaturamento').addEventListener('click',()=>{
-  document.getElementById('tabFaturamento').classList.add('active');
-  document.getElementById('tabMargem').classList.remove('active');
-  modoBilling='faturamento';
-  calcularTierEExibirNoBilling();
-});
-// Aba Margem
-document.getElementById('tabMargem').addEventListener('click',()=>{
-  document.getElementById('tabMargem').classList.add('active');
-  document.getElementById('tabFaturamento').classList.remove('active');
-  modoBilling='margem';
-  calcularTierEExibirNoBilling();
-});
-
-// 1) Carregar lista (distinct efetivado_por)
-async function carregarListaEfetivadoPor(){
-  let url='https://www.magictraveltur.com/api_pedidos.php?distinct_efetivado_por=1';
-  try{
-    let resp= await fetch(url);
-    if(!resp.ok) throw new Error('HTTP '+resp.status);
-    let arr= await resp.json(); // ex.: ["Vanessa Barreto","Matheus Alvarenga",...]
-    let sel= document.getElementById('efetivadoPorSelect');
-    sel.innerHTML='<option value="">Todos</option>';
-    arr.forEach(nome=>{
-      let opt=document.createElement('option');
-      opt.value=nome;
-      opt.textContent=nome;
-      sel.appendChild(opt);
-    });
-  }catch(e){
-    console.error('Erro distinct efetivado_por:', e);
-  }
-}
-
-// 2) Carregar Dados
-async function carregarDados(){
-  const dataInicial= document.getElementById('dataInicial').value || '';
-  const dataFinal= document.getElementById('dataFinal').value || '';
-  const efetivadoPor= document.getElementById('efetivadoPorSelect').value || '';
-
-  if(!dataInicial && !dataFinal && !efetivadoPor){
-    alert('Selecione ao menos um período ou a pessoa (efetivado_por).');
-    return;
-  }
-  let url= `https://www.magictraveltur.com/api_pedidos.php?start_date=${dataInicial}&end_date=${dataFinal}&efetivado_por=${efetivadoPor}`;
-  try{
-    let resp= await fetch(url);
-    if(!resp.ok) throw new Error('HTTP '+resp.status);
-    let dados= await resp.json();
-    if(!Array.isArray(dados)){
-      console.warn('Resposta não é array:', dados);
-      return;
-    }
-    pedidosGlobal=dados;
-    currentPage=1;
-    exibirPagina(pedidosGlobal, currentPage);
-    // Preenche cartões
-    somarCartoes(pedidosGlobal);
-    // Agrupar p/ gráfico
-    let {arrFat, arrMarg}= agruparPorMes(pedidosGlobal, dataInicial, dataFinal);
-    renderGraficoBarras(arrFat, arrMarg, dataInicial, dataFinal);
-    // Monthly billing
-    calcularTierEExibirNoBilling(arrFat, arrMarg);
-  }catch(e){
-    console.error('Erro ao carregar:', e);
-    alert('Erro ao carregar: '+ e.message);
-  }
-}
-
-// 3) Exibir página (5 por vez)
 function exibirPagina(pedidos, page){
   currentPage=page;
-  let startIndex=(page-1)*pageSize;
-  let endIndex= page*pageSize;
-  let slice= pedidos.slice(startIndex, endIndex);
+  let start=(page-1)*pageSize;
+  let end= page*pageSize;
+  let slice= pedidos.slice(start, end);
 
   let tbody= document.getElementById('tableBodyPedidos');
   tbody.innerHTML='';
   slice.forEach(p=>{
-    let tr=document.createElement('tr');
-    tr.innerHTML=`
+    let tr= document.createElement('tr');
+    tr.innerHTML= `
       <td>#${p.id}</td>
       <td>${p.data_venda||''}</td>
       <td>${p.nome_comprador||''}</td>
@@ -609,30 +684,27 @@ function exibirPagina(pedidos, page){
     `;
     tbody.appendChild(tr);
   });
-
-  // Paginas
   let totalPages= Math.ceil(pedidos.length/pageSize);
   document.getElementById('paginationInfo').textContent=
-    `Página ${page} de ${totalPages}`;
+    `Página ${currentPage} de ${totalPages}`;
 }
 
-// 4) Somar cartões
+// 6) Somar cartoes
 function somarCartoes(pedidos){
-  let somaFat=0, somaCom=0, somaMarg=0;
+  let somaFaturamento=0, somaComissao=0, somaMargem=0;
   pedidos.forEach(p=>{
-    somaFat += Number(p.valor_venda)||0;
-    somaCom += Number(p.comissao_do_agente)||0;
-    somaMarg+= Number(p.valor_comissao)||0; // se preferir outro campo, troque
+    somaFaturamento+= Number(p.valor_venda)||0;
+    somaComissao   += Number(p.comissao_do_agente)||0;
+    // Se Margem for p.valor_comissao:
+    somaMargem     += Number(p.valor_comissao)||0;
   });
   document.getElementById('cardFaturamento').textContent=
-    'R$ '+ somaFat.toLocaleString('pt-BR');
+    'R$ '+ somaFaturamento.toLocaleString('pt-BR');
   document.getElementById('cardComissao').textContent=
-    'R$ '+ somaCom.toLocaleString('pt-BR');
-  // Exibe como R$
+    'R$ '+ somaComissao.toLocaleString('pt-BR');
   document.getElementById('cardMargem').textContent=
-    somaMarg.toLocaleString('pt-BR')+' (R$)';
-  // Take Rate
-  let take= (somaFat>0)? (somaCom/somaFat)*100 :0;
+    somaMargem.toLocaleString('pt-BR') + ' (R$)';
+  let take= (somaFaturamento>0)? (somaComissao/somaFaturamento)*100 :0;
   document.getElementById('cardTakeRate').textContent= take.toFixed(2)+'%';
   // Categoria
   let cat='Vendedor Bronze';
@@ -640,111 +712,43 @@ function somarCartoes(pedidos){
   document.getElementById('vendedorCategoria').textContent=cat;
 }
 
-// 5) Agrupar p/ gráfico (apenas meses dentro do range)
-function agruparPorMes(pedidos, startDate, endDate){
-  // Converter start e end p/ YYYY-MM (pegar o range)
-  let arrFat=[];
-  let arrMarg=[];
-  // 1) Cria array de meses no range
-  let rangeMeses= gerarListaMesesNoRange(startDate, endDate); 
-  // ex.: ["2025-01","2025-02","2025-03"]
-
-  // Inicializa arrFat, arrMarg com zero
-  rangeMeses.forEach(()=> {
-    arrFat.push(0);
-    arrMarg.push(0);
-  });
-
-  // 2) Preenche
+// 7) agruparPorMes e renderGrafico
+function agruparPorMes(pedidos){
+  let arrFat= new Array(12).fill(0);
+  let arrMarg=new Array(12).fill(0);
+  let mapMes={
+    'janeiro':0,'fevereiro':1,'março':2,'abril':3,'maio':4,'junho':5,
+    'julho':6,'agosto':7,'setembro':8,'outubro':9,'novembro':10,'dezembro':11,
+    'Janeiro':0,'Fevereiro':1,'Março':2,'Abril':3,'Maio':4,'Junho':5,
+    'Julho':6,'Agosto':7,'Setembro':8,'Outubro':9,'Novembro':10,'Dezembro':11
+  };
   pedidos.forEach(p=>{
-    let dataVenda= (p.data_venda||'').substring(0,7); // "YYYY-MM"
-    // Se "2025-01" está no range, soma
-    let idx= rangeMeses.indexOf(dataVenda);
-    if(idx>=0){
-      arrFat[idx]+= Number(p.valor_venda)||0;
-      arrMarg[idx]+= Number(p.valor_comissao)||0;
-    }
+    let m= (p.mes_venda||'').trim();
+    let idx= mapMes[m];
+    if(idx===undefined)return;
+    arrFat[idx]+= Number(p.valor_venda)||0;
+    arrMarg[idx]+= Number(p.valor_comissao)||0;
   });
-
-  return { arrFat, arrMarg, rangeMeses };
+  return {arrFat, arrMarg};
 }
-
-// Gera array de strings "YYYY-MM" do start ao end
-function gerarListaMesesNoRange(startDate, endDate){
-  if(!startDate || !endDate) return [];
-  // converter p/ Date
-  let start= new Date(startDate+'-01'); // arriscamos
-  let end= new Date(endDate+'-01');
-  // se user escolheu 2025-01-15, arriscamos "2025-01"
-  if(isNaN(start.getTime())|| isNaN(end.getTime())) return [];
-  if(start> end) [start, end]=[end, start];
-  // loop
-  let arr=[];
-  let current= new Date(start);
-  while(current<= end){
-    let y= current.getFullYear();
-    let m= String(current.getMonth()+1).padStart(2,'0');
-    arr.push(`${y}-${m}`);
-    // avança 1 mes
-    current.setMonth(current.getMonth()+1);
-  }
-  return arr;
-}
-
-// 6) Render Grafico
-function renderGraficoBarras(arrFat, arrMarg, startDate, endDate){
+function renderGraficoBarras(arrFat, arrMarg){
   if(chartFM) chartFM.destroy();
-
-  // Precisamos do array de labels => ex.: ["2025-01","2025-02",...]
-  // mas no agruparPorMes, retornamos "rangeMeses" (ver arrFat.rangeMeses?), ajustamos a função
-  if(Array.isArray(arrFat.rangeMeses)){
-    // mas nós mudamos a sign. Precisamos desestruturar?
-  }
-
-  // Ajuste -> agruparPorMes retorna {arrFat, arrMarg, rangeMeses}
-  // mas chamamos "arrFat, arrMarg= agruparPorMes(...)"
-  // Precisamos "rangeMeses= agruparPorMes(...).rangeMeses" => reescrever:
-  if(!Array.isArray(arrFat)){
-    // se passamos objeto
-    arrMarg= arrFat.arrMarg;
-    startDate= arrFat.startDate;
-    endDate= arrFat.endDate;
-    let tmp= arrFat;
-    arrFat= tmp.arrFat;
-  }
-
-  let canvas= document.getElementById('faturamentoMargemChart').getContext('2d');
-
-  // se a func agruparPorMes retornou "rangeMeses" => passamos como 3o param
-  let rangeMeses= arrFat.rangeMeses; // se exist
-  if(!rangeMeses){
-    // refaz
-    let {arrFat: aF, arrMarg: aM, rangeMeses: rM}= agruparPorMes(pedidosGlobal, startDate, endDate);
-    arrFat= aF; arrMarg= aM; rangeMeses= rM;
-  }
-  // Exemplo label: "2025-01" => "Jan/2025"
-  let finalLabels= rangeMeses.map(m=>{
-    let [yyyy, mm]= m.split('-');
-    let dt= new Date(Number(yyyy), Number(mm)-1, 1);
-    let mesNome= dt.toLocaleString('pt-BR',{month:'short'}); // "jan", "fev"
-    return mesNome+'/'+ yyyy;
-  });
-
-  chartFM= new Chart(canvas, {
+  let ctx= document.getElementById('faturamentoMargemChart').getContext('2d');
+  chartFM= new Chart(ctx, {
     type:'bar',
     data:{
-      labels: finalLabels,
+      labels:['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'],
       datasets:[
         {
           label:'Faturamento (R$)',
-          data: arrFat,
+          data:arrFat,
           backgroundColor:'#000',
           borderRadius:4,
           barPercentage:0.6
         },
         {
           label:'Margem (R$)',
-          data: arrMarg,
+          data:arrMarg,
           backgroundColor:'#BBB',
           borderRadius:4,
           barPercentage:0.6
@@ -755,83 +759,76 @@ function renderGraficoBarras(arrFat, arrMarg, startDate, endDate){
       responsive:true,
       maintainAspectRatio:false,
       scales:{
-        y:{beginAtZero:true,ticks:{color:'#666'}},
-        x:{grid:{display:false},ticks:{color:'#666'}}
+        y:{beginAtZero:true},
+        x:{grid:{display:false}}
       }
     }
   });
 }
 
-// 7) Monthly Billing
+// 8) Monthly billing
 function calcularTierEExibirNoBilling(arrFat, arrMarg){
-  if(!arrFat || !arrMarg || !Array.isArray(arrFat)||!Array.isArray(arrMarg)){
-    let {arrFat:af, arrMarg:am}= agruparPorMes(pedidosGlobal, 
-      document.getElementById('dataInicial').value, 
-      document.getElementById('dataFinal').value
-    );
-    arrFat= af; arrMarg= am;
+  if(!arrFat || !arrMarg){
+    let am= agruparPorMes(pedidosGlobal);
+    arrFat= am.arrFat; arrMarg= am.arrMarg;
   }
   let valor=0;
   if(modoBilling==='faturamento'){
-    valor= arrFat.reduce((acc,val)=>acc+val,0);
+    valor= arrFat.reduce((acc,v)=>acc+v,0);
     calcularTierEExibir(valor,'faturamento');
   } else {
-    valor= arrMarg.reduce((acc,val)=>acc+val,0);
+    valor= arrMarg.reduce((acc,v)=>acc+v,0);
     calcularTierEExibir(valor,'margem');
   }
 }
-
 function calcularTierEExibir(valor,tipo){
   let tiersFat=[
     {nome:'Bronze',min:0,max:294000,cor:'#CD7F32'},
     {nome:'Prata',min:294000,max:534000,cor:'#C0C0C0'},
     {nome:'Ouro', min:534000,max:768000,cor:'#FFD700'},
-    {nome:'Black',min:768000,max:1068000,cor:'#000000'}
+    {nome:'Black',min:768000,max:1068000,cor:'#000'}
   ];
   let tiersMarg=[
     {nome:'Bronze',min:0,max:23670,cor:'#CD7F32'},
     {nome:'Prata',min:23670,max:42120,cor:'#C0C0C0'},
     {nome:'Ouro', min:42120,max:60570,cor:'#FFD700'},
-    {nome:'Black',min:60570,max:81570,cor:'#000000'}
+    {nome:'Black',min:60570,max:81570,cor:'#000'}
   ];
-  let tiers= (tipo==='faturamento')? tiersFat : tiersMarg;
-  let tierAtual= tiers[0], perc=0;
+  let tiers=(tipo==='faturamento')?tiersFat:tiersMarg;
+  let tierAtual= tiers[0],perc=0;
   for(let i=0;i<tiers.length;i++){
     let t= tiers[i];
     if(valor>=t.min && valor<t.max){
       tierAtual=t;
       perc=((valor-t.min)/(t.max-t.min))*100;
       break;
-    } else if(valor>= tiers[tiers.length-1].max){
+    }else if(valor>= tiers[tiers.length-1].max){
       tierAtual= tiers[tiers.length-1];
-      perc=100;
-      break;
+      perc=100;break;
     }
   }
-  renderBillingChart(perc, tierAtual.cor);
+  renderBillingChart(perc,tierAtual.cor);
   document.getElementById('billingTotal').textContent= perc.toFixed(1)+'%';
-  document.getElementById('legendColor').style.background= tierAtual.cor;
+  document.getElementById('legendColor').style.backgroundColor= tierAtual.cor;
 }
-
-function renderBillingChart(perc,cor){
+function renderBillingChart(perc, corTier){
   if(currentChartBilling) currentChartBilling.destroy();
   let ctx= document.getElementById('billingChart').getContext('2d');
-  let v1= perc;
-  let v2= 100-perc;
-  currentChartBilling= new Chart(ctx,{
+  let v1= perc; let v2= 100-perc;
+  currentChartBilling= new Chart(ctx, {
     type:'doughnut',
     data:{
       labels:['Tier','Restante'],
       datasets:[{
         data:[v1,v2],
-        backgroundColor:[cor,'#EEE'],
+        backgroundColor:[corTier,'#EEE'],
         hoverOffset:4
       }]
     },
     options:{
       responsive:true,
       maintainAspectRatio:false,
-      cutout:'70%',
+      cutout:'75%',
       rotation:-90,
       circumference:180,
       plugins:{legend:{display:false}},
