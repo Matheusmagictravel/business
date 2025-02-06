@@ -2,10 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard - Calendar + Layout Refinements</title>
-  <!-- Chart.js -->
+  <title>Dashboard - Ajuste Half-Donut e Texto Oculto</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-
   <style>
     :root {
       --bg-page: #F9FAFB;
@@ -18,27 +16,24 @@
       --shadow: 0 4px 10px rgba(0,0,0,0.06);
       --transition: 0.2s ease;
 
-      /* Cores Bronze/Prata/Ouro/Black um pouco mais suaves */
+      /* Cores Tier */
       --bronze-color: #c78d53;
       --prata-color: #C0C0C0;
       --ouro-color:  #FFD700;
       --black-color: #000000;
     }
     * {
-      margin: 0; 
-      padding: 0; 
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
-      font-family: Arial, sans-serif; /* Tamanho de fonte mantido */
+      font-family: Arial, sans-serif; 
     }
     body {
       background: var(--bg-page);
       color: var(--text-color);
       min-height: 100vh;
     }
-
-    /***************************************
-     * Layout principal: sidebar + conteúdo
-     ***************************************/
+    /* Layout principal */
     .dashboard {
       display: flex;
       min-height: 100vh;
@@ -48,8 +43,7 @@
       min-width: 260px;
       background: var(--bg-white);
       box-shadow: var(--shadow);
-      /* Remove padding */
-      padding: 0;
+      padding: 0; /* Remove o padding da sidebar */
     }
     .main-content {
       flex: 1;
@@ -60,9 +54,7 @@
       margin: 0 auto;
     }
 
-    /***************************************
-     * Cabeçalho + Filtros
-     ***************************************/
+    /* Cabeçalho + Filtros */
     .dashboard-header {
       display: flex;
       justify-content: space-between;
@@ -75,7 +67,7 @@
       letter-spacing: 0.5px;
     }
     .filters {
-      display: flex; 
+      display: flex;
       gap: 12px;
       align-items: center;
     }
@@ -114,21 +106,19 @@
       background: #005bb5;
     }
 
-    /* Linha para exibir “Datas selecionadas: ...” */
+    /* Texto "Datas selecionadas" - inicialmente oculto */
     .selected-dates-label {
+      display: none; /* Fica oculto até datas estarem definidas */
       background: var(--bg-white);
       padding: 8px 12px;
       border-radius: 8px;
-      display: inline-block;
       font-size: 14px;
       color: #444;
       margin-bottom: 20px;
       box-shadow: var(--shadow);
     }
 
-    /***************************************
-     * Linha superior (5 colunas)
-     ***************************************/
+    /* Linha superior (5 colunas) */
     .top-row {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -177,9 +167,7 @@
       font-weight: 600;
     }
 
-    /***************************************
-     * Gráfico de Barras
-     ***************************************/
+    /* Gráfico de Barras */
     .bar-chart-container {
       background: var(--bg-white);
       border-radius: var(--radius);
@@ -201,9 +189,7 @@
       height: 300px !important;
     }
 
-    /***************************************
-     * Parte inferior: Pedidos + Monthly billing
-     ***************************************/
+    /* Parte inferior: Pedidos + Monthly billing */
     .bottom-row {
       display: flex;
       gap: 20px;
@@ -275,7 +261,7 @@
       color: #444;
     }
 
-    /* Monthly Billing (half donut) */
+    /* Monthly Billing (half-donut) */
     .billing-section {
       flex: 2;
       background: var(--bg-white);
@@ -316,29 +302,32 @@
       color: #000;
       border-bottom: 2px solid #000;
     }
+
+    /* Para não achatar: forçamos um container com max-width e aspect ratio */
     .donut-container {
+      width: 300px; /* fixo para evitar “achatado” */
+      margin: 0 auto; /* centraliza */
       position: relative;
-      width: 100%;
-      height: 220px;
+      height: 160px; /* define altura */
       display: flex;
-      justify-content: center;
       align-items: center;
-      flex: 1;
+      justify-content: center;
     }
     #billingChart {
-      max-width: 220px;
-      height: 200px !important;
+      /* iremos forçar aspect ratio via chart config */
+      width: 100% !important;
+      height: 100% !important;
     }
     .donut-center-text {
       position: absolute;
-      top: 50%; 
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
       pointer-events: none;
     }
     .donut-center-text .total-label {
-      font-size: 14px; /* um pouco maior */
+      font-size: 14px;
       color: #999;
       font-weight: 500;
       margin-bottom: 2px;
@@ -367,9 +356,7 @@
       border-radius: 2px;
     }
 
-    /*********************************************************
-     * Calendário (Print #2) 
-     *********************************************************/
+    /* Calendário Custom - Overlay */
     .date-range-overlay {
       position: fixed;
       top: 0; left: 0;
@@ -468,17 +455,15 @@
     .calendar-action-buttons button:hover {
       background: #005bb5;
     }
+
   </style>
 </head>
-
 <body>
 <div class="dashboard">
-  <!-- SIDEBAR (Sem padding) -->
   <div class="sidebar" id="sidebar"></div>
 
   <div class="main-content">
     <div class="dashboard-container">
-
       <!-- Cabeçalho + Filtros -->
       <header class="dashboard-header">
         <h1>Dashboard</h1>
@@ -491,12 +476,12 @@
         </div>
       </header>
 
-      <!-- Exibir datas selecionadas -->
+      <!-- Texto de "Datas selecionadas" (oculto até user definir range) -->
       <div class="selected-dates-label" id="selectedDatesText">
         Datas selecionadas: --/--/---- - --/--/----
       </div>
 
-      <!-- Linha superior (5 colunas) -->
+      <!-- Linha superior -->
       <div class="top-row">
         <div class="stat-card">
           <div class="stat-icon">💸</div>
@@ -539,7 +524,7 @@
         <canvas id="faturamentoMargemChart"></canvas>
       </section>
 
-      <!-- Parte inferior: Pedidos + Monthly billing -->
+      <!-- Parte inferior -->
       <div class="bottom-row">
         <div class="pedidos-section">
           <h3>Pedidos</h3>
@@ -564,7 +549,7 @@
           </div>
         </div>
 
-        <!-- Monthly Billing (Half-Donut) -->
+        <!-- Half Donut + tabs -->
         <div class="billing-section">
           <div class="billing-header">
             <h4>Monthly billing</h4>
@@ -584,21 +569,21 @@
             <div><span class="legend-color" id="legendColor"></span> Nível</div>
           </div>
         </div>
-      </div><!-- /bottom-row -->
+      </div>
     </div><!-- /dashboard-container -->
   </div><!-- /main-content -->
 </div><!-- /dashboard -->
 
-<!-- Overlay do calendário custom -->
+<!-- Overlay do calendário -->
 <div class="date-range-overlay" id="calendarOverlay">
-  <div class="calendar-range-content" style="min-width:360px;" id="calendarContent">
+  <div class="calendar-range-content" id="calendarContent">
     <div class="calendar-header">
       <select id="selectMes"></select>
       <select id="selectAno"></select>
       <button id="btnBackCalendar">Back</button>
     </div>
     <div class="calendar-grid" id="calendarGrid">
-      <!-- Títulos dos dias -->
+      <!-- Dom..Sab headers e dias -->
       <div class="day-header">Dom</div>
       <div class="day-header">Seg</div>
       <div class="day-header">Ter</div>
@@ -606,7 +591,7 @@
       <div class="day-header">Qui</div>
       <div class="day-header">Sex</div>
       <div class="day-header">Sáb</div>
-      <!-- Dias gerados via JS -->
+      <!-- dias => gerados via js -->
     </div>
     <div class="selected-range" id="labelRange"></div>
     <div class="calendar-action-buttons">
@@ -617,15 +602,15 @@
 </div>
 
 <script>
-// 1) Carregar a sidebar
+// 1) Carregar sidebar.html
 fetch('sidebar.html')
   .then(resp=>resp.text())
   .then(html=>{
-    document.getElementById('sidebar').innerHTML=html;
+    document.getElementById('sidebar').innerHTML= html;
   })
-  .catch(err=>console.error('sidebar load error:',err));
+  .catch(err=>console.error('sidebar load error:', err));
 
-// 2) Vars
+// 2) Variáveis
 let chartFM;
 let currentChartBilling;
 let modoBilling='faturamento';
@@ -633,46 +618,50 @@ let pedidosGlobal=[];
 let currentPage=1;
 const pageSize=5;
 
+// Ocultaremos #selectedDatesText até termos datas
+let selectedDatesLabel= document.getElementById('selectedDatesText');
+selectedDatesLabel.style.display='none';
+
 let dataInicial='', dataFinal='';
-let selectedStart=null, selectedEnd=null;
 
 // Calendário
+let selectedStart=null, selectedEnd=null;
+let now= new Date();
+let currentMonth= now.getMonth();
+let currentYear= now.getFullYear();
 const calendarOverlay= document.getElementById('calendarOverlay');
 const selectMes= document.getElementById('selectMes');
 const selectAno= document.getElementById('selectAno');
 const calendarGrid= document.getElementById('calendarGrid');
 const labelRange= document.getElementById('labelRange');
-let now= new Date();
-let currentMonth= now.getMonth();
-let currentYear= now.getFullYear();
 
-// Ao carregar
+// Ao iniciar
 window.addEventListener('load', async()=>{
-  await carregarListaEfetivadoPor();
+  await carregarEfetivadoPor();
   initCalendar();
   renderCalendar();
 });
 
 // 3) Carregar distinct
-async function carregarListaEfetivadoPor(){
+async function carregarEfetivadoPor(){
   try{
     let url='https://www.magictraveltur.com/api_pedidos.php?distinct_efetivado_por=1';
     let resp= await fetch(url);
-    if(!resp.ok) throw new Error('HTTP '+ resp.status);
+    if(!resp.ok) throw new Error('HTTP '+resp.status);
     let arr= await resp.json();
     let sel= document.getElementById('efetivadoPorSelect');
     sel.innerHTML='<option value="">Todos</option>';
     arr.forEach(nome=>{
       let opt= document.createElement('option');
-      opt.value=nome; opt.textContent=nome;
+      opt.value= nome; opt.textContent= nome;
       sel.appendChild(opt);
     });
   } catch(e){
-    console.log('erro distinct_efetivado_por:', e);
+    console.log(e);
   }
 }
 
-// 4) Botão Selecionar Data => calendarOverlay
+// 4) Botão “Selecionar Data”
 document.getElementById('btnDateRange').addEventListener('click',()=>{
   calendarOverlay.style.display='flex';
 });
@@ -680,44 +669,42 @@ document.getElementById('btnCancelRange').addEventListener('click',()=>{
   calendarOverlay.style.display='none';
 });
 document.getElementById('btnApplyRange').addEventListener('click',()=>{
-  if(!selectedStart||!selectedEnd){
+  if(!selectedStart|| !selectedEnd){
     alert('Selecione Data Inicial e Final.');
     return;
   }
-  // montar dataInicial < dataFinal
+  // Monta dataInicial< dataFinal
   let di= formatYMD(selectedStart.year,selectedStart.month,selectedStart.day);
   let df= formatYMD(selectedEnd.year,selectedEnd.month,selectedEnd.day);
-  if(di>df){
-    [di,df]=[df,di];
-  }
+  if(di>df) [di,df]=[df,di];
   dataInicial= di;
   dataFinal= df;
   calendarOverlay.style.display='none';
-  // Atualizar label
-  document.getElementById('selectedDatesText').textContent=
+
+  // Exibir label
+  selectedDatesLabel.style.display='inline-block';
+  selectedDatesLabel.textContent= 
     'Datas selecionadas: ' + fmtDMY(di) + ' - ' + fmtDMY(df);
 });
-document.getElementById('btnBackCalendar').addEventListener('click',()=>{
-  alert('Esta função "Back" é personalizável. Por exemplo, poderia mudar pro mês anterior etc.');
-});
 
-// 5) Iniciar e render calendar
+// 5) Funções Calendário
+document.getElementById('btnBackCalendar').addEventListener('click',()=>{
+  alert('Back customizável, ex.: month-1');
+});
 function initCalendar(){
-  // Montar selects
   let meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   for(let i=0;i<meses.length;i++){
     let opt= document.createElement('option');
-    opt.value= i; opt.textContent= meses[i];
+    opt.value=i; opt.textContent= meses[i];
     selectMes.appendChild(opt);
   }
-  for(let y=2023; y<=2030; y++){
+  for(let y=2023;y<=2030;y++){
     let opt= document.createElement('option');
     opt.value=y; opt.textContent=y;
     selectAno.appendChild(opt);
   }
-  selectMes.value= currentMonth;
-  selectAno.value= currentYear;
-
+  selectMes.value=currentMonth;
+  selectAno.value=currentYear;
   selectMes.addEventListener('change',()=>{
     currentMonth= parseInt(selectMes.value);
     renderCalendar();
@@ -729,7 +716,6 @@ function initCalendar(){
 }
 
 function renderCalendar(){
-  // Apagar dias, manter 7 day-header
   while(calendarGrid.children.length>7){
     calendarGrid.removeChild(calendarGrid.lastChild);
   }
@@ -741,7 +727,7 @@ function renderCalendar(){
     let blank= document.createElement('div');
     calendarGrid.appendChild(blank);
   }
-  for(let d=1; d<= daysInMonth; d++){
+  for(let d=1; d<=daysInMonth; d++){
     let div= document.createElement('div');
     div.classList.add('calendar-day');
     div.textContent= d;
@@ -763,31 +749,25 @@ function dayClicked(y,m,d){
   } else if(!selectedEnd){
     selectedEnd={year:y,month:m,day:d};
   } else {
-    // reset
     selectedStart={year:y,month:m,day:d};
     selectedEnd=null;
   }
   renderCalendar();
 }
-
 function isDaySelected(y,m,d){
   if(!selectedStart) return false;
   let cur= formatYMD(y,m,d);
   let st= formatYMD(selectedStart.year,selectedStart.month,selectedStart.day);
   if(!selectedEnd){
-    // se só tem start
-    return (cur=== st);
+    return (cur===st);
   }
   let en= formatYMD(selectedEnd.year,selectedEnd.month,selectedEnd.day);
-  if(st> en){
-    [st,en]=[en,st];
-  }
-  return (cur>= st && cur<= en);
+  if(st> en) [st,en]=[en,st];
+  return (cur>=st && cur<=en);
 }
-
 function updateLabelRange(){
   if(!selectedStart){
-    labelRange.textContent= '';
+    labelRange.textContent='';
     return;
   }
   let st= formatYMD(selectedStart.year,selectedStart.month,selectedStart.day);
@@ -796,28 +776,26 @@ function updateLabelRange(){
     labelRange.textContent= str;
   } else {
     let en= formatYMD(selectedEnd.year,selectedEnd.month,selectedEnd.day);
-    if(st>en){
-      [st,en]=[en,st];
-    }
-    labelRange.textContent= fmtDMY(st) + ' - ' + fmtDMY(en);
+    if(st>en) [st,en]=[en,st];
+    labelRange.textContent= fmtDMY(st)+' - '+fmtDMY(en);
   }
 }
+// Y-M-D
 function formatYMD(y,m,d){
-  let mm= (m+1).toString().padStart(2,'0');
-  let dd= d.toString().padStart(2,'0');
+  let mm=(m+1).toString().padStart(2,'0');
+  let dd=d.toString().padStart(2,'0');
   return y+'-'+mm+'-'+dd;
 }
+// dd/mm/yyyy
 function fmtDMY(ymd){
-  // ymd = "YYYY-MM-DD"
   let [y,mo,da]= ymd.split('-');
-  return da+'/'+ mo +'/'+ y;
+  return da+'/'+mo+'/'+y;
 }
 
 // 6) Filtrar => carregaDados
 document.getElementById('btnFiltrar').addEventListener('click',()=>{
   carregarDados();
 });
-
 async function carregarDados(){
   let ef= document.getElementById('efetivadoPorSelect').value||'';
   if(!dataInicial && !dataFinal && !ef){
@@ -839,10 +817,10 @@ async function carregarDados(){
     somarCartoes(pedidosGlobal);
 
     let {arrFat,arrMarg}= agruparPorMes(pedidosGlobal);
-    renderGraficoBarras(arrFat, arrMarg);
-    calcularTierEExibirNoBilling(arrFat, arrMarg);
+    renderGraficoBarras(arrFat,arrMarg);
+    calcularTierEExibirNoBilling(arrFat,arrMarg);
   } catch(e){
-    console.error('erro fetch:',e);
+    console.error('erro:',e);
     alert('Erro: '+ e.message);
   }
 }
@@ -861,7 +839,7 @@ document.getElementById('btnProximo').addEventListener('click',()=>{
     exibirPagina(pedidosGlobal,currentPage);
   }
 });
-function exibirPagina(pedidos,page){
+function exibirPagina(pedidos, page){
   currentPage=page;
   let start=(page-1)*pageSize;
   let end= page*pageSize;
@@ -871,7 +849,7 @@ function exibirPagina(pedidos,page){
   tbody.innerHTML='';
   slice.forEach(p=>{
     let tr= document.createElement('tr');
-    tr.innerHTML=`
+    tr.innerHTML= `
       <td>#${p.id}</td>
       <td>${p.data_venda||''}</td>
       <td>${p.nome_comprador||''}</td>
@@ -887,7 +865,7 @@ function exibirPagina(pedidos,page){
     `Página ${currentPage} de ${totalPages}`;
 }
 
-// 8) Somar Cartoes
+// 8) SomarCartoes
 function somarCartoes(pedidos){
   let sf=0, sc=0, sm=0;
   pedidos.forEach(p=>{
@@ -900,7 +878,7 @@ function somarCartoes(pedidos){
   document.getElementById('cardComissao').textContent=
     'R$ '+ sc.toLocaleString('pt-BR');
   document.getElementById('cardMargem').textContent=
-    sm.toLocaleString('pt-BR') + ' (R$)';
+    sm.toLocaleString('pt-BR')+' (R$)';
   let take= (sf>0)? (sc/sf)*100:0;
   document.getElementById('cardTakeRate').textContent= take.toFixed(2)+'%';
   let cat='Vendedor Bronze';
@@ -911,7 +889,7 @@ function somarCartoes(pedidos){
 // 9) agruparPorMes + Grafico
 function agruparPorMes(pedidos){
   let arrFat= new Array(12).fill(0);
-  let arrMarg=new Array(12).fill(0);
+  let arrMarg= new Array(12).fill(0);
   let mapMes={
     'janeiro':0,'fevereiro':1,'março':2,'abril':3,'maio':4,'junho':5,
     'julho':6,'agosto':7,'setembro':8,'outubro':9,'novembro':10,'dezembro':11,
@@ -921,7 +899,7 @@ function agruparPorMes(pedidos){
   pedidos.forEach(p=>{
     let m=(p.mes_venda||'').trim();
     let idx= mapMes[m];
-    if(idx===undefined) return;
+    if(idx===undefined)return;
     arrFat[idx]+= Number(p.valor_venda)||0;
     arrMarg[idx]+= Number(p.valor_comissao)||0;
   });
@@ -953,7 +931,7 @@ function renderGraficoBarras(arrFat,arrMarg){
     },
     options:{
       responsive:true,
-      maintainAspectRatio:false,
+      maintainAspectRatio:false, /* para encher container height */
       scales:{
         y:{beginAtZero:true},
         x:{grid:{display:false}}
@@ -962,7 +940,7 @@ function renderGraficoBarras(arrFat,arrMarg){
   });
 }
 
-// 10) monthly billing
+// 10) monthly billing => half-donut
 document.getElementById('tabFaturamento').addEventListener('click',()=>{
   document.getElementById('tabFaturamento').classList.add('active');
   document.getElementById('tabMargem').classList.remove('active');
@@ -991,28 +969,29 @@ function calcularTierEExibirNoBilling(arrFat,arrMarg){
 }
 function exibirTier(valor,tipo){
   let tiersFat=[
-    {nome:'Bronze', min:0, max:294000, cor:'var(--bronze-color)'},
-    {nome:'Prata',  min:294000, max:534000, cor:'var(--prata-color)'},
-    {nome:'Ouro',   min:534000, max:768000, cor:'var(--ouro-color)'},
-    {nome:'Black',  min:768000, max:1068000, cor:'var(--black-color)'}
+    {nome:'Bronze',min:0,max:294000,cor:'var(--bronze-color)'},
+    {nome:'Prata',min:294000,max:534000,cor:'var(--prata-color)'},
+    {nome:'Ouro', min:534000,max:768000, cor:'var(--ouro-color)'},
+    {nome:'Black',min:768000,max:1068000, cor:'var(--black-color)'}
   ];
   let tiersMarg=[
-    {nome:'Bronze', min:0, max:23670,  cor:'var(--bronze-color)'},
-    {nome:'Prata',  min:23670, max:42120, cor:'var(--prata-color)'},
-    {nome:'Ouro',   min:42120, max:60570, cor:'var(--ouro-color)'},
-    {nome:'Black',  min:60570, max:81570, cor:'var(--black-color)'}
+    {nome:'Bronze',min:0,max:23670, cor:'var(--bronze-color)'},
+    {nome:'Prata',min:23670,max:42120, cor:'var(--prata-color)'},
+    {nome:'Ouro', min:42120,max:60570, cor:'var(--ouro-color)'},
+    {nome:'Black',min:60570,max:81570, cor:'var(--black-color)'}
   ];
   let tiers= (tipo==='faturamento')? tiersFat:tiersMarg;
   let tierAtual= tiers[0], perc=0;
   for(let i=0;i<tiers.length;i++){
     let t= tiers[i];
-    if(valor>=t.min && valor< t.max){
-      tierAtual=t;
+    if(valor>=t.min && valor<t.max){
+      tierAtual= t;
       perc=((valor- t.min)/(t.max- t.min))*100;
       break;
     } else if(valor>= tiers[tiers.length-1].max){
       tierAtual= tiers[tiers.length-1];
-      perc=100; break;
+      perc=100; 
+      break;
     }
   }
   renderBillingChart(perc,tierAtual.cor);
@@ -1022,7 +1001,7 @@ function exibirTier(valor,tipo){
 function renderBillingChart(perc, corTier){
   if(currentChartBilling) currentChartBilling.destroy();
   let ctx= document.getElementById('billingChart').getContext('2d');
-  let v1=perc, v2=100-perc;
+  let v1= perc, v2= 100-perc;
   currentChartBilling= new Chart(ctx,{
     type:'doughnut',
     data:{
@@ -1035,8 +1014,10 @@ function renderBillingChart(perc, corTier){
     },
     options:{
       responsive:true,
-      maintainAspectRatio:false,
-      cutout:'75%',
+      // Forçamos aspect ratio p/ ~1.8 => não achatar
+      maintainAspectRatio:true,
+      aspectRatio:1.8,
+      cutout:'70%',
       rotation:-90,
       circumference:180,
       plugins:{
