@@ -2,28 +2,24 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard - Apple Style</title>
-  <!-- Chart.js -->
+  <title>Dashboard - Período Único + Sidebar</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
   <style>
     :root {
-      /* Paleta minimalista, inspirada na Apple */
-      --bg-page: #F9FAFB;      /* fundo claríssimo */
-      --bg-white: #FFFFFF;     /* cartões/branco */
+      --bg-page: #F9FAFB;
+      --bg-white: #FFFFFF;
       --bg-dark: #1C1C1C;
       --text-color: #333333;
       --text-muted: #777777;
-      --primary-color: #007aff; /* Azul iOS */
-      --radius: 12px;          /* bordas levemente maiores */
-      --shadow: 0 4px 10px rgba(0,0,0,0.06); /* sombra suave */
-      --transition: 0.2s ease; 
+      --primary-color: #007aff; /* azul iOS */
+      --radius: 12px;
+      --shadow: 0 4px 10px rgba(0,0,0,0.06);
+      --transition: 0.2s ease;
     }
-
     * {
-      margin: 0; 
-      padding: 0; 
-      box-sizing: border-box;
-      font-family: Arial, sans-serif; /* Mantivemos a fonte, sem alterar tamanho */
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: Arial, sans-serif; /* Mantemos o font-size atual */
     }
     body {
       background: var(--bg-page);
@@ -31,9 +27,6 @@
       min-height: 100vh;
     }
 
-    /*********************************************************
-     * Layout principal: Sidebar + Conteúdo
-     *********************************************************/
     .dashboard {
       display: flex;
       min-height: 100vh;
@@ -41,7 +34,7 @@
     .sidebar {
       width: 260px;
       min-width: 260px;
-      background: #FFFFFF;
+      background: var(--bg-white);
       box-shadow: var(--shadow);
       padding: 20px;
     }
@@ -54,12 +47,10 @@
       margin: 0 auto;
     }
 
-    /*********************************************************
-     * Cabeçalho + Filtros
-     *********************************************************/
+    /* Cabeçalho + Filtros */
     .dashboard-header {
-      display: flex;
-      justify-content: space-between;
+      display: flex; 
+      justify-content: space-between; 
       align-items: center;
       margin-bottom: 20px;
     }
@@ -69,16 +60,11 @@
       letter-spacing: 0.5px;
     }
     .filters {
-      display: flex;
+      display: flex; 
       gap: 12px;
       align-items: center;
     }
-    .filters label {
-      font-size: 14px;
-      color: var(--text-color);
-      font-weight: 500;
-    }
-    /* Botão de Selecionar Período */
+    /* Botão único p/ data range */
     .date-range-btn {
       background: #FFF;
       border: 1px solid #CCC;
@@ -114,9 +100,7 @@
       background: #005bb5;
     }
 
-    /*********************************************************
-     * Linha superior (5 colunas)
-     *********************************************************/
+    /* Linha superior (5 colunas) */
     .top-row {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -166,9 +150,7 @@
       font-weight: 600;
     }
 
-    /*********************************************************
-     * Gráfico de barras
-     *********************************************************/
+    /* Gráfico de Barras */
     .bar-chart-container {
       background: var(--bg-white);
       border-radius: var(--radius);
@@ -190,15 +172,11 @@
       height: 300px !important;
     }
 
-    /*********************************************************
-     * Parte inferior: Pedidos + Monthly Billing
-     *********************************************************/
+    /* Linha inferior: Pedidos + Monthly Billing */
     .bottom-row {
       display: flex;
       gap: 20px;
     }
-
-    /* Pedidos (5 por página) */
     .pedidos-section {
       flex: 3;
       background: var(--bg-white);
@@ -266,7 +244,7 @@
       color: #444;
     }
 
-    /* Monthly Billing (half-donut) */
+    /* Monthly billing (half-donut) */
     .billing-section {
       flex: 2;
       background: var(--bg-white);
@@ -356,15 +334,13 @@
       border-radius: 2px;
     }
 
-    /*********************************************************
-     * Overlay do "Selecionar Período"
-     *********************************************************/
+    /* Overlay do "Selecionar Período" - single pop-up c/ 2 datas */
     .date-range-overlay {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: rgba(0,0,0,0.3);
-      display: none; /* oculto por padrão */
+      display: none;
       justify-content: center;
       align-items: center;
       z-index: 9999;
@@ -396,9 +372,9 @@
       border-radius: 8px;
     }
     .date-range-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
+      display: flex; 
+      justify-content: flex-end; 
+      gap: 10px; 
       margin-top: 10px;
     }
     .date-range-actions button {
@@ -417,8 +393,8 @@
 </head>
 <body>
 <div class="dashboard">
-  <!-- SIDEBAR (carregada via fetch) -->
-  <div class="sidebar" id="sidebar">Sidebar</div>
+  <!-- SIDEBAR: Carregando via fetch('sidebar.html') -->
+  <div class="sidebar" id="sidebar"></div>
 
   <div class="main-content">
     <div class="dashboard-container">
@@ -426,7 +402,7 @@
       <header class="dashboard-header">
         <h1>Dashboard</h1>
         <div class="filters">
-          <!-- BOTÃO UNIFICADO DE DATA RANGE -->
+          <!-- Único botão para range de datas -->
           <button class="date-range-btn" id="btnDateRange">Selecionar Período</button>
 
           <label>efetivado por:
@@ -473,13 +449,13 @@
         </div>
       </div>
 
-      <!-- Gráfico de Barras (Faturamento x Margem) -->
+      <!-- Gráfico de Barras -->
       <section class="bar-chart-container">
         <h3>Faturamento x Margem</h3>
         <canvas id="faturamentoMargemChart"></canvas>
       </section>
 
-      <!-- Linha inferior: Pedidos + Monthly billing -->
+      <!-- Linha inferior: Pedidos + Monthly Billing -->
       <div class="bottom-row">
         <div class="pedidos-section">
           <h3>Pedidos</h3>
@@ -495,9 +471,7 @@
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody id="tableBodyPedidos">
-              <!-- 5 por página -->
-            </tbody>
+            <tbody id="tableBodyPedidos"></tbody>
           </table>
           <div class="pagination">
             <button id="btnAnterior">Anterior</button>
@@ -506,7 +480,7 @@
           </div>
         </div>
 
-        <!-- Monthly Billing (half-donut) -->
+        <!-- Monthly billing (half donut) -->
         <div class="billing-section">
           <div class="billing-header">
             <h4>Monthly billing</h4>
@@ -531,7 +505,7 @@
   </div><!-- /main-content -->
 </div><!-- /dashboard -->
 
-<!-- OVERLAY DE SELECIONAR PERÍODO -->
+<!-- OVERLAY p/ datas -->
 <div class="date-range-overlay" id="overlayRange">
   <div class="date-range-content">
     <h4>Selecionar Período</h4>
@@ -547,108 +521,112 @@
 </div>
 
 <script>
-// --------------------------
-// Variáveis globais
-// --------------------------
-let chartFM; // gráfico de barras
-let currentChartBilling; // donut
-let modoBilling = 'faturamento';
+// ---------------------
+// 1) Carregar sidebar.html
+// ---------------------
+fetch('sidebar.html')
+  .then(resp=>resp.text())
+  .then(html=>{
+    document.getElementById('sidebar').innerHTML= html;
+  })
+  .catch(err=>console.error('Erro ao carregar sidebar:', err));
 
-// Pedidos
-let pedidosGlobal = []; 
-let currentPage = 1;
-const pageSize = 5;
+// ---------------------
+// 2) Variáveis globais
+// ---------------------
+let chartFM; // grafico barras
+let currentChartBilling; 
+let modoBilling='faturamento';
+let pedidosGlobal=[];
+let currentPage=1;
+const pageSize=5;
+let dataInicial='', dataFinal=''; // range datas
 
-// Armazenar datas escolhidas
-let dataInicial = ''; 
-let dataFinal   = '';
+// Inputs do overlay
+const overlay= document.getElementById('overlayRange');
+const rangeStart= document.getElementById('rangeStart');
+const rangeEnd= document.getElementById('rangeEnd');
 
-// Ao carregar:
-window.addEventListener('load', ()=>{
-  carregarListaEfetivadoPor();
+// Ao carregar
+window.addEventListener('load', async()=>{
+  await carregarListaEfetivadoPor();
 });
 
-// 1) Carregar distinct "efetivado_por"
+// 3) Carregar distinct_efetivado_por
 async function carregarListaEfetivadoPor(){
-  try {
-    const url = 'https://www.magictraveltur.com/api_pedidos.php?distinct_efetivado_por=1';
-    let resp = await fetch(url);
+  try{
+    let url='https://www.magictraveltur.com/api_pedidos.php?distinct_efetivado_por=1';
+    let resp= await fetch(url);
     if(!resp.ok) throw new Error('HTTP '+resp.status);
-    let arr = await resp.json(); // ex.: ["Vanessa","Breno",...]
-    let sel = document.getElementById('efetivadoPorSelect');
-    sel.innerHTML = '<option value="">Todos</option>';
+    let arr= await resp.json(); 
+    let sel= document.getElementById('efetivadoPorSelect');
+    sel.innerHTML= '<option value="">Todos</option>';
     arr.forEach(nome=>{
-      let opt = document.createElement('option');
-      opt.value=nome; opt.textContent=nome;
+      let opt= document.createElement('option');
+      opt.value= nome;
+      opt.textContent= nome;
       sel.appendChild(opt);
     });
-  } catch(e){
-    console.log('Erro ao carregar distinct_efetivado_por:', e);
+  }catch(e){
+    console.log('Erro distinct_efetivado_por:', e);
   }
 }
 
-// 2) Overlays (abrir/fechar) e datas
-const overlayRange = document.getElementById('overlayRange');
-const btnDateRange = document.getElementById('btnDateRange');
-const btnAplicarOverlay = document.getElementById('btnAplicarOverlay');
-const btnCancelarOverlay= document.getElementById('btnCancelarOverlay');
-const rangeStart = document.getElementById('rangeStart');
-const rangeEnd   = document.getElementById('rangeEnd');
-
-btnDateRange.addEventListener('click', ()=>{
-  overlayRange.style.display='flex';
+// 4) Botão para abrir overlay
+document.getElementById('btnDateRange').addEventListener('click', ()=>{
+  overlay.style.display='flex';
 });
-btnCancelarOverlay.addEventListener('click', ()=>{
-  overlayRange.style.display='none';
+document.getElementById('btnCancelarOverlay').addEventListener('click', ()=>{
+  overlay.style.display='none';
 });
-btnAplicarOverlay.addEventListener('click', ()=>{
-  // Pega os valores
+document.getElementById('btnAplicarOverlay').addEventListener('click', ()=>{
   dataInicial= rangeStart.value;
   dataFinal  = rangeEnd.value;
-  overlayRange.style.display='none';
+  overlay.style.display='none';
 });
 
-// 3) Botão Filtrar => carregaDados
+// 5) Filtrar => carregaDados
 document.getElementById('btnFiltrar').addEventListener('click', ()=>{
   carregarDados();
 });
 
-// 4) Carregar dados
+// 6) carregarDados
 async function carregarDados(){
-  // Se nenhum param (datas ou efetivadoPor), não carrega
-  let efetivado = document.getElementById('efetivadoPorSelect').value||'';
+  let efetivado= document.getElementById('efetivadoPorSelect').value||'';
   if(!dataInicial && !dataFinal && !efetivado){
     alert('Selecione um período e/ou Efetivado Por.');
     return;
   }
-  let url = `https://www.magictraveltur.com/api_pedidos.php?start_date=${dataInicial}&end_date=${dataFinal}&efetivado_por=${efetivado}`;
+  let url=`https://www.magictraveltur.com/api_pedidos.php?start_date=${dataInicial}&end_date=${dataFinal}&efetivado_por=${efetivado}`;
   try{
     let resp= await fetch(url);
-    if(!resp.ok) throw new Error('HTTP '+ resp.status);
+    if(!resp.ok) throw new Error('HTTP '+resp.status);
     let dados= await resp.json();
     if(!Array.isArray(dados)){
       console.warn('Resposta não é array:', dados);
       return;
     }
-    pedidosGlobal = dados;
-    // Exibe paginado
+    pedidosGlobal= dados;
+    // Paginação
     currentPage=1;
     exibirPagina(pedidosGlobal, currentPage);
-    // Somar cartoes
-    somarCartoes(pedidosGlobal);
-    // Grafico de barras
-    let {arrFat, arrMarg} = agruparPorMes(pedidosGlobal);
-    renderGraficoBarras(arrFat, arrMarg);
-    // Monthly billing
-    calcularTierEExibirNoBilling(arrFat, arrMarg);
 
-  } catch(e){
-    console.error('Erro ao carregar dados:', e);
+    // Cartões
+    somarCartoes(pedidosGlobal);
+
+    // Gráfico de Barras
+    let {arrFat, arrMarg}= agruparPorMes(pedidosGlobal);
+    renderGraficoBarras(arrFat, arrMarg);
+
+    // Monthly Billing
+    calcularTierEExibirNoBilling(arrFat, arrMarg);
+  }catch(e){
+    console.error('Erro ao carregarDados:', e);
     alert('Erro: '+ e.message);
   }
 }
 
-// 5) Paginação
+// 7) Paginação
 document.getElementById('btnAnterior').addEventListener('click', ()=>{
   if(currentPage>1){
     currentPage--;
@@ -656,24 +634,23 @@ document.getElementById('btnAnterior').addEventListener('click', ()=>{
   }
 });
 document.getElementById('btnProximo').addEventListener('click', ()=>{
-  let totalPages= Math.ceil(pedidosGlobal.length / pageSize);
+  let totalPages= Math.ceil(pedidosGlobal.length/pageSize);
   if(currentPage< totalPages){
     currentPage++;
     exibirPagina(pedidosGlobal, currentPage);
   }
 });
-
 function exibirPagina(pedidos, page){
-  currentPage=page;
+  currentPage= page;
   let start=(page-1)*pageSize;
   let end= page*pageSize;
-  let slice= pedidos.slice(start, end);
+  let slice= pedidos.slice(start,end);
 
   let tbody= document.getElementById('tableBodyPedidos');
   tbody.innerHTML='';
   slice.forEach(p=>{
     let tr= document.createElement('tr');
-    tr.innerHTML= `
+    tr.innerHTML=`
       <td>#${p.id}</td>
       <td>${p.data_venda||''}</td>
       <td>${p.nome_comprador||''}</td>
@@ -689,30 +666,28 @@ function exibirPagina(pedidos, page){
     `Página ${currentPage} de ${totalPages}`;
 }
 
-// 6) Somar cartoes
+// 8) SomarCartoes
 function somarCartoes(pedidos){
-  let somaFaturamento=0, somaComissao=0, somaMargem=0;
+  let somaFat=0, somaCom=0, somaMarg=0;
   pedidos.forEach(p=>{
-    somaFaturamento+= Number(p.valor_venda)||0;
-    somaComissao   += Number(p.comissao_do_agente)||0;
-    // Se Margem for p.valor_comissao:
-    somaMargem     += Number(p.valor_comissao)||0;
+    somaFat+= Number(p.valor_venda)||0;
+    somaCom+= Number(p.comissao_do_agente)||0;
+    somaMarg+= Number(p.valor_comissao)||0; // se margin = valor_comissao
   });
   document.getElementById('cardFaturamento').textContent=
-    'R$ '+ somaFaturamento.toLocaleString('pt-BR');
+    'R$ '+ somaFat.toLocaleString('pt-BR');
   document.getElementById('cardComissao').textContent=
-    'R$ '+ somaComissao.toLocaleString('pt-BR');
+    'R$ '+ somaCom.toLocaleString('pt-BR');
   document.getElementById('cardMargem').textContent=
-    somaMargem.toLocaleString('pt-BR') + ' (R$)';
-  let take= (somaFaturamento>0)? (somaComissao/somaFaturamento)*100 :0;
+    somaMarg.toLocaleString('pt-BR') + ' (R$)';
+  let take= (somaFat>0)? (somaCom/somaFat)*100 :0;
   document.getElementById('cardTakeRate').textContent= take.toFixed(2)+'%';
-  // Categoria
   let cat='Vendedor Bronze';
   if(take>30) cat='Vendedor Diamante';
-  document.getElementById('vendedorCategoria').textContent=cat;
+  document.getElementById('vendedorCategoria').textContent= cat;
 }
 
-// 7) agruparPorMes e renderGrafico
+// 9) Agrupar por mes + renderGraficoBarras
 function agruparPorMes(pedidos){
   let arrFat= new Array(12).fill(0);
   let arrMarg=new Array(12).fill(0);
@@ -729,12 +704,12 @@ function agruparPorMes(pedidos){
     arrFat[idx]+= Number(p.valor_venda)||0;
     arrMarg[idx]+= Number(p.valor_comissao)||0;
   });
-  return {arrFat, arrMarg};
+  return {arrFat,arrMarg};
 }
 function renderGraficoBarras(arrFat, arrMarg){
   if(chartFM) chartFM.destroy();
   let ctx= document.getElementById('faturamentoMargemChart').getContext('2d');
-  chartFM= new Chart(ctx, {
+  chartFM= new Chart(ctx,{
     type:'bar',
     data:{
       labels:['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'],
@@ -766,18 +741,18 @@ function renderGraficoBarras(arrFat, arrMarg){
   });
 }
 
-// 8) Monthly billing
+// 10) Half-donut
 function calcularTierEExibirNoBilling(arrFat, arrMarg){
-  if(!arrFat || !arrMarg){
-    let am= agruparPorMes(pedidosGlobal);
-    arrFat= am.arrFat; arrMarg= am.arrMarg;
+  if(!arrFat||!arrMarg){
+    let tmp= agruparPorMes(pedidosGlobal);
+    arrFat= tmp.arrFat; arrMarg= tmp.arrMarg;
   }
   let valor=0;
   if(modoBilling==='faturamento'){
-    valor= arrFat.reduce((acc,v)=>acc+v,0);
+    valor= arrFat.reduce((a,b)=>a+b,0);
     calcularTierEExibir(valor,'faturamento');
   } else {
-    valor= arrMarg.reduce((acc,v)=>acc+v,0);
+    valor= arrMarg.reduce((a,b)=>a+b,0);
     calcularTierEExibir(valor,'margem');
   }
 }
@@ -794,17 +769,17 @@ function calcularTierEExibir(valor,tipo){
     {nome:'Ouro', min:42120,max:60570,cor:'#FFD700'},
     {nome:'Black',min:60570,max:81570,cor:'#000'}
   ];
-  let tiers=(tipo==='faturamento')?tiersFat:tiersMarg;
-  let tierAtual= tiers[0],perc=0;
+  let tiers= (tipo==='faturamento')? tiersFat: tiersMarg;
+  let tierAtual= tiers[0], perc=0;
   for(let i=0;i<tiers.length;i++){
     let t= tiers[i];
-    if(valor>=t.min && valor<t.max){
-      tierAtual=t;
-      perc=((valor-t.min)/(t.max-t.min))*100;
+    if(valor>= t.min && valor< t.max){
+      tierAtual= t;
+      perc= ((valor- t.min)/(t.max- t.min))*100;
       break;
-    }else if(valor>= tiers[tiers.length-1].max){
+    } else if(valor>= tiers[tiers.length-1].max){
       tierAtual= tiers[tiers.length-1];
-      perc=100;break;
+      perc=100; break;
     }
   }
   renderBillingChart(perc,tierAtual.cor);
@@ -814,8 +789,8 @@ function calcularTierEExibir(valor,tipo){
 function renderBillingChart(perc, corTier){
   if(currentChartBilling) currentChartBilling.destroy();
   let ctx= document.getElementById('billingChart').getContext('2d');
-  let v1= perc; let v2= 100-perc;
-  currentChartBilling= new Chart(ctx, {
+  let v1=perc, v2=100-perc;
+  currentChartBilling= new Chart(ctx,{
     type:'doughnut',
     data:{
       labels:['Tier','Restante'],
@@ -832,10 +807,28 @@ function renderBillingChart(perc, corTier){
       rotation:-90,
       circumference:180,
       plugins:{legend:{display:false}},
-      animation:{animateRotate:true,animateScale:true,duration:700}
+      animation:{
+        animateRotate:true,
+        animateScale:true,
+        duration:700
+      }
     }
   });
 }
+
+// Tabs do monthly billing
+document.getElementById('tabFaturamento').addEventListener('click', ()=>{
+  document.getElementById('tabFaturamento').classList.add('active');
+  document.getElementById('tabMargem').classList.remove('active');
+  modoBilling='faturamento';
+  calcularTierEExibirNoBilling();
+});
+document.getElementById('tabMargem').addEventListener('click', ()=>{
+  document.getElementById('tabMargem').classList.add('active');
+  document.getElementById('tabFaturamento').classList.remove('active');
+  modoBilling='margem';
+  calcularTierEExibirNoBilling();
+});
 </script>
 </body>
 </html>
