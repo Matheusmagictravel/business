@@ -298,8 +298,8 @@
           <label>Data Final:
             <input type="date" id="dataFinal">
           </label>
-          <label>Finalizado por:
-            <select id="finalizadoPorSelect"></select>
+          <label>efetivado por:
+            <select id="efetivadoPorSelect"></select>
           </label>
           <button id="btnFiltrar">Filtrar</button>
         </div>
@@ -429,8 +429,8 @@ const pageSize = 5; // 5 por página
  * EVENTOS E FLUXO
  ****************************************************************/
 window.addEventListener('load', async ()=>{
-  // 1) Carrega a lista de distinct "efetivado_por" (renomeado "Finalizado por" no front)
-  await carregarListaFinalizadoPor();
+  // 1) Carrega a lista de distinct "efetivado_por" (renomeado "efetivado por" no front)
+  await carregarListaefetivadoPor();
   // 2) Nada é carregado enquanto o usuário não clicar em "Filtrar"
 });
 
@@ -471,13 +471,13 @@ document.getElementById('tabMargem').addEventListener('click', ()=>{
 /****************************************************************
  * 1) FUNÇÃO PARA CARREGAR LISTA DE EFETIVADO_POR
  ****************************************************************/
-async function carregarListaFinalizadoPor(){
+async function carregarListaefetivadoPor(){
   try {
-    const url = 'https://www.magictraveltur.com/api_pedidos.php?distinct_finalizado_por=1';
+    const url = 'https://www.magictraveltur.com/api_pedidos.php?distinct_efetivado_por=1';
     let resp = await fetch(url);
     if(!resp.ok) throw new Error('Erro HTTP '+resp.status);
     let arr = await resp.json(); // array de strings
-    let select = document.getElementById('finalizadoPorSelect');
+    let select = document.getElementById('efetivadoPorSelect');
     select.innerHTML = '<option value="">Todos</option>';
     arr.forEach(nome=>{
       let opt = document.createElement('option');
@@ -486,7 +486,7 @@ async function carregarListaFinalizadoPor(){
       select.appendChild(opt);
     });
   } catch(e){
-    console.error('Falha ao carregar distinct finalizado_por:', e);
+    console.error('Falha ao carregar distinct efetivado_por:', e);
   }
 }
 
@@ -496,15 +496,15 @@ async function carregarListaFinalizadoPor(){
 async function carregarDados(){
   const dataInicial = document.getElementById('dataInicial').value || '';
   const dataFinal   = document.getElementById('dataFinal').value || '';
-  const finalizadoPor= document.getElementById('finalizadoPorSelect').value || '';
+  const efetivadoPor= document.getElementById('efetivadoPorSelect').value || '';
 
   // Se nenhum filtro => não carregar nada
-  if(!dataInicial && !dataFinal && !finalizadoPor){
-    alert('Selecione ao menos uma data ou finalizado por para filtrar.');
+  if(!dataInicial && !dataFinal && !efetivadoPor){
+    alert('Selecione ao menos uma data ou efetivado por para filtrar.');
     return;
   }
 
-  let url = `https://www.magictraveltur.com/api_pedidos.php?start_date=${dataInicial}&end_date=${dataFinal}&finalizado_por=${finalizadoPor}`;
+  let url = `https://www.magictraveltur.com/api_pedidos.php?start_date=${dataInicial}&end_date=${dataFinal}&efetivado_por=${efetivadoPor}`;
 
   try {
     let resp = await fetch(url);
