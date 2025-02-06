@@ -2,8 +2,9 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard - Ajustes finais</title>
+  <title>Dashboard - Texto Percentual Ajustado</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
   <style>
     :root {
       --bg-page: #F9FAFB;
@@ -16,15 +17,15 @@
       --shadow: 0 4px 10px rgba(0,0,0,0.06);
       --transition: 0.2s ease;
 
-      /* Cores tier */
+      /* Cores para tiers */
       --bronze-color: #c78d53;
       --prata-color:  #C0C0C0;
       --ouro-color:   #FFD700;
       --black-color:  #000000;
     }
     * {
-      margin: 0; 
-      padding: 0; 
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
       font-family: Arial, sans-serif;
     }
@@ -43,7 +44,7 @@
       min-width: 260px;
       background: var(--bg-white);
       box-shadow: var(--shadow);
-      /* Remove padding da sidebar */
+      /* Remove o padding da sidebar */
       padding: 0;
     }
     .main-content {
@@ -72,22 +73,6 @@
       gap: 12px;
       align-items: center;
     }
-
-    /* 
-       1) Mover "Datas selecionadas" AO LADO do botão
-          => iremos colocar a label dentro de .filters 
-          e ajustamos para exibir em inline-block 
-    */
-    .selected-dates-label {
-      display: none; /* só aparece depois de escolher datas */
-      background: var(--bg-white);
-      padding: 6px 12px;
-      border-radius: 8px;
-      font-size: 14px;
-      color: #444;
-      box-shadow: var(--shadow);
-    }
-
     .date-range-btn {
       background: #FFF;
       border: 1px solid #CCC;
@@ -98,6 +83,15 @@
     }
     .date-range-btn:hover {
       background: #F0F0F0;
+    }
+    .selected-dates-label {
+      display: none; /* só aparece depois de definir datas */
+      background: var(--bg-white);
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #444;
+      box-shadow: var(--shadow);
     }
     .filters select {
       padding: 6px 10px;
@@ -199,6 +193,7 @@
       display: flex;
       gap: 20px;
     }
+
     /* Pedidos */
     .pedidos-section {
       flex: 3;
@@ -244,20 +239,15 @@
       font-size: 14px;
       color: #333;
     }
-
-    /* 
-       2) Jogar a paginação para a DIREITA:
-          => basta usar justify-content: flex-end
-    */
     .pagination {
       display: flex;
       gap: 10px;
       margin-top: 10px;
       align-items: center;
-      justify-content: flex-end; /* move para direita */
+      justify-content: flex-end; /* Pagination à direita */
     }
     .pagination button {
-      background: #4285f4; /* cor do botao (ex. azul) */
+      background: #4285f4;
       color: #fff;
       border: none;
       padding: 5px 10px;
@@ -273,14 +263,14 @@
       color: #444;
     }
 
-    /* Monthly Billing (Half Donut) */
+    /* Monthly billing (Half-Donut) */
     .billing-section {
       flex: 2;
       background: var(--bg-white);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 20px;
-      display: flex; 
+      display: flex;
       flex-direction: column;
       transition: transform var(--transition);
     }
@@ -314,12 +304,13 @@
       color: #000;
       border-bottom: 2px solid #000;
     }
+
     .billing-content {
-      flex: 1;  
+      flex: 1; 
       display: flex;
       flex-direction: column;
       justify-content: center; 
-      align-items: center;     
+      align-items: center;
     }
 
     .donut-container {
@@ -331,20 +322,18 @@
       align-items: center;
       justify-content: center;
     }
-
     #billingChart {
       width: 100% !important;
       height: 100% !important;
     }
 
     /* 
-       1) Subir "Percentual" => top: 30% (exemplo). 
-          Assim, fica na altura do topo do donut 
-          (ajuste se precisar).
+       Texto "Percentual" + "XX%" 
+       -> top: 65% => mais abaixo, perto do meio do semicírculo
     */
     .donut-center-text {
       position: absolute;
-      top: 30%; /* ajusta para ficar no topo do semicírculo */
+      top: 65%; /* Ajuste conforme a necessidade (60,65,70...) */
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
@@ -380,7 +369,7 @@
       border-radius: 2px;
     }
 
-    /* Calendário custom no overlay (Print #2) */
+    /* Calendário custom (Print #2) */
     .date-range-overlay {
       position: fixed;
       top: 0; left: 0;
@@ -482,8 +471,10 @@
     }
   </style>
 </head>
+
 <body>
 <div class="dashboard">
+  <!-- SIDEBAR (sem padding) -->
   <div class="sidebar" id="sidebar"></div>
 
   <div class="main-content">
@@ -493,8 +484,10 @@
       <header class="dashboard-header">
         <h1>Dashboard</h1>
         <div class="filters">
+          <!-- Botão Selecionar Data -->
           <button class="date-range-btn" id="btnDateRange">Selecionar Data</button>
-          <!-- 1) Agora, "Datas selecionadas" fica AO LADO do botão -->
+          
+          <!-- Texto "Datas selecionadas" ao lado do botão, inicialmente oculto -->
           <div class="selected-dates-label" id="selectedDatesText">
             Datas selecionadas: --/--/---- - --/--/----
           </div>
@@ -506,7 +499,7 @@
         </div>
       </header>
 
-      <!-- Linha superior (5 colunas) -->
+      <!-- Linha superior -->
       <div class="top-row">
         <div class="stat-card">
           <div class="stat-icon">💸</div>
@@ -569,7 +562,7 @@
             <tbody id="tableBodyPedidos"></tbody>
           </table>
 
-          <!-- 2) Pagination para a DIREITA, ver .pagination { justify-content: flex-end; } -->
+          <!-- Paginação à direita -->
           <div class="pagination">
             <button id="btnAnterior">Anterior</button>
             <span id="paginationInfo">Página 1 de 1</span>
@@ -577,7 +570,7 @@
           </div>
         </div>
 
-        <!-- Monthly billing (half-donut) -->
+        <!-- Monthly billing (Half-Donut) -->
         <div class="billing-section">
           <div class="billing-header">
             <h4>Monthly billing</h4>
@@ -587,11 +580,11 @@
             </div>
           </div>
 
-          <!-- Subcontêiner para centralizar vertical -->
+          <!-- Subcontêiner para centralizar verticalmente o donut -->
           <div class="billing-content">
             <div class="donut-container">
               <canvas id="billingChart"></canvas>
-              <!-- 3) "Percentual" no topo do semicírculo => top:30% -->
+              <!-- Ajuste top => 65% p/ deixar "Percentual" mais abaixo -->
               <div class="donut-center-text">
                 <div class="total-label">Percentual</div>
                 <div class="total-value" id="billingTotal">0%</div>
@@ -616,7 +609,6 @@
       <button id="btnBackCalendar">Back</button>
     </div>
     <div class="calendar-grid" id="calendarGrid">
-      <!-- Títulos fixos (Dom..Sab) -->
       <div class="day-header">Dom</div>
       <div class="day-header">Seg</div>
       <div class="day-header">Ter</div>
@@ -624,7 +616,7 @@
       <div class="day-header">Qui</div>
       <div class="day-header">Sex</div>
       <div class="day-header">Sáb</div>
-      <!-- Dias => via JS -->
+      <!-- Dias do mês => gerados dinamicamente -->
     </div>
     <div class="selected-range" id="labelRange"></div>
     <div class="calendar-action-buttons">
@@ -635,13 +627,13 @@
 </div>
 
 <script>
-// 1) Carrega sidebar
+// 1) Carregar sidebar.html
 fetch('sidebar.html')
-  .then(r=>r.text())
+  .then(resp=>resp.text())
   .then(html=>{
-    document.getElementById('sidebar').innerHTML=html;
+    document.getElementById('sidebar').innerHTML= html;
   })
-  .catch(err=>console.error('Sidebar load error:',err));
+  .catch(err=>console.error('Sidebar error:', err));
 
 // 2) Variáveis
 let chartFM;
@@ -651,9 +643,8 @@ let pedidosGlobal=[];
 let currentPage=1;
 const pageSize=5;
 
-// Label "Datas selecionadas", fica oculto até setar datas
 let dataInicial='', dataFinal='';
-const selectedDatesLabel=document.getElementById('selectedDatesText');
+const selectedDatesLabel = document.getElementById('selectedDatesText');
 selectedDatesLabel.style.display='none';
 
 // Calendário
@@ -673,25 +664,27 @@ window.addEventListener('load', async()=>{
   renderCalendar();
 });
 
-// 3) Carrega "efetivado_por" (distinct)
+// 3) Carrega distinct "efetivado_por"
 async function carregarEfetivadoPor(){
-  let url='https://www.magictraveltur.com/api_pedidos.php?distinct_efetivado_por=1';
-  try{
+  try {
+    let url='https://www.magictraveltur.com/api_pedidos.php?distinct_efetivado_por=1';
     let resp= await fetch(url);
     if(!resp.ok) throw new Error('HTTP '+resp.status);
     let arr= await resp.json();
     let sel= document.getElementById('efetivadoPorSelect');
     sel.innerHTML='<option value="">Todos</option>';
-    arr.forEach(n=>{
+    arr.forEach(nome=>{
       let opt= document.createElement('option');
-      opt.value=n;
-      opt.textContent=n;
+      opt.value= nome;
+      opt.textContent= nome;
       sel.appendChild(opt);
     });
-  }catch(e){console.log(e);}
+  } catch(e){
+    console.log('Erro distinct_efetivado_por:', e);
+  }
 }
 
-// 4) Botão "Selecionar Data" => abre overlay
+// 4) Botão Selecionar Data
 document.getElementById('btnDateRange').addEventListener('click',()=>{
   calendarOverlay.style.display='flex';
 });
@@ -703,20 +696,19 @@ document.getElementById('btnApplyRange').addEventListener('click',()=>{
     alert('Selecione Data Inicial e Final.');
     return;
   }
-  let di= formatYMD(selectedStart.year,selectedStart.month,selectedStart.day);
-  let df= formatYMD(selectedEnd.year,selectedEnd.month,selectedEnd.day);
+  let di= formatYMD(selectedStart.year, selectedStart.month, selectedStart.day);
+  let df= formatYMD(selectedEnd.year, selectedEnd.month, selectedEnd.day);
   if(di>df) [di,df]=[df,di];
-  dataInicial=di; 
-  dataFinal=df;
+  dataInicial=di; dataFinal=df;
   calendarOverlay.style.display='none';
 
-  // Mostra label e atualiza
+  // Exibe label e atualiza
   selectedDatesLabel.style.display='inline-block';
   selectedDatesLabel.textContent=
-    'Datas selecionadas: '+fmtDMY(di)+' - '+fmtDMY(df);
+    'Datas selecionadas: '+ fmtDMY(di) +' - '+ fmtDMY(df);
 });
 document.getElementById('btnBackCalendar').addEventListener('click',()=>{
-  alert('Back customizável (ex.: mês anterior).');
+  alert('Back customizável');
 });
 
 // 5) Init + render calendar
@@ -728,10 +720,9 @@ function initCalendar(){
     opt.value=i; opt.textContent=meses[i];
     selectMes.appendChild(opt);
   }
-  for(let y=2023;y<=2030;y++){
+  for(let y=2023; y<=2030; y++){
     let opt= document.createElement('option');
-    opt.value=y; 
-    opt.textContent=y;
+    opt.value=y; opt.textContent=y;
     selectAno.appendChild(opt);
   }
   selectMes.value=currentMonth;
@@ -754,19 +745,19 @@ function renderCalendar(){
   let startWeekDay= first.getDay();
   let daysInMonth= new Date(currentYear, currentMonth+1,0).getDate();
 
-  for(let i=0;i<startWeekDay;i++){
+  for(let i=0; i<startWeekDay; i++){
     let blank= document.createElement('div');
     calendarGrid.appendChild(blank);
   }
-  for(let d=1; d<=daysInMonth; d++){
+  for(let d=1; d<= daysInMonth; d++){
     let div= document.createElement('div');
     div.classList.add('calendar-day');
     div.textContent=d;
-    if(isDaySelected(currentYear,currentMonth,d)){
+    if(isDaySelected(currentYear, currentMonth, d)){
       div.classList.add('selected');
     }
     div.addEventListener('click',()=>{
-      dayClicked(currentYear,currentMonth,d);
+      dayClicked(currentYear, currentMonth, d);
     });
     calendarGrid.appendChild(div);
   }
@@ -774,12 +765,12 @@ function renderCalendar(){
 }
 function dayClicked(y,m,d){
   if(!selectedStart){
-    selectedStart={year:y, month:m, day:d};
+    selectedStart={year:y,month:m,day:d};
     selectedEnd=null;
   } else if(!selectedEnd){
-    selectedEnd={year:y, month:m, day:d};
+    selectedEnd={year:y,month:m,day:d};
   } else {
-    selectedStart={year:y, month:m, day:d};
+    selectedStart={year:y,month:m,day:d};
     selectedEnd=null;
   }
   renderCalendar();
@@ -800,14 +791,14 @@ function updateLabelRange(){
     labelRange.textContent='';
     return;
   }
-  let st= formatYMD(selectedStart.year,selectedStart.month,selectedStart.day);
+  let st= formatYMD(selectedStart.year, selectedStart.month, selectedStart.day);
   let str= fmtDMY(st);
   if(!selectedEnd){
     labelRange.textContent=str;
   } else {
-    let en= formatYMD(selectedEnd.year,selectedEnd.month,selectedEnd.day);
+    let en= formatYMD(selectedEnd.year, selectedEnd.month, selectedEnd.day);
     if(st>en) [st,en]=[en,st];
-    labelRange.textContent= fmtDMY(st)+' - '+fmtDMY(en);
+    labelRange.textContent= fmtDMY(st)+' - '+ fmtDMY(en);
   }
 }
 function formatYMD(y,m,d){
@@ -820,7 +811,7 @@ function fmtDMY(ymd){
   return da+'/'+mo+'/'+yy;
 }
 
-// 6) Botão Filtrar => carregaDados
+// 6) Filtrar => carregaDados
 document.getElementById('btnFiltrar').addEventListener('click',()=>{
   carregarDados();
 });
@@ -833,42 +824,45 @@ async function carregarDados(){
   let url=`https://www.magictraveltur.com/api_pedidos.php?start_date=${dataInicial}&end_date=${dataFinal}&efetivado_por=${ef}`;
   try{
     let resp= await fetch(url);
-    if(!resp.ok) throw new Error('HTTP '+resp.status);
+    if(!resp.ok) throw new Error('HTTP '+ resp.status);
     let arr= await resp.json();
-    if(!Array.isArray(arr)) return console.warn('Não é array:',arr);
+    if(!Array.isArray(arr)){
+      console.warn('Não é array:', arr);
+      return;
+    }
     pedidosGlobal= arr;
     currentPage=1;
-    exibirPagina(pedidosGlobal,currentPage);
+    exibirPagina(pedidosGlobal, currentPage);
     somarCartoes(pedidosGlobal);
 
     let {arrFat, arrMarg}= agruparPorMes(pedidosGlobal);
     renderGraficoBarras(arrFat, arrMarg);
     calcularTierEExibirNoBilling(arrFat, arrMarg);
   } catch(e){
-    console.error('Erro fetch:',e);
+    console.error('Erro fetch:', e);
     alert('Erro: '+ e.message);
   }
 }
 
-// 7) Paginação (à direita)
+// 7) Paginação
 document.getElementById('btnAnterior').addEventListener('click',()=>{
   if(currentPage>1){
     currentPage--;
-    exibirPagina(pedidosGlobal,currentPage);
+    exibirPagina(pedidosGlobal, currentPage);
   }
 });
 document.getElementById('btnProximo').addEventListener('click',()=>{
   let totalPages= Math.ceil(pedidosGlobal.length/pageSize);
   if(currentPage< totalPages){
     currentPage++;
-    exibirPagina(pedidosGlobal,currentPage);
+    exibirPagina(pedidosGlobal, currentPage);
   }
 });
-function exibirPagina(pedidos,page){
-  currentPage=page;
+function exibirPagina(pedidos, page){
+  currentPage= page;
   let start=(page-1)*pageSize;
-  let end=page*pageSize;
-  let slice= pedidos.slice(start,end);
+  let end= page*pageSize;
+  let slice= pedidos.slice(start, end);
 
   let tbody= document.getElementById('tableBodyPedidos');
   tbody.innerHTML='';
@@ -905,17 +899,18 @@ function somarCartoes(pedidos){
   document.getElementById('cardMargem').textContent=
     sm.toLocaleString('pt-BR')+' (R$)';
   let take= (sf>0)? (sc/sf)*100 :0;
-  document.getElementById('cardTakeRate').textContent= 
+  document.getElementById('cardTakeRate').textContent=
     take.toFixed(2)+'%';
+
   let cat='Vendedor Bronze';
   if(take>30) cat='Vendedor Diamante';
   document.getElementById('vendedorCategoria').textContent=cat;
 }
 
-// 9) Gráfico de Barras
+// 9) Agrupar por mês + Gráfico de Barras
 function agruparPorMes(pedidos){
   let arrFat= new Array(12).fill(0);
-  let arrMarg=new Array(12).fill(0);
+  let arrMarg= new Array(12).fill(0);
   let mapMes={
     'janeiro':0,'fevereiro':1,'março':2,'abril':3,'maio':4,'junho':5,
     'julho':6,'agosto':7,'setembro':8,'outubro':9,'novembro':10,'dezembro':11,
@@ -931,7 +926,7 @@ function agruparPorMes(pedidos){
   });
   return {arrFat, arrMarg};
 }
-function renderGraficoBarras(arrFat,arrMarg){
+function renderGraficoBarras(arrFat, arrMarg){
   if(chartFM) chartFM.destroy();
   let ctx= document.getElementById('faturamentoMargemChart').getContext('2d');
   chartFM= new Chart(ctx,{
@@ -966,7 +961,7 @@ function renderGraficoBarras(arrFat,arrMarg){
   });
 }
 
-// 10) Monthly billing - Half Donut
+// 10) Monthly Billing - Half Donut
 document.getElementById('tabFaturamento').addEventListener('click',()=>{
   document.getElementById('tabFaturamento').classList.add('active');
   document.getElementById('tabMargem').classList.remove('active');
@@ -979,11 +974,11 @@ document.getElementById('tabMargem').addEventListener('click',()=>{
   modoBilling='margem';
   calcularTierEExibirNoBilling();
 });
-
 function calcularTierEExibirNoBilling(arrFat,arrMarg){
   if(!arrFat||!arrMarg){
     let tmp= agruparPorMes(pedidosGlobal);
-    arrFat= tmp.arrFat; arrMarg= tmp.arrMarg;
+    arrFat= tmp.arrFat; 
+    arrMarg= tmp.arrMarg;
   }
   let valor=0;
   if(modoBilling==='faturamento'){
@@ -997,17 +992,17 @@ function calcularTierEExibirNoBilling(arrFat,arrMarg){
 function exibirTier(valor,tipo){
   let tiersFat=[
     {nome:'Bronze',min:0,max:294000,cor:'var(--bronze-color)'},
-    {nome:'Prata',min:294000,max:534000,cor:'var(--prata-color)'},
-    {nome:'Ouro', min:534000,max:768000,cor:'var(--ouro-color)'},
-    {nome:'Black',min:768000,max:1068000,cor:'var(--black-color)'}
+    {nome:'Prata', min:294000,max:534000,cor:'var(--prata-color)'},
+    {nome:'Ouro',  min:534000,max:768000,cor:'var(--ouro-color)'},
+    {nome:'Black', min:768000,max:1068000,cor:'var(--black-color)'}
   ];
   let tiersMarg=[
-    {nome:'Bronze',min:0,max:23670,cor:'var(--bronze-color)'},
-    {nome:'Prata',min:23670,max:42120,cor:'var(--prata-color)'},
-    {nome:'Ouro', min:42120,max:60570,cor:'var(--ouro-color)'},
-    {nome:'Black',min:60570,max:81570,cor:'var(--black-color)'}
+    {nome:'Bronze',min:0,max:23670, cor:'var(--bronze-color)'},
+    {nome:'Prata', min:23670,max:42120, cor:'var(--prata-color)'},
+    {nome:'Ouro',  min:42120,max:60570, cor:'var(--ouro-color)'},
+    {nome:'Black', min:60570,max:81570, cor:'var(--black-color)'}
   ];
-  let tiers=(tipo==='faturamento')?tiersFat:tiersMarg;
+  let tiers= (tipo==='faturamento')? tiersFat: tiersMarg;
   let tierAtual= tiers[0], perc=0;
   for(let i=0;i<tiers.length;i++){
     let t= tiers[i];
@@ -1027,7 +1022,7 @@ function exibirTier(valor,tipo){
 function renderBillingChart(perc, corTier){
   if(currentChartBilling) currentChartBilling.destroy();
   let ctx= document.getElementById('billingChart').getContext('2d');
-  let v1= perc, v2= 100-perc;
+  let v1=perc, v2=100-perc;
   currentChartBilling= new Chart(ctx,{
     type:'doughnut',
     data:{
@@ -1046,7 +1041,7 @@ function renderBillingChart(perc, corTier){
       rotation:-90,
       circumference:180,
       plugins:{
-        legend:{display:false}
+        legend:{ display:false }
       },
       animation:{
         animateRotate:true,
