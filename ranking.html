@@ -2,9 +2,10 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard Completo - Monthly Billing Ajustado</title>
+  <title>Dashboard - Ajuste no Monthly Billing</title>
   <!-- Chart.js para gráficos -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+
   <style>
     :root {
       --bg-page: #F5F6FA;
@@ -16,47 +17,39 @@
       --shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
     * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+      margin: 0; padding: 0; box-sizing: border-box;
       font-family: Arial, sans-serif;
     }
     body {
       background-color: var(--bg-page);
       color: var(--text-color);
-      min-height: 100vh; /* Para ocupar toda a tela */
+      min-height: 100vh;
     }
 
-    /*************************************************************
-     * Layout principal: Sidebar fixa à esquerda + Conteúdo
-     *************************************************************/
+    /* Layout principal: sidebar à esquerda + conteúdo */
     .dashboard {
       display: flex;
       min-height: 100vh;
     }
-    /* SIDEBAR fixo à esquerda */
     .sidebar {
       width: 260px;
       min-width: 260px;
       background: var(--bg-white);
       box-shadow: var(--shadow);
-      /* Conteúdo será inserido via fetch('sidebar.html') */
+      /* Conteúdo via fetch('sidebar.html') */
     }
-    /* CONTEÚDO principal */
     .main-content {
       flex: 1;
       padding: 20px;
     }
 
-    /*************************************************************
-     * Container geral do dashboard (onde já estava seu conteúdo)
-     *************************************************************/
+    /* Container interno */
     .dashboard-container {
       max-width: 1200px;
       margin: 0 auto;
     }
 
-    /* ========= Cabeçalho ========= */
+    /* Cabeçalho */
     .dashboard-header {
       display: flex;
       justify-content: space-between;
@@ -78,14 +71,13 @@
       object-fit: cover;
     }
 
-    /* ========= Linha superior (5 colunas) ========= */
+    /* Linha superior (5 colunas): 4 cards + box preto */
     .top-row {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 20px;
       margin-bottom: 30px;
     }
-    /* Cartões estatísticos */
     .stat-card {
       background-color: var(--bg-white);
       border-radius: var(--radius);
@@ -94,7 +86,6 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: flex-start;
     }
     .stat-icon {
       font-size: 28px;
@@ -109,8 +100,6 @@
       font-size: 14px;
       color: var(--text-muted);
     }
-
-    /* Box preto: Categoria de Vendedor */
     .dark-box {
       background-color: var(--bg-dark);
       color: #fff;
@@ -136,7 +125,7 @@
       opacity: 0.8;
     }
 
-    /* ========= Gráfico de Barras (Faturamento x Margem) ========= */
+    /* Gráfico de Barras (Faturamento x Margem) */
     .bar-chart-container {
       background-color: var(--bg-white);
       border-radius: var(--radius);
@@ -153,17 +142,14 @@
       height: 300px !important;
     }
 
-    /*********************************************************
-     * Linha inferior: Tabela (Customers) + Monthly billing
-     *********************************************************/
+    /* Linha inferior: Tabela (Customers) + Monthly billing */
     .bottom-row {
       display: flex;
       gap: 20px;
     }
-
-    /* TABELA CUSTOMERS (7 colunas) - à esquerda */
+    /* Tabela de 7 colunas */
     .customers-section {
-      flex: 3; /* Mais espaço */
+      flex: 3;
       background-color: var(--bg-white);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
@@ -198,9 +184,7 @@
       color: var(--text-color);
     }
 
-    /*********************************************************
-     * Monthly Billing (lado direito), estilo do Print #2
-     *********************************************************/
+    /* MONTHLY BILLING */
     .billing-section {
       flex: 2;
       background: var(--bg-white);
@@ -210,7 +194,6 @@
       display: flex;
       flex-direction: column;
     }
-    /* Cabeçalho: Título + Tabs */
     .billing-header {
       display: flex;
       justify-content: space-between;
@@ -232,18 +215,17 @@
       color: #777;
       cursor: pointer;
       padding-bottom: 5px;
-      transition: color 0.2s;
     }
     .tabs span.active {
       color: #000;
       border-bottom: 2px solid #000;
     }
 
-    /* Donut Container (inclui o canvas + texto central) */
+    /* Donut Container (ajustado) */
     .donut-container {
-      position: relative;  /* Para posicionar texto no centro */
+      position: relative;
       width: 100%;
-      height: 200px; /* altura fixa para acomodar donut e texto */
+      height: 210px; /* um pouco maior para texto não sobrepor a fatia */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -253,26 +235,26 @@
       max-width: 200px;
       height: 200px !important;
     }
-    /* Texto “Total $1450” centralizado dentro do donut */
+    /* Texto central: "Total" e valor */
     .donut-center-text {
       position: absolute;
-      top: 50%;
+      top: 48%; /* Ajuste a gosto */
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
+      pointer-events: none; /* Evita clique no texto */
     }
     .donut-center-text .total-label {
-      font-size: 14px;
+      font-size: 12px;
       color: #999;
+      margin-bottom: 2px;
     }
     .donut-center-text .total-value {
       font-size: 20px;
       font-weight: 600;
       color: #333;
-      margin-top: 4px;
     }
 
-    /* Legenda na parte de baixo */
     .donut-legend {
       display: flex;
       gap: 20px;
@@ -296,7 +278,7 @@
 
 <body>
 <div class="dashboard">
-  <!-- SIDEBAR (carregado via sidebar.html) -->
+  <!-- SIDEBAR (arquivo sidebar.html via fetch) -->
   <div class="sidebar" id="sidebar"></div>
 
   <div class="main-content">
@@ -311,6 +293,7 @@
 
       <!-- Linha superior: 4 cartões + box preto -->
       <div class="top-row">
+        <!-- Card 1 -->
         <div class="stat-card">
           <div class="stat-icon">💸</div>
           <div class="stat-info">
@@ -318,6 +301,7 @@
             <p>Comissão</p>
           </div>
         </div>
+        <!-- Card 2 -->
         <div class="stat-card">
           <div class="stat-icon">📈</div>
           <div class="stat-info">
@@ -325,6 +309,7 @@
             <p>Margem</p>
           </div>
         </div>
+        <!-- Card 3 -->
         <div class="stat-card">
           <div class="stat-icon">💰</div>
           <div class="stat-info">
@@ -332,6 +317,7 @@
             <p>Faturamento</p>
           </div>
         </div>
+        <!-- Card 4 -->
         <div class="stat-card">
           <div class="stat-icon">🔗</div>
           <div class="stat-info">
@@ -339,7 +325,7 @@
             <p>Take Rate</p>
           </div>
         </div>
-        <!-- Box preto -->
+        <!-- Box Preto -->
         <div class="dark-box">
           <h4>Categoria de Vendedor</h4>
           <p>Vendedor Premium</p>
@@ -347,15 +333,15 @@
         </div>
       </div>
 
-      <!-- Gráfico de Barras: Faturamento x Margem -->
+      <!-- Gráfico de Barras -->
       <section class="bar-chart-container">
         <h3>Faturamento x Margem</h3>
         <canvas id="faturamentoMargemChart"></canvas>
       </section>
 
-      <!-- LINHA INFERIOR: Tabela (Customers) + Monthly Billing -->
+      <!-- Linha inferior: Tabela + Monthly billing ajustado -->
       <div class="bottom-row">
-        <!-- TABELA CUSTOMERS -->
+        <!-- Tabela -->
         <div class="customers-section">
           <h3>Customers</h3>
           <table>
@@ -371,6 +357,7 @@
               </tr>
             </thead>
             <tbody>
+              <!-- Exemplo fictício -->
               <tr>
                 <td>#1001</td>
                 <td>01/02/2025</td>
@@ -411,9 +398,8 @@
           </table>
         </div>
 
-        <!-- MONTHLY BILLING: estilo Print #2 -->
+        <!-- Monthly billing (aba Issued / Received + half donut) -->
         <div class="billing-section">
-          <!-- Cabeçalho com tabs -->
           <div class="billing-header">
             <h4>Monthly billing</h4>
             <div class="tabs">
@@ -425,7 +411,6 @@
           <!-- Donut Container + texto central -->
           <div class="donut-container">
             <canvas id="billingChart"></canvas>
-            <!-- Texto no centro do donut -->
             <div class="donut-center-text">
               <div class="total-label">Total</div>
               <div class="total-value" id="billingTotal">$1450</div>
@@ -438,12 +423,12 @@
             <div><span class="legend-color" style="background:#DDD;"></span> Pending</div>
           </div>
         </div>
-      </div><!-- /bottom-row -->
+      </div>
     </div><!-- /dashboard-container -->
   </div><!-- /main-content -->
 </div><!-- /dashboard -->
 
-<!-- 1) Carrega a sidebar externa -->
+<!-- 1) Carrega sidebar.html -->
 <script>
   fetch('sidebar.html')
     .then(resp => resp.text())
@@ -453,7 +438,7 @@
     .catch(err => console.error('Erro ao carregar sidebar:', err));
 </script>
 
-<!-- 2) Gráfico de Barras: Faturamento x Margem -->
+<!-- 2) Gráfico de Barras -->
 <script>
   const ctxFM = document.getElementById('faturamentoMargemChart').getContext('2d');
   new Chart(ctxFM, {
@@ -483,31 +468,29 @@
       scales: {
         y: {
           beginAtZero: true,
-          ticks: { color: '#666' },
-          grid: { color: '#eee' }
+          ticks: { color:'#666' },
+          grid: { color:'#eee' }
         },
         x: {
-          ticks: { color: '#666' },
-          grid: { display: false }
+          ticks: { color:'#666' },
+          grid: { display:false }
         }
       },
       plugins: {
-        legend: { labels: { color: '#333' } }
+        legend: { labels: { color:'#333' } }
       }
     }
   });
 </script>
 
-<!-- 3) Donut com TABS: Issued / Received, estilo Print #2 -->
+<!-- 3) Donut com TABS: Issued / Received -->
 <script>
   const ctxBilling = document.getElementById('billingChart').getContext('2d');
 
-  // Dados fictícios de "Issued" e "Received"
-  const dataIssued = [1450, 500];   // [Charged, Pending]
-  const dataReceived = [900, 300];  // [Charged, Pending]
-
+  const dataIssued = [1450, 500];
+  const dataReceived = [900, 300];
   let currentChart;
-  let totalValue = 1450; // Valor inicial (Issued)
+  let totalValue = 1450; // Valor inicial
 
   function renderBillingChart(dataArray) {
     if (currentChart) currentChart.destroy();
@@ -524,17 +507,15 @@
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        cutout: '60%',        // "furo" central
-        rotation: -90,        // começa de cima
-        circumference: 180,   // 180 => meia-lua
-        plugins: {
-          legend: { display: false }
-        }
+        cutout: '70%',   // Mais "furo" p/ texto central
+        rotation: -90,
+        circumference: 180,
+        plugins: { legend: { display: false } }
       }
     });
   }
 
-  // Render inicial (Issued)
+  // Render inicial: Issued
   renderBillingChart(dataIssued);
   document.getElementById('billingTotal').textContent = '$' + totalValue;
 
