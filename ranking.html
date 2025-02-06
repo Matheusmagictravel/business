@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard - Calendário Customizado</title>
+  <title>Dashboard - Calendar + Layout Refinements</title>
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 
@@ -17,6 +17,12 @@
       --radius: 12px;
       --shadow: 0 4px 10px rgba(0,0,0,0.06);
       --transition: 0.2s ease;
+
+      /* Cores Bronze/Prata/Ouro/Black um pouco mais suaves */
+      --bronze-color: #c78d53;
+      --prata-color: #C0C0C0;
+      --ouro-color:  #FFD700;
+      --black-color: #000000;
     }
     * {
       margin: 0; 
@@ -30,7 +36,9 @@
       min-height: 100vh;
     }
 
-    /* Layout principal */
+    /***************************************
+     * Layout principal: sidebar + conteúdo
+     ***************************************/
     .dashboard {
       display: flex;
       min-height: 100vh;
@@ -40,8 +48,8 @@
       min-width: 260px;
       background: var(--bg-white);
       box-shadow: var(--shadow);
-      /* Remove o padding da sidebar */
-      padding: 0; 
+      /* Remove padding */
+      padding: 0;
     }
     .main-content {
       flex: 1;
@@ -52,12 +60,14 @@
       margin: 0 auto;
     }
 
-    /* Cabeçalho + Filtros */
+    /***************************************
+     * Cabeçalho + Filtros
+     ***************************************/
     .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .dashboard-header h1 {
       font-size: 24px;
@@ -65,14 +75,14 @@
       letter-spacing: 0.5px;
     }
     .filters {
-      display: flex;
+      display: flex; 
       gap: 12px;
       align-items: center;
     }
     .date-range-btn {
       background: #FFF;
       border: 1px solid #CCC;
-      padding: 5px 12px;
+      padding: 6px 14px;
       border-radius: 8px;
       cursor: pointer;
       transition: background var(--transition);
@@ -81,7 +91,7 @@
       background: #F0F0F0;
     }
     .filters select {
-      padding: 5px 8px;
+      padding: 6px 10px;
       border-radius: 8px;
       border: 1px solid #CCC;
       font-size: 14px;
@@ -104,7 +114,21 @@
       background: #005bb5;
     }
 
-    /* Linha superior (5 colunas) */
+    /* Linha para exibir “Datas selecionadas: ...” */
+    .selected-dates-label {
+      background: var(--bg-white);
+      padding: 8px 12px;
+      border-radius: 8px;
+      display: inline-block;
+      font-size: 14px;
+      color: #444;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    /***************************************
+     * Linha superior (5 colunas)
+     ***************************************/
     .top-row {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -153,7 +177,9 @@
       font-weight: 600;
     }
 
-    /* Gráfico de Barras */
+    /***************************************
+     * Gráfico de Barras
+     ***************************************/
     .bar-chart-container {
       background: var(--bg-white);
       border-radius: var(--radius);
@@ -175,7 +201,9 @@
       height: 300px !important;
     }
 
-    /* Parte inferior: Pedidos + Monthly billing */
+    /***************************************
+     * Parte inferior: Pedidos + Monthly billing
+     ***************************************/
     .bottom-row {
       display: flex;
       gap: 20px;
@@ -247,7 +275,7 @@
       color: #444;
     }
 
-    /* Monthly billing (half-donut) */
+    /* Monthly Billing (half donut) */
     .billing-section {
       flex: 2;
       background: var(--bg-white);
@@ -303,20 +331,22 @@
     }
     .donut-center-text {
       position: absolute;
-      top: 50%;
+      top: 50%; 
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
+      pointer-events: none;
     }
     .donut-center-text .total-label {
-      font-size: 12px;
+      font-size: 14px; /* um pouco maior */
       color: #999;
+      font-weight: 500;
+      margin-bottom: 2px;
     }
     .donut-center-text .total-value {
       font-size: 20px;
       font-weight: 600;
       color: #333;
-      margin-top: 2px;
     }
     .donut-legend {
       display: flex;
@@ -338,7 +368,7 @@
     }
 
     /*********************************************************
-     * Calendário customizado (Print #2)
+     * Calendário (Print #2) 
      *********************************************************/
     .date-range-overlay {
       position: fixed;
@@ -355,7 +385,7 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow);
       padding: 20px;
-      min-width: 300px;
+      min-width: 360px;
     }
     .calendar-header {
       display: flex;
@@ -365,16 +395,29 @@
       margin-bottom: 8px;
     }
     .calendar-header select {
-      padding: 3px 6px;
-      border-radius: 4px;
+      padding: 4px 8px;
+      border-radius: 6px;
       border: 1px solid #ccc;
       font-size: 14px;
+    }
+    .calendar-header button {
+      background: var(--primary-color);
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background var(--transition);
+    }
+    .calendar-header button:hover {
+      background: #005bb5;
     }
     .calendar-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
+      gap: 6px;
       text-align: center;
+      margin: 10px 0;
     }
     .calendar-grid .day-header {
       font-size: 12px;
@@ -383,14 +426,15 @@
       padding-bottom: 2px;
     }
     .calendar-day {
-      width: 32px; height: 32px;
+      width: 36px; height: 36px;
       display: flex; 
       align-items: center; 
       justify-content: center;
       cursor: pointer;
       font-size: 14px;
       border-radius: 6px;
-      transition: background 0.2s;
+      transition: background 0.2s, color 0.2s;
+      user-select: none;
     }
     .calendar-day:hover {
       background: #EEE;
@@ -398,6 +442,13 @@
     .calendar-day.selected {
       background: var(--primary-color);
       color: #FFF;
+    }
+    .selected-range {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #444;
+      text-align: center;
+      font-weight: 500;
     }
     .calendar-action-buttons {
       display: flex;
@@ -417,22 +468,17 @@
     .calendar-action-buttons button:hover {
       background: #005bb5;
     }
-    .selected-range {
-      margin-top: 8px;
-      font-size: 12px;
-      color: #444;
-      text-align: center;
-    }
   </style>
 </head>
 
 <body>
 <div class="dashboard">
-  <!-- SIDEBAR (retirado o padding) -->
+  <!-- SIDEBAR (Sem padding) -->
   <div class="sidebar" id="sidebar"></div>
 
   <div class="main-content">
     <div class="dashboard-container">
+
       <!-- Cabeçalho + Filtros -->
       <header class="dashboard-header">
         <h1>Dashboard</h1>
@@ -445,7 +491,12 @@
         </div>
       </header>
 
-      <!-- Linha superior: 5 colunas -->
+      <!-- Exibir datas selecionadas -->
+      <div class="selected-dates-label" id="selectedDatesText">
+        Datas selecionadas: --/--/---- - --/--/----
+      </div>
+
+      <!-- Linha superior (5 colunas) -->
       <div class="top-row">
         <div class="stat-card">
           <div class="stat-icon">💸</div>
@@ -488,7 +539,7 @@
         <canvas id="faturamentoMargemChart"></canvas>
       </section>
 
-      <!-- Linha inferior: Pedidos + Monthly billing -->
+      <!-- Parte inferior: Pedidos + Monthly billing -->
       <div class="bottom-row">
         <div class="pedidos-section">
           <h3>Pedidos</h3>
@@ -504,9 +555,7 @@
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody id="tableBodyPedidos">
-              <!-- Paginado -->
-            </tbody>
+            <tbody id="tableBodyPedidos"></tbody>
           </table>
           <div class="pagination">
             <button id="btnAnterior">Anterior</button>
@@ -515,7 +564,7 @@
           </div>
         </div>
 
-        <!-- Monthly Billing -->
+        <!-- Monthly Billing (Half-Donut) -->
         <div class="billing-section">
           <div class="billing-header">
             <h4>Monthly billing</h4>
@@ -540,18 +589,16 @@
   </div><!-- /main-content -->
 </div><!-- /dashboard -->
 
-<!-- Overlay: Calendário Customizado -->
+<!-- Overlay do calendário custom -->
 <div class="date-range-overlay" id="calendarOverlay">
-  <div class="calendar-range-content" id="calendarContent">
-    <!-- Mês e Ano no topo -->
+  <div class="calendar-range-content" style="min-width:360px;" id="calendarContent">
     <div class="calendar-header">
       <select id="selectMes"></select>
       <select id="selectAno"></select>
       <button id="btnBackCalendar">Back</button>
     </div>
-    <!-- Grade de Dias -->
     <div class="calendar-grid" id="calendarGrid">
-      <!-- Cabeçalhos dos dias da semana -->
+      <!-- Títulos dos dias -->
       <div class="day-header">Dom</div>
       <div class="day-header">Seg</div>
       <div class="day-header">Ter</div>
@@ -559,11 +606,9 @@
       <div class="day-header">Qui</div>
       <div class="day-header">Sex</div>
       <div class="day-header">Sáb</div>
-      <!-- Aqui entram os dias do mês via JS -->
+      <!-- Dias gerados via JS -->
     </div>
-    <div class="selected-range" id="labelRange">
-      <!-- Ex.: 04/02/2025 - 20/02/2025 -->
-    </div>
+    <div class="selected-range" id="labelRange"></div>
     <div class="calendar-action-buttons">
       <button id="btnCancelRange">Cancelar</button>
       <button id="btnApplyRange">Apply</button>
@@ -572,19 +617,15 @@
 </div>
 
 <script>
-// ===============
-// 1) SIDEBAR
-// ===============
+// 1) Carregar a sidebar
 fetch('sidebar.html')
   .then(resp=>resp.text())
   .then(html=>{
     document.getElementById('sidebar').innerHTML=html;
   })
-  .catch(err=>console.error('sidebar load:', err));
+  .catch(err=>console.error('sidebar load error:',err));
 
-// ===============
-// 2) Variáveis Globais
-// ===============
+// 2) Vars
 let chartFM;
 let currentChartBilling;
 let modoBilling='faturamento';
@@ -592,233 +633,201 @@ let pedidosGlobal=[];
 let currentPage=1;
 const pageSize=5;
 
-// Armazenar dataInicial e dataFinal (YYYY-MM-DD)
 let dataInicial='', dataFinal='';
+let selectedStart=null, selectedEnd=null;
 
 // Calendário
-let calendarOverlay= document.getElementById('calendarOverlay');
-let selectMes= document.getElementById('selectMes');
-let selectAno= document.getElementById('selectAno');
-let calendarGrid= document.getElementById('calendarGrid');
-let labelRange= document.getElementById('labelRange');
-
-let selectedStart=null; // {year,month,day}
-let selectedEnd=null;   // {year,month,day}
+const calendarOverlay= document.getElementById('calendarOverlay');
+const selectMes= document.getElementById('selectMes');
+const selectAno= document.getElementById('selectAno');
+const calendarGrid= document.getElementById('calendarGrid');
+const labelRange= document.getElementById('labelRange');
+let now= new Date();
+let currentMonth= now.getMonth();
+let currentYear= now.getFullYear();
 
 // Ao carregar
-window.addEventListener('load', async ()=>{
+window.addEventListener('load', async()=>{
   await carregarListaEfetivadoPor();
-  initCalendar(); // monta selects de ano/mes
-  renderCalendar(); // exibe mes atual
+  initCalendar();
+  renderCalendar();
 });
 
-// ===============
-// 3) Carregar distinct_efetivado_por
-// ===============
+// 3) Carregar distinct
 async function carregarListaEfetivadoPor(){
   try{
     let url='https://www.magictraveltur.com/api_pedidos.php?distinct_efetivado_por=1';
     let resp= await fetch(url);
-    if(!resp.ok) throw new Error('HTTP '+resp.status);
+    if(!resp.ok) throw new Error('HTTP '+ resp.status);
     let arr= await resp.json();
     let sel= document.getElementById('efetivadoPorSelect');
-    sel.innerHTML= '<option value="">Todos</option>';
+    sel.innerHTML='<option value="">Todos</option>';
     arr.forEach(nome=>{
       let opt= document.createElement('option');
-      opt.value= nome;
-      opt.textContent= nome;
+      opt.value=nome; opt.textContent=nome;
       sel.appendChild(opt);
     });
-  }catch(e){
-    console.log('Erro distinct_efetivado_por:', e);
+  } catch(e){
+    console.log('erro distinct_efetivado_por:', e);
   }
 }
 
-// ===============
-// 4) Calendário Custom
-// ===============
-const btnDateRange= document.getElementById('btnDateRange');
-btnDateRange.addEventListener('click', ()=>{
+// 4) Botão Selecionar Data => calendarOverlay
+document.getElementById('btnDateRange').addEventListener('click',()=>{
   calendarOverlay.style.display='flex';
 });
-
-document.getElementById('btnCancelRange').addEventListener('click', ()=>{
+document.getElementById('btnCancelRange').addEventListener('click',()=>{
   calendarOverlay.style.display='none';
 });
-
-document.getElementById('btnApplyRange').addEventListener('click', ()=>{
-  if(!selectedStart || !selectedEnd){
+document.getElementById('btnApplyRange').addEventListener('click',()=>{
+  if(!selectedStart||!selectedEnd){
     alert('Selecione Data Inicial e Final.');
     return;
   }
-  // Montar dataInicial e dataFinal em YYYY-MM-DD
+  // montar dataInicial < dataFinal
   let di= formatYMD(selectedStart.year,selectedStart.month,selectedStart.day);
   let df= formatYMD(selectedEnd.year,selectedEnd.month,selectedEnd.day);
   if(di>df){
-    // invertidos? trocar
-    let tmp=di; di=df; df=tmp;
+    [di,df]=[df,di];
   }
-  dataInicial=di;
-  dataFinal=df;
+  dataInicial= di;
+  dataFinal= df;
   calendarOverlay.style.display='none';
-  console.log('Range aplicado:',dataInicial,'-',dataFinal);
+  // Atualizar label
+  document.getElementById('selectedDatesText').textContent=
+    'Datas selecionadas: ' + fmtDMY(di) + ' - ' + fmtDMY(df);
+});
+document.getElementById('btnBackCalendar').addEventListener('click',()=>{
+  alert('Esta função "Back" é personalizável. Por exemplo, poderia mudar pro mês anterior etc.');
 });
 
-document.getElementById('btnBackCalendar').addEventListener('click', ()=>{
-  // Exemplo: se quiser voltar para "mês anterior" sem trocar selects, remover se preferir
-  // Ou simplesmente 'Back' volta p/ tela anterior no design?
-  // Aqui vou deixar só um "alert" para demonstrar
-  alert('Navegação "Back" customizável. Pode ocultar ou reprogramar.');
-});
-
-// Monta selectMes e selectAno
+// 5) Iniciar e render calendar
 function initCalendar(){
-  // Mês: Jan..Dez
+  // Montar selects
   let meses=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  meses.forEach((m,i)=>{
+  for(let i=0;i<meses.length;i++){
     let opt= document.createElement('option');
-    opt.value= i; 
-    opt.textContent= m;
+    opt.value= i; opt.textContent= meses[i];
     selectMes.appendChild(opt);
-  });
-  // Anos: 2023..2030 (ou range maior se quiser)
-  for(let a=2023;a<=2030;a++){
+  }
+  for(let y=2023; y<=2030; y++){
     let opt= document.createElement('option');
-    opt.value=a; 
-    opt.textContent=a;
+    opt.value=y; opt.textContent=y;
     selectAno.appendChild(opt);
   }
-  // Selecionar mes/ano atual
-  let now= new Date();
-  selectMes.value= now.getMonth();
-  selectAno.value= now.getFullYear();
+  selectMes.value= currentMonth;
+  selectAno.value= currentYear;
 
-  selectMes.addEventListener('change',renderCalendar);
-  selectAno.addEventListener('change',renderCalendar);
+  selectMes.addEventListener('change',()=>{
+    currentMonth= parseInt(selectMes.value);
+    renderCalendar();
+  });
+  selectAno.addEventListener('change',()=>{
+    currentYear= parseInt(selectAno.value);
+    renderCalendar();
+  });
 }
 
-// Renderiza grid
 function renderCalendar(){
-  // Apaga dias
-  // Mantém cabeçalhos "Dom,Seg,Ter..."
+  // Apagar dias, manter 7 day-header
   while(calendarGrid.children.length>7){
     calendarGrid.removeChild(calendarGrid.lastChild);
   }
-  let mes= parseInt(selectMes.value);
-  let ano= parseInt(selectAno.value);
+  let first= new Date(currentYear, currentMonth,1);
+  let startWeekDay= first.getDay();
+  let daysInMonth= new Date(currentYear, currentMonth+1,0).getDate();
 
-  // 1o dia do mes
-  let first= new Date(ano, mes,1);
-  let startWeekDay= first.getDay(); // 0=dom
-  let daysInMonth= new Date(ano,mes+1,0).getDate(); // quantos dias no mes
-
-  // Preenche "dias" em grid
-  for(let i=0;i< startWeekDay;i++){
-    // espaços em branco
+  for(let i=0;i<startWeekDay;i++){
     let blank= document.createElement('div');
-    blank.textContent= '';
     calendarGrid.appendChild(blank);
   }
-
   for(let d=1; d<= daysInMonth; d++){
     let div= document.createElement('div');
     div.classList.add('calendar-day');
     div.textContent= d;
-    // Se faz parte do range, marcamos
-    if(isDaySelected(ano, mes, d)){
+    if(isDaySelected(currentYear,currentMonth,d)){
       div.classList.add('selected');
     }
-    div.addEventListener('click', ()=>{
-      dayClicked(ano, mes, d);
+    div.addEventListener('click',()=>{
+      dayClicked(currentYear,currentMonth,d);
     });
     calendarGrid.appendChild(div);
   }
   updateLabelRange();
 }
 
-// Clicar num dia
-function dayClicked(ano,mes,day){
-  // Se selectedStart não existe, define
+function dayClicked(y,m,d){
   if(!selectedStart){
-    selectedStart={year:ano,month:mes,day};
+    selectedStart={year:y,month:m,day:d};
     selectedEnd=null;
+  } else if(!selectedEnd){
+    selectedEnd={year:y,month:m,day:d};
   } else {
-    // Se selectedStart existe e selectedEnd não
-    if(!selectedEnd){
-      selectedEnd={year:ano,month:mes,day};
-    } else {
-      // Se ambos existem, redefinir Start= clique e End=null
-      selectedStart={year:ano,month:mes,day};
-      selectedEnd=null;
-    }
+    // reset
+    selectedStart={year:y,month:m,day:d};
+    selectedEnd=null;
   }
   renderCalendar();
 }
 
-// Checa se day (ano,mes,day) está no range
-function isDaySelected(ano,mes,day){
+function isDaySelected(y,m,d){
   if(!selectedStart) return false;
-  let cur= {y:ano,m:mes,d:day};
-  let valCur= formatYMD(ano,mes,day);
-  let valStart= selectedStart ? formatYMD(selectedStart.year,selectedStart.month,selectedStart.day) : '';
+  let cur= formatYMD(y,m,d);
+  let st= formatYMD(selectedStart.year,selectedStart.month,selectedStart.day);
   if(!selectedEnd){
-    // Se só start existe, check se (ano,mes,day) = start
-    return valCur=== valStart;
+    // se só tem start
+    return (cur=== st);
   }
-  let valEnd= formatYMD(selectedEnd.year,selectedEnd.month,selectedEnd.day);
-  if(valStart> valEnd){
-    // swap
-    let tmp= valStart; valStart= valEnd; valEnd= tmp;
+  let en= formatYMD(selectedEnd.year,selectedEnd.month,selectedEnd.day);
+  if(st> en){
+    [st,en]=[en,st];
   }
-  return (valCur>= valStart && valCur<= valEnd);
+  return (cur>= st && cur<= en);
 }
 
 function updateLabelRange(){
-  let text='';
-  if(selectedStart){
-    let s=fmtDMY(selectedStart.year,selectedStart.month,selectedStart.day);
-    text+= s;
+  if(!selectedStart){
+    labelRange.textContent= '';
+    return;
   }
-  if(selectedEnd){
-    let e=fmtDMY(selectedEnd.year,selectedEnd.month,selectedEnd.day);
-    text+= ' - '+ e;
+  let st= formatYMD(selectedStart.year,selectedStart.month,selectedStart.day);
+  let str= fmtDMY(st);
+  if(!selectedEnd){
+    labelRange.textContent= str;
+  } else {
+    let en= formatYMD(selectedEnd.year,selectedEnd.month,selectedEnd.day);
+    if(st>en){
+      [st,en]=[en,st];
+    }
+    labelRange.textContent= fmtDMY(st) + ' - ' + fmtDMY(en);
   }
-  labelRange.textContent= text;
 }
-
-// formata YYYY-MM-DD
 function formatYMD(y,m,d){
   let mm= (m+1).toString().padStart(2,'0');
   let dd= d.toString().padStart(2,'0');
-  return y+'-'+ mm +'-'+ dd;
+  return y+'-'+mm+'-'+dd;
 }
-// formata DD/MM/YYYY
-function fmtDMY(y,m,d){
-  let mm= (m+1).toString().padStart(2,'0');
-  let dd= d.toString().padStart(2,'0');
-  return dd+'/'+ mm +'/'+ y;
+function fmtDMY(ymd){
+  // ymd = "YYYY-MM-DD"
+  let [y,mo,da]= ymd.split('-');
+  return da+'/'+ mo +'/'+ y;
 }
 
-// ===============
-// 5) Filtrar => carregaDados
-// ===============
-document.getElementById('btnFiltrar').addEventListener('click', ()=>{
+// 6) Filtrar => carregaDados
+document.getElementById('btnFiltrar').addEventListener('click',()=>{
   carregarDados();
 });
 
-// ===============
-// 6) carregarDados
-// ===============
 async function carregarDados(){
   let ef= document.getElementById('efetivadoPorSelect').value||'';
   if(!dataInicial && !dataFinal && !ef){
     alert('Selecione um período e/ou Efetivado Por.');
     return;
   }
-  let url= `https://www.magictraveltur.com/api_pedidos.php?start_date=${dataInicial}&end_date=${dataFinal}&efetivado_por=${ef}`;
+  let url=`https://www.magictraveltur.com/api_pedidos.php?start_date=${dataInicial}&end_date=${dataFinal}&efetivado_por=${ef}`;
   try{
     let resp= await fetch(url);
-    if(!resp.ok) throw new Error('HTTP '+ resp.status);
+    if(!resp.ok) throw new Error('HTTP '+resp.status);
     let arr= await resp.json();
     if(!Array.isArray(arr)){
       console.warn('Resposta não é array:',arr);
@@ -826,21 +835,19 @@ async function carregarDados(){
     }
     pedidosGlobal= arr;
     currentPage=1;
-    exibirPagina(pedidosGlobal, currentPage);
+    exibirPagina(pedidosGlobal,currentPage);
     somarCartoes(pedidosGlobal);
 
-    let {arrFat, arrMarg}= agruparPorMes(pedidosGlobal);
+    let {arrFat,arrMarg}= agruparPorMes(pedidosGlobal);
     renderGraficoBarras(arrFat, arrMarg);
     calcularTierEExibirNoBilling(arrFat, arrMarg);
   } catch(e){
-    console.error('Erro fetch:',e);
+    console.error('erro fetch:',e);
     alert('Erro: '+ e.message);
   }
 }
 
-// ===============
 // 7) Paginação
-// ===============
 document.getElementById('btnAnterior').addEventListener('click',()=>{
   if(currentPage>1){
     currentPage--;
@@ -851,12 +858,12 @@ document.getElementById('btnProximo').addEventListener('click',()=>{
   let totalPages= Math.ceil(pedidosGlobal.length/pageSize);
   if(currentPage< totalPages){
     currentPage++;
-    exibirPagina(pedidosGlobal, currentPage);
+    exibirPagina(pedidosGlobal,currentPage);
   }
 });
-function exibirPagina(pedidos, page){
-  currentPage= page;
-  let start= (page-1)*pageSize;
+function exibirPagina(pedidos,page){
+  currentPage=page;
+  let start=(page-1)*pageSize;
   let end= page*pageSize;
   let slice= pedidos.slice(start,end);
 
@@ -880,9 +887,7 @@ function exibirPagina(pedidos, page){
     `Página ${currentPage} de ${totalPages}`;
 }
 
-// ===============
-// 8) SomarCartoes
-// ===============
+// 8) Somar Cartoes
 function somarCartoes(pedidos){
   let sf=0, sc=0, sm=0;
   pedidos.forEach(p=>{
@@ -891,24 +896,22 @@ function somarCartoes(pedidos){
     sm+= Number(p.valor_comissao)||0;
   });
   document.getElementById('cardFaturamento').textContent=
-    'R$ ' + sf.toLocaleString('pt-BR');
+    'R$ '+ sf.toLocaleString('pt-BR');
   document.getElementById('cardComissao').textContent=
-    'R$ ' + sc.toLocaleString('pt-BR');
+    'R$ '+ sc.toLocaleString('pt-BR');
   document.getElementById('cardMargem').textContent=
-    sm.toLocaleString('pt-BR')+' (R$)';
-  let take= (sf>0)? (sc/sf)*100 :0;
+    sm.toLocaleString('pt-BR') + ' (R$)';
+  let take= (sf>0)? (sc/sf)*100:0;
   document.getElementById('cardTakeRate').textContent= take.toFixed(2)+'%';
   let cat='Vendedor Bronze';
   if(take>30) cat='Vendedor Diamante';
   document.getElementById('vendedorCategoria').textContent= cat;
 }
 
-// ===============
-// 9) Agrupar por mes + Gráfico
-// ===============
+// 9) agruparPorMes + Grafico
 function agruparPorMes(pedidos){
   let arrFat= new Array(12).fill(0);
-  let arrMarg= new Array(12).fill(0);
+  let arrMarg=new Array(12).fill(0);
   let mapMes={
     'janeiro':0,'fevereiro':1,'março':2,'abril':3,'maio':4,'junho':5,
     'julho':6,'agosto':7,'setembro':8,'outubro':9,'novembro':10,'dezembro':11,
@@ -922,9 +925,9 @@ function agruparPorMes(pedidos){
     arrFat[idx]+= Number(p.valor_venda)||0;
     arrMarg[idx]+= Number(p.valor_comissao)||0;
   });
-  return {arrFat, arrMarg};
+  return {arrFat,arrMarg};
 }
-function renderGraficoBarras(arrFat, arrMarg){
+function renderGraficoBarras(arrFat,arrMarg){
   if(chartFM) chartFM.destroy();
   let ctx= document.getElementById('faturamentoMargemChart').getContext('2d');
   chartFM= new Chart(ctx,{
@@ -959,9 +962,7 @@ function renderGraficoBarras(arrFat, arrMarg){
   });
 }
 
-// ===============
-// 10) Monthly billing
-// ===============
+// 10) monthly billing
 document.getElementById('tabFaturamento').addEventListener('click',()=>{
   document.getElementById('tabFaturamento').classList.add('active');
   document.getElementById('tabMargem').classList.remove('active');
@@ -974,59 +975,58 @@ document.getElementById('tabMargem').addEventListener('click',()=>{
   modoBilling='margem';
   calcularTierEExibirNoBilling();
 });
-function calcularTierEExibirNoBilling(arrFat, arrMarg){
+function calcularTierEExibirNoBilling(arrFat,arrMarg){
   if(!arrFat||!arrMarg){
-    let {arrFat:f, arrMarg:m}= agruparPorMes(pedidosGlobal);
-    arrFat=f; arrMarg=m;
+    let tmp= agruparPorMes(pedidosGlobal);
+    arrFat= tmp.arrFat; arrMarg= tmp.arrMarg;
   }
   let valor=0;
   if(modoBilling==='faturamento'){
     valor= arrFat.reduce((a,b)=>a+b,0);
-    calcularTierEExibir(valor,'faturamento');
+    exibirTier(valor,'faturamento');
   } else {
     valor= arrMarg.reduce((a,b)=>a+b,0);
-    calcularTierEExibir(valor,'margem');
+    exibirTier(valor,'margem');
   }
 }
-function calcularTierEExibir(valor,tipo){
+function exibirTier(valor,tipo){
   let tiersFat=[
-    {nome:'Bronze', min:0, max:294000, cor:'#CD7F32'},
-    {nome:'Prata',  min:294000, max:534000, cor:'#C0C0C0'},
-    {nome:'Ouro',   min:534000, max:768000, cor:'#FFD700'},
-    {nome:'Black',  min:768000, max:1068000, cor:'#000'}
+    {nome:'Bronze', min:0, max:294000, cor:'var(--bronze-color)'},
+    {nome:'Prata',  min:294000, max:534000, cor:'var(--prata-color)'},
+    {nome:'Ouro',   min:534000, max:768000, cor:'var(--ouro-color)'},
+    {nome:'Black',  min:768000, max:1068000, cor:'var(--black-color)'}
   ];
   let tiersMarg=[
-    {nome:'Bronze', min:0, max:23670, cor:'#CD7F32'},
-    {nome:'Prata',  min:23670, max:42120, cor:'#C0C0C0'},
-    {nome:'Ouro',   min:42120, max:60570, cor:'#FFD700'},
-    {nome:'Black',  min:60570, max:81570, cor:'#000'}
+    {nome:'Bronze', min:0, max:23670,  cor:'var(--bronze-color)'},
+    {nome:'Prata',  min:23670, max:42120, cor:'var(--prata-color)'},
+    {nome:'Ouro',   min:42120, max:60570, cor:'var(--ouro-color)'},
+    {nome:'Black',  min:60570, max:81570, cor:'var(--black-color)'}
   ];
-  let tiers= (tipo==='faturamento')? tiersFat: tiersMarg;
+  let tiers= (tipo==='faturamento')? tiersFat:tiersMarg;
   let tierAtual= tiers[0], perc=0;
   for(let i=0;i<tiers.length;i++){
     let t= tiers[i];
-    if(valor>=t.min && valor<t.max){
-      tierAtual= t;
+    if(valor>=t.min && valor< t.max){
+      tierAtual=t;
       perc=((valor- t.min)/(t.max- t.min))*100;
       break;
     } else if(valor>= tiers[tiers.length-1].max){
       tierAtual= tiers[tiers.length-1];
-      perc=100;
-      break;
+      perc=100; break;
     }
   }
   renderBillingChart(perc,tierAtual.cor);
   document.getElementById('billingTotal').textContent= perc.toFixed(1)+'%';
   document.getElementById('legendColor').style.backgroundColor= tierAtual.cor;
 }
-function renderBillingChart(perc,corTier){
+function renderBillingChart(perc, corTier){
   if(currentChartBilling) currentChartBilling.destroy();
   let ctx= document.getElementById('billingChart').getContext('2d');
-  let v1= perc, v2= 100-perc;
+  let v1=perc, v2=100-perc;
   currentChartBilling= new Chart(ctx,{
     type:'doughnut',
     data:{
-      labels:['Tier','Restante'],
+      labels:['Nível','Restante'],
       datasets:[{
         data:[v1,v2],
         backgroundColor:[corTier,'#EEE'],
@@ -1039,7 +1039,9 @@ function renderBillingChart(perc,corTier){
       cutout:'75%',
       rotation:-90,
       circumference:180,
-      plugins:{legend:{display:false}},
+      plugins:{
+        legend:{ display:false }
+      },
       animation:{
         animateRotate:true,
         animateScale:true,
