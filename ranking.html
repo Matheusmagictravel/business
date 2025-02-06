@@ -2,13 +2,11 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard Completo - Final Revisado</title>
-  <!-- Chart.js para gráficos -->
+  <title>Dashboard Integrado - Filtros e API</title>
+  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-
   <style>
     :root {
-      /* Paleta e variáveis básicas */
       --bg-page: #F5F6FA;
       --bg-white: #FFFFFF;
       --bg-dark: #1C1C1C;
@@ -17,7 +15,6 @@
       --radius: 10px;
       --shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
-    /* Reset */
     * {
       margin: 0; 
       padding: 0; 
@@ -27,12 +24,10 @@
     body {
       background-color: var(--bg-page);
       color: var(--text-color);
-      min-height: 100vh; /* ocupa tela inteira */
+      min-height: 100vh;
     }
 
-    /*************************************************************
-     * Layout principal: Sidebar fixa à esquerda + Conteúdo
-     *************************************************************/
+    /* Layout principal: sidebar + conteúdo */
     .dashboard {
       display: flex;
       min-height: 100vh;
@@ -42,48 +37,47 @@
       min-width: 260px;
       background: var(--bg-white);
       box-shadow: var(--shadow);
-      /* Conteúdo virá de sidebar.html via fetch() */
     }
     .main-content {
       flex: 1;
       padding: 20px;
     }
-
-    /*************************************************************
-     * Container interno do dashboard
-     *************************************************************/
     .dashboard-container {
       max-width: 1200px;
       margin: 0 auto;
     }
 
-    /*************************************************************
-     * Cabeçalho
-     *************************************************************/
+    /* Cabeçalho + Filtros */
     .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
-    .dashboard-header h1 {
-      font-size: 24px;
-    }
-    .header-tools {
+    .filters {
       display: flex;
-      gap: 15px;
-      align-items: center;
+      gap: 10px;
     }
-    .header-tools img {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      object-fit: cover;
+    .filters label {
+      font-size: 14px;
+      color: var(--text-color);
+    }
+    .filters select, .filters input[type="date"] {
+      padding: 5px 8px;
+      border-radius: 4px;
+      border: 1px solid #CCC;
+      font-size: 14px;
+    }
+    .filters button {
+      padding: 5px 10px;
+      background: #000;
+      color: #FFF;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
     }
 
-    /*************************************************************
-     * Linha superior (5 colunas): 4 cartões + box preto
-     *************************************************************/
+    /* Linha superior: 4 cartões + box preto */
     .top-row {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -107,7 +101,6 @@
     .stat-info h2 {
       font-size: 20px;
       margin-bottom: 5px;
-      color: var(--text-color);
     }
     .stat-info p {
       font-size: 14px;
@@ -123,24 +116,8 @@
       flex-direction: column;
       justify-content: center;
     }
-    .dark-box h4 {
-      font-size: 16px;
-      margin-bottom: 10px;
-      font-weight: 500;
-    }
-    .dark-box p {
-      font-size: 14px;
-      margin-bottom: 5px;
-      font-weight: 600;
-    }
-    .dark-box span {
-      font-size: 12px;
-      opacity: 0.8;
-    }
 
-    /*************************************************************
-     * Gráfico de Barras (Faturamento x Margem)
-     *************************************************************/
+    /* Gráfico de Barras */
     .bar-chart-container {
       background-color: var(--bg-white);
       border-radius: var(--radius);
@@ -157,15 +134,11 @@
       height: 300px !important;
     }
 
-    /*************************************************************
-     * Linha inferior: Tabela (Customers) + Monthly billing
-     *************************************************************/
+    /* Linha inferior: Tabela + Monthly Billing */
     .bottom-row {
       display: flex;
       gap: 20px;
     }
-
-    /* Tabela (7 colunas) à esquerda */
     .customers-section {
       flex: 3;
       background-color: var(--bg-white);
@@ -199,10 +172,9 @@
     .customers-section tbody td {
       padding: 8px;
       font-size: 14px;
-      color: var(--text-color);
     }
 
-    /* Monthly Billing (half-donut) à direita */
+    /* Monthly Billing (half-donut) */
     .billing-section {
       flex: 2;
       background: var(--bg-white);
@@ -222,7 +194,6 @@
     .billing-header h4 {
       font-size: 16px;
       font-weight: 600;
-      margin: 0;
     }
     .tabs {
       display: flex;
@@ -238,12 +209,10 @@
       color: #000;
       border-bottom: 2px solid #000;
     }
-
-    /* Donut container + texto central */
     .donut-container {
       position: relative;
       width: 100%;
-      height: 220px; 
+      height: 220px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -255,7 +224,7 @@
     }
     .donut-center-text {
       position: absolute;
-      top: 50%; 
+      top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       text-align: center;
@@ -271,8 +240,6 @@
       font-weight: 600;
       color: #333;
     }
-
-    /* Legenda no rodapé do card */
     .donut-legend {
       display: flex;
       gap: 20px;
@@ -296,59 +263,70 @@
 
 <body>
 <div class="dashboard">
-  <!-- SIDEBAR: Carregado via fetch('sidebar.html') -->
+  <!-- SIDEBAR externa -->
   <div class="sidebar" id="sidebar"></div>
 
+  <!-- CONTEÚDO -->
   <div class="main-content">
     <div class="dashboard-container">
       
-      <!-- Cabeçalho -->
+      <!-- Cabeçalho + Filtros -->
       <header class="dashboard-header">
         <h1>Dashboard</h1>
-        <div class="header-tools">
-          <img src="https://via.placeholder.com/40" alt="Avatar">
+        <div class="filters">
+          <label>Data Inicial:
+            <input type="date" id="dataInicial">
+          </label>
+          <label>Data Final:
+            <input type="date" id="dataFinal">
+          </label>
+          <label>Agente:
+            <select id="agenteSelect">
+              <option value="">Todos</option>
+              <option value="João">João</option>
+              <option value="Maria">Maria</option>
+              <option value="Luis">Luis</option>
+            </select>
+          </label>
+          <button id="btnFiltrar">Filtrar</button>
         </div>
       </header>
 
       <!-- Linha superior: 4 cartões + box preto -->
       <div class="top-row">
-        <!-- Card 1 -->
+        <!-- 4 cartões + box preto -->
         <div class="stat-card">
           <div class="stat-icon">💸</div>
           <div class="stat-info">
-            <h2>R$ 3.200</h2>
+            <h2 id="cardComissao">R$ 0,00</h2>
             <p>Comissão</p>
           </div>
         </div>
-        <!-- Card 2 -->
         <div class="stat-card">
           <div class="stat-icon">📈</div>
           <div class="stat-info">
-            <h2>25%</h2>
+            <h2 id="cardMargem">0%</h2>
             <p>Margem</p>
           </div>
         </div>
-        <!-- Card 3 -->
         <div class="stat-card">
           <div class="stat-icon">💰</div>
           <div class="stat-info">
-            <h2>R$ 18.500</h2>
+            <h2 id="cardFaturamento">R$ 0,00</h2>
             <p>Faturamento</p>
           </div>
         </div>
-        <!-- Card 4 -->
         <div class="stat-card">
           <div class="stat-icon">🔗</div>
           <div class="stat-info">
-            <h2>3.5%</h2>
+            <h2 id="cardTakeRate">0%</h2>
             <p>Take Rate</p>
           </div>
         </div>
-        <!-- Box preto -->
         <div class="dark-box">
           <h4>Categoria de Vendedor</h4>
-          <p>Vendedor Premium</p>
-          <span>Você possui 27 dias para atualização de informações</span>
+          <p id="vendedorCategoria">Vendedor ???</p>
+          <span>Você possui X dias para atualização</span>
         </div>
       </div>
 
@@ -358,9 +336,9 @@
         <canvas id="faturamentoMargemChart"></canvas>
       </section>
 
-      <!-- Linha inferior: Tabela (Customers) + Monthly billing -->
+      <!-- Linha inferior: Tabela + Monthly billing -->
       <div class="bottom-row">
-        <!-- TABELA (7 colunas) -->
+        <!-- Tabela -->
         <div class="customers-section">
           <h3>Customers</h3>
           <table>
@@ -375,67 +353,30 @@
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody>
-              <!-- Exemplo -->
-              <tr>
-                <td>#1001</td>
-                <td>01/02/2025</td>
-                <td>Arquetipo Influence</td>
-                <td>R$ 4.500,00</td>
-                <td>Cartão</td>
-                <td>R$ 900,00</td>
-                <td>Pago</td>
-              </tr>
-              <tr>
-                <td>#1002</td>
-                <td>30/01/2025</td>
-                <td>Everis</td>
-                <td>R$ 2.000,00</td>
-                <td>Boleto</td>
-                <td>R$ 400,00</td>
-                <td>Pendente</td>
-              </tr>
-              <tr>
-                <td>#1003</td>
-                <td>28/01/2025</td>
-                <td>Cecotec</td>
-                <td>R$ 950,00</td>
-                <td>Cartão</td>
-                <td>R$ 190,00</td>
-                <td>Pago</td>
-              </tr>
-              <tr>
-                <td>#1004</td>
-                <td>27/01/2025</td>
-                <td>Luatop Technics</td>
-                <td>R$ 3.100,00</td>
-                <td>PIX</td>
-                <td>R$ 620,00</td>
-                <td>Pago</td>
-              </tr>
+            <tbody id="tableBodyPedidos">
+              <!-- Linhas inseridas via JS -->
             </tbody>
           </table>
         </div>
 
-        <!-- MONTHLY BILLING (Half-Donut) -->
+        <!-- Monthly Billing (Faturamento / Margem) -->
         <div class="billing-section">
           <div class="billing-header">
             <h4>Monthly billing</h4>
             <div class="tabs">
-              <span id="tabIssued" class="active">Issued</span>
-              <span id="tabReceived">Received</span>
+              <span id="tabFaturamento" class="active">Faturamento</span>
+              <span id="tabMargem">Margem</span>
             </div>
           </div>
           <div class="donut-container">
             <canvas id="billingChart"></canvas>
             <div class="donut-center-text">
-              <div class="total-label">Total</div>
-              <div class="total-value" id="billingTotal">$1450</div>
+              <div class="total-label">Percentual</div>
+              <div class="total-value" id="billingTotal">0%</div>
             </div>
           </div>
           <div class="donut-legend">
-            <div><span class="legend-color" style="background:#000;"></span> Charged</div>
-            <div><span class="legend-color" style="background:#DDD;"></span> Pending</div>
+            <div><span class="legend-color" id="legendColor"></span> Nível</div>
           </div>
         </div>
       </div><!-- /bottom-row -->
@@ -443,125 +384,289 @@
   </div><!-- /main-content -->
 </div><!-- /dashboard -->
 
-<!-- 1) Carrega sidebar.html -->
 <script>
-  fetch('sidebar.html')
-    .then(resp => resp.text())
-    .then(html => {
-      document.getElementById('sidebar').innerHTML = html;
-    })
-    .catch(err => console.error('Erro ao carregar sidebar:', err));
-</script>
+// SIDEBAR
+fetch('sidebar.html')
+  .then(resp => resp.text())
+  .then(html => {
+    document.getElementById('sidebar').innerHTML = html;
+  })
+  .catch(err => console.error('Erro ao carregar sidebar:', err));
 
-<!-- 2) Gráfico de Barras (Faturamento x Margem) -->
-<script>
-  const ctxFM = document.getElementById('faturamentoMargemChart')?.getContext('2d');
-  if (ctxFM) {
-    new Chart(ctxFM, {
-      type: 'bar',
-      data: {
-        labels: ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'],
-        datasets: [
-          {
-            label: 'Faturamento (R$)',
-            data: [10000,12000,8000,14000,18000,20000,25000,17000,22000,24000,26000,30000],
-            backgroundColor: '#000',
-            borderRadius: 4,
-            barPercentage: 0.6
-          },
-          {
-            label: 'Margem (%)',
-            data: [20,22,18,25,27,30,32,28,26,24,28,35],
-            backgroundColor: '#BBB',
-            borderRadius: 4,
-            barPercentage: 0.6
-          }
-        ]
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: { color:'#666' },
-            grid: { color:'#eee' }
-          },
-          x: {
-            ticks: { color:'#666' },
-            grid: { display:false }
-          }
-        },
-        plugins: {
-          legend: { labels: { color:'#333' } }
-        }
-      }
-    });
-  }
-</script>
+/**********************************
+ * Variáveis para gráficos e tabela
+ **********************************/
+let chartFM;        // grafico de barras (Faturamento x Margem)
+let chartBilling;   // half-donut do Monthly billing
+let modoBilling = 'faturamento'; // "faturamento" ou "margem"
 
-<!-- 3) Gráfico Half-Donut com tabs Issued / Received -->
-<script>
-  const ctxBilling = document.getElementById('billingChart')?.getContext('2d');
-  if (ctxBilling) {
-    const dataIssued = [1450, 500];   // [Charged, Pending]
-    const dataReceived = [900, 300];  // [Charged, Pending]
-    let currentChart;
-    let totalValue = 1450; // Valor inicial = Issued
+// Função para buscar e preencher tudo
+async function carregarDados() {
+  const dataInicial = document.getElementById('dataInicial').value || '';
+  const dataFinal   = document.getElementById('dataFinal').value || '';
+  const agente      = document.getElementById('agenteSelect').value || '';
 
-    function renderBillingChart(dataArray) {
-      if (currentChart) currentChart.destroy();
-      currentChart = new Chart(ctxBilling, {
-        type: 'doughnut',
-        data: {
-          labels: ['Charged','Pending'],
-          datasets: [{
-            data: dataArray,
-            backgroundColor: ['#000','#DDD'],
-            hoverOffset: 4
-          }]
-        },
-        options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          cutout: '75%',       // donut mais fino
-          rotation: -90,       // começa de cima
-          circumference: 180,  // meia-lua
-          plugins: {
-            legend: { display: false }
-          },
-          animation: {
-            animateRotate: true,
-            animateScale: true,
-            duration: 700
-          }
-        }
-      });
+  try {
+    // Monta a URL para api_pedidos.php
+    const url = `api_pedidos.php?data_inicial=${dataInicial}&data_final=${dataFinal}&agente=${agente}`;
+    const resp = await fetch(url);
+    const json = await resp.json();
+
+    /**
+     * Supondo que o JSON venha no formato:
+     * {
+     *   "pedidos": [
+     *     {
+     *       "id": "1001",
+     *       "data_venda": "2025-02-01",
+     *       "nome_comprador": "Arquetipo Influence",
+     *       "valor_venda": 4500.00,
+     *       "meio_pgto": "Cartão",
+     *       "comissao_do_agente": 900.00,
+     *       "status": "Pago"
+     *     },
+     *     ... etc ...
+     *   ],
+     *   "soma_faturamento_por_mes": [ ... array com 12 valores ... ],
+     *   "soma_margem_por_mes": [ ... array com 12 valores ... ],
+     *   "soma_faturamento_total": 180000,
+     *   "soma_margem_total": 30000,
+     *   "comissao_do_agente_total": 15000,
+     *   ... etc ...
+     * }
+     */
+
+    // 1) Preencher Tabela "Customers"
+    const pedidos = json.pedidos || [];
+    preencherTabela(pedidos);
+
+    // 2) Atualizar Cartões (Comissão, Margem, Faturamento, Take Rate)
+    atualizarCartoes(json);
+
+    // 3) Atualizar Gráfico de Barras (Faturamento x Margem) - supõe arrays mensais
+    const arrFat = json.soma_faturamento_por_mes || [0,0,0,0,0,0,0,0,0,0,0,0];
+    const arrMarg = json.soma_margem_por_mes || [0,0,0,0,0,0,0,0,0,0,0,0];
+    renderGraficoBarras(arrFat, arrMarg);
+
+    // 4) Monthly Billing (Faturamento x Margem) => exibir % e cor do tier
+    // Iniciamos com o tab "faturamento"
+    if (modoBilling === 'faturamento') {
+      calcularMonthlyBilling(json.soma_faturamento_total || 0, 'faturamento');
+    } else {
+      calcularMonthlyBilling(json.soma_margem_total || 0, 'margem');
     }
-
-    // Render inicial (Issued)
-    renderBillingChart(dataIssued);
-    document.getElementById('billingTotal').textContent = '$' + totalValue;
-
-    // Tabs
-    const tabIssued = document.getElementById('tabIssued');
-    const tabReceived = document.getElementById('tabReceived');
-
-    tabIssued?.addEventListener('click', () => {
-      tabIssued.classList.add('active');
-      tabReceived.classList.remove('active');
-      renderBillingChart(dataIssued);
-      totalValue = 1450;
-      document.getElementById('billingTotal').textContent = '$' + totalValue;
-    });
-    tabReceived?.addEventListener('click', () => {
-      tabReceived.classList.add('active');
-      tabIssued.classList.remove('active');
-      renderBillingChart(dataReceived);
-      totalValue = 900;
-      document.getElementById('billingTotal').textContent = '$' + totalValue;
-    });
+  } catch(e) {
+    console.error(e);
+    alert('Erro ao carregar dados da API.');
   }
+}
+
+function preencherTabela(pedidos) {
+  const tbody = document.getElementById('tableBodyPedidos');
+  tbody.innerHTML = '';
+  pedidos.forEach(p => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>#${p.id}</td>
+      <td>${p.data_venda}</td>
+      <td>${p.nome_comprador}</td>
+      <td>R$ ${p.valor_venda?.toLocaleString('pt-BR')}</td>
+      <td>${p.meio_pgto}</td>
+      <td>R$ ${p.comissao_do_agente?.toLocaleString('pt-BR')}</td>
+      <td>${p.status}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function atualizarCartoes(json) {
+  // Exemplo: comissao_do_agente_total, soma_margem_total, soma_faturamento_total ...
+  let comissaoAgente = json.comissao_do_agente_total || 0;
+  let faturamento = json.soma_faturamento_total || 0;
+  let margem = json.soma_margem_total || 0;
+
+  document.getElementById('cardComissao').textContent = 'R$ ' + comissaoAgente.toLocaleString('pt-BR');
+  document.getElementById('cardMargem').textContent = margem.toFixed(2) + '%';
+  document.getElementById('cardFaturamento').textContent = 'R$ ' + faturamento.toLocaleString('pt-BR');
+
+  // Supondo que take rate = (comissaoAgente / faturamento) * 100 ...
+  let take = (faturamento > 0) ? (comissaoAgente / faturamento) * 100 : 0;
+  document.getElementById('cardTakeRate').textContent = take.toFixed(2) + '%';
+
+  // Categoria do Vendedor - exemplo fictício
+  document.getElementById('vendedorCategoria').textContent = (take > 30) ? 'Vendedor Diamante' : 'Vendedor Standard';
+}
+
+function renderGraficoBarras(arrFat, arrMarg) {
+  // Destroi anterior se existir
+  if (chartFM) chartFM.destroy();
+
+  const ctxFM = document.getElementById('faturamentoMargemChart').getContext('2d');
+  chartFM = new Chart(ctxFM, {
+    type: 'bar',
+    data: {
+      labels: ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'],
+      datasets: [
+        {
+          label: 'Faturamento (R$)',
+          data: arrFat,
+          backgroundColor: '#000',
+          borderRadius: 4,
+          barPercentage: 0.6
+        },
+        {
+          label: 'Margem (R$)',
+          data: arrMarg,
+          backgroundColor: '#BBB',
+          borderRadius: 4,
+          barPercentage: 0.6
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true },
+        x: { grid: { display:false } }
+      },
+      plugins: {
+        legend: { labels: { color:'#333' } }
+      }
+    }
+  });
+}
+
+
+/***************************************
+ * Lógica Monthly Billing (Half Donut)
+ * Faturamento vs Margem => Tiers
+ ***************************************/
+function calcularMonthlyBilling(valor, tipo) {
+  /**
+   * Tiers Faturamento:
+   * Bronze: 0..294000
+   * Prata:  294000..534000
+   * Ouro:   534000..768000
+   * Black:  768000..1068000
+   *
+   * Tiers Margem:
+   * Bronze: 0..23670
+   * Prata:  23670..42120
+   * Ouro:   42120..60570
+   * Black:  60570..81570
+   */
+  let tiersFat = [
+    {nome:'Bronze', min:0, max:294000, cor:'#CD7F32'}, // cor bronze
+    {nome:'Prata',  min:294000, max:534000, cor:'#C0C0C0'},
+    {nome:'Ouro',   min:534000, max:768000, cor:'#FFD700'}, // gold
+    {nome:'Black',  min:768000, max:1068000, cor:'#000000'}
+  ];
+  let tiersMarg = [
+    {nome:'Bronze', min:0, max:23670,  cor:'#CD7F32'},
+    {nome:'Prata',  min:23670, max:42120,  cor:'#C0C0C0'},
+    {nome:'Ouro',   min:42120, max:60570,  cor:'#FFD700'},
+    {nome:'Black',  min:60570, max:81570,  cor:'#000000'}
+  ];
+
+  let tiers = (tipo === 'faturamento') ? tiersFat : tiersMarg;
+
+  // 1) Achar em qual tier o "valor" cai
+  let tierAtual = tiers[0];
+  let perc = 0; // 0..100
+  for (let i=0; i<tiers.length; i++){
+    let t = tiers[i];
+    if (valor >= t.min && valor < t.max) {
+      tierAtual = t;
+      // Ex: se valor=147000 e tier bronze=0..294000 => perc=147000/294000*100=50%
+      perc = ((valor - t.min) / (t.max - t.min)) * 100;
+      break;
+    } else if (valor >= tiers[tiers.length-1].max) {
+      // Já passou do black
+      tierAtual = tiers[tiers.length-1];
+      perc = 100;
+      break;
+    }
+  }
+
+  // 2) Renderizar half donut com "perc" e "100-perc"
+  renderBillingHalfDonut(perc, tierAtual.cor);
+
+  // 3) Exibir "billingTotal" como perc + '%', e colorir legendColor
+  document.getElementById('billingTotal').textContent = perc.toFixed(1) + '%';
+  document.getElementById('legendColor').style.background = tierAtual.cor;
+}
+
+/** 
+ * Gera o half-donut: "perc" vs "restante", e "corTier" vs "#EEE"
+ */
+let currentChartBilling;
+function renderBillingHalfDonut(perc, corTier) {
+  if (currentChartBilling) currentChartBilling.destroy();
+
+  let ctx = document.getElementById('billingChart').getContext('2d');
+  // Se perc=50 => [50,50], se perc=80 => [80,20]
+  let valor1 = perc; 
+  let valor2 = 100 - perc;
+  
+  currentChartBilling = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Tier', 'Faltante'],
+      datasets: [{
+        data: [valor1, valor2],
+        backgroundColor: [corTier, '#EEE'],
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '75%',
+      rotation: -90,
+      circumference: 180,
+      plugins: { legend: { display: false } },
+      animation: {
+        animateRotate: true,
+        animateScale: true,
+        duration: 700
+      }
+    }
+  });
+}
+
+
+/******************************************************
+ * EVENTOS: Tabs "Faturamento" x "Margem", Botão Filtrar
+ ******************************************************/
+document.getElementById('tabFaturamento').addEventListener('click', ()=>{
+  document.getElementById('tabFaturamento').classList.add('active');
+  document.getElementById('tabMargem').classList.remove('active');
+  modoBilling = 'faturamento';
+  // Precisamos re-carregar e re-calcular
+  // Supor que no JSON havia "soma_faturamento_total"
+  // Simplesmente chamamos "carregarDados()" p/ refazer
+  carregarDados();
+});
+
+document.getElementById('tabMargem').addEventListener('click', ()=>{
+  document.getElementById('tabMargem').classList.add('active');
+  document.getElementById('tabFaturamento').classList.remove('active');
+  modoBilling = 'margem';
+  carregarDados();
+});
+
+document.getElementById('btnFiltrar').addEventListener('click', ()=>{
+  carregarDados();
+});
+
+/** 
+ * Carregar dados ao abrir a página
+ */
+window.addEventListener('load', ()=>{
+  carregarDados();
+});
 </script>
+
 </body>
 </html>
