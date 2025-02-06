@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Dashboard Integrado - Finalizado por (Dinâmico)</title>
+  <title>Dashboard Completo - Somando no Front</title>
   <!-- Chart.js via CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 
@@ -16,6 +16,7 @@
       --radius: 10px;
       --shadow: 0 2px 5px rgba(0,0,0,0.1);
     }
+    /* Reset básico */
     * {
       margin: 0; 
       padding: 0; 
@@ -28,6 +29,7 @@
       min-height: 100vh;
     }
 
+    /* Layout principal: sidebar + conteúdo */
     .dashboard {
       display: flex;
       min-height: 100vh;
@@ -81,7 +83,7 @@
       cursor: pointer;
     }
 
-    /* Linha superior (5 colunas) */
+    /* Linha superior (5 colunas): 4 cartões + box preto */
     .top-row {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
@@ -121,6 +123,20 @@
       flex-direction: column;
       justify-content: center;
     }
+    .dark-box h4 {
+      font-size: 16px;
+      margin-bottom: 10px;
+      font-weight: 500;
+    }
+    .dark-box p {
+      font-size: 14px;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+    .dark-box span {
+      font-size: 12px;
+      opacity: 0.8;
+    }
 
     /* Gráfico de Barras */
     .bar-chart-container {
@@ -139,7 +155,7 @@
       height: 300px !important;
     }
 
-    /* Tabela + Monthly Billing (linha inferior) */
+    /* Linha inferior: Tabela + Monthly Billing */
     .bottom-row {
       display: flex;
       gap: 20px;
@@ -200,6 +216,7 @@
     .billing-header h4 {
       font-size: 16px;
       font-weight: 600;
+      margin: 0;
     }
     .tabs {
       display: flex;
@@ -215,6 +232,7 @@
       color: #000;
       border-bottom: 2px solid #000;
     }
+
     .donut-container {
       position: relative;
       width: 100%;
@@ -296,11 +314,11 @@
 
       <!-- Linha superior: 4 cartões + box preto -->
       <div class="top-row">
-        <!-- Comissao -->
+        <!-- Comissão -->
         <div class="stat-card">
           <div class="stat-icon">💸</div>
           <div class="stat-info">
-            <h2 id="cardComissao">R$ 0,00</h2>
+            <h2 id="cardComissao">R$ 0</h2>
             <p>Comissão</p>
           </div>
         </div>
@@ -316,7 +334,7 @@
         <div class="stat-card">
           <div class="stat-icon">💰</div>
           <div class="stat-info">
-            <h2 id="cardFaturamento">R$ 0,00</h2>
+            <h2 id="cardFaturamento">R$ 0</h2>
             <p>Faturamento</p>
           </div>
         </div>
@@ -328,15 +346,15 @@
             <p>Take Rate</p>
           </div>
         </div>
-        <!-- Box preto -->
+        <!-- Box Preto -->
         <div class="dark-box">
           <h4>Categoria de Vendedor</h4>
-          <p id="vendedorCategoria">Vendedor ???</p>
+          <p id="vendedorCategoria">Vendedor Bronze</p>
           <span>Exemplo de texto</span>
         </div>
       </div>
 
-      <!-- Gráfico de Barras -->
+      <!-- Gráfico de Barras: Faturamento x Margem -->
       <section class="bar-chart-container">
         <h3>Faturamento x Margem</h3>
         <canvas id="faturamentoMargemChart"></canvas>
@@ -344,7 +362,7 @@
 
       <!-- Linha inferior: Tabela + Monthly billing -->
       <div class="bottom-row">
-        <!-- Tabela (Customers) -->
+        <!-- Tabela de pedidos -->
         <div class="customers-section">
           <h3>Customers</h3>
           <table>
@@ -360,12 +378,12 @@
               </tr>
             </thead>
             <tbody id="tableBodyPedidos">
-              <!-- Linhas inseridas dinamicamente -->
+              <!-- preenchido dinamicamente -->
             </tbody>
           </table>
         </div>
 
-        <!-- Monthly Billing (half-donut) -->
+        <!-- Monthly Billing (Half-donut) -->
         <div class="billing-section">
           <div class="billing-header">
             <h4>Monthly billing</h4>
@@ -399,18 +417,26 @@ fetch('sidebar.html')
   })
   .catch(err => console.error('Erro ao carregar sidebar:', err));
 
-// 2) Ao carregar a página, primeiro carrega a lista de "finalizado_por"
+// Variáveis globais
+let chartFM;             // Gráfico de Barras (Faturamento x Margem)
+let currentChartBilling; // Half-donut
+let modoBilling = 'faturamento'; // aba selecionada
+
+// Ao carregar a página
 window.addEventListener('load', async ()=>{
-  await carregarListaFinalizadoPor(); 
-  // Depois que preencher as opções, carrega os dados iniciais
+  // Carrega a lista de finalizado_por (opcional, se tiver distinct)
+  await carregarListaFinalizadoPor();
+
+  // Carrega dados (inicial)
   await carregarDados();
 });
 
+// Botão Filtrar
 document.getElementById('btnFiltrar').addEventListener('click', ()=>{
   carregarDados();
 });
 
-// Tabs
+// Tabs do "Monthly billing"
 document.getElementById('tabFaturamento').addEventListener('click', ()=>{
   document.getElementById('tabFaturamento').classList.add('active');
   document.getElementById('tabMargem').classList.remove('active');
@@ -424,189 +450,239 @@ document.getElementById('tabMargem').addEventListener('click', ()=>{
   carregarDados();
 });
 
-/*******************************************
- * FUNÇÃO para pegar distinct finalizado_por
- *******************************************/
+/***************************************************************
+ * Carregar lista de finalizado_por (distinct) - se a API tiver:
+ * ?distinct_finalizado_por=1
+ ***************************************************************/
 async function carregarListaFinalizadoPor(){
   try {
-    // Supõe que a API aceite ?distinct_finalizado_por=1 e retorne algo como:
-    // [ "João", "Maria", "Luis", ... ]
     let url = 'https://www.magictraveltur.com/api_pedidos.php?distinct_finalizado_por=1';
     let resp = await fetch(url);
+    if(!resp.ok) throw new Error('Erro HTTP '+resp.status);
     let arr = await resp.json();
-    // Exemplo: arr = ["João","Maria","Luis"]
+    // Ex.: arr = ["Vanessa Barreto", "Matheus Alvarenga", "Breno Severiano", ...]
 
-    // Preenche o select
-    let select = document.getElementById('finalizadoPorSelect');
-    select.innerHTML = '<option value="">Todos</option>'; // valor vazio => sem filtro
-    arr.forEach(nome=>{
+    let sel = document.getElementById('finalizadoPorSelect');
+    sel.innerHTML = '<option value="">Todos</option>';
+    arr.forEach(nome =>{
       let opt = document.createElement('option');
       opt.value = nome;
       opt.textContent = nome;
-      select.appendChild(opt);
+      sel.appendChild(opt);
     });
   } catch(e){
-    console.error('Erro ao carregar finalizado_por:', e);
+    console.log('Falha ao carregar distinct finalizado_por:', e);
   }
 }
 
 /***************************************
- * PRINCIPAL: carregarDados()
+ * Carregar dados da API
  ***************************************/
-let chartFM;             // Gráfico de Barras
-let currentChartBilling; // Half-donut
-let modoBilling = 'faturamento'; // aba selecionada
-
 async function carregarDados(){
   const dataInicial = document.getElementById('dataInicial').value || '';
   const dataFinal   = document.getElementById('dataFinal').value   || '';
   const finalizadoPor= document.getElementById('finalizadoPorSelect').value || '';
 
-  // Ajusta para start_date / end_date
+  // Monta a URL
+  // Observação: na sua API, os parâmetros são "start_date" e "end_date"
+  // e o campo é "finalizado_por" (ou "efetivado_por"? ver se coincide)
   const url = `https://www.magictraveltur.com/api_pedidos.php?start_date=${dataInicial}&end_date=${dataFinal}&finalizado_por=${finalizadoPor}`;
-
+  
   try {
-    const resp = await fetch(url);
-    const json = await resp.json();
+    let resp = await fetch(url);
+    if(!resp.ok) throw new Error('Erro HTTP '+resp.status);
+    let pedidos = await resp.json();
 
-    // Preencher tabela
-    preencherTabela(json.pedidos || []);
-
-    // Atualizar cartões
-    atualizarCartoes(json);
-
-    // Gráfico de Barras
-    const arrFat  = json.soma_faturamento_por_mes || [0,0,0,0,0,0,0,0,0,0,0,0];
-    const arrMarg = json.soma_margem_por_mes      || [0,0,0,0,0,0,0,0,0,0,0,0];
+    // Caso a API retorne um array de pedidos
+    // Precisamos somar valor_venda e comissao_do_agente e agrupar por mês
+    preencherTabela(pedidos);
+    somarCartoes(pedidos);
+    let { arrFat, arrMarg } = agruparPorMes(pedidos);
     renderGraficoBarras(arrFat, arrMarg);
 
     // Monthly billing
-    if (modoBilling==='faturamento'){
-      calcularTierEExibir(json.soma_faturamento_total || 0, 'faturamento');
+    if(modoBilling === 'faturamento'){
+      let totalFaturamento = arrFat.reduce((acc, val)=>acc+val, 0);
+      calcularTierEExibir(totalFaturamento, 'faturamento');
     } else {
-      calcularTierEExibir(json.soma_margem_total || 0, 'margem');
+      // Aqui, definimos "Margem" como soma de ... (exemplo: valor_comissao)
+      // Se você quiser usar outro campo, troque!
+      let totalMargem = arrMarg.reduce((acc, val)=>acc+val, 0);
+      calcularTierEExibir(totalMargem, 'margem');
     }
-  } catch(e) {
-    console.error(e);
-    alert('Erro ao carregar dados da API.');
+  } catch(e){
+    console.error('Falha ao carregar dados:', e);
+    alert('Falha ao carregar dados: '+ e.message);
   }
 }
 
-// Tabela
+/***************************************
+ * 1) Preencher Tabela
+ ***************************************/
 function preencherTabela(pedidos){
-  const tbody = document.getElementById('tableBodyPedidos');
-  tbody.innerHTML='';
-  pedidos.forEach(p=>{
+  let tbody = document.getElementById('tableBodyPedidos');
+  tbody.innerHTML = '';
+  pedidos.forEach( p => {
+    // Ex.: p.id, p.data_venda, p.nome_comprador, p.valor_venda...
     let tr = document.createElement('tr');
-    tr.innerHTML=`
+    tr.innerHTML = `
       <td>#${p.id}</td>
-      <td>${p.data_venda}</td>
-      <td>${p.nome_comprador}</td>
-      <td>R$ ${Number(p.valor_venda||0).toLocaleString('pt-BR')}</td>
-      <td>${p.meio_pgto}</td>
-      <td>R$ ${Number(p.comissao_do_agente||0).toLocaleString('pt-BR')}</td>
-      <td>${p.status}</td>
+      <td>${p.data_venda||''}</td>
+      <td>${p.nome_comprador||''}</td>
+      <td>R$ ${(Number(p.valor_venda)||0).toLocaleString('pt-BR')}</td>
+      <td>${p.meio_pgto||''}</td>
+      <td>R$ ${(Number(p.comissao_do_agente)||0).toLocaleString('pt-BR')}</td>
+      <td>${p.status||''}</td>
     `;
     tbody.appendChild(tr);
   });
 }
 
-// Cartões
-function atualizarCartoes(json){
-  let comissaoAgente= json.comissao_do_agente_total || 0;
-  let faturamento   = json.soma_faturamento_total    || 0;
-  let margem        = json.soma_margem_total         || 0;
+/***************************************
+ * 2) Somar para os Cartões
+ ***************************************/
+function somarCartoes(pedidos){
+  let somaFaturamento = 0;
+  let somaComissao    = 0;
+  let somaMargem      = 0; // se "margem" for outro campo, ex: "valor_comissao"
+  
+  pedidos.forEach(p => {
+    somaFaturamento += Number(p.valor_venda) || 0;
+    somaComissao    += Number(p.comissao_do_agente) || 0;
+    // Se preferir "valor_comissao" como "Margem", troque a linha abaixo:
+    somaMargem      += Number(p.valor_comissao) || 0;
+  });
+
+  // Preenche os cartões
+  document.getElementById('cardFaturamento').textContent = 
+    'R$ ' + somaFaturamento.toLocaleString('pt-BR');
 
   document.getElementById('cardComissao').textContent = 
-    'R$ ' + Number(comissaoAgente).toLocaleString('pt-BR');
+    'R$ ' + somaComissao.toLocaleString('pt-BR');
+
+  // Aqui, supomos "Margem" é somaMargem e exibimos em R$ ou %
+  // Exemplo: exibir em R$:
+  // document.getElementById('cardMargem').textContent = 'R$ ' + somaMargem.toLocaleString('pt-BR');
+  // Se quiser exibir como %, ajuste a forma de cálculo
   document.getElementById('cardMargem').textContent = 
-    Number(margem).toLocaleString('pt-BR') + '%';
-  document.getElementById('cardFaturamento').textContent = 
-    'R$ ' + Number(faturamento).toLocaleString('pt-BR');
+    somaMargem.toLocaleString('pt-BR') + ' (R$)';
 
-  // Take Rate
-  let take = (faturamento>0) ? (comissaoAgente/faturamento)*100 :0;
-  document.getElementById('cardTakeRate').textContent = 
-    take.toFixed(2)+'%';
+  // Take Rate => comissao / faturamento * 100
+  let take = (somaFaturamento>0) ? (somaComissao/somaFaturamento)*100 : 0;
+  document.getElementById('cardTakeRate').textContent = take.toFixed(2) + '%';
 
-  // Categoria (exemplo)
-  let categoria= 'Vendedor Bronze';
-  if(take>30) categoria='Vendedor Diamante';
-  document.getElementById('vendedorCategoria').textContent= categoria;
+  // Exemplo de categoria do vendedor
+  let categoria = 'Vendedor Bronze';
+  if(take > 30) categoria = 'Vendedor Diamante';
+  document.getElementById('vendedorCategoria').textContent = categoria;
 }
 
-// Gráfico Barras
+/***************************************
+ * 3) Agrupar por mês (para gráfico de barras)
+ ***************************************/
+function agruparPorMes(pedidos){
+  // Precisamos de 12 posições (Jan..Dez)
+  let arrFat = new Array(12).fill(0);
+  let arrMarg= new Array(12).fill(0);
+
+  // Mapeamento das strings
+  const mapMes = {
+    'janeiro':0,'fevereiro':1,'março':2,'abril':3,'maio':4,'junho':5,
+    'julho':6,'agosto':7,'setembro':8,'outubro':9,'novembro':10,'dezembro':11,
+    'Janeiro':0,'Fevereiro':1,'Março':2,'Abril':3,'Maio':4,'Junho':5,
+    'Julho':6,'Agosto':7,'Setembro':8,'Outubro':9,'Novembro':10,'Dezembro':11
+  };
+
+  pedidos.forEach( p => {
+    let mesStr = (p.mes_venda || '').trim(); // "Janeiro","Fevereiro" etc.
+    let idx = mapMes[mesStr];
+    if(idx===undefined) return; // se não bateu, ignora
+    // soma no array
+    arrFat[idx]  += Number(p.valor_venda) || 0;
+    // se "Margem" for p.valor_comissao, use:
+    arrMarg[idx] += Number(p.valor_comissao) || 0; 
+    // se preferir p.comissao_do_agente, troque a linha acima
+  });
+
+  return { arrFat, arrMarg };
+}
+
+/***************************************
+ * 4) Renderizar Gráfico de Barras
+ ***************************************/
 function renderGraficoBarras(arrFat, arrMarg){
   if(chartFM) chartFM.destroy();
-  let ctx = document.getElementById('faturamentoMargemChart').getContext('2d');
-  chartFM= new Chart(ctx, {
-    type:'bar',
-    data:{
-      labels:['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'],
-      datasets:[
+  const ctx = document.getElementById('faturamentoMargemChart').getContext('2d');
+  chartFM = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'],
+      datasets: [
         {
-          label:'Faturamento (R$)',
+          label: 'Faturamento (R$)',
           data: arrFat,
-          backgroundColor:'#000',
-          borderRadius:4,
-          barPercentage:0.6
+          backgroundColor: '#000',
+          borderRadius: 4,
+          barPercentage: 0.6
         },
         {
-          label:'Margem (R$)',
+          label: 'Margem (R$)',
           data: arrMarg,
-          backgroundColor:'#BBB',
-          borderRadius:4,
-          barPercentage:0.6
+          backgroundColor: '#BBB',
+          borderRadius: 4,
+          barPercentage: 0.6
         }
       ]
     },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      scales:{
-        y:{ beginAtZero:true },
-        x:{ grid:{ display:false } }
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        y: { beginAtZero: true },
+        x: { grid: { display: false } }
       }
     }
   });
 }
 
-/**************************************
- * Monthly Billing (Faturamento ou Margem => Tiers => %)
- **************************************/
+/***************************************
+ * 5) Monthly Billing (Half Donut)
+ ***************************************/
 function calcularTierEExibir(valor, tipo){
-  // Tiers de exemplo
+  // Tiers Faturamento
   let tiersFat = [
     {nome:'Bronze', min:0, max:294000, cor:'#CD7F32'},
     {nome:'Prata',  min:294000, max:534000, cor:'#C0C0C0'},
     {nome:'Ouro',   min:534000, max:768000, cor:'#FFD700'},
     {nome:'Black',  min:768000, max:1068000, cor:'#000000'}
   ];
+  // Tiers Margem
   let tiersMarg = [
     {nome:'Bronze', min:0, max:23670, cor:'#CD7F32'},
     {nome:'Prata',  min:23670, max:42120, cor:'#C0C0C0'},
     {nome:'Ouro',   min:42120, max:60570, cor:'#FFD700'},
     {nome:'Black',  min:60570, max:81570, cor:'#000000'}
   ];
-  let tiers= (tipo==='faturamento') ? tiersFat : tiersMarg;
 
-  let tierAtual= tiers[0];
+  let tiers = (tipo==='faturamento') ? tiersFat : tiersMarg;
   let perc=0;
+  let tierAtual = tiers[0];
+
   for(let i=0;i<tiers.length;i++){
     let t= tiers[i];
-    if(valor>=t.min && valor<t.max){
-      tierAtual=t;
-      perc= ((valor - t.min)/(t.max - t.min))*100;
+    if(valor >= t.min && valor < t.max){
+      tierAtual = t;
+      perc = ((valor - t.min)/(t.max - t.min))*100;
       break;
-    } else if(valor>= tiers[tiers.length-1].max){
+    } else if(valor >= tiers[tiers.length-1].max){
       tierAtual= tiers[tiers.length-1];
-      perc=100;
+      perc= 100;
       break;
     }
   }
   renderBillingChart(perc, tierAtual.cor);
   document.getElementById('billingTotal').textContent= perc.toFixed(1)+'%';
-  document.getElementById('legendColor').style.background= tierAtual.cor;
+  document.getElementById('legendColor').style.backgroundColor= tierAtual.cor;
 }
 
 function renderBillingChart(perc, corTier){
@@ -614,6 +690,7 @@ function renderBillingChart(perc, corTier){
   let ctx= document.getElementById('billingChart').getContext('2d');
   let v1= perc;
   let v2= 100-perc;
+
   currentChartBilling= new Chart(ctx, {
     type:'doughnut',
     data:{
@@ -630,7 +707,7 @@ function renderBillingChart(perc, corTier){
       cutout:'75%',
       rotation:-90,
       circumference:180,
-      plugins:{ legend:{display:false }},
+      plugins:{legend:{display:false}},
       animation:{
         animateRotate:true,
         animateScale:true,
