@@ -175,8 +175,6 @@
       cursor: pointer;
     }
 
-    /* Não usamos mais .details-button porque substituímos por ícone */
-
     /*==================================================
       Paginação
     ==================================================*/
@@ -389,8 +387,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 130px;    /* Ajuste conforme desejar */
-      height: 40px;    /* Ajuste conforme desejar */
+      width: 130px;
+      height: 40px;
       color: #fff;
       font-size: 12px;
       font-weight: 600;
@@ -591,24 +589,33 @@
 
     // Mapeia status -> cor do badge
     function getStatusBadge(status) {
-      const st = (status || '').toLowerCase();
-    
+      // Converte status para minúsculo
+      let st = (status || '').toLowerCase();
+      // Remove no-break spaces, zero-width spaces, etc.
+      st = st.replace(/[\u200B\uFEFF\u00A0]/g, '');
+
       switch (st) {
+        // Concluído = #1cbb8c
         case 'concluído':
           return `<button class="status-badge" style="background-color:#1cbb8c;">Concluído</button>`;
-    
+
+        // Emitido – Não Pago = #dc3545
         case 'emitido – não pago':
           return `<button class="status-badge" style="background-color:#dc3545;">Emitido – Não Pago</button>`;
-    
+
+        // Emitido TIF = #fcb92c
         case 'emitido tif':
           return `<button class="status-badge" style="background-color:#fcb92c;">Emitido TIF</button>`;
-    
+
+        // Aguardando Emissão = #3b7ddd
         case 'aguardando emissão':
           return `<button class="status-badge" style="background-color:#3b7ddd;">Aguardando Emissão</button>`;
-    
+
+        // Emissão Bloqueada = #dc3545
         case 'emissão bloqueada':
-          return `<button class="status-badge" style="background-color:#dc3546;">Emissão Bloqueada</button>`;
-    
+          return `<button class="status-badge" style="background-color:#dc3545;">Emissão Bloqueada</button>`;
+
+        // Qualquer outro status => cor neutra
         default:
           return `<button class="status-badge" style="background-color:#6c757d;">${status || 'Sem Status'}</button>`;
       }
