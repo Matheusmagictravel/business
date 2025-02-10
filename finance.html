@@ -387,8 +387,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 130px;    /* Ajuste conforme desejar */
-      height: 40px;    /* Ajuste conforme desejar */
+      width: 130px;  
+      height: 40px;  
       color: #fff;
       font-size: 12px;
       font-weight: 600;
@@ -481,16 +481,12 @@
               <th>Fornecedor</th>
               <th>Status</th>
               <!-- Coluna de Ação mais estreita e centralizada -->
-              <th style="width: 50px; text-align:center;">Ação</th>
+              <th style="width:50px; text-align:center;">Ação</th>
             </tr>
           </thead>
-          <tbody id="orders-table">
-            <!-- Os dados serão carregados dinamicamente -->
-          </tbody>
+          <tbody id="orders-table"></tbody>
         </table>
-        <div class="pagination" id="pagination-controls">
-          <!-- Controles de paginação -->
-        </div>
+        <div class="pagination" id="pagination-controls"></div>
       </div>
     </div>
   </main>
@@ -503,6 +499,28 @@
     let combinedOrders = [];
     let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+
+    // Decodifica entidades HTML (para remover &NoBreak; etc.)
+    function decodeHtmlEntities(str) {
+      const el = document.createElement('textarea');
+      el.innerHTML = str;
+      return el.value;
+    }
+
+    // Normaliza e remove caracteres invisíveis
+    function normalizeStatus(status) {
+      // Decodifica &NoBreak; e outras entidades
+      let st = decodeHtmlEntities(status || '');
+      // Minúsculo
+      st = st.toLowerCase();
+      // Normaliza
+      st = st.normalize('NFKC');
+      // Remove no-break spaces, zero-width spaces, etc.
+      st = st.replace(/[\u00A0\u200B\uFEFF]/g, '');
+      // Remove espaços extras no início e fim
+      st = st.trim();
+      return st;
+    }
 
     async function loadSidebar() {
       try {
@@ -520,7 +538,7 @@
       try {
         const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
         const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
-        
+
         const apiUrlPlanilhas = `https://www.magictraveltur.com/api_planilhas.php?start_date=${startDate}&end_date=${endDate}`;
         const apiUrlPedidos = `https://www.magictraveltur.com/api_pedidos.php`;
 
@@ -535,17 +553,19 @@
         const planilhasData = await responsePlanilhas.json();
         const pedidosData = await responsePedidos.json();
 
-        // Cria mapa id -> nome
+        // Cria mapa id_pedido -> nome do pedido
         const pedidosMap = {};
         pedidosData.forEach(pedido => {
           pedidosMap[pedido.id] = pedido.nome;
         });
 
+        // Combina
         combinedOrders = planilhasData.map(planilha => {
           return {
             nome: pedidosMap[planilha.id_pedido] || 'N/A',
             id_pedido: planilha.id_pedido,
             produto: planilha.produto || '',
+            // Valor em U$ = total_usd - lobista
             valor: (planilha.total_usd && planilha.lobista)
               ? (parseFloat(planilha.total_usd) - parseFloat(planilha.lobista)).toFixed(2)
               : '0.00',
@@ -563,7 +583,9 @@
         console.error('Erro ao carregar os dados:', error);
         document.getElementById('orders-table').innerHTML = `
           <tr>
-            <td colspan="10" style="text-align: center; color: red;">Erro ao carregar os pedidos.</td>
+            <td colspan="10" style="text-align: center; color: red;">
+              Erro ao carregar os pedidos.
+            </td>
           </tr>
         `;
       }
@@ -583,43 +605,20 @@
       renderPagination(filteredOrders);
     }
 
-    // Remove caracteres invisíveis e normaliza
-    function normalizeStatus(status) {
-      // Converte pra string minúscula
-      let st = (status || '').toLowerCase();
-      // Normaliza e remove no-break spaces, zero-width spaces etc.
-      st = st
-        .normalize('NFKC')
-        .replace(/[\u00A0\u200B\uFEFF]/g, '')
-        .trim();
-      return st;
-    }
-
     function getStatusBadge(status) {
       const st = normalizeStatus(status);
 
       switch (st) {
-        // Concluído = #1cbb8c
         case 'concluído':
           return `<button class="status-badge" style="background-color:#1cbb8c;">Concluído</button>`;
-
-        // Emitido – Não Pago = #dc3545
         case 'emitido – não pago':
           return `<button class="status-badge" style="background-color:#dc3545;">Emitido – Não Pago</button>`;
-
-        // Emitido TIF = #fcb92c
         case 'emitido tif':
           return `<button class="status-badge" style="background-color:#fcb92c;">Emitido TIF</button>`;
-
-        // Aguardando Emissão = #3b7ddd
         case 'aguardando emissão':
           return `<button class="status-badge" style="background-color:#3b7ddd;">Aguardando Emissão</button>`;
-
-        // Emissão Bloqueada = #dc3545
         case 'emissão bloqueada':
           return `<button class="status-badge" style="background-color:#dc3545;">Emissão Bloqueada</button>`;
-
-        // Qualquer outro status => cor neutra
         default:
           return `<button class="status-badge" style="background-color:#6c757d;">${status || 'Sem Status'}</button>`;
       }
@@ -642,7 +641,6 @@
           <td>${order.identificador}</td>
           <td>${order.fornecedor}</td>
           <td>${getStatusBadge(order.status)}</td>
-          <!-- Ícone de olho para abrir detalhes -->
           <td style="width:50px; text-align:center;">
             <i class="bi bi-eye" style="cursor:pointer; font-size:1.2rem;"
                onclick="openDetailsPage('${order.id_pedido}')"></i>
@@ -801,7 +799,6 @@
         return `${d}/${m}/${y}`;
       }
 
-      // Define mês/ano iniciais do calendário
       monthSelect.value = selectedStartDate.getMonth();
       yearSelect.value = selectedStartDate.getFullYear();
       renderCalendar();
