@@ -10,7 +10,7 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
   <!-- Bootstrap Icons (para usar o ícone bi-eye) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
-  
+
   <style>
     /*==================================================
       Variáveis Globais
@@ -175,7 +175,7 @@
       cursor: pointer;
     }
 
-    /* (Removendo .details-button pois não será mais usado) */
+    /* Não usamos mais .details-button porque substituímos por ícone */
 
     /*==================================================
       Paginação
@@ -473,7 +473,7 @@
         <table>
           <thead>
             <tr>
-              <th>Name</th>
+              <th>Nome</th>
               <th>ID do Pedido</th>
               <th>Itens</th>
               <th>Valor (U$)</th>
@@ -481,8 +481,9 @@
               <th>Data de Pagamento</th>
               <th>Identificador</th>
               <th>Fornecedor</th>
+              <th>Status</th>
               <!-- Coluna de Ação mais estreita e centralizada -->
-              <th style="width:50px; text-align:center;">Ação</th>
+              <th style="width: 50px; text-align:center;">Ação</th>
             </tr>
           </thead>
           <tbody id="orders-table">
@@ -503,11 +504,11 @@
     const rowsPerPage = 10;
     // Array que conterá os dados combinados (api_planilhas + nome dos pedidos da api_pedidos)
     let combinedOrders = [];
-    // Data inicial e final para o filtro (por padrão, do primeiro ao último dia do mês atual)
+    // Data inicial e final para o filtro
     let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
-    // Função para carregar o sidebar
+    // Carregar sidebar
     async function loadSidebar() {
       try {
         const response = await fetch('https://business.magictraveltur.com/sidebar.html');
@@ -520,15 +521,15 @@
       }
     }
 
-    // Função para carregar os dados das APIs (api_planilhas e api_pedidos) e combiná-los
+    // Carregar dados (api_planilhas e api_pedidos) e combiná-los
     async function loadOrders() {
       try {
         const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
         const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
+
         const apiUrlPlanilhas = `https://www.magictraveltur.com/api_planilhas.php?start_date=${startDate}&end_date=${endDate}`;
         const apiUrlPedidos = `https://www.magictraveltur.com/api_pedidos.php`;
 
-        // Executa as requisições simultaneamente
         const [responsePlanilhas, responsePedidos] = await Promise.all([
           fetch(apiUrlPlanilhas),
           fetch(apiUrlPedidos)
@@ -540,19 +541,18 @@
         const planilhasData = await responsePlanilhas.json();
         const pedidosData = await responsePedidos.json();
 
-        // Cria um mapa para associar o id do pedido ao nome (assumindo que em api_pedidos.php a chave é "id" e o nome está em "nome")
+        // Mapeia id_pedido -> nome
         const pedidosMap = {};
         pedidosData.forEach(pedido => {
           pedidosMap[pedido.id] = pedido.nome;
         });
 
-        // Combina os dados: para cada registro de planilhas, adiciona o nome (ou 'N/A' se não houver)
+        // Combina
         combinedOrders = planilhasData.map(planilha => {
           return {
             nome: pedidosMap[planilha.id_pedido] || 'N/A',
             id_pedido: planilha.id_pedido,
             produto: planilha.produto || '',
-            // Valor em U$ = total_usd - lobista
             valor: (planilha.total_usd && planilha.lobista)
               ? (parseFloat(planilha.total_usd) - parseFloat(planilha.lobista)).toFixed(2)
               : '0.00',
@@ -569,12 +569,12 @@
       } catch (error) {
         console.error('Erro ao carregar os dados:', error);
         document.getElementById('orders-table').innerHTML = `<tr>
-          <td colspan="9" style="text-align: center; color: red;">Erro ao carregar os pedidos.</td>
+          <td colspan="10" style="text-align: center; color: red;">Erro ao carregar os pedidos.</td>
         </tr>`;
       }
     }
 
-    // Função para filtrar os pedidos com base na Data de Pagamento (data_pagamento das planilhas)
+    // Filtra pedidos pela data de pagamento
     function filterOrders() {
       let filteredOrders = combinedOrders;
       if (selectedStartDate && selectedEndDate) {
@@ -589,24 +589,38 @@
       renderPagination(filteredOrders);
     }
 
-    // Mapeia o status textual para um botão com .status-badge
+    // Mapeia status -> cor do badge
     function getStatusBadge(status) {
-      // Transformamos tudo em minúsculo pra comparar
       const st = (status || '').toLowerCase();
-
+    
       switch (st) {
+        // Concluído = #1cbb8c
         case 'concluído':
           return `<button class="status-badge" style="background-color:#1cbb8c;">Concluído</button>`;
+    
+        // Emitido – Não Pago = #dc3545
+        case 'emitido – não pago':
+          return `<button class="status-badge" style="background-color:#dc3545;">Emitido – Não Pago</button>`;
+    
+        // Emitido TIF = #fcb92c
+        case 'emitido tif':
+          return `<button class="status-badge" style="background-color:#fcb92c;">Emitido TIF</button>`;
+    
+        // Aguardando Emissão = #3b7ddd
+        case 'aguardando emissão':
+          return `<button class="status-badge" style="background-color:#3b7ddd;">Aguardando Emissão</button>`;
+    
+        // Emissão Bloqueada = #dc3545
         case 'emissão bloqueada':
           return `<button class="status-badge" style="background-color:#dc3545;">Emissão Bloqueada</button>`;
-        // Adicione aqui outros casos que quiser padronizar
+    
+        // Qualquer outro status => cor neutra
         default:
-          // Caso não bata em nenhum, usar cor neutra #6c757d
           return `<button class="status-badge" style="background-color:#6c757d;">${status || 'Sem Status'}</button>`;
       }
     }
 
-    // Função para renderizar a tabela com os pedidos (com paginação)
+    // Renderiza tabela com paginação
     function renderTable(filteredOrders) {
       const ordersTable = document.getElementById('orders-table');
       const start = (currentPage - 1) * rowsPerPage;
@@ -624,8 +638,8 @@
           <td>${order.identificador}</td>
           <td>${order.fornecedor}</td>
           <td>${getStatusBadge(order.status)}</td>
-          <!-- Ícone no lugar do botão "Detalhes" -->
-          <td style="text-align:center;">
+          <!-- Ícone de olho para abrir detalhes -->
+          <td style="width:50px; text-align:center;">
             <i class="bi bi-eye" style="cursor:pointer; font-size:1.2rem;"
                onclick="openDetailsPage('${order.id_pedido}')"></i>
           </td>
@@ -633,14 +647,14 @@
       `).join('');
     }
 
-    // Função para formatar datas (de YYYY-MM-DD para DD/MM/YYYY)
+    // Formata datas de YYYY-MM-DD -> DD/MM/YYYY
     function formatDate(dateString) {
       if (!dateString) return '';
       const [year, month, day] = dateString.split('-').map(Number);
       return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
     }
 
-    // Função para renderizar os controles de paginação
+    // Paginação
     function renderPagination(filteredOrders) {
       const paginationControls = document.getElementById('pagination-controls');
       const totalPages = Math.ceil(filteredOrders.length / rowsPerPage);
@@ -658,17 +672,17 @@
       }
     }
 
-    // Função para abrir a página de detalhes (em nova aba)
+    // Abre página de detalhes em nova aba
     function openDetailsPage(orderId) {
       window.open(`detalhes.html?pedido=${orderId}`, '_blank');
     }
 
-    // Função para redirecionar para a página de adicionar novo pedido
+    // Redireciona p/ adicionar novo pedido
     function addNewOrder() {
       window.location.href = 'https://business.magictraveltur.com/loti.html';
     }
 
-    // Função para inicializar o calendário
+    // Inicializa calendário (modal e filtro)
     function initializeCalendar() {
       const openCalendarBtn = document.getElementById("open-calendar-btn");
       const backBtn = document.getElementById("back-btn");
@@ -788,13 +802,14 @@
         return `${d}/${m}/${y}`;
       }
 
-      // Ajusta selects p/ mês/ano atual
+      // Define mês/ano iniciais do calendário
       monthSelect.value = selectedStartDate.getMonth();
       yearSelect.value = selectedStartDate.getFullYear();
       renderCalendar();
       updateSelectedDateDisplay();
     }
 
+    // Ao carregar a página
     document.addEventListener('DOMContentLoaded', () => {
       initializeCalendar();
       loadSidebar();
