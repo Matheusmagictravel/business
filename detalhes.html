@@ -179,13 +179,7 @@
 
     /*************************************************************
      *  Ajuste de colunas ESPECÍFICAS na Planilha do Pedido
-     *  (Segundo table dentro da .section planilha)
      *************************************************************/
-    /* A Planilha do Pedido tem 13 colunas (thead): 
-       1)Produto, 2)Data, 3)Idade, 4)Net U$, 5)Lobista,
-       6)Número, 7)Total U$, 8)Net R$, 9)Margem,
-       10)Pix, 11)Taxa, 12)10x, 13)Ações
-       Então ajustamos as larguras (exemplo do layout antigo) */
     .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(1)  { width: 14%; }
     .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(2)  { width: 10%; }
     .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(3)  { width: 8%; }
@@ -467,7 +461,7 @@
   <!-- Scripts -->
   <script>
     /************************************************************
-     * JS principal (igual ao anterior, apenas mudamos classes)
+     * JS principal
      ************************************************************/
     window.planilhasEmMemoria = [];
 
@@ -515,12 +509,10 @@
       }
 
       try {
-        // Alterado para utilizar o parâmetro id_pedido
         const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?id_pedido=${pedidoId}`;
         const response = await fetch(apiUrl);
         const pedidos = await response.json();
 
-        // Se a resposta não for um array, tenta usá-la como objeto único
         let pedido;
         if (Array.isArray(pedidos)) {
           if (pedidos.length === 0) {
@@ -630,7 +622,10 @@
           montarPlanilhaPrincipal(planilhas);
           document.getElementById("dolar-cambio").value = planilhas[0].dolar_cambio || 0;
           document.getElementById("dolar-magic").textContent = planilhas[0].dolar_magic || "0.00";
+        } else {
+          // Se não vier nada, deixa a planilha vazia (nenhuma linha)
         }
+
         montarEmissao(planilhas);
 
         document.querySelectorAll("#spreadsheet-info input, #spreadsheet-info select").forEach((el) => {
@@ -752,6 +747,7 @@
       const planilhaId = row.getAttribute("data-planilha-id");
 
       if (!planilhaId) {
+        // Linha ainda não salva no banco
         if (confirm("Linha não salva no banco. Remover mesmo assim?")) {
           row.remove();
           calcularValoresPlanilha();
@@ -811,77 +807,74 @@
         const margem     = parseFloat(linha.querySelector('input[name="margem"]')?.value) || 0;
         const taxa       = parseFloat(linha.querySelector('input[name="taxa"]')?.value) || 0;
 
+        // Calcula totalUsd
         const totalUsd = (netDollar + lobista) * quantidade;
         const netBrl   = totalUsd * dolarMagic;
-        const totalPix = netBrl / (1 - (margem/100));
-        const total10x = totalPix / (1 - (taxa/100));
+        // margem e taxa são valores percentuais; lembre-se de dividir por 100 ao fazer conta
+        const totalPix = netBrl / (1 - (margem / 100));
+        const total10x = totalPix / (1 - (taxa / 100));
 
+        // Verifica campos obrigatórios
         if (!produto || !data) {
           alert("Campos obrigatórios (produto e data) não foram preenchidos em uma linha.");
           return;
         }
 
+        // Monta objeto para envio
+        const objLinha = {
+          id_pedido: pedidoId,
+          produto,
+          data,
+          idade,
+          net_usd: netDollar,
+          lobista,
+          quantidade,
+          total_usd: totalUsd,
+          net_brl: netBrl,
+          margem,
+          total_pix: totalPix,
+          taxa,
+          total_10x: total10x,
+          dolar_cambio: dolarCambio,
+          dolar_magic: dolarMagic
+        };
+
         if (!planilhaId) {
-          novos.push({
-            id_pedido: pedidoId,
-            produto,
-            data,
-            idade,
-            net_usd: netDollar,
-            lobista,
-            quantidade,
-            total_usd: totalUsd,
-            net_brl: netBrl,
-            margem,
-            total_pix: totalPix,
-            taxa,
-            total_10x: total10x,
-            dolar_cambio: dolarCambio,
-            dolar_magic: dolarMagic
-          });
+          // Linha nova
+          novos.push(objLinha);
         } else {
+          // Linha existente (UPDATE)
+          // Busca no array em memória para preservar ID
           const original = window.planilhasEmMemoria.find(p => p.id == planilhaId);
           if (!original) {
-            novos.push({
-              id_pedido: pedidoId,
-              produto,
-              data,
-              idade,
-              net_usd: netDollar,
-              lobista,
-              quantidade,
-              total_usd: totalUsd,
-              net_brl: netBrl,
-              margem,
-              total_pix: totalPix,
-              taxa,
-              total_10x: total10x,
-              dolar_cambio: dolarCambio,
-              dolar_magic: dolarMagic
-            });
+            // Se não achar no array "planilhasEmMemoria", trata como novo
+            novos.push(objLinha);
           } else {
             const atualizado = { ...original };
-            atualizado.produto = produto;
-            atualizado.data = data;
-            atualizado.idade = idade;
-            atualizado.net_usd = netDollar;
-            atualizado.lobista = lobista;
-            atualizado.quantidade = quantidade;
-            atualizado.total_usd = totalUsd;
-            atualizado.net_brl = netBrl;
-            atualizado.margem = margem;
-            atualizado.total_pix = totalPix;
-            atualizado.taxa = taxa;
-            atualizado.total_10x = total10x;
+            atualizado.produto      = produto;
+            atualizado.data         = data;
+            atualizado.idade        = idade;
+            atualizado.net_usd      = netDollar;
+            atualizado.lobista      = lobista;
+            atualizado.quantidade   = quantidade;
+            atualizado.total_usd    = totalUsd;
+            atualizado.net_brl      = netBrl;
+            atualizado.margem       = margem;
+            atualizado.total_pix    = totalPix;
+            atualizado.taxa         = taxa;
+            atualizado.total_10x    = total10x;
             atualizado.dolar_cambio = dolarCambio;
-            atualizado.dolar_magic = dolarMagic;
+            atualizado.dolar_magic  = dolarMagic;
+
             existentes.push(atualizado);
           }
         }
       }
 
       try {
+        // Se houver linhas novas, POST
         if (novos.length > 0) {
+          console.log("Debug POST (novos) =>", JSON.stringify(novos, null, 2));
           const resPost = await fetch("https://magictraveltur.com/api_planilhas.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -893,7 +886,9 @@
           }
         }
 
+        // Se houver linhas existentes, PUT
         if (existentes.length > 0) {
+          console.log("Debug PUT (existentes) =>", JSON.stringify(existentes, null, 2));
           const resPut = await fetch("https://magictraveltur.com/api_planilhas.php", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -956,6 +951,7 @@
       }
 
       try {
+        console.log("Debug PUT Emissão =>", JSON.stringify(updates, null, 2));
         const resPut = await fetch("https://magictraveltur.com/api_planilhas.php", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -982,13 +978,13 @@
         const netDollar  = parseFloat(row.querySelector('input[name="netDollar"]')?.value) || 0;
         const lobista    = parseFloat(row.querySelector('input[name="lobista"]')?.value) || 0;
         const quantidade = parseInt(row.querySelector('input[name="quantidade"]')?.value) || 0;
-        const margem     = parseFloat(row.querySelector('input[name="margem"]')?.value) / 100 || 0;
-        const taxa       = parseFloat(row.querySelector('input[name="taxa"]')?.value) / 100 || 0;
+        const margemVal  = parseFloat(row.querySelector('input[name="margem"]')?.value) / 100 || 0;
+        const taxaVal    = parseFloat(row.querySelector('input[name="taxa"]')?.value) / 100 || 0;
 
         const totalDollar = (netDollar + lobista) * quantidade;
         const netReal     = totalDollar * dolarMagic;
-        const totalPix    = netReal / (1 - margem);
-        const total10x    = totalPix / (1 - taxa);
+        const totalPix    = netReal / (1 - margemVal);
+        const total10x    = totalPix / (1 - taxaVal);
 
         row.querySelector('td[name="totalDollar"]').textContent = totalDollar.toFixed(2);
         row.querySelector('td[name="netReal"]').textContent     = netReal.toFixed(2);
@@ -1020,10 +1016,11 @@
 
     function updateDolarMagic() {
       const dolarCambio = parseFloat(document.getElementById('dolar-cambio').value) || 0;
+      // Exemplo de taxa base, você pode alterar
       const dolarMagic = (dolarCambio * 1.0098).toFixed(2);
       document.getElementById('dolar-magic').textContent = dolarMagic;
       calcularValoresPlanilha();
     }
   </script>
 </body>
-</html>
+</html>  
