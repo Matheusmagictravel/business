@@ -78,7 +78,7 @@
     ==================================================*/
     main.content {
       margin-left: 260px;
-      margin-top: 100px; /* Alteração solicitada */
+      margin-top: 100px; /* Alteração para deixar o conteúdo mais abaixo */
       flex-grow: 1;
       padding: 40px;
       overflow-y: auto;
@@ -544,17 +544,23 @@
         // Combina os dados: para cada registro de planilhas, adiciona o nome (ou 'N/A' se não houver)
         combinedOrders = planilhasData.map(planilha => {
           return {
+            // nome do pedido obtido via "id_pedido" no map
             nome: pedidosMap[planilha.id_pedido] || 'N/A',
             id_pedido: planilha.id_pedido,
-            // Ajuste: obtém o produto (campo "produto" na API; fallback para string vazia)
+            // Itens (produto)
             produto: planilha.produto || '',
-            // Ajuste: valor em U$ obtido do campo net_usd
-            valor: planilha.net_usd ? parseFloat(planilha.net_usd).toFixed(2) : '0.00',
-            // Ajuste: data de uso obtida do campo "data"
+            // Valor em U$ = total_usd - lobista
+            // Se não existir alguma das chaves, define como 0.00
+            valor: (planilha.total_usd && planilha.lobista)
+              ? (parseFloat(planilha.total_usd) - parseFloat(planilha.lobista)).toFixed(2)
+              : '0.00',
+            // Data de uso obtida no campo "data"
             data_uso: planilha.data || '',
+            // Data de pagamento
             data_pagamento: planilha.data_pagamento,
             identificador: planilha.identificador,
             fornecedor: planilha.fornecedor,
+            // Status da planilha
             status: planilha.status
           };
         });
@@ -584,6 +590,27 @@
       renderPagination(filteredOrders);
     }
 
+    // Mapeia o status textual para um botão colorido do Bootstrap
+    function getStatusBadge(status) {
+      // Ajuste os cases conforme os possíveis valores que sua API retorna
+      switch ((status || '').toLowerCase()) {
+        case 'pago':
+          return '<button class="btn btn-success">Pago</button>';
+        case 'em aberto':
+          return '<button class="btn btn-primary">Em Aberto</button>';
+        case 'pendente':
+          return '<button class="btn btn-warning">Pendente</button>';
+        case 'cancelado':
+          return '<button class="btn btn-danger">Cancelado</button>';
+        case 'em análise':
+          return '<button class="btn btn-info">Em Análise</button>';
+        // Caso o status não se encaixe em nenhum acima, usa o secondary
+        default:
+          // Exibe o texto do status original como fallback
+          return `<button class="btn btn-secondary">${status || 'Sem Status'}</button>`;
+      }
+    }
+
     // Função para renderizar a tabela com os pedidos (com paginação)
     function renderTable(filteredOrders) {
       const ordersTable = document.getElementById('orders-table');
@@ -595,21 +622,19 @@
         <tr>
           <td>${order.nome}</td>
           <td>${order.id_pedido}</td>
-          <!-- Usando o campo "produto" para exibir os itens -->
           <td>${order.produto}</td>
           <td>U$ ${order.valor}</td>
-          <!-- Exibe Data de Uso se existir, formatada -->
           <td>${order.data_uso ? formatDate(order.data_uso) : ''}</td>
           <td>${formatDate(order.data_pagamento)}</td>
           <td>${order.identificador}</td>
           <td>${order.fornecedor}</td>
-          <td>${order.status}</td>
+          <td>${getStatusBadge(order.status)}</td>
           <td><button class="details-button" onclick="openDetailsPage('${order.id_pedido}')">Detalhes</button></td>
         </tr>
       `).join('');
     }
 
-    // Função para formatar as datas (de YYYY-MM-DD para DD/MM/YYYY)
+    // Função para formatar datas (de YYYY-MM-DD para DD/MM/YYYY)
     function formatDate(dateString) {
       if (!dateString) return '';
       const [year, month, day] = dateString.split('-').map(Number);
@@ -761,16 +786,19 @@
         }
       }
 
+      // Seta inicialmente o mês/ano do calendário como a data inicial selecionada
       monthSelect.value = selectedStartDate.getMonth();
       yearSelect.value = selectedStartDate.getFullYear();
       renderCalendar();
       updateSelectedDateDisplay();
     }
 
+    // Inicializa o calendário ao carregar a página
     document.addEventListener('DOMContentLoaded', () => {
       initializeCalendar();
     });
 
+    // Carrega sidebar e pedidos ao carregar a página
     document.addEventListener('DOMContentLoaded', () => {
       console.log("DOM content loaded");
       loadSidebar();
