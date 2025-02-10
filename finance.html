@@ -392,6 +392,22 @@
       align-items: center;
       height: 95%;
     }
+
+    /*==================================================
+      Badge de Status (altura/largura fixas, texto centralizado)
+    ==================================================*/
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 130px;    /* Ajuste conforme desejar */
+      height: 40px;    /* Ajuste conforme desejar */
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: none;
+    }
   </style>
 </head>
 <body>
@@ -584,40 +600,30 @@
       renderPagination(filteredOrders);
     }
 
-    // Mapeia o status textual para um botão colorido (cores solicitadas), fonte 12px
+    // Mapeia o status textual para um botão com .status-badge
     function getStatusBadge(status) {
       // Transformamos tudo em minúsculo pra comparar
       const st = (status || '').toLowerCase();
 
       /*
-        As cores solicitadas:
-        Concluído = #1cbb8c
-        Emitido – Não Pago = #dc3545
-        Emitido TIF = #fcb92c
-        Aguardando Emissão = #3b7ddd
-        Emissão Bloqueada = #dc3545
+        Suas cores de status:
+        - Emissão Bloqueada: #dc3545
+        - Concluído: #1cbb8c
+        etc.
       */
-      const baseStyle = "font-size:12px; color:#fff; border:none; border-radius:8px; padding:5px 10px;";
-
       switch (st) {
         case 'concluído':
-          return `<button style="${baseStyle} background-color:#1cbb8c;">Concluído</button>`;
-
-        case '⁠emitido – não pago': // Atenção: certifique-se de que o texto que chega da API combina com esse case
-          return `<button style="${baseStyle} background-color:#dc3545;">⁠Emitido – Não Pago</button>`;
-
-        case 'emitido tif':
-          return `<button style="${baseStyle} background-color:#fcb92c;">Emitido TIF</button>`;
-
-        case 'aguardando emissão':
-          return `<button style="${baseStyle} background-color:#3b7ddd;">Aguardando Emissão</button>`;
-
+          // Exemplo: cor #1cbb8c
+          return `<button class="status-badge" style="background-color:#1cbb8c;">Concluído</button>`;
         case 'emissão bloqueada':
-          return `<button style="${baseStyle} background-color:#dc3545;">Emissão Bloqueada</button>`;
+          // Cor #dc3545
+          return `<button class="status-badge" style="background-color:#dc3545;">Emissão Bloqueada</button>`;
+        // Adicione aqui outros casos que quiser padronizar:
+        // ex. "Aguardando Emissão", "Emitido – Não Pago", etc.
 
         default:
-          // Caso não bata em nenhum dos acima, usa cor #6c757d com o texto original
-          return `<button style="${baseStyle} background-color:#6c757d;">${status || 'Sem Status'}</button>`;
+          // Caso não bata em nenhum, usar cor neutra #6c757d
+          return `<button class="status-badge" style="background-color:#6c757d;">${status || 'Sem Status'}</button>`;
       }
     }
 
