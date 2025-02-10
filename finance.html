@@ -6,8 +6,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pedidos - Magic Travel</title>
-  <!-- Adicionando o CSS do Bootstrap -->
+  <!-- CSS do Bootstrap -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons (para usar o ícone bi-eye) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+  
   <style>
     /*==================================================
       Variáveis Globais
@@ -172,21 +175,7 @@
       cursor: pointer;
     }
 
-    .details-button {
-      background-color: var(--primary-color);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 15px;
-      font-weight: 600;
-      font-size: 12px;
-      cursor: pointer;
-      text-align: center;
-    }
-
-    .details-button:hover {
-      background-color: var(--primary-hover);
-    }
+    /* (Removendo .details-button pois não será mais usado) */
 
     /*==================================================
       Paginação
@@ -492,8 +481,8 @@
               <th>Data de Pagamento</th>
               <th>Identificador</th>
               <th>Fornecedor</th>
-              <th>Status</th>
-              <th>Ação</th>
+              <!-- Coluna de Ação mais estreita e centralizada -->
+              <th style="width:50px; text-align:center;">Ação</th>
             </tr>
           </thead>
           <tbody id="orders-table">
@@ -507,7 +496,7 @@
     </div>
   </main>
 
-  <!-- Adicionando o JS do Bootstrap -->
+  <!-- JS do Bootstrap -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
   <script>
     let currentPage = 1;
@@ -580,7 +569,7 @@
       } catch (error) {
         console.error('Erro ao carregar os dados:', error);
         document.getElementById('orders-table').innerHTML = `<tr>
-          <td colspan="10" style="text-align: center; color: red;">Erro ao carregar os pedidos.</td>
+          <td colspan="9" style="text-align: center; color: red;">Erro ao carregar os pedidos.</td>
         </tr>`;
       }
     }
@@ -605,22 +594,12 @@
       // Transformamos tudo em minúsculo pra comparar
       const st = (status || '').toLowerCase();
 
-      /*
-        Suas cores de status:
-        - Emissão Bloqueada: #dc3545
-        - Concluído: #1cbb8c
-        etc.
-      */
       switch (st) {
         case 'concluído':
-          // Exemplo: cor #1cbb8c
           return `<button class="status-badge" style="background-color:#1cbb8c;">Concluído</button>`;
         case 'emissão bloqueada':
-          // Cor #dc3545
           return `<button class="status-badge" style="background-color:#dc3545;">Emissão Bloqueada</button>`;
-        // Adicione aqui outros casos que quiser padronizar:
-        // ex. "Aguardando Emissão", "Emitido – Não Pago", etc.
-
+        // Adicione aqui outros casos que quiser padronizar
         default:
           // Caso não bata em nenhum, usar cor neutra #6c757d
           return `<button class="status-badge" style="background-color:#6c757d;">${status || 'Sem Status'}</button>`;
@@ -645,7 +624,11 @@
           <td>${order.identificador}</td>
           <td>${order.fornecedor}</td>
           <td>${getStatusBadge(order.status)}</td>
-          <td><button class="details-button" onclick="openDetailsPage('${order.id_pedido}')">Detalhes</button></td>
+          <!-- Ícone no lugar do botão "Detalhes" -->
+          <td style="text-align:center;">
+            <i class="bi bi-eye" style="cursor:pointer; font-size:1.2rem;"
+               onclick="openDetailsPage('${order.id_pedido}')"></i>
+          </td>
         </tr>
       `).join('');
     }
@@ -675,7 +658,7 @@
       }
     }
 
-    // Função para abrir a página de detalhes (abrindo em nova aba)
+    // Função para abrir a página de detalhes (em nova aba)
     function openDetailsPage(orderId) {
       window.open(`detalhes.html?pedido=${orderId}`, '_blank');
     }
@@ -685,7 +668,7 @@
       window.location.href = 'https://business.magictraveltur.com/loti.html';
     }
 
-    // Função para inicializar o calendário (modal, seleção de datas e atualização do filtro)
+    // Função para inicializar o calendário
     function initializeCalendar() {
       const openCalendarBtn = document.getElementById("open-calendar-btn");
       const backBtn = document.getElementById("back-btn");
@@ -697,17 +680,14 @@
       const yearSelect = document.getElementById("calendar__year");
       const selectedDateDisplay = document.getElementById("datas-selecionadas");
 
-      // Abre o modal ao clicar no botão "Selecionar Data"
       openCalendarBtn.addEventListener("click", () => {
         bootstrapModal.show();
       });
 
-      // Fecha o modal ao clicar em "Back"
       backBtn.addEventListener("click", () => {
         bootstrapModal.hide();
       });
 
-      // Aplica o filtro de datas e recarrega os pedidos
       applyBtn.addEventListener("click", () => {
         if (!selectedStartDate || !selectedEndDate) {
           if (selectedStartDate && !selectedEndDate) {
@@ -732,14 +712,14 @@
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         calendarDatesContainer.innerHTML = '';
 
-        // Renderiza os espaços em branco antes do primeiro dia
+        // Espaços em branco antes do primeiro dia
         for (let i = 0; i < firstDayOfMonth; i++) {
           const emptyDate = document.createElement('div');
           emptyDate.classList.add('calendar__date', 'calendar__date--grey');
           calendarDatesContainer.appendChild(emptyDate);
         }
 
-        // Renderiza os dias do mês
+        // Dias do mês
         for (let i = 1; i <= daysInMonth; i++) {
           const dateElement = document.createElement('div');
           dateElement.classList.add('calendar__date');
@@ -808,14 +788,13 @@
         return `${d}/${m}/${y}`;
       }
 
-      // Ajusta selects para o mês/ano atual
+      // Ajusta selects p/ mês/ano atual
       monthSelect.value = selectedStartDate.getMonth();
       yearSelect.value = selectedStartDate.getFullYear();
       renderCalendar();
       updateSelectedDateDisplay();
     }
 
-    // Inicia tudo ao carregar a página
     document.addEventListener('DOMContentLoaded', () => {
       initializeCalendar();
       loadSidebar();
