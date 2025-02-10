@@ -78,7 +78,7 @@
     ==================================================*/
     main.content {
       margin-left: 260px;
-      margin-top: 100px; /* Alteração para deixar o conteúdo mais abaixo */
+      margin-top: 100px; 
       flex-grow: 1;
       padding: 40px;
       overflow-y: auto;
@@ -468,7 +468,7 @@
         <table>
           <thead>
             <tr>
-              <th>Nome</th>
+              <th>Name</th>
               <th>ID do Pedido</th>
               <th>Itens</th>
               <th>Valor (U$)</th>
@@ -544,23 +544,17 @@
         // Combina os dados: para cada registro de planilhas, adiciona o nome (ou 'N/A' se não houver)
         combinedOrders = planilhasData.map(planilha => {
           return {
-            // nome do pedido obtido via "id_pedido" no map
             nome: pedidosMap[planilha.id_pedido] || 'N/A',
             id_pedido: planilha.id_pedido,
-            // Itens (produto)
             produto: planilha.produto || '',
             // Valor em U$ = total_usd - lobista
-            // Se não existir alguma das chaves, define como 0.00
             valor: (planilha.total_usd && planilha.lobista)
               ? (parseFloat(planilha.total_usd) - parseFloat(planilha.lobista)).toFixed(2)
               : '0.00',
-            // Data de uso obtida no campo "data"
             data_uso: planilha.data || '',
-            // Data de pagamento
             data_pagamento: planilha.data_pagamento,
             identificador: planilha.identificador,
             fornecedor: planilha.fornecedor,
-            // Status da planilha
             status: planilha.status
           };
         });
@@ -590,24 +584,27 @@
       renderPagination(filteredOrders);
     }
 
-    // Mapeia o status textual para um botão colorido do Bootstrap
+    // Mapeia o status textual para um botão colorido, fonte 12px
     function getStatusBadge(status) {
-      // Ajuste os cases conforme os possíveis valores que sua API retorna
-      switch ((status || '').toLowerCase()) {
-        case 'pago':
-          return '<button class="btn btn-success">Pago</button>';
+      // Transformamos tudo em minúsculo pra comparar
+      const st = (status || '').toLowerCase();
+
+      switch (st) {
+        case 'concluído':
+          return `<button class="btn btn-success" style="font-size:12px;">Concluído</button>`;
         case 'em aberto':
-          return '<button class="btn btn-primary">Em Aberto</button>';
+          return `<button class="btn btn-primary" style="font-size:12px;">Em Aberto</button>`;
         case 'pendente':
-          return '<button class="btn btn-warning">Pendente</button>';
+          return `<button class="btn btn-warning" style="font-size:12px;">Pendente</button>`;
         case 'cancelado':
-          return '<button class="btn btn-danger">Cancelado</button>';
+          return `<button class="btn btn-danger" style="font-size:12px;">Cancelado</button>`;
         case 'em análise':
-          return '<button class="btn btn-info">Em Análise</button>';
-        // Caso o status não se encaixe em nenhum acima, usa o secondary
+          return `<button class="btn btn-info" style="font-size:12px;">Em Análise</button>`;
+        case 'emissão bloqueada':
+          return `<button class="btn btn-secondary" style="font-size:12px;">Emissão Bloqueada</button>`;
         default:
-          // Exibe o texto do status original como fallback
-          return `<button class="btn btn-secondary">${status || 'Sem Status'}</button>`;
+          // Caso não bata em nenhum dos acima, usa 'secondary' com o texto original
+          return `<button class="btn btn-secondary" style="font-size:12px;">${status || 'Sem Status'}</button>`;
       }
     }
 
@@ -638,7 +635,7 @@
     function formatDate(dateString) {
       if (!dateString) return '';
       const [year, month, day] = dateString.split('-').map(Number);
-      return `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+      return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
     }
 
     // Função para renderizar os controles de paginação
@@ -775,32 +772,33 @@
 
       function updateSelectedDateDisplay() {
         if (selectedStartDate && selectedEndDate) {
-          const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
-          const endDateStr = `${selectedEndDate.getDate().toString().padStart(2, '0')}/${(selectedEndDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedEndDate.getFullYear()}`;
+          const startDateStr = formatDisplayDate(selectedStartDate);
+          const endDateStr = formatDisplayDate(selectedEndDate);
           selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
         } else if (selectedStartDate) {
-          const startDateStr = `${selectedStartDate.getDate().toString().padStart(2, '0')}/${(selectedStartDate.getMonth() + 1).toString().padStart(2, '0')}/${selectedStartDate.getFullYear()}`;
-          selectedDateDisplay.textContent = `Data selecionada: ${startDateStr}`;
+          selectedDateDisplay.textContent = `Data selecionada: ${formatDisplayDate(selectedStartDate)}`;
         } else {
           selectedDateDisplay.textContent = '';
         }
       }
 
-      // Seta inicialmente o mês/ano do calendário como a data inicial selecionada
+      function formatDisplayDate(dateObj) {
+        const d = dateObj.getDate().toString().padStart(2, '0');
+        const m = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+        const y = dateObj.getFullYear();
+        return `${d}/${m}/${y}`;
+      }
+
+      // Ajusta selects para o mês/ano atual
       monthSelect.value = selectedStartDate.getMonth();
       yearSelect.value = selectedStartDate.getFullYear();
       renderCalendar();
       updateSelectedDateDisplay();
     }
 
-    // Inicializa o calendário ao carregar a página
+    // Inicia tudo ao carregar a página
     document.addEventListener('DOMContentLoaded', () => {
       initializeCalendar();
-    });
-
-    // Carrega sidebar e pedidos ao carregar a página
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log("DOM content loaded");
       loadSidebar();
       loadOrders();
     });
