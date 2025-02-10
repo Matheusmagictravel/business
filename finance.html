@@ -387,8 +387,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 130px;
-      height: 40px;
+      width: 130px;    /* Ajuste conforme desejar */
+      height: 40px;    /* Ajuste conforme desejar */
       color: #fff;
       font-size: 12px;
       font-weight: 600;
@@ -500,13 +500,10 @@
   <script>
     let currentPage = 1;
     const rowsPerPage = 10;
-    // Array que conterá os dados combinados (api_planilhas + nome dos pedidos da api_pedidos)
     let combinedOrders = [];
-    // Data inicial e final para o filtro
     let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
-    // Carregar sidebar
     async function loadSidebar() {
       try {
         const response = await fetch('https://business.magictraveltur.com/sidebar.html');
@@ -519,12 +516,11 @@
       }
     }
 
-    // Carregar dados (api_planilhas e api_pedidos) e combiná-los
     async function loadOrders() {
       try {
         const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
         const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
-
+        
         const apiUrlPlanilhas = `https://www.magictraveltur.com/api_planilhas.php?start_date=${startDate}&end_date=${endDate}`;
         const apiUrlPedidos = `https://www.magictraveltur.com/api_pedidos.php`;
 
@@ -539,13 +535,12 @@
         const planilhasData = await responsePlanilhas.json();
         const pedidosData = await responsePedidos.json();
 
-        // Mapeia id_pedido -> nome
+        // Cria mapa id -> nome
         const pedidosMap = {};
         pedidosData.forEach(pedido => {
           pedidosMap[pedido.id] = pedido.nome;
         });
 
-        // Combina
         combinedOrders = planilhasData.map(planilha => {
           return {
             nome: pedidosMap[planilha.id_pedido] || 'N/A',
@@ -566,13 +561,14 @@
         filterOrders();
       } catch (error) {
         console.error('Erro ao carregar os dados:', error);
-        document.getElementById('orders-table').innerHTML = `<tr>
-          <td colspan="10" style="text-align: center; color: red;">Erro ao carregar os pedidos.</td>
-        </tr>`;
+        document.getElementById('orders-table').innerHTML = `
+          <tr>
+            <td colspan="10" style="text-align: center; color: red;">Erro ao carregar os pedidos.</td>
+          </tr>
+        `;
       }
     }
 
-    // Filtra pedidos pela data de pagamento
     function filterOrders() {
       let filteredOrders = combinedOrders;
       if (selectedStartDate && selectedEndDate) {
@@ -587,12 +583,20 @@
       renderPagination(filteredOrders);
     }
 
-    // Mapeia status -> cor do badge
-    function getStatusBadge(status) {
-      // Converte status para minúsculo
+    // Remove caracteres invisíveis e normaliza
+    function normalizeStatus(status) {
+      // Converte pra string minúscula
       let st = (status || '').toLowerCase();
-      // Remove no-break spaces, zero-width spaces, etc.
-      st = st.replace(/[\u200B\uFEFF\u00A0]/g, '');
+      // Normaliza e remove no-break spaces, zero-width spaces etc.
+      st = st
+        .normalize('NFKC')
+        .replace(/[\u00A0\u200B\uFEFF]/g, '')
+        .trim();
+      return st;
+    }
+
+    function getStatusBadge(status) {
+      const st = normalizeStatus(status);
 
       switch (st) {
         // Concluído = #1cbb8c
@@ -621,7 +625,6 @@
       }
     }
 
-    // Renderiza tabela com paginação
     function renderTable(filteredOrders) {
       const ordersTable = document.getElementById('orders-table');
       const start = (currentPage - 1) * rowsPerPage;
@@ -648,14 +651,12 @@
       `).join('');
     }
 
-    // Formata datas de YYYY-MM-DD -> DD/MM/YYYY
     function formatDate(dateString) {
       if (!dateString) return '';
       const [year, month, day] = dateString.split('-').map(Number);
       return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
     }
 
-    // Paginação
     function renderPagination(filteredOrders) {
       const paginationControls = document.getElementById('pagination-controls');
       const totalPages = Math.ceil(filteredOrders.length / rowsPerPage);
@@ -673,17 +674,14 @@
       }
     }
 
-    // Abre página de detalhes em nova aba
     function openDetailsPage(orderId) {
       window.open(`detalhes.html?pedido=${orderId}`, '_blank');
     }
 
-    // Redireciona p/ adicionar novo pedido
     function addNewOrder() {
       window.location.href = 'https://business.magictraveltur.com/loti.html';
     }
 
-    // Inicializa calendário (modal e filtro)
     function initializeCalendar() {
       const openCalendarBtn = document.getElementById("open-calendar-btn");
       const backBtn = document.getElementById("back-btn");
@@ -797,8 +795,8 @@
       }
 
       function formatDisplayDate(dateObj) {
-        const d = dateObj.getDate().toString().padStart(2, '0');
-        const m = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+        const d = String(dateObj.getDate()).padStart(2, '0');
+        const m = String(dateObj.getMonth() + 1).padStart(2, '0');
         const y = dateObj.getFullYear();
         return `${d}/${m}/${y}`;
       }
@@ -810,7 +808,6 @@
       updateSelectedDateDisplay();
     }
 
-    // Ao carregar a página
     document.addEventListener('DOMContentLoaded', () => {
       initializeCalendar();
       loadSidebar();
