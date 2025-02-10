@@ -387,8 +387,8 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 130px;  
-      height: 40px;  
+      width: 130px;    /* Ajuste conforme precisar */
+      height: 40px;    /* Ajuste conforme precisar */
       color: #fff;
       font-size: 12px;
       font-weight: 600;
@@ -398,7 +398,6 @@
   </style>
 </head>
 <body>
-  <!-- Sidebar será carregado aqui -->
   <div id="sidebar-container"></div>
 
   <main class="content">
@@ -407,7 +406,6 @@
       <button id="open-calendar-btn" class="btn btn-primary">Selecionar Data</button>
     </div>
 
-    <!-- Modal do Calendário -->
     <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" style="display: none;">
       <div class="modal-dialog modal-sm">
         <div class="modal-content">
@@ -447,7 +445,7 @@
                   <div>Sab</div>
                 </div>
                 <div class="calendar__dates">
-                  <!-- Datas serão geradas dinamicamente -->
+                  <!-- Dias do calendário -->
                 </div>
               </div>
 
@@ -461,7 +459,7 @@
       </div>
     </div>
 
-    <!-- Tabela de Pedidos -->
+    <!-- Área de Pedidos -->
     <div class="dashboard-orders">
       <div class="dashboard-orders-container">
         <div class="dashboard-header">
@@ -480,7 +478,7 @@
               <th>Identificador</th>
               <th>Fornecedor</th>
               <th>Status</th>
-              <!-- Coluna de Ação mais estreita e centralizada -->
+              <!-- Coluna de Ação reduzida -->
               <th style="width:50px; text-align:center;">Ação</th>
             </tr>
           </thead>
@@ -500,24 +498,26 @@
     let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
-    // Decodifica entidades HTML (para remover &NoBreak; etc.)
+    // Decodifica entidades HTML (&NoBreak;, etc.)
     function decodeHtmlEntities(str) {
       const el = document.createElement('textarea');
       el.innerHTML = str;
       return el.value;
     }
 
-    // Normaliza e remove caracteres invisíveis
+    // Normaliza e unifica traços e remove caracteres invisíveis
     function normalizeStatus(status) {
       // Decodifica &NoBreak; e outras entidades
       let st = decodeHtmlEntities(status || '');
-      // Minúsculo
+      // Converte para minúsculo
       st = st.toLowerCase();
-      // Normaliza
+      // Normaliza Unicode
       st = st.normalize('NFKC');
-      // Remove no-break spaces, zero-width spaces, etc.
+      // Remove no-break, zero-width, BOM, etc.
       st = st.replace(/[\u00A0\u200B\uFEFF]/g, '');
-      // Remove espaços extras no início e fim
+      // Unifica todos traços (\u2013, \u2014, e hífen ASCII) para en dash "–"
+      st = st.replace(/[\u2013\u2014-]/g, '–');
+      // Remove espaços extras no início/fim
       st = st.trim();
       return st;
     }
@@ -553,7 +553,7 @@
         const planilhasData = await responsePlanilhas.json();
         const pedidosData = await responsePedidos.json();
 
-        // Cria mapa id_pedido -> nome do pedido
+        // Mapeia id -> nome
         const pedidosMap = {};
         pedidosData.forEach(pedido => {
           pedidosMap[pedido.id] = pedido.nome;
@@ -565,7 +565,6 @@
             nome: pedidosMap[planilha.id_pedido] || 'N/A',
             id_pedido: planilha.id_pedido,
             produto: planilha.produto || '',
-            // Valor em U$ = total_usd - lobista
             valor: (planilha.total_usd && planilha.lobista)
               ? (parseFloat(planilha.total_usd) - parseFloat(planilha.lobista)).toFixed(2)
               : '0.00',
@@ -723,14 +722,12 @@
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         calendarDatesContainer.innerHTML = '';
 
-        // Espaços em branco antes do primeiro dia
         for (let i = 0; i < firstDayOfMonth; i++) {
           const emptyDate = document.createElement('div');
           emptyDate.classList.add('calendar__date', 'calendar__date--grey');
           calendarDatesContainer.appendChild(emptyDate);
         }
 
-        // Dias do mês
         for (let i = 1; i <= daysInMonth; i++) {
           const dateElement = document.createElement('div');
           dateElement.classList.add('calendar__date');
