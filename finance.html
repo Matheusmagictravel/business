@@ -1,3 +1,4 @@
+
 <?php include 'auth.php'; ?>
 
 <!DOCTYPE html>
@@ -503,28 +504,20 @@
     let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
-    // 1) Função para decodificar entidades HTML (&NoBreak;, etc.)
+    // 1️⃣ Decodifica entidades HTML (&NoBreak;, etc.)
     function decodeHtmlEntities(str) {
-      const el = document.createElement('textarea');
-      el.innerHTML = str;
-      return el.value;
+        const el = document.createElement('textarea');
+        el.innerHTML = str;
+        return el.value;
     }
 
-    // 2) Função para normalizar e remover possíveis variações de traços e espaços invisíveis
+    // 2️⃣ Normaliza e remove caracteres invisíveis dos status
     function normalizeStatus(status) {
-      // Decodifica HTML (caso tenha &NoBreak;)
-      let st = decodeHtmlEntities(status || '');
-      // Converte pra minúsculo
-      st = st.toLowerCase();
-      // Normaliza (NFKC) para evitar diferenças de Unicode
-      st = st.normalize('NFKC');
-      // Remove no-break space (\u00A0), zero-width space (\u200B), BOM (\uFEFF)
-      st = st.replace(/[\u00A0\u200B\uFEFF]/g, '');
-      // Unifica todos os traços (\u2013, \u2014, hífen ASCII) em "–"
-      st = st.replace(/[\u2013\u2014-]/g, '–');
-      // Remove espaços extras no início/fim
-      st = st.trim();
-      return st;
+        let st = decodeHtmlEntities(status || ''); // Decodifica entidades HTML
+        st = st.toLowerCase().normalize('NFKC');  // Normaliza Unicode e minúsculas
+        st = st.replace(/[\u00A0\u200B\uFEFF\u2060]/g, ''); // Remove espaços invisíveis
+        st = st.replace(/[\u2013\u2014-]/g, '–'); // Unifica todos os traços para "–"
+        return st.trim();
     }
 
     // Função para carregar a sidebar
@@ -610,22 +603,22 @@
 
     // Ajusta a cor do status baseado no texto normalizado
     function getStatusBadge(status) {
-      const st = normalizeStatus(status);
+        const st = normalizeStatus(status);
 
-      switch (st) {
+        switch (st) {
         case 'concluído':
-          return `<button class="status-badge" style="background-color:#1cbb8c;">Concluído</button>`;
+            return `<button class="status-badge" style="background-color:#1cbb8c;">Concluído</button>`;
         case 'emitido – não pago':
-          return `<button class="status-badge" style="background-color:#dc3545;">Emitido – Não Pago</button>`;
+            return `<button class="status-badge" style="background-color:#dc3545;">Emitido – Não Pago</button>`;
         case 'emitido tif':
-          return `<button class="status-badge" style="background-color:#fcb92c;">Emitido TIF</button>`;
+            return `<button class="status-badge" style="background-color:#fcb92c;">Emitido TIF</button>`;
         case 'aguardando emissão':
-          return `<button class="status-badge" style="background-color:#3b7ddd;">Aguardando Emissão</button>`;
+            return `<button class="status-badge" style="background-color:#3b7ddd;">Aguardando Emissão</button>`;
         case 'emissão bloqueada':
-          return `<button class="status-badge" style="background-color:#dc3545;">Emissão Bloqueada</button>`;
+            return `<button class="status-badge" style="background-color:#dc3545;">Emissão Bloqueada</button>`;
         default:
-          return `<button class="status-badge" style="background-color:#6c757d;">${status || 'Sem Status'}</button>`;
-      }
+            return `<button class="status-badge" style="background-color:#6c757d;">${status || 'Sem Status'}</button>`;
+        }
     }
 
     // Renderiza a tabela de pedidos
