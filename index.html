@@ -226,16 +226,6 @@
       text-align: center;
       font-size: 14px;
     }
-    #dashboard-container .row {
-      display: flex;
-      flex-wrap: wrap;
-      margin-left: -0.75rem;
-      margin-right: -0.75rem;
-    }
-    #dashboard-container .row > [class*='col-'] {
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-    }
     .content {
       color: var(--bs-body-color);
       font-family: var(--bs-body-font-family);
@@ -342,11 +332,10 @@
       </div>
     </div>
 
-    <!-- CONTEÚDO PRINCIPAL (cards, mapas, tabelas, etc.) -->
+    <!-- CONTEÚDO PRINCIPAL (cards, tabelas, etc.) -->
     <div class="container-fluid p-0">
       <div class="row">
         <div class="col-xl-6 col-xxl-5 d-flex">
-          <!-- ... Cards: Receita, Faturado, Custo, Pedidos ... -->
           <div class="w-100">
             <div class="row">
               <!-- Card Receita -->
@@ -554,10 +543,8 @@
         console.log("Resposta da Sessão:", result);
 
         if (result.logged_in) {
-          // Se logado, exibimos o conteúdo
           document.body.style.display = "block";
         } else {
-          // Se não estiver logado, redirecionamos para login
           window.location.replace("https://business.magictraveltur.com/login.html");
         }
       } catch (error) {
@@ -570,7 +557,6 @@
 
     /*******************************************************
      * 2) Logout
-     *    Chama api_log.php/logout (retorna {"success":true})
      *******************************************************/
     document.addEventListener("DOMContentLoaded", () => {
       const logoutBtn = document.getElementById("logoutBtn");
@@ -583,7 +569,6 @@
             const result = await response.json();
 
             if (result.success) {
-              // Limpamos localStorage (se usado)
               localStorage.removeItem("userLoggedIn");
               window.location.replace("https://business.magictraveltur.com/login.html");
             } else {
@@ -605,17 +590,16 @@
 
   <script>
     /*******************************************************
-     * 3) Restante do JS do Dashboard
-     *    Calendário, fetch dos pedidos, mapas, gráficos, etc.
+     * 3) Restante do JS do Dashboard (Calendário, Pedidos, Mapas, etc.)
      *******************************************************/
     document.addEventListener("DOMContentLoaded", async function () {
-      // Funções de formatação:
       function formatDateBR(dateStr) {
         if (!dateStr) return '';
         const parts = dateStr.split('-');
         if (parts.length < 3) return dateStr;
         return parts[2] + '/' + parts[1] + '/' + parts[0];
       }
+
       function formatCurrencyBR(value) {
         return Number(value).toLocaleString('pt-BR', {
           style: 'currency',
@@ -770,20 +754,28 @@
         calendarModal.setAttribute('inert', 'true');
       });
 
+      // Aqui está o fetch p/ api_pedidos.php com credentials:'include'
       async function fetchDashboardData() {
         try {
           const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
           const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
           const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?start_date=${startDate}&end_date=${endDate}&t=${Date.now()}`;
-          console.log('Start Date:', startDate);
-          console.log('End Date:', endDate);
           console.log('API URL:', apiUrl);
 
-          const response = await fetch(apiUrl, { cache: "no-store" });
+          const response = await fetch(apiUrl, {
+            cache: "no-store",
+            credentials: "include" // Envia e recebe cookie
+          });
           if (!response.ok) throw new Error(`Erro ao carregar os dados: ${response.status}`);
 
           const data = await response.json();
           console.log('Dados recebidos:', data);
+
+          // Se vier error:true, paramos
+          if (data.error) {
+            alert(data.message || "Erro: Usuário não está logado.");
+            return;
+          }
 
           if (data.length === 0) {
             const latestProjects = document.getElementById('latest-projects');
@@ -802,6 +794,7 @@
             return;
           }
 
+          // data é array
           const totalReceita = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_comissao || 0), 0);
           const totalFaturamento = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_venda || 0), 0);
           const totalDespesa = data.reduce((acc, pedido) => acc + parseFloat(pedido.custo || 0), 0);
@@ -838,6 +831,7 @@
         }
       }
 
+      // Gráfico de Receita Recente
       function updateRecentMovementChart(data) {
         const sortedData = data.sort((a, b) => new Date(a.data_venda) - new Date(b.data_venda));
         const labels = sortedData.map(p => formatDateBR(p.data_venda));
@@ -872,6 +866,7 @@
         });
       }
 
+      // Mapa de estados
       function updateRealTimeMap(data) {
         const estados = {};
         data.forEach(pedido => {
@@ -885,7 +880,8 @@
         });
 
         if (!window.brazilMap) {
-          window.brazilMap = L.map('world_map', { zoomControl: true }).setView([-14.2350, -51.9253], 4);
+          window.brazilMap = L.map('world_map', { zoomControl: true })
+            .setView([-14.2350, -51.9253], 4);
           L.tileLayer('https://stamen-tiles.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}.png', {
             attribution: 'Map tiles by Stamen Design, CC BY 3.0 — Map data © OpenStreetMap contributors'
           }).addTo(window.brazilMap);
@@ -942,6 +938,7 @@
         return coordinates[uf] || [0, 0];
       }
 
+      // Gráfico de pizza (Meio de Pagamento)
       function updateBrowserUsage(data) {
         const meioPgtoCounts = {};
         data.forEach(pedido => {
@@ -995,6 +992,7 @@
         });
       }
 
+      // Gráfico de barras (Ranking de Vendedores)
       function updateMonthlySales(data) {
         const agents = {};
         data.forEach(pedido => {
@@ -1008,6 +1006,7 @@
             agents[agent].totalComissao += parseFloat(pedido.valor_comissao || 0);
           }
         });
+
         const sortedAgents = Object.keys(agents).sort((a, b) => agents[b].count - agents[a].count);
         const counts = sortedAgents.map(agent => agents[agent].count);
         const vendas = sortedAgents.map(agent => agents[agent].totalVenda);
@@ -1021,7 +1020,8 @@
           type: 'bar',
           data: {
             labels: sortedAgents,
-            datasets: [{
+            datasets: [
+              {
                 label: 'Vendas',
                 backgroundColor: window.theme.primary,
                 borderColor: window.theme.primary,
