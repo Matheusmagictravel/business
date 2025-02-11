@@ -280,11 +280,12 @@
       const password = document.getElementById('password').value.trim();
       const errorMessageDiv = document.getElementById('errorMessage');
 
-      // Limpa mensagem anterior
+      // Limpa a mensagem de erro anterior
       errorMessageDiv.textContent = '';
 
-      // Envia requisição para login.php
-      fetch('https://magictraveltur.com/api/login.php', {
+      // Envia requisição para a rota de LOGIN da sua API
+      // Ajuste a URL conforme onde seu api_log.php estiver hospedado
+      fetch('https://magictraveltur.com/api_log.php/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
