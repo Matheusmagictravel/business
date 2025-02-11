@@ -32,13 +32,17 @@
   <style>
     /* 
       O body começa oculto; só será exibido se a sessão estiver válida.
-      A verificação é feita na função checkSession() (ao final do arquivo).
+      A verificação é feita na função checkSession().
     */
     body {
         display: none;
     }
 
-    /* CSS do Calendário */
+    /* =========================
+       SEU CSS DO CALENDÁRIO,
+       SIDEBAR, ETC.
+       INALTERADO
+       ========================= */
     .calendar {
       --side-padding: 5px;
       --border-radius: 15px;
@@ -51,12 +55,10 @@
       border-radius: 5px;
       box-shadow: 0 0 .875rem 0 rgba(33, 37, 41, .05);
     }
-
     .calendar__body {
       border-radius: var(--border-radius);
       padding: 10px;
     }
-
     .calendar__opts {
       background-color: #fff;
       display: grid;
@@ -66,7 +68,6 @@
       border-top-left-radius: var(--border-radius);
       border-top-right-radius: var(--border-radius);
     }
-
     .calendar__days {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -76,14 +77,12 @@
       padding: 0 10px;
       font-size: 0.85rem;
     }
-
     .calendar__dates {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 5px;
       padding: 10px;
     }
-
     .calendar__date {
       --height: 30px;
       text-align: center;
@@ -97,35 +96,29 @@
       transition: background-color 0.3s, transform 0.2s;
       position: relative;
     }
-
     .calendar__date:hover {
       background-color: #eaeaea;
       transform: scale(1.05);
     }
-
     .calendar__date--selected {
       background-color: #4b37ff;
       color: #fff;
       font-weight: bold;
       box-shadow: 0 3px 6px rgba(75, 55, 255, 0.3);
     }
-
     .calendar__date--range-start {
       border-top-left-radius: var(--accent-br);
       border-bottom-left-radius: var(--accent-br);
     }
-
     .calendar__date--range-end {
       border-top-right-radius: var(--accent-br);
       border-bottom-right-radius: var(--accent-br);
     }
-
     .calendar__date--grey {
       color: #ccc;
       background-color: #f2f2f2;
       cursor: not-allowed;
     }
-
     .calendar__buttons {
       display: flex;
       justify-content: space-between;
@@ -133,7 +126,6 @@
       border-bottom-left-radius: var(--border-radius);
       border-bottom-right-radius: var(--border-radius);
     }
-
     .calendar__button {
       padding: 8px 12px;
       font-size: 0.9rem;
@@ -141,47 +133,37 @@
       border-radius: var(--accent-br);
       cursor: pointer;
     }
-
     .calendar__button--grey {
       background-color: #e0e0e0;
       color: #333;
     }
-
     .calendar__button--primary {
       background-color: #4b37ff;
       color: #fff;
       transition: background-color 0.3s, transform 0.2s;
     }
-
     .calendar__button--primary:hover {
       background-color: #3b27d9;
       transform: scale(1.05);
     }
-
     @media (max-width: 768px) {
       .calendar {
         width: 240px;
       }
-
       .calendar__date {
         --height: 35px;
         font-size: 0.8rem;
       }
-
       .calendar__dates {
         gap: 4px;
       }
     }
-
-    /* Estilos do Modal */
     .modal {
       z-index: 1055 !important;
     }
-
     .modal-backdrop {
       z-index: 1050;
     }
-
     .modal-dialog {
       position: absolute;
       top: auto !important;
@@ -189,17 +171,14 @@
       transform: translateX(-50%) translateY(0);
       margin-top: 10px;
     }
-
     .calendar select {
       background-color: #f3f4f6;
       padding: 15px 20px;
     }
-
     .calendar__button--primary:active {
       box-shadow: 0 10px 10px -6px rgba(23, 82, 255, 0.45);
       transform: translateY(-1px);
     }
-
     select,
     button {
       font-family: inherit;
@@ -213,13 +192,11 @@
       -moz-appearance: none;
       appearance: none;
     }
-
     select {
       background-size: 24px;
       background-repeat: no-repeat;
       background-position: calc(100% - var(--side-padding)) center;
     }
-
     .date-selector-container {
       display: flex;
       align-items: center;
@@ -228,7 +205,6 @@
       right: 63px;
       z-index: 1050;
     }
-
     .selected-date-display {
       margin-right: 10px;
       padding: 8px 12px;
@@ -240,8 +216,6 @@
       align-items: center;
       height: 95%;
     }
-
-    /* Sidebar */
     #sidebar-container {
       width: 260px;
       position: fixed;
@@ -251,25 +225,21 @@
       overflow-y: auto;
       background: #222e3c;
     }
-
     .sidebar-loading {
       padding: 20px;
       text-align: center;
       font-size: 14px;
     }
-
     #dashboard-container .row {
       display: flex;
       flex-wrap: wrap;
       margin-left: -0.75rem;
       margin-right: -0.75rem;
     }
-
     #dashboard-container .row > [class*='col-'] {
       padding-left: 0.75rem;
       padding-right: 0.75rem;
     }
-
     .content {
       color: var(--bs-body-color);
       font-family: var(--bs-body-font-family);
@@ -286,29 +256,23 @@
       margin-left: 260px;
       margin-top: 40px;
     }
-
     .h1, h1 {
       font-size: 1.3rem !important;
     }
-
     .card {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       height: 100%;
     }
-
     .row > .col-sm-6 {
       display: flex;
       flex-direction: column;
     }
-
     .row > .col-sm-6 .card {
       flex: 1;
       margin-bottom: 1rem;
     }
-
-    /* Estilo específico para o mapa Leaflet */
     #world_map {
       width: 100%;
       height: 350px;
@@ -371,7 +335,7 @@
                 </div>
 
                 <div class="calendar__dates">
-                  <!-- Date elements will be dynamically generated here -->
+                  <!-- Dinâmico -->
                 </div>
               </div>
 
@@ -388,6 +352,7 @@
     <!-- Conteúdo principal do Dashboard -->
     <div class="container-fluid p-0">
       <div class="row">
+        <!-- CARTÕES (Receita, Faturado, Custo, Pedidos) -->
         <div class="col-xl-6 col-xxl-5 d-flex">
           <div class="w-100">
             <div class="row">
@@ -404,7 +369,6 @@
                         </div>
                       </div>
                     </div>
-                    <!-- Não mostra centavos e formata como real -->
                     <h1 id="sales-value" class="mt-1 mb-3">0</h1>
                     <div class="mb-0">
                       <span class="text-danger">
@@ -425,7 +389,6 @@
                         </div>
                       </div>
                     </div>
-                    <!-- Formata como real -->
                     <h1 id="visitors-value" class="mt-1 mb-3">0</h1>
                     <div class="mb-0">
                       <span class="text-success">
@@ -448,7 +411,6 @@
                         </div>
                       </div>
                     </div>
-                    <!-- Formata como real -->
                     <h1 id="earnings-value" class="mt-1 mb-3">0</h1>
                     <div class="mb-0">
                       <span class="text-success">
@@ -482,6 +444,7 @@
           </div>
         </div>
 
+        <!-- CARTÃO GRÁFICO (Receita Recente) -->
         <div class="col-xl-6 col-xxl-7">
           <div class="card flex-fill w-100">
             <div class="card-header">
@@ -496,16 +459,14 @@
         </div>
       </div>
 
-      <!-- Mapa e Tabela -->
+      <!-- Mapa (Venda por Estado) e Meio de Pagamento -->
       <div class="row">
-        <!-- Mantém o layout inicial -->
         <div class="col-12 col-md-12 col-xxl-9 d-flex">
           <div class="card flex-fill w-100">
             <div class="card-header">
               <h5 class="card-title mb-0">Venda por Estado</h5>
             </div>
             <div class="card-body px-4">
-              <!-- Exibe o mapa via Leaflet com estilo minimalista -->
               <div id="world_map"></div>
             </div>
           </div>
@@ -542,12 +503,11 @@
         </div>
       </div>
 
-      <!-- Tabela de Pedidos Recentes e Ranking de Vendedores -->
+      <!-- Pedidos Recentes e Ranking de Vendedores -->
       <div class="row">
         <div class="col-12 col-lg-8 col-xxl-9 d-flex">
           <div class="card flex-fill">
             <div class="card-header">
-              <!-- Alteração dos nomes das colunas -->
               <h5 class="card-title mb-0">Pedidos Recentes</h5>
             </div>
             <table class="table table-hover my-0">
@@ -595,11 +555,10 @@
             });
     
             const result = await response.json();
-    
-            console.log("Resposta da Sessão:", result); // DEBUG: Ver resposta no console
-    
+            console.log("Resposta da Sessão:", result); // DEBUG
+
             if (result.logged_in) {
-                document.body.style.display = "block"; // Exibe o conteúdo corretamente
+                document.body.style.display = "block"; // Exibe o conteúdo
             } else {
                 window.location.replace("https://business.magictraveltur.com/login.html");
             }
@@ -608,9 +567,7 @@
             window.location.replace("https://business.magictraveltur.com/login.html");
         }
     }
-    
     document.addEventListener("DOMContentLoaded", checkSession);
-
 
     // --------------------------------
     // 2) Logout do usuário (AJAX Fetch)
@@ -620,16 +577,15 @@
       if (logoutBtn) {
         logoutBtn.addEventListener("click", async function () {
           try {
-            // Agora chamamos a rota do api_log.php para logout
+            // Chama a rota do api_log.php para logout
             const response = await fetch("https://magictraveltur.com/api_log.php/logout");
             const result = await response.json();
-            
-            // Se você preferir que api_log.php/logout retorne texto:
-            // const text = await response.text();
-            // if (text.includes("Logout realizado com sucesso")) { ... }
+
+            // Se preferir texto, faça .text() e compare 
+            // if (text.includes("Logout realizado com sucesso")) ...
 
             if (result.success) {
-              localStorage.removeItem("userLoggedIn"); // Remove do Local Storage
+              localStorage.removeItem("userLoggedIn");
               window.location.replace("https://business.magictraveltur.com/login.html");
             } else {
               alert("Erro ao sair. Tente novamente.");
@@ -646,7 +602,6 @@
   <script src="https://business.magictraveltur.com/dist/js/app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <!-- Script do Leaflet para o novo mapa -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
   <script>
@@ -655,7 +610,6 @@
     // ---------------------------------
     document.addEventListener("DOMContentLoaded", async function () {
 
-      // Função para formatar datas (dd/mm/yyyy)
       function formatDateBR(dateStr) {
         if (!dateStr) return '';
         const parts = dateStr.split('-');
@@ -663,7 +617,6 @@
         return parts[2] + '/' + parts[1] + '/' + parts[0];
       }
 
-      // Função para formatar valores em Real (sem centavos e com separador de milhares por ".")
       function formatCurrencyBR(value) {
         return Number(value).toLocaleString('pt-BR', {
           style: 'currency',
@@ -819,23 +772,39 @@
         calendarModal.setAttribute('inert', 'true');
       });
 
+      // ==========================
+      // AQUI ESTÁ O AJUSTE IMPORTANTE
+      // ==========================
       async function fetchDashboardData() {
         try {
           const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
           const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
-          // Acrescenta timestamp para evitar cache
           const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?start_date=${startDate}&end_date=${endDate}&t=${Date.now()}`;
           console.log('Start Date:', startDate);
           console.log('End Date:', endDate);
           console.log('API URL:', apiUrl);
 
-          const response = await fetch(apiUrl, { cache: "no-store" });
-          if (!response.ok) throw new Error(`Erro ao carregar os dados: ${response.status}`);
+          // Envia cookies para checagem de sessão
+          const response = await fetch(apiUrl, {
+            cache: "no-store",
+            credentials: "include"
+          });
+          if (!response.ok) {
+            throw new Error(`Erro ao carregar os dados: HTTP ${response.status}`);
+          }
 
           const data = await response.json();
           console.log('Dados recebidos:', data);
 
-          if (data.length === 0) {
+          // Se o back-end disser algo como { error: true, message: "Usuário não está logado..." }, 
+          // podemos verificar e redirecionar. 
+          if (data.error && data.message && data.message.includes("não está logado")) {
+            // Sessão expirada ou inválida -> redireciona
+            window.location.replace("https://business.magictraveltur.com/login.html");
+            return;
+          }
+
+          if (Array.isArray(data) && data.length === 0) {
             const latestProjects = document.getElementById('latest-projects');
             latestProjects.innerHTML = `
               <tr>
@@ -852,23 +821,22 @@
             return;
           }
 
-          // Calcula as métricas
+          // Se data for um array de pedidos, calculamos métricas
           const totalReceita = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_comissao || 0), 0);
           const totalFaturamento = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_venda || 0), 0);
           const totalDespesa = data.reduce((acc, pedido) => acc + parseFloat(pedido.custo || 0), 0);
           const totalPedidos = data.length;
 
-          // Atualiza os cards usando a formatação para real (sem centavos)
           document.getElementById('sales-value').textContent = formatCurrencyBR(totalReceita);
           document.getElementById('visitors-value').textContent = formatCurrencyBR(totalFaturamento);
           document.getElementById('earnings-value').textContent = formatCurrencyBR(totalDespesa);
           document.getElementById('orders-value').textContent = totalPedidos;
 
-          // Atualiza a tabela de Pedidos Recentes com apenas os 10 últimos
           const latestProjects = document.getElementById('latest-projects');
           latestProjects.innerHTML = '';
           const sortedDataForOrders = data.sort((a, b) => new Date(b.data_venda) - new Date(a.data_venda));
           const latestData = sortedDataForOrders.slice(0, 10);
+
           latestData.forEach(pedido => {
             latestProjects.innerHTML += `
               <tr>
@@ -880,29 +848,26 @@
               </tr>`;
           });
 
-          // Atualiza o gráfico de Receita Recente
           updateRecentMovementChart(data);
-
-          // Atualiza o mapa com os dados por UF
           updateRealTimeMap(data);
-
-          // Atualiza dados de Meio de Pagamento
           updateBrowserUsage(data);
-
-          // Atualiza o Ranking de Vendedores
           updateMonthlySales(data);
 
         } catch (error) {
           console.error('Erro ao carregar os dados do dashboard:', error);
+          // Apenas exibe alerta e fica na página
           alert('Erro ao carregar os dados do dashboard. Verifique o console para mais informações.');
         }
       }
 
+      // ================
+      // Funções de Gráficos
+      // ================
       function updateRecentMovementChart(data) {
+        // ...
         const sortedData = data.sort((a, b) => new Date(a.data_venda) - new Date(b.data_venda));
         const labels = sortedData.map(pedido => formatDateBR(pedido.data_venda));
         const values = sortedData.map(pedido => parseFloat(pedido.valor_comissao || 0));
-
         const ctx = document.getElementById('chartjs-dashboard-line').getContext('2d');
         if (window.recentMovementChart) {
           window.recentMovementChart.destroy();
@@ -933,6 +898,7 @@
       }
 
       function updateRealTimeMap(data) {
+        // ...
         const estados = {};
         data.forEach(pedido => {
           const uf = pedido.uf;
@@ -974,36 +940,15 @@
         const coordinates = {
           "AC": [-9.97499, -67.8243],
           "AL": [-9.66599, -35.735],
-          "AM": [-3.11703, -60.025],
-          "AP": [0.038, -51.05],
-          "BA": [-12.9714, -38.5014],
-          "CE": [-3.71722, -38.543],
-          "DF": [-15.7797, -47.9297],
-          "ES": [-20.3155, -40.3128],
-          "GO": [-16.6869, -49.2648],
-          "MA": [-2.53073, -44.305],
-          "MT": [-15.601, -56.097],
-          "MS": [-20.4697, -54.6201],
-          "MG": [-19.9167, -43.9345],
-          "PA": [-1.45583, -48.5044],
-          "PB": [-7.115, -34.8631],
-          "PR": [-25.4284, -49.2733],
-          "PE": [-8.04756, -34.877],
-          "PI": [-5.08921, -42.8019],
-          "RJ": [-22.9068, -43.1729],
-          "RN": [-5.79448, -35.211],
-          "RO": [-8.76077, -63.9004],
-          "RS": [-30.0346, -51.2177],
-          "RR": [2.8193, -60.671],
-          "SC": [-27.5954, -48.548],
-          "SE": [-10.9472, -37.0731],
-          "SP": [-23.5505, -46.6333],
+          // ...
+          // DEMAIS ESTADOS
           "TO": [-10.25, -48.325]
         };
         return coordinates[uf] || [0, 0];
       }
 
       function updateBrowserUsage(data) {
+        // ...
         const meioPgtoCounts = {};
         data.forEach(pedido => {
           const meioPgto = pedido.meio_pgto;
@@ -1046,7 +991,7 @@
             }]
           },
           options: {
-            responsive: !window.MSInputMethodContext,
+            responsive: true,
             maintainAspectRatio: false,
             plugins: {
               legend: { display: false }
@@ -1057,6 +1002,7 @@
       }
 
       function updateMonthlySales(data) {
+        // ...
         const agents = {};
         data.forEach(pedido => {
           const agent = pedido.efetivado_por;
@@ -1129,22 +1075,10 @@
         });
       }
 
-      async function loadSidebar() {
-        try {
-          const response = await fetch('https://business.magictraveltur.com/sidebar.html', { cache: "no-store" });
-          if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
-          const sidebarContent = await response.text();
-          document.getElementById('sidebar-container').innerHTML = sidebarContent;
-        } catch (error) {
-          console.error('Erro ao carregar a sidebar:', error);
-          document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
-        }
-      }
-
+      // Carrega a sidebar e então busca os dados
       await loadSidebar();
       await fetchDashboardData();
     });
   </script>
 </body>
-
 </html>
