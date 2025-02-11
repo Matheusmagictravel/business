@@ -1,10 +1,11 @@
 <?php 
-// Se auth.php estiver na mesma pasta, mantenha assim:
-//   include 'auth.php';
-// Caso esteja em outro lugar, ajuste o caminho:
+/**************************************************************
+ * 1) Incluir 'auth.php'
+ *    Se 'auth.php' estiver na mesma pasta, use: include 'auth.php';
+ *    Caso contrário, ajuste o caminho:
+ **************************************************************/
 include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -683,6 +684,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
         const dataPagamento = new Date(yyyy, mm - 1, dd);
 
         if (dataPagamento >= rangeStart && dataPagamento <= rangeEnd) {
+          // Somente se estiver: "emissão bloqueada", "emitido – não pago", ou "emitido tif"
           if (["emissão bloqueada", "emitido – não pago", "emitido tif"].includes(status)) {
             totalUsd += valorPedido;
           }
@@ -725,14 +727,15 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
         comparativoPedidos = 'Nenhuma variação em relação ao período anterior';
       }
 
+      // Determina cotação final (padrão ou digitada pelo usuário)
       const cotacaoFinal = (userCotacaoManual !== null) ? userCotacaoManual : cotacaoEmUso;
       const valorReais = totalHoje * cotacaoFinal;
 
-      document.getElementById("totalPagarHoje").innerText = `U$ ${totalHoje.toFixed(2)}`;
+      document.getElementById("totalPagarHoje").innerText     = `U$ ${totalHoje.toFixed(2)}`;
       document.getElementById("totalPagarHojeCompare").innerText = comparativoHoje;
 
-      document.getElementById("totalPedidos").innerText = pedidosDiferentes;
-      document.getElementById("totalPedidosCompare").innerText = comparativoPedidos;
+      document.getElementById("totalPedidos").innerText       = pedidosDiferentes;
+      document.getElementById("totalPedidosCompare").innerText= comparativoPedidos;
 
       document.getElementById("valorEstimadoReais").innerText = `R$ ${valorReais.toFixed(2)}`;
       document.getElementById("valorEstimadoCompare").innerText = '';
@@ -741,7 +744,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     function renderTable(dataToDisplay) {
       const ordersTable = document.getElementById('orders-table');
       const start = (currentPage - 1) * rowsPerPage;
-      const end = start + rowsPerPage;
+      const end   = start + rowsPerPage;
       const ordersSlice = dataToDisplay.slice(start, end);
 
       ordersTable.innerHTML = ordersSlice.map(order => `
@@ -782,6 +785,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     }
 
     function filterOrders() {
+      // Filtra por data de pagamento
       let filtered = combinedOrders;
       if (selectedStartDate && selectedEndDate) {
         filtered = combinedOrders.filter(order => {
@@ -793,6 +797,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       }
       displayedOrders = filtered;
 
+      // Se há uma coluna em modo de ordenação, aplica
       const activeColumn = Object.keys(sortDirections).find(col => sortDirections[col] !== null);
       if (activeColumn) {
         sortColumn(activeColumn);
@@ -840,17 +845,22 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       let valA = a[columnKey];
       let valB = b[columnKey];
 
+      // Se for numérico
       if (columnKey === 'valor_calculado' || columnKey === 'raw_total_usd') {
         valA = parseFloat(valA) || 0;
         valB = parseFloat(valB) || 0;
-      } else if (columnKey === 'data_uso' || columnKey === 'data_pagamento') {
+      }
+      // Se for data
+      else if (columnKey === 'data_uso' || columnKey === 'data_pagamento') {
         if (!valA) valA = '0000-00-00';
         if (!valB) valB = '0000-00-00';
         const dateA = new Date(valA).getTime();
         const dateB = new Date(valB).getTime();
         valA = dateA;
         valB = dateB;
-      } else {
+      }
+      // Caso string
+      else {
         valA = String(valA).toLowerCase();
         valB = String(valB).toLowerCase();
       }
@@ -898,7 +908,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
         const apiUrlPlanilhas = `https://www.magictraveltur.com/api_planilhas.php?start_date=${startDate}&end_date=${endDate}`;
         const apiUrlPedidos   = `https://www.magictraveltur.com/api_pedidos.php`;
 
-        // Adicionamos credentials: 'include' para enviar cookie de sessão
+        // Importante: credentials: 'include' para enviar cookie de sessão
         const [responsePlanilhas, responsePedidos] = await Promise.all([
           fetch(apiUrlPlanilhas, { credentials: 'include' }),
           fetch(apiUrlPedidos,   { credentials: 'include' }),
@@ -914,7 +924,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
         const planilhasData = await responsePlanilhas.json();
         const pedidosData   = await responsePedidos.json();
 
-        // Se a API retornar erro (objeto ao invés de array), trate aqui:
+        // Se a API retornar objeto de erro em vez de array
         if (!Array.isArray(planilhasData)) {
           console.error('Planilhas retornou erro:', planilhasData);
           document.getElementById('orders-table').innerHTML = `
@@ -934,28 +944,27 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
           return;
         }
 
-        // Mapeia id -> nome do pedido
+        // id -> nome do pedido
         const pedidosMap = {};
         pedidosData.forEach(pedido => {
           pedidosMap[pedido.id] = pedido.nome;
         });
 
-        // Monta array unificado
         combinedOrders = planilhasData.map(planilha => {
           const totalUsd = parseFloat(planilha.total_usd) || 0;
           const lobista  = parseFloat(planilha.lobista)   || 0;
 
           return {
-            nome:          pedidosMap[planilha.id_pedido] || 'N/A',
-            id_pedido:     planilha.id_pedido,
-            produto:       planilha.produto || '',
-            valor_calculado: (totalUsd - lobista).toFixed(2),
-            raw_total_usd:   totalUsd.toFixed(2),
-            data_uso:      planilha.data || '',
+            nome:           pedidosMap[planilha.id_pedido] || 'N/A',
+            id_pedido:      planilha.id_pedido,
+            produto:        planilha.produto || '',
+            valor_calculado:(totalUsd - lobista).toFixed(2),
+            raw_total_usd:  totalUsd.toFixed(2),
+            data_uso:       planilha.data || '',
             data_pagamento: planilha.data_pagamento || '',
-            identificador: planilha.identificador || '',
-            fornecedor:    planilha.fornecedor || '',
-            status:        planilha.status || ''
+            identificador:  planilha.identificador || '',
+            fornecedor:     planilha.fornecedor || '',
+            status:         planilha.status || ''
           };
         });
 
