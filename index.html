@@ -30,19 +30,15 @@
   <script src="https://unpkg.com/feather-icons"></script>
 
   <style>
-    /* 
-      O body começa oculto; só será exibido se a sessão estiver válida.
-      A verificação é feita na função checkSession().
+    /*
+      Ocultamos o body até confirmar a sessão,
+      assim o usuário não vê conteúdo se não estiver logado.
     */
     body {
-        display: none;
+      display: none;
     }
 
-    /* =========================
-       SEU CSS DO CALENDÁRIO,
-       SIDEBAR, ETC.
-       INALTERADO
-       ========================= */
+    /* INÍCIO: TODO SEU CSS ORIGINAL */
     .calendar {
       --side-padding: 5px;
       --border-radius: 15px;
@@ -277,6 +273,7 @@
       width: 100%;
       height: 350px;
     }
+    /* FIM: TODO SEU CSS ORIGINAL */
   </style>
 </head>
 
@@ -314,7 +311,6 @@
                   <option value="10">Nov</option>
                   <option value="11">Dec</option>
                 </select>
-
                 <select name="calendar__year" id="calendar__year">
                   <option value="2025">2025</option>
                   <option value="2026">2026</option>
@@ -322,7 +318,6 @@
                   <option value="2028">2028</option>
                 </select>
               </div>
-
               <div class="calendar__body">
                 <div class="calendar__days">
                   <div>M</div>
@@ -333,12 +328,10 @@
                   <div>S</div>
                   <div>S</div>
                 </div>
-
                 <div class="calendar__dates">
-                  <!-- Dinâmico -->
+                  <!-- Date elements will be dynamically generated here -->
                 </div>
               </div>
-
               <div class="calendar__buttons">
                 <button class="calendar__button calendar__button--grey" id="back-btn">Back</button>
                 <button class="calendar__button calendar__button--primary" id="apply-btn">Apply</button>
@@ -349,13 +342,14 @@
       </div>
     </div>
 
-    <!-- Conteúdo principal do Dashboard -->
+    <!-- CONTEÚDO PRINCIPAL (cards, mapas, tabelas, etc.) -->
     <div class="container-fluid p-0">
       <div class="row">
-        <!-- CARTÕES (Receita, Faturado, Custo, Pedidos) -->
         <div class="col-xl-6 col-xxl-5 d-flex">
+          <!-- ... Cards: Receita, Faturado, Custo, Pedidos ... -->
           <div class="w-100">
             <div class="row">
+              <!-- Card Receita -->
               <div class="col-sm-6">
                 <div class="card">
                   <div class="card-body">
@@ -377,6 +371,7 @@
                     </div>
                   </div>
                 </div>
+                <!-- Card Faturado -->
                 <div class="card">
                   <div class="card-body">
                     <div class="row">
@@ -398,6 +393,8 @@
                   </div>
                 </div>
               </div>
+
+              <!-- Card Custo e Pedidos -->
               <div class="col-sm-6">
                 <div class="card">
                   <div class="card-body">
@@ -444,7 +441,7 @@
           </div>
         </div>
 
-        <!-- CARTÃO GRÁFICO (Receita Recente) -->
+        <!-- Receita Recente (gráfico) -->
         <div class="col-xl-6 col-xxl-7">
           <div class="card flex-fill w-100">
             <div class="card-header">
@@ -459,7 +456,7 @@
         </div>
       </div>
 
-      <!-- Mapa (Venda por Estado) e Meio de Pagamento -->
+      <!-- Venda por Estado (mapa) e Meio de Pagamento (pie chart) -->
       <div class="row">
         <div class="col-12 col-md-12 col-xxl-9 d-flex">
           <div class="card flex-fill w-100">
@@ -545,46 +542,48 @@
   </main>
 
   <script>
-    // ----------------------------
-    // 1) Verifica a Sessão via AJAX
-    // ----------------------------
+    /*******************************************************
+     * 1) Checar sessão via api_log.php/check
+     *******************************************************/
     async function checkSession() {
-        try {
-            const response = await fetch("https://magictraveltur.com/session_check.php", {
-                credentials: 'include' // Envia os cookies de sessão corretamente
-            });
-    
-            const result = await response.json();
-            console.log("Resposta da Sessão:", result); // DEBUG
+      try {
+        const response = await fetch("https://magictraveltur.com/api_log.php/check", {
+          credentials: 'include'
+        });
+        const result = await response.json();
+        console.log("Resposta da Sessão:", result);
 
-            if (result.logged_in) {
-                document.body.style.display = "block"; // Exibe o conteúdo
-            } else {
-                window.location.replace("https://business.magictraveltur.com/login.html");
-            }
-        } catch (error) {
-            console.error("Erro ao verificar a sessão:", error);
-            window.location.replace("https://business.magictraveltur.com/login.html");
+        if (result.logged_in) {
+          // Se logado, exibimos o conteúdo
+          document.body.style.display = "block";
+        } else {
+          // Se não estiver logado, redirecionamos para login
+          window.location.replace("https://business.magictraveltur.com/login.html");
         }
+      } catch (error) {
+        console.error("Erro ao verificar a sessão:", error);
+        window.location.replace("https://business.magictraveltur.com/login.html");
+      }
     }
+
     document.addEventListener("DOMContentLoaded", checkSession);
 
-    // --------------------------------
-    // 2) Logout do usuário (AJAX Fetch)
-    // --------------------------------
+    /*******************************************************
+     * 2) Logout
+     *    Chama api_log.php/logout (retorna {"success":true})
+     *******************************************************/
     document.addEventListener("DOMContentLoaded", () => {
       const logoutBtn = document.getElementById("logoutBtn");
       if (logoutBtn) {
         logoutBtn.addEventListener("click", async function () {
           try {
-            // Chama a rota do api_log.php para logout
-            const response = await fetch("https://magictraveltur.com/api_log.php/logout");
+            const response = await fetch("https://magictraveltur.com/api_log.php/logout", {
+              credentials: 'include'
+            });
             const result = await response.json();
 
-            // Se preferir texto, faça .text() e compare 
-            // if (text.includes("Logout realizado com sucesso")) ...
-
             if (result.success) {
+              // Limpamos localStorage (se usado)
               localStorage.removeItem("userLoggedIn");
               window.location.replace("https://business.magictraveltur.com/login.html");
             } else {
@@ -597,7 +596,7 @@
       }
     });
   </script>
-  
+
   <!-- Scripts principais -->
   <script src="https://business.magictraveltur.com/dist/js/app.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -605,18 +604,18 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
   <script>
-    // ---------------------------------
-    // 3) Carregamento do Dashboard etc.
-    // ---------------------------------
+    /*******************************************************
+     * 3) Restante do JS do Dashboard
+     *    Calendário, fetch dos pedidos, mapas, gráficos, etc.
+     *******************************************************/
     document.addEventListener("DOMContentLoaded", async function () {
-
+      // Funções de formatação:
       function formatDateBR(dateStr) {
         if (!dateStr) return '';
         const parts = dateStr.split('-');
         if (parts.length < 3) return dateStr;
         return parts[2] + '/' + parts[1] + '/' + parts[0];
       }
-
       function formatCurrencyBR(value) {
         return Number(value).toLocaleString('pt-BR', {
           style: 'currency',
@@ -642,12 +641,10 @@
       function renderCalendar() {
         const month = parseInt(monthSelect.value);
         const year = parseInt(yearSelect.value);
-
         const firstDayOfMonth = new Date(year, month, 1).getDay();
         const daysInMonth = new Date(year, month + 1, 0).getDate();
 
         calendarDatesContainer.innerHTML = '';
-
         let firstWeekDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
         for (let i = 0; i < firstWeekDay; i++) {
           const emptyDateElement = document.createElement('div');
@@ -663,6 +660,7 @@
 
           dateElement.addEventListener('click', function () {
             const clickedDate = new Date(year, month, i);
+
             if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
               selectedStartDate = clickedDate;
               selectedEndDate = null;
@@ -772,9 +770,6 @@
         calendarModal.setAttribute('inert', 'true');
       });
 
-      // ==========================
-      // AQUI ESTÁ O AJUSTE IMPORTANTE
-      // ==========================
       async function fetchDashboardData() {
         try {
           const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
@@ -784,27 +779,13 @@
           console.log('End Date:', endDate);
           console.log('API URL:', apiUrl);
 
-          // Envia cookies para checagem de sessão
-          const response = await fetch(apiUrl, {
-            cache: "no-store",
-            credentials: "include"
-          });
-          if (!response.ok) {
-            throw new Error(`Erro ao carregar os dados: HTTP ${response.status}`);
-          }
+          const response = await fetch(apiUrl, { cache: "no-store" });
+          if (!response.ok) throw new Error(`Erro ao carregar os dados: ${response.status}`);
 
           const data = await response.json();
           console.log('Dados recebidos:', data);
 
-          // Se o back-end disser algo como { error: true, message: "Usuário não está logado..." }, 
-          // podemos verificar e redirecionar. 
-          if (data.error && data.message && data.message.includes("não está logado")) {
-            // Sessão expirada ou inválida -> redireciona
-            window.location.replace("https://business.magictraveltur.com/login.html");
-            return;
-          }
-
-          if (Array.isArray(data) && data.length === 0) {
+          if (data.length === 0) {
             const latestProjects = document.getElementById('latest-projects');
             latestProjects.innerHTML = `
               <tr>
@@ -821,7 +802,6 @@
             return;
           }
 
-          // Se data for um array de pedidos, calculamos métricas
           const totalReceita = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_comissao || 0), 0);
           const totalFaturamento = data.reduce((acc, pedido) => acc + parseFloat(pedido.valor_venda || 0), 0);
           const totalDespesa = data.reduce((acc, pedido) => acc + parseFloat(pedido.custo || 0), 0);
@@ -836,7 +816,6 @@
           latestProjects.innerHTML = '';
           const sortedDataForOrders = data.sort((a, b) => new Date(b.data_venda) - new Date(a.data_venda));
           const latestData = sortedDataForOrders.slice(0, 10);
-
           latestData.forEach(pedido => {
             latestProjects.innerHTML += `
               <tr>
@@ -855,19 +834,15 @@
 
         } catch (error) {
           console.error('Erro ao carregar os dados do dashboard:', error);
-          // Apenas exibe alerta e fica na página
           alert('Erro ao carregar os dados do dashboard. Verifique o console para mais informações.');
         }
       }
 
-      // ================
-      // Funções de Gráficos
-      // ================
       function updateRecentMovementChart(data) {
-        // ...
         const sortedData = data.sort((a, b) => new Date(a.data_venda) - new Date(b.data_venda));
-        const labels = sortedData.map(pedido => formatDateBR(pedido.data_venda));
-        const values = sortedData.map(pedido => parseFloat(pedido.valor_comissao || 0));
+        const labels = sortedData.map(p => formatDateBR(p.data_venda));
+        const values = sortedData.map(p => parseFloat(p.valor_comissao || 0));
+
         const ctx = document.getElementById('chartjs-dashboard-line').getContext('2d');
         if (window.recentMovementChart) {
           window.recentMovementChart.destroy();
@@ -898,7 +873,6 @@
       }
 
       function updateRealTimeMap(data) {
-        // ...
         const estados = {};
         data.forEach(pedido => {
           const uf = pedido.uf;
@@ -940,15 +914,35 @@
         const coordinates = {
           "AC": [-9.97499, -67.8243],
           "AL": [-9.66599, -35.735],
-          // ...
-          // DEMAIS ESTADOS
+          "AM": [-3.11703, -60.025],
+          "AP": [0.038, -51.05],
+          "BA": [-12.9714, -38.5014],
+          "CE": [-3.71722, -38.543],
+          "DF": [-15.7797, -47.9297],
+          "ES": [-20.3155, -40.3128],
+          "GO": [-16.6869, -49.2648],
+          "MA": [-2.53073, -44.305],
+          "MT": [-15.601, -56.097],
+          "MS": [-20.4697, -54.6201],
+          "MG": [-19.9167, -43.9345],
+          "PA": [-1.45583, -48.5044],
+          "PB": [-7.115, -34.8631],
+          "PE": [-8.04756, -34.877],
+          "PI": [-5.08921, -42.8019],
+          "RJ": [-22.9068, -43.1729],
+          "RN": [-5.79448, -35.211],
+          "RO": [-8.76077, -63.9004],
+          "RS": [-30.0346, -51.2177],
+          "RR": [2.8193, -60.671],
+          "SC": [-27.5954, -48.548],
+          "SE": [-10.9472, -37.0731],
+          "SP": [-23.5505, -46.6333],
           "TO": [-10.25, -48.325]
         };
         return coordinates[uf] || [0, 0];
       }
 
       function updateBrowserUsage(data) {
-        // ...
         const meioPgtoCounts = {};
         data.forEach(pedido => {
           const meioPgto = pedido.meio_pgto;
@@ -991,7 +985,7 @@
             }]
           },
           options: {
-            responsive: true,
+            responsive: !window.MSInputMethodContext,
             maintainAspectRatio: false,
             plugins: {
               legend: { display: false }
@@ -1002,7 +996,6 @@
       }
 
       function updateMonthlySales(data) {
-        // ...
         const agents = {};
         data.forEach(pedido => {
           const agent = pedido.efetivado_por;
@@ -1028,8 +1021,7 @@
           type: 'bar',
           data: {
             labels: sortedAgents,
-            datasets: [
-              {
+            datasets: [{
                 label: 'Vendas',
                 backgroundColor: window.theme.primary,
                 borderColor: window.theme.primary,
@@ -1075,7 +1067,18 @@
         });
       }
 
-      // Carrega a sidebar e então busca os dados
+      async function loadSidebar() {
+        try {
+          const response = await fetch('https://business.magictraveltur.com/sidebar.html', { cache: "no-store" });
+          if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
+          const sidebarContent = await response.text();
+          document.getElementById('sidebar-container').innerHTML = sidebarContent;
+        } catch (error) {
+          console.error('Erro ao carregar a sidebar:', error);
+          document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
+        }
+      }
+
       await loadSidebar();
       await fetchDashboardData();
     });
