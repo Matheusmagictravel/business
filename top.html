@@ -127,6 +127,35 @@
       font-size: 18px;
     }
 
+    /* Formulário para o usuário digitar a cotação do dólar */
+    .custom-dollar-form {
+      margin-top: 10px;
+    }
+    .custom-dollar-form label {
+      margin-right: 5px;
+      font-size: 13px;
+    }
+    .custom-dollar-form input {
+      width: 80px;
+      padding: 5px;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .custom-dollar-form button {
+      font-size: 13px;
+      padding: 5px 10px;
+      margin-left: 5px;
+      background-color: var(--secondary-color);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .custom-dollar-form button:hover {
+      background-color: var(--secondary-hover);
+    }
+
     /* SELETOR DE DATAS (CALENDÁRIO) */
     .date-selector-container {
       display: flex;
@@ -258,6 +287,7 @@
       background-color: #3b27d9;
       transform: scale(1.05);
     }
+
     @media (max-width: 768px) {
       .calendar {
         width: 240px;
@@ -341,6 +371,7 @@
       background-color: #cceeff;
       cursor: pointer;
     }
+
     /* Paginação */
     .pagination {
       display: flex;
@@ -412,7 +443,6 @@
           Pedidos Diferentes
         </div>
         <div class="summary-value" id="totalPedidos">-</div>
-        <!-- Comparativo com intervalo anterior -->
         <div class="summary-compare" id="totalPedidosCompare"></div>
       </div>
 
@@ -425,6 +455,19 @@
         <div class="summary-value" id="valorEstimadoReais">-</div>
         <!-- Comparativo com penúltimo dia útil -->
         <div class="summary-compare" id="valorEstimadoCompare"></div>
+
+        <!-- Form para o usuário digitar a cotação manual -->
+        <div class="custom-dollar-form">
+          <label for="inputDollarRate">Cotação do Dólar:</label>
+          <input 
+            type="number" 
+            step="0.0001" 
+            id="inputDollarRate" 
+            placeholder="Ex: 5.79"
+            min="0"
+          />
+          <button onclick="applyUserDollar()">Aplicar</button>
+        </div>
       </div>
     </div>
 
@@ -518,7 +561,7 @@
 
   <script>
     /* ======================================
-       VARIÁVEIS GLOBAIS E COTAÇÃO EXEMPLO
+       VARIÁVEIS GLOBAIS
     ====================================== */
     let currentPage = 1;
     const rowsPerPage = 10;
@@ -532,9 +575,29 @@
     const ultimaCotacaoFechamento = 5.79;
     const penultimaCotacaoFechamento = 5.75;
 
-    // Calculamos a cotação em uso e a do penúltimo dia útil (para comparativo)
-    const cotacaoEmUso = parseFloat((ultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2));    // ~ 5.85
-    const cotacaoPenultima = parseFloat((penultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2)); // ~ 5.80 ou 5.81
+    // Calculamos a cotação em uso e a do penúltimo dia útil (para comparativo).
+    // Se o usuário não digitar nada, vamos usar estes valores.
+    let cotacaoEmUso = parseFloat((ultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2));    
+    let cotacaoPenultima = parseFloat((penultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2)); 
+
+    // Caso o usuário forneça manualmente, salvamos aqui (ou null se não fornecido).
+    let userCotacaoManual = null;
+
+    /* ======================================
+       FUNÇÃO PARA APLICAR A COTAÇÃO
+       DIGITADA PELO USUÁRIO
+    ====================================== */
+    function applyUserDollar() {
+      const val = parseFloat(document.getElementById('inputDollarRate').value);
+      if (!isNaN(val) && val > 0) {
+        // Soma 0,98%
+        userCotacaoManual = parseFloat((val * (1 + 0.0098)).toFixed(2));
+        // Recalcula a tabela e o resumo
+        filterOrders();
+      } else {
+        alert('Por favor, informe um valor válido para a cotação.');
+      }
+    }
 
     /* ======================================
        FUNÇÕES COMPARTILHADAS
@@ -549,18 +612,16 @@
       let st = decodeHtmlEntities(status || '');
       st = st.toLowerCase().normalize('NFKC');
       st = st.replace(/[\u00A0\u200B\uFEFF\u2060]/g, '');
-      st = st.replace(/[\u2013\u2014-]/g, '–');
+      st = st.replace(/[\u2013\u2014-]/g, '–'); 
       return st.trim();
     }
 
-    // Formata data (YYYY-MM-DD -> DD/MM/YYYY)
     function formatDate(dateString) {
       if (!dateString) return '';
       const [year, month, day] = dateString.split('-').map(Number);
       return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
     }
 
-    // Formata objeto Date -> DD/MM/YYYY (para exibir no label)
     function formatDisplayDate(dateObj) {
       const d = String(dateObj.getDate()).padStart(2, '0');
       const m = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -568,17 +629,14 @@
       return `${d}/${m}/${y}`;
     }
 
-    // Abre detalhes em nova aba
     function openDetailsPage(orderId) {
       window.open(`detalhes.html?pedido=${orderId}`, '_blank');
     }
 
-    // Botão "Adicionar Pedido"
     function addNewOrder() {
       window.location.href = 'https://business.magictraveltur.com/loti.html';
     }
 
-    // Ajusta cor do status
     function getStatusBadge(status) {
       const st = normalizeStatus(status);
       switch (st) {
@@ -597,30 +655,22 @@
       }
     }
 
-    /* ======================================
-       COMPARATIVO DE PERCENTUAL
-    ====================================== */
     function calcPercentChange(newValue, oldValue) {
       if (oldValue === 0) {
         if (newValue === 0) return 0;
-        return 100; // se antes era 0 e agora >0 => 100% (ou infinito)
+        return 100;
       }
       return ((newValue - oldValue) / oldValue) * 100;
     }
 
-    // Retorna [startDateAnterior, endDateAnterior] do mesmo tamanho
     function getPreviousInterval(startDate, endDate) {
-      // Ex.: se 10/02 a 12/02 => length=3 => anterior= 07/02 a 09/02
       const oneDayMs = 86400000;
-      const lengthMs = endDate - startDate + oneDayMs; // total ms do intervalo
-
-      const endDateAnterior = new Date(startDate.getTime() - oneDayMs); 
+      const lengthMs = endDate - startDate + oneDayMs;
+      const endDateAnterior = new Date(startDate.getTime() - oneDayMs);
       const startDateAnterior = new Date(endDateAnterior.getTime() - (lengthMs - oneDayMs));
-
       return [startDateAnterior, endDateAnterior];
     }
 
-    // Filtra e soma "Total a Pagar" (USD) e "Pedidos Diferentes" num range
     function calculateIntervalData(orders, rangeStart, rangeEnd) {
       let totalUsd = 0;
       let pedidosSet = new Set();
@@ -629,8 +679,6 @@
         const status = normalizeStatus(order.status);
         const valorPedido = parseFloat(order.raw_total_usd) || 0;
         if (!order.data_pagamento) return;
-
-        // data_pagamento => date
         const [yyyy, mm, dd] = order.data_pagamento.split('-').map(Number);
         const dataPagamento = new Date(yyyy, mm - 1, dd);
 
@@ -708,7 +756,7 @@
       const totalHojeAnterior = intervaloAnterior.totalUsd;
       const pedidosDiferentesAnterior = intervaloAnterior.pedidosDiferentes;
 
-      // 2a) % variação do totalHoje
+      // Comparativos
       const pctHoje = calcPercentChange(totalHoje, totalHojeAnterior);
       let comparativoHoje = '';
       if (pctHoje > 0) {
@@ -719,7 +767,6 @@
         comparativoHoje = 'Nenhuma variação em relação ao período anterior';
       }
 
-      // 2b) % variação pedidos
       const pctPedidos = calcPercentChange(pedidosDiferentes, pedidosDiferentesAnterior);
       let comparativoPedidos = '';
       if (pctPedidos > 0) {
@@ -730,12 +777,13 @@
         comparativoPedidos = 'Nenhuma variação em relação ao período anterior';
       }
 
-      // 3) Valor estimado em Reais: totalHoje * cotaçãoEmUso
-      const valorReais = totalHoje * cotacaoEmUso;
+      // 3) Valor Estimado em Reais:
+      // Se o usuário digitou algo, priorizamos userCotacaoManual.
+      const cotacaoFinal = (userCotacaoManual !== null) ? userCotacaoManual : cotacaoEmUso;
+      const valorReais = totalHoje * cotacaoFinal;
 
-      // Comparativo com penúltimo dia útil (só a cotação)
-      // Ex.: se cotacaoEmUso=5.85 e penultima=5.80 => dif = +0.86%
-      const pctCotacao = calcPercentChange(cotacaoEmUso, cotacaoPenultima);
+      // Comparativo com penúltima cotação
+      const pctCotacao = calcPercentChange(cotacaoFinal, cotacaoPenultima);
       let comparativoReais = '';
       if (pctCotacao > 0) {
         comparativoReais = `Cotação subiu +${pctCotacao.toFixed(2)}% comparado à penúltima`;
@@ -745,9 +793,7 @@
         comparativoReais = 'Cotação inalterada em relação à penúltima';
       }
 
-      /* ======================================
-         EXIBE VALORES NA TELA
-      ====================================== */
+      // Exibe valores
       document.getElementById("totalPagarHoje").innerText = `U$ ${totalHoje.toFixed(2)}`;
       document.getElementById("totalPagarHojeCompare").innerText = comparativoHoje;
 
@@ -759,12 +805,11 @@
     }
 
     /* ======================================
-       FILTRO (INTERVALO SELECIONADO) + RENDER
+       FILTRO (INTERVALO) E RENDERIZA
     ====================================== */
     function filterOrders() {
       let filteredOrders = combinedOrders;
 
-      // Filtra data_pagamento entre selectedStartDate e selectedEndDate
       if (selectedStartDate && selectedEndDate) {
         filteredOrders = combinedOrders.filter(order => {
           if (!order.data_pagamento) return false;
@@ -774,11 +819,8 @@
         });
       }
 
-      // Renderiza tabela e paginação
       renderTable(filteredOrders);
       renderPagination(filteredOrders);
-
-      // Calcula e exibe o resumo + comparativos
       calcularResumoEComparativo(filteredOrders);
     }
 
@@ -798,7 +840,7 @@
     }
 
     /* ======================================
-       CARREGA DADOS DAS APIs E UNIFICA
+       CARREGA DADOS DAS APIS E UNIFICA
     ====================================== */
     async function loadOrders() {
       try {
@@ -839,7 +881,7 @@
             id_pedido: planilha.id_pedido,
             produto: planilha.produto || '',
             valor_calculado: (totalUsd - lobista).toFixed(2), // exibido na tabela
-            raw_total_usd: totalUsd.toFixed(2), // usado no resumo
+            raw_total_usd: totalUsd.toFixed(2),               // usado no resumo
             data_uso: planilha.data || '',
             data_pagamento: planilha.data_pagamento || '',
             identificador: planilha.identificador || '',
@@ -848,7 +890,7 @@
           };
         });
 
-        // Filtra e renderiza
+        // Agora filtra e exibe
         filterOrders();
       } catch (error) {
         console.error('Erro ao carregar os dados:', error);
@@ -862,7 +904,7 @@
     }
 
     /* ======================================
-       INICIALIZA CALENDÁRIO E EVENTOS
+       INICIALIZA O CALENDÁRIO E EVENTOS
     ====================================== */
     function initializeCalendar() {
       const openCalendarBtn = document.getElementById("open-calendar-btn");
@@ -996,8 +1038,10 @@
        DOM CARREGADO
     ====================================== */
     document.addEventListener('DOMContentLoaded', () => {
+      // Inicializa o calendário e a sidebar
       initializeCalendar();
       loadSidebar();
+      // Carrega pedidos e planilhas
       loadOrders();
     });
   </script>
