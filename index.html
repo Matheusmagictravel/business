@@ -1,11 +1,3 @@
-<?php 
-session_start();
-if (!isset($_SESSION["user_id"])) {
-    header("Location: https://business.magictraveltur.com/login.html");
-    exit();
-}
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -38,7 +30,10 @@ if (!isset($_SESSION["user_id"])) {
   <script src="https://unpkg.com/feather-icons"></script>
 
   <style>
-    
+    /* 
+      O body começa oculto; só será exibido se a sessão estiver válida.
+      A verificação é feita na função checkSession() (ao final do arquivo).
+    */
     body {
         display: none;
     }
@@ -588,7 +583,12 @@ if (!isset($_SESSION["user_id"])) {
       </div>
     </div>
   </main>
-    <script>async function checkSession() {
+
+  <script>
+    // ----------------------------
+    // 1) Verifica a Sessão via AJAX
+    // ----------------------------
+    async function checkSession() {
         try {
             const response = await fetch("https://magictraveltur.com/session_check.php", {
                 credentials: 'include' // Envia os cookies de sessão corretamente
@@ -612,20 +612,32 @@ if (!isset($_SESSION["user_id"])) {
     document.addEventListener("DOMContentLoaded", checkSession);
 
 
-    // Logout do usuário
-    document.getElementById("logoutBtn").addEventListener("click", async function () {
-      try {
-        const response = await fetch("https://magictraveltur.com/logout.php");
-        const result = await response.json();
-        
-        if (result.success) {
-          localStorage.removeItem("userLoggedIn"); // Remove do Local Storage
-          window.location.replace("https://business.magictraveltur.com/login.html");
-        } else {
-          alert("Erro ao sair. Tente novamente.");
-        }
-      } catch (error) {
-        console.error("Erro ao sair:", error);
+    // --------------------------------
+    // 2) Logout do usuário (AJAX Fetch)
+    // --------------------------------
+    document.addEventListener("DOMContentLoaded", () => {
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", async function () {
+          try {
+            // Agora chamamos a rota do api_log.php para logout
+            const response = await fetch("https://magictraveltur.com/api_log.php/logout");
+            const result = await response.json();
+            
+            // Se você preferir que api_log.php/logout retorne texto:
+            // const text = await response.text();
+            // if (text.includes("Logout realizado com sucesso")) { ... }
+
+            if (result.success) {
+              localStorage.removeItem("userLoggedIn"); // Remove do Local Storage
+              window.location.replace("https://business.magictraveltur.com/login.html");
+            } else {
+              alert("Erro ao sair. Tente novamente.");
+            }
+          } catch (error) {
+            console.error("Erro ao sair:", error);
+          }
+        });
       }
     });
   </script>
@@ -638,6 +650,9 @@ if (!isset($_SESSION["user_id"])) {
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
   <script>
+    // ---------------------------------
+    // 3) Carregamento do Dashboard etc.
+    // ---------------------------------
     document.addEventListener("DOMContentLoaded", async function () {
 
       // Função para formatar datas (dd/mm/yyyy)
@@ -668,7 +683,6 @@ if (!isset($_SESSION["user_id"])) {
       const yearSelect = document.getElementById("calendar__year");
       const selectedDateDisplay = document.getElementById("datas-selecionadas");
 
-      // Inicializa com o primeiro e último dia do mês atual
       let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
       let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
@@ -681,7 +695,6 @@ if (!isset($_SESSION["user_id"])) {
 
         calendarDatesContainer.innerHTML = '';
 
-        // Renderiza dias vazios até o primeiro dia da semana (segunda como primeiro dia)
         let firstWeekDay = firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1;
         for (let i = 0; i < firstWeekDay; i++) {
           const emptyDateElement = document.createElement('div');
@@ -689,7 +702,6 @@ if (!isset($_SESSION["user_id"])) {
           calendarDatesContainer.appendChild(emptyDateElement);
         }
 
-        // Renderiza os dias do mês
         for (let i = 1; i <= daysInMonth; i++) {
           const dateElement = document.createElement('div');
           dateElement.classList.add('calendar__date');
@@ -698,15 +710,12 @@ if (!isset($_SESSION["user_id"])) {
 
           dateElement.addEventListener('click', function () {
             const clickedDate = new Date(year, month, i);
-
-            // Se não há datas selecionadas ou se já temos um intervalo completo, inicia nova seleção
             if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
               selectedStartDate = clickedDate;
               selectedEndDate = null;
               clearSelection();
               dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
             } else {
-              // Verifica se a data final é anterior à inicial
               if (clickedDate < selectedStartDate) {
                 alert('Data de término não pode ser anterior à data de início.');
                 return;
@@ -855,7 +864,7 @@ if (!isset($_SESSION["user_id"])) {
           document.getElementById('earnings-value').textContent = formatCurrencyBR(totalDespesa);
           document.getElementById('orders-value').textContent = totalPedidos;
 
-          // Atualiza a tabela de Pedidos Recentes com apenas os 10 últimos pedidos
+          // Atualiza a tabela de Pedidos Recentes com apenas os 10 últimos
           const latestProjects = document.getElementById('latest-projects');
           latestProjects.innerHTML = '';
           const sortedDataForOrders = data.sort((a, b) => new Date(b.data_venda) - new Date(a.data_venda));
@@ -871,16 +880,16 @@ if (!isset($_SESSION["user_id"])) {
               </tr>`;
           });
 
-          // Atualiza o gráfico de Receita Recente com todos os dados do período selecionado
+          // Atualiza o gráfico de Receita Recente
           updateRecentMovementChart(data);
 
-          // Atualiza o mapa com os dados por UF usando Leaflet
+          // Atualiza o mapa com os dados por UF
           updateRealTimeMap(data);
 
           // Atualiza dados de Meio de Pagamento
           updateBrowserUsage(data);
 
-          // Atualiza o Ranking de Vendedores com vendas, faturado e margem
+          // Atualiza o Ranking de Vendedores
           updateMonthlySales(data);
 
         } catch (error) {
@@ -890,7 +899,6 @@ if (!isset($_SESSION["user_id"])) {
       }
 
       function updateRecentMovementChart(data) {
-        // Ordena os dados por data (ascendente)
         const sortedData = data.sort((a, b) => new Date(a.data_venda) - new Date(b.data_venda));
         const labels = sortedData.map(pedido => formatDateBR(pedido.data_venda));
         const values = sortedData.map(pedido => parseFloat(pedido.valor_comissao || 0));
@@ -924,7 +932,6 @@ if (!isset($_SESSION["user_id"])) {
         });
       }
 
-      // Função de mapa usando Leaflet com tile layer minimalista (Stamen Toner Lite)
       function updateRealTimeMap(data) {
         const estados = {};
         data.forEach(pedido => {
@@ -1049,7 +1056,6 @@ if (!isset($_SESSION["user_id"])) {
         });
       }
 
-      // Atualiza o Ranking de Vendedores com vendas, faturado e margem
       function updateMonthlySales(data) {
         const agents = {};
         data.forEach(pedido => {
@@ -1076,7 +1082,8 @@ if (!isset($_SESSION["user_id"])) {
           type: 'bar',
           data: {
             labels: sortedAgents,
-            datasets: [{
+            datasets: [
+              {
                 label: 'Vendas',
                 backgroundColor: window.theme.primary,
                 borderColor: window.theme.primary,
@@ -1122,7 +1129,6 @@ if (!isset($_SESSION["user_id"])) {
         });
       }
 
-      // Carrega o conteúdo da Sidebar
       async function loadSidebar() {
         try {
           const response = await fetch('https://business.magictraveltur.com/sidebar.html', { cache: "no-store" });
