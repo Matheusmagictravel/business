@@ -18,7 +18,6 @@
        Variáveis Globais e Reset
     ============================================ */
     :root {
-      /* Variáveis do primeiro código */
       --primary-color: #0071e3;
       --secondary-color: #1cbb8c;
       --warning-color: #fcb92c;
@@ -27,7 +26,7 @@
       --light-bg: #f9f9fa;
       --text-color: #1d1d1f;
 
-      /* Variáveis extras do segundo código */
+      /* Extras do segundo código */
       --primary-hover: #005bb5;
       --secondary-hover: #17a2b8;
       --sidebar-bg: #222e3c;
@@ -453,24 +452,28 @@
 
     <!-- Blocos de resumo -->
     <div class="summary-container">
+      <!-- IDs para atualizar dinamicamente, se quiser mostrar o intervalo nos títulos -->
       <div class="summary-box">
-        <div class="summary-title">
-          <i class="bi bi-credit-card summary-icon"></i> Total a Pagar Hoje (USD)
+        <div class="summary-title" id="totalPagarHojeLabel">
+          <i class="bi bi-credit-card summary-icon"></i> 
+          Total a Pagar Hoje (USD)
         </div>
         <div class="summary-value" id="totalPagarHoje">-</div>
         <div class="summary-change positive" id="totalPagarHojeChange"></div>
       </div>
 
       <div class="summary-box">
-        <div class="summary-title">
-          <i class="bi bi-file-earmark-text summary-icon"></i> Pedidos Diferentes
+        <div class="summary-title" id="totalPedidosLabel">
+          <i class="bi bi-file-earmark-text summary-icon"></i> 
+          Pedidos Diferentes
         </div>
         <div class="summary-value" id="totalPedidos">-</div>
       </div>
 
       <div class="summary-box">
-        <div class="summary-title">
-          <i class="bi bi-calendar-event summary-icon"></i> Total a Pagar na Semana
+        <div class="summary-title" id="totalSemanaLabel">
+          <i class="bi bi-calendar-event summary-icon"></i> 
+          Total a Pagar na Semana
         </div>
         <div class="summary-value" id="totalSemana">-</div>
         <div class="summary-change positive" id="totalSemanaChange"></div>
@@ -574,6 +577,7 @@
     let currentPage = 1;
     const rowsPerPage = 10;
     let combinedOrders = []; // Array unificado (Planilha + Pedidos)
+    // Intervalo padrão (primeiro dia do mês até o último dia)
     let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
@@ -599,6 +603,14 @@
       if (!dateString) return '';
       const [year, month, day] = dateString.split('-').map(Number);
       return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
+    }
+
+    // Formata objeto Date -> DD/MM/YYYY
+    function formatDisplayDate(dateObj) {
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const y = dateObj.getFullYear();
+      return `${d}/${m}/${y}`;
     }
 
     // Abre detalhes em nova aba
@@ -644,10 +656,7 @@
           <td>${order.nome}</td>
           <td>${order.id_pedido}</td>
           <td>${order.produto}</td>
-          <!--
-            Aqui exibimos o valor “(total_usd - lobista)” caso queiram manter a apresentação 
-            já que no front, originalmente, era isso que aparecia. Fica a seu critério.
-          -->
+          <!-- Exibe (total_usd - lobista) conforme estava originalmente -->
           <td>U$ ${order.valor_calculado}</td>
           <td>${order.data_uso ? formatDate(order.data_uso) : ''}</td>
           <td>${formatDate(order.data_pagamento)}</td>
@@ -681,65 +690,99 @@
     }
 
     /* ============================================
-       CÁLCULO DOS RESUMOS USANDO total_usd
-       (somente para Emissão Bloqueada, Emitido – Não Pago, Emitido TIF)
+       ATUALIZA TÍTULOS DOS BLOCOS DE RESUMO 
+       (se quiser mostrar intervalo neles)
+    ============================================ */
+    function updateSummaryLabels() {
+      if (!selectedStartDate || !selectedEndDate) return;
+
+      const startStr = formatDisplayDate(selectedStartDate);
+      const endStr = formatDisplayDate(selectedEndDate);
+
+      // "Total a Pagar Hoje (USD) (start-end)"
+      document.getElementById('totalPagarHojeLabel').innerHTML = `
+        <i class="bi bi-credit-card summary-icon"></i>
+        Total a Pagar Hoje (USD) (${startStr} - ${endStr})
+      `;
+
+      // "Pedidos Diferentes (start-end)"
+      document.getElementById('totalPedidosLabel').innerHTML = `
+        <i class="bi bi-file-earmark-text summary-icon"></i>
+        Pedidos Diferentes (${startStr} - ${endStr})
+      `;
+
+      // "Total a Pagar na Semana (mantém a mesma lógica de exibição)"
+      document.getElementById('totalSemanaLabel').innerHTML = `
+        <i class="bi bi-calendar-event summary-icon"></i>
+        Total a Pagar na Semana
+      `;
+    }
+
+    /* ============================================
+       AGORA "Total a Pagar Hoje (USD)" SOMA 
+       TODO O INTERVALO SELECIONADO.
     ============================================ */
     function calcularResumo(orders) {
       let totalPagarHoje = 0;
       let totalSemana = 0;
       let pedidosDiferentes = new Set();
 
+      // "orders" já está filtrado para o intervalo 
+      // (selectedStartDate <= data_pagamento <= selectedEndDate)
+      orders.forEach(order => {
+        const status = normalizeStatus(order.status);
+        const valorPedido = parseFloat(order.raw_total_usd) || 0;
+
+        // Soma somente se status for Emissão Bloqueada, Emitido – Não Pago, Emitido TIF
+        if (["emissão bloqueada", "emitido – não pago", "emitido tif"].includes(status)) {
+          // Agora, "Total a Pagar Hoje" = soma do intervalo
+          totalPagarHoje += valorPedido;
+        }
+
+        pedidosDiferentes.add(order.id_pedido);
+      });
+
+      // Exibe no HTML
+      document.getElementById("totalPagarHoje").innerText = `U$ ${totalPagarHoje.toFixed(2)}`;
+      document.getElementById("totalPedidos").innerText = pedidosDiferentes.size;
+
+      // Mantemos a lógica antiga para "Total a Pagar na Semana" 
+      // (segunda a domingo do dia do sistema).
+      // Se quiser somar também só o intervalo selecionado,
+      // troque o que está abaixo para algo compatível.
       const hoje = new Date();
-      // Ajustar para segunda a domingo:
-      // 0=Domingo, 1=Segunda, etc.
-      const dayOfWeek = hoje.getDay(); // 0=Domingo
-      const distanceFromMonday = (dayOfWeek + 6) % 7; 
+      hoje.setHours(0,0,0,0);
+      const dayOfWeek = hoje.getDay();
+      const distanceFromMonday = (dayOfWeek + 6) % 7;
       const inicioSemana = new Date(hoje);
-      inicioSemana.setHours(0,0,0,0);
       inicioSemana.setDate(inicioSemana.getDate() - distanceFromMonday);
+      inicioSemana.setHours(0,0,0,0);
 
       const fimSemana = new Date(inicioSemana);
       fimSemana.setDate(fimSemana.getDate() + 6);
       fimSemana.setHours(23,59,59,999);
 
+      let totalSemanaTemp = 0;
       orders.forEach(order => {
-        // Usamos o 'total_usd' puro, sem subtrair 'lobista'
-        const valorPedido = parseFloat(order.raw_total_usd) || 0;
         const status = normalizeStatus(order.status);
-
-        // Somente se for Emissão Bloqueada, Emitido – Não Pago ou Emitido TIF
+        const valorPedido = parseFloat(order.raw_total_usd) || 0;
         if (["emissão bloqueada", "emitido – não pago", "emitido tif"].includes(status)) {
           if (order.data_pagamento) {
             const [yyyy, mm, dd] = order.data_pagamento.split('-').map(Number);
             const dataPagamento = new Date(yyyy, mm - 1, dd);
-
-            // Se é hoje
-            if (dataPagamento.toDateString() === hoje.toDateString()) {
-              totalPagarHoje += valorPedido;
-            }
-
-            // Se está dentro da semana (segunda a domingo)
             if (dataPagamento >= inicioSemana && dataPagamento <= fimSemana) {
-              totalSemana += valorPedido;
+              totalSemanaTemp += valorPedido;
             }
           }
         }
-
-        // Pedidos Diferentes = contar quantos IDs diferentes
-        pedidosDiferentes.add(order.id_pedido);
       });
-
-      document.getElementById("totalPagarHoje").innerText = `U$ ${totalPagarHoje.toFixed(2)}`;
+      totalSemana = totalSemanaTemp;
       document.getElementById("totalSemana").innerText = `U$ ${totalSemana.toFixed(2)}`;
-      document.getElementById("totalPedidos").innerText = pedidosDiferentes.size;
-
-      // Exemplo de mudanças percentuais (caso queira futuramente)
-      // document.getElementById("totalPagarHojeChange").innerText = "+10%";
-      // document.getElementById("totalSemanaChange").innerText = "-5%";
     }
 
     /* ============================================
-       FILTRAGEM (INTERVALO DE DATAS) PARA A TABELA
+       FILTRA (pela data_pagamento no range) 
+       e depois chama renderização e cálculo resumo
     ============================================ */
     function filterOrders() {
       let filteredOrders = combinedOrders;
@@ -753,12 +796,12 @@
         });
       }
 
-      // Atualiza a Tabela e Paginação
       renderTable(filteredOrders);
       renderPagination(filteredOrders);
-
-      // Calcula o resumo com base no array filtrado
       calcularResumo(filteredOrders);
+
+      // Atualiza títulos dos blocos para exibir datas escolhidas (opcional)
+      updateSummaryLabels();
     }
 
     /* ============================================
@@ -777,11 +820,10 @@
     }
 
     /* ============================================
-       CARREGA DADOS DAS APIS E MONTA O ARRAY
+       CARREGA DADOS DAS APIs E UNIFICA
     ============================================ */
     async function loadOrders() {
       try {
-        // Datas em formato YYYY-MM-DD
         const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
         const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
 
@@ -803,13 +845,13 @@
         const planilhasData = await responsePlanilhas.json();
         const pedidosData = await responsePedidos.json();
 
-        // Monta um map (id -> nome do pedido)
+        // Mapeia id -> nome do pedido
         const pedidosMap = {};
         pedidosData.forEach(pedido => {
           pedidosMap[pedido.id] = pedido.nome;
         });
 
-        // Unifica
+        // Monta array unificado
         combinedOrders = planilhasData.map(planilha => {
           const totalUsd = parseFloat(planilha.total_usd) || 0;
           const lobista = parseFloat(planilha.lobista) || 0;
@@ -818,14 +860,8 @@
             nome: pedidosMap[planilha.id_pedido] || 'N/A',
             id_pedido: planilha.id_pedido,
             produto: planilha.produto || '',
-
-            // Valor para exibir na tabela: (total_usd - lobista),
-            // mas lembre que no resumo iremos somar "total_usd" puro.
-            valor_calculado: (totalUsd - lobista).toFixed(2),
-
-            // Guardamos o total_usd original para o resumo
-            raw_total_usd: totalUsd.toFixed(2),
-
+            valor_calculado: (totalUsd - lobista).toFixed(2), // exibido na tabela
+            raw_total_usd: totalUsd.toFixed(2), // usado no resumo
             data_uso: planilha.data || '',
             data_pagamento: planilha.data_pagamento || '',
             identificador: planilha.identificador || '',
@@ -834,7 +870,7 @@
           };
         });
 
-        // Agora filtra e exibe
+        // Filtra de acordo com o intervalo selecionado
         filterOrders();
       } catch (error) {
         console.error('Erro ao carregar os dados:', error);
@@ -846,7 +882,7 @@
     }
 
     /* ============================================
-       INICIALIZA O CALENDÁRIO
+       INICIALIZA O CALENDÁRIO E EVENTOS
     ============================================ */
     function initializeCalendar() {
       const openCalendarBtn = document.getElementById("open-calendar-btn");
@@ -868,7 +904,7 @@
       });
 
       applyBtn.addEventListener("click", () => {
-        // Se só selecionou data inicial e não a final, usar a mesma
+        // Se só selecionou data inicial
         if (selectedStartDate && !selectedEndDate) {
           selectedEndDate = selectedStartDate;
         }
@@ -878,8 +914,7 @@
         }
         updateSelectedDateDisplay();
         bootstrapModal.hide();
-        // Recarrega com as novas datas
-        loadOrders();
+        loadOrders(); // Recarrega dados com as novas datas
       });
 
       monthSelect.addEventListener("change", renderCalendar);
@@ -908,8 +943,8 @@
           dateElement.addEventListener("click", () => {
             const clickedDate = new Date(year, month, i);
 
-            // Se ainda não tem startDate ou já havia intervalo completo, começa de novo
             if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
+              // Reinicia intervalo
               selectedStartDate = clickedDate;
               selectedEndDate = null;
               clearSelection();
@@ -923,7 +958,7 @@
               dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
             }
             else {
-              // Selecionou data final
+              // Seleciona data final
               selectedEndDate = clickedDate;
               highlightRange(selectedStartDate, selectedEndDate);
             }
@@ -975,14 +1010,7 @@
         }
       }
 
-      function formatDisplayDate(dateObj) {
-        const d = String(dateObj.getDate()).padStart(2, '0');
-        const m = String(dateObj.getMonth() + 1).padStart(2, '0');
-        const y = dateObj.getFullYear();
-        return `${d}/${m}/${y}`;
-      }
-
-      // Inicializa com o mês/ano atuais
+      // Inicializa com a data do selectedStartDate
       monthSelect.value = selectedStartDate.getMonth();
       yearSelect.value = selectedStartDate.getFullYear();
       renderCalendar();
