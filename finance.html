@@ -356,6 +356,9 @@
       font-weight: 600;
       color: var(--header-text);
       background-color: var(--header-bg);
+      cursor: pointer;
+      user-select: none;
+      position: relative; /* Para acomodar indicador de ordenação */
     }
     tr:nth-child(odd) {
       background-color: var(--table-odd);
@@ -371,6 +374,20 @@
       background-color: #cceeff;
       cursor: pointer;
     }
+
+    /* Indicador de ordenação (setas) */
+    .sort-indicator {
+      margin-left: 6px;
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+    .sort-indicator.asc::before {
+      content: "\\2191"; /* seta para cima */
+    }
+    .sort-indicator.desc::before {
+      content: "\\2193"; /* seta para baixo */
+    }
+
     /* Paginação */
     .pagination {
       display: flex;
@@ -451,7 +468,6 @@
           Valor Estimado em Reais
         </div>
         <div class="summary-value" id="valorEstimadoReais">-</div>
-        <!-- Removemos a comparação com a penúltima cotação -->
         <div class="summary-compare" id="valorEstimadoCompare"></div>
 
         <!-- Campo para digitar manualmente a cotação do dólar -->
@@ -528,18 +544,23 @@
           <h1>Financeiro | Pedidos</h1>
           <button class="add-order-button" onclick="addNewOrder()">Adicionar Pedido</button>
         </div>
+
+        <!-- IMPORTANTE: 
+             Adicionamos data-sort-key em cada <th> para o JavaScript 
+             saber qual propriedade usar para ordenar. 
+        -->
         <table>
           <thead>
             <tr>
-              <th>Nome</th>
-              <th>ID do Pedido</th>
-              <th>Itens</th>
-              <th>Valor (U$)</th>
-              <th>Data de Uso</th>
-              <th>Data de Pagamento</th>
-              <th>Identificador</th>
-              <th>Fornecedor</th>
-              <th>Status</th>
+              <th data-sort-key="nome">Nome <span class="sort-indicator"></span></th>
+              <th data-sort-key="id_pedido">ID do Pedido <span class="sort-indicator"></span></th>
+              <th data-sort-key="produto">Itens <span class="sort-indicator"></span></th>
+              <th data-sort-key="valor_calculado">Valor (U$) <span class="sort-indicator"></span></th>
+              <th data-sort-key="data_uso">Data de Uso <span class="sort-indicator"></span></th>
+              <th data-sort-key="data_pagamento">Data de Pagamento <span class="sort-indicator"></span></th>
+              <th data-sort-key="identificador">Identificador <span class="sort-indicator"></span></th>
+              <th data-sort-key="fornecedor">Fornecedor <span class="sort-indicator"></span></th>
+              <th data-sort-key="status">Status <span class="sort-indicator"></span></th>
               <th style="width:50px; text-align:center;">Ação</th>
             </tr>
           </thead>
@@ -547,6 +568,7 @@
             <!-- Dados dinâmicos -->
           </tbody>
         </table>
+
         <div class="pagination" id="pagination-controls">
           <!-- Controles de paginação -->
         </div>
@@ -565,6 +587,9 @@
     const rowsPerPage = 10;
     let combinedOrders = [];
 
+    // Será o array filtrado + ordenado que exibimos na tabela
+    let displayedOrders = [];
+
     // Intervalo padrão (ex.: primeiro dia do mês até o último dia)
     let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
@@ -580,6 +605,10 @@
 
     // Valor que o usuário digitar (ou null caso não digite)
     let userCotacaoManual = null;
+
+    // Objeto que armazena a direção atual de ordenação por coluna
+    // Pode ser 'asc', 'desc' ou null
+    const sortDirections = {};
 
     /* ======================================
        FUNÇÃO PARA APLICAR A COTAÇÃO
@@ -614,6 +643,7 @@
     }
 
     function formatDate(dateString) {
+      // Converte "YYYY-MM-DD" para "DD/MM/YYYY"
       if (!dateString) return '';
       const [year, month, day] = dateString.split('-').map(Number);
       return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
@@ -695,13 +725,13 @@
     /* ======================================
        RENDERIZA TABELA E PAGINAÇÃO
     ====================================== */
-    function renderTable(filteredOrders) {
+    function renderTable(dataToDisplay) {
       const ordersTable = document.getElementById('orders-table');
       const start = (currentPage - 1) * rowsPerPage;
       const end = start + rowsPerPage;
-      const ordersToDisplay = filteredOrders.slice(start, end);
+      const ordersSlice = dataToDisplay.slice(start, end);
 
-      ordersTable.innerHTML = ordersToDisplay.map(order => `
+      ordersTable.innerHTML = ordersSlice.map(order => `
         <tr>
           <td>${order.nome}</td>
           <td>${order.id_pedido}</td>
@@ -720,9 +750,9 @@
       `).join('');
     }
 
-    function renderPagination(filteredOrders) {
+    function renderPagination(dataToDisplay) {
       const paginationControls = document.getElementById('pagination-controls');
-      const totalPages = Math.ceil(filteredOrders.length / rowsPerPage);
+      const totalPages = Math.ceil(dataToDisplay.length / rowsPerPage);
       paginationControls.innerHTML = '';
 
       for (let i = 1; i <= totalPages; i++) {
@@ -731,8 +761,8 @@
         button.disabled = i === currentPage;
         button.onclick = () => {
           currentPage = i;
-          renderTable(filteredOrders);
-          renderPagination(filteredOrders);
+          renderTable(dataToDisplay);
+          renderPagination(dataToDisplay);
         };
         paginationControls.appendChild(button);
       }
@@ -741,9 +771,9 @@
     /* ======================================
        CÁLCULO DE RESUMO
     ====================================== */
-    function calcularResumoEComparativo(filteredOrders) {
+    function calcularResumoEComparativo(dataToCalc) {
       // 1) Intervalo atual
-      const intervaloAtual = calculateIntervalData(filteredOrders, selectedStartDate, selectedEndDate);
+      const intervaloAtual = calculateIntervalData(dataToCalc, selectedStartDate, selectedEndDate);
       const totalHoje = intervaloAtual.totalUsd;
       const pedidosDiferentes = intervaloAtual.pedidosDiferentes;
 
@@ -775,17 +805,10 @@
         comparativoPedidos = 'Nenhuma variação em relação ao período anterior';
       }
 
-      // 3) Valor em reais = totalHoje * (cotação final)
-      // Se usuário digitou, pegamos userCotacaoManual; senão, cotacaoEmUso
+      // 3) Valor em reais
       const cotacaoFinal = (userCotacaoManual !== null) ? userCotacaoManual : cotacaoEmUso;
       const valorReais = totalHoje * cotacaoFinal;
 
-      // Não exibimos mais comparativo com a penúltima
-      // (Removemos “Cotação subiu +X% comparado à penúltima”)
-      // Podemos exibir alguma info simples, se quiser
-      const comparativoReais = '';
-
-      // Exibe
       document.getElementById("totalPagarHoje").innerText = `U$ ${totalHoje.toFixed(2)}`;
       document.getElementById("totalPagarHojeCompare").innerText = comparativoHoje;
 
@@ -793,25 +816,135 @@
       document.getElementById("totalPedidosCompare").innerText = comparativoPedidos;
 
       document.getElementById("valorEstimadoReais").innerText = `R$ ${valorReais.toFixed(2)}`;
-      document.getElementById("valorEstimadoCompare").innerText = comparativoReais;
+      // Aqui está vazio, pois não comparamos mais com a penúltima
+      document.getElementById("valorEstimadoCompare").innerText = '';
     }
 
     /* ======================================
        FILTRO (INTERVALO) E RENDERIZA
     ====================================== */
     function filterOrders() {
-      let filteredOrders = combinedOrders;
+      // Filtrar com base no intervalo de datas escolhido
+      let filtered = combinedOrders;
       if (selectedStartDate && selectedEndDate) {
-        filteredOrders = combinedOrders.filter(order => {
+        filtered = combinedOrders.filter(order => {
           if (!order.data_pagamento) return false;
           const [year, month, day] = order.data_pagamento.split('-').map(Number);
           const paymentDate = new Date(year, month - 1, day);
           return paymentDate >= selectedStartDate && paymentDate <= selectedEndDate;
         });
       }
-      renderTable(filteredOrders);
-      renderPagination(filteredOrders);
-      calcularResumoEComparativo(filteredOrders);
+
+      // Guardamos no displayedOrders (antes de ordenar)
+      displayedOrders = filtered;
+
+      // Se tiver alguma ordenação ativa, aplicamos
+      // (Caso contrário, apenas segue sem ordenar explicitamente)
+      const activeColumn = Object.keys(sortDirections).find(col => sortDirections[col] !== null);
+      if (activeColumn) {
+        sortColumn(activeColumn); 
+      } else {
+        // Se não há coluna ativa, apenas renderizamos
+        currentPage = 1; // resetar para página 1
+        renderTable(displayedOrders);
+        renderPagination(displayedOrders);
+        calcularResumoEComparativo(displayedOrders);
+      }
+    }
+
+    /* ======================================
+       FUNÇÕES DE ORDENAÇÃO
+    ====================================== */
+    function sortColumn(columnKey) {
+      // Alterna a direção: se estiver asc, muda pra desc; se desc, muda pra asc; se null, começa asc
+      const currentDirection = sortDirections[columnKey] || null;
+      let newDirection = 'asc';
+      if (currentDirection === 'asc') {
+        newDirection = 'desc';
+      } else if (currentDirection === 'desc') {
+        newDirection = 'asc';
+      }
+      // Zera a direção de outras colunas
+      for (let key in sortDirections) {
+        sortDirections[key] = null;
+      }
+      // A coluna clicada passa a ter newDirection
+      sortDirections[columnKey] = newDirection;
+
+      // Faz a ordenação do displayedOrders
+      displayedOrders.sort((a, b) => compareValues(a, b, columnKey, newDirection));
+
+      // Atualiza indicadores visuais no cabeçalho (setas)
+      updateSortIndicators(columnKey, newDirection);
+
+      // Renderiza tabela/paginação e recalcula o resumo
+      currentPage = 1; 
+      renderTable(displayedOrders);
+      renderPagination(displayedOrders);
+      calcularResumoEComparativo(displayedOrders);
+    }
+
+    function compareValues(a, b, columnKey, direction) {
+      let valA = a[columnKey];
+      let valB = b[columnKey];
+
+      // Caso seja valor numérico
+      if (columnKey === 'valor_calculado' || columnKey === 'raw_total_usd') {
+        valA = parseFloat(valA) || 0;
+        valB = parseFloat(valB) || 0;
+      }
+      // Caso seja data no formato "YYYY-MM-DD"
+      else if (columnKey === 'data_uso' || columnKey === 'data_pagamento') {
+        // Se estiver vazio, tratamos como 0
+        if (!valA) valA = '0000-00-00';
+        if (!valB) valB = '0000-00-00';
+        const dateA = new Date(valA);
+        const dateB = new Date(valB);
+        valA = dateA.getTime();
+        valB = dateB.getTime();
+      }
+      // Caso seja string normal (nome, produto, etc.)
+      else {
+        valA = String(valA).toLowerCase();
+        valB = String(valB).toLowerCase();
+      }
+
+      if (valA < valB) return direction === 'asc' ? -1 : 1;
+      if (valA > valB) return direction === 'asc' ? 1 : -1;
+      return 0;
+    }
+
+    function updateSortIndicators(activeKey, direction) {
+      // Remove indicadores de todas as colunas
+      const thElements = document.querySelectorAll('table thead th');
+      thElements.forEach(th => {
+        const span = th.querySelector('.sort-indicator');
+        if (span) {
+          span.classList.remove('asc', 'desc');
+        }
+      });
+      // Aplica na coluna ativa
+      const activeTh = document.querySelector(`th[data-sort-key="${activeKey}"]`);
+      if (activeTh) {
+        const span = activeTh.querySelector('.sort-indicator');
+        if (span) {
+          if (direction === 'asc') span.classList.add('asc');
+          if (direction === 'desc') span.classList.add('desc');
+        }
+      }
+    }
+
+    function initSortingEvents() {
+      // Adicionar eventListener em cada TH que tenha data-sort-key
+      const thElements = document.querySelectorAll('table thead th');
+      thElements.forEach(th => {
+        const sortKey = th.getAttribute('data-sort-key');
+        if (sortKey) {
+          th.addEventListener('click', () => {
+            sortColumn(sortKey);
+          });
+        }
+      });
     }
 
     /* ======================================
@@ -880,7 +1013,7 @@
           };
         });
 
-        // Filtra e renderiza
+        // Chama o filtro inicial (sem ordem definida de imediato)
         filterOrders();
       } catch (error) {
         console.error('Erro ao carregar os dados:', error);
@@ -1021,10 +1154,14 @@
       updateSelectedDateDisplay();
     }
 
+    /* ======================================
+       DOMContentLoaded
+    ====================================== */
     document.addEventListener('DOMContentLoaded', () => {
       initializeCalendar();
       loadSidebar();
       loadOrders();
+      initSortingEvents(); // Inicializa eventos de clique para ordenar
     });
   </script>
 </body>
