@@ -1,4 +1,9 @@
-<?php include 'auth.php'; ?>
+<?php 
+// Se auth.php estiver na mesma pasta, mantenha assim:
+//   include 'auth.php';
+// Caso esteja em outro lugar, ajuste o caminho:
+include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
+?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -91,7 +96,6 @@
       margin-bottom: 30px;
       flex-wrap: wrap;
     }
-
     .summary-box {
       flex: 1;
       padding: 20px;
@@ -100,7 +104,6 @@
       box-shadow: var(--dashboard-box-shadow);
       min-width: 250px;
     }
-
     .summary-title {
       font-size: 16px;
       font-weight: 600;
@@ -109,24 +112,19 @@
       align-items: center;
       gap: 8px;
     }
-
     .summary-value {
       font-size: 24px;
       font-weight: 700;
       margin-top: 5px;
     }
-
     .summary-compare {
       font-size: 13px;
       margin-top: 5px;
       color: #555;
     }
-
     .summary-icon {
       font-size: 18px;
     }
-
-    /* Formulário para o usuário digitar a cotação do dólar */
     .custom-dollar-form {
       margin-top: 10px;
     }
@@ -164,7 +162,6 @@
       right: 63px;
       z-index: 1050;
     }
-
     .selected-date-display {
       margin-right: 10px;
       padding: 8px 12px;
@@ -190,7 +187,6 @@
       transform: translateX(-50%);
       margin-top: 10px;
     }
-
     .calendar {
       width: var(--calendar-width);
       margin: auto;
@@ -524,7 +520,6 @@
                   <div>Sab</div>
                 </div>
                 <div class="calendar__dates">
-                  <!-- Dias do calendario -->
                 </div>
               </div>
               <div class="calendar__buttons">
@@ -545,10 +540,6 @@
           <button class="add-order-button" onclick="addNewOrder()">Adicionar Pedido</button>
         </div>
 
-        <!-- IMPORTANTE: 
-             Adicionamos data-sort-key em cada <th> para o JavaScript 
-             saber qual propriedade usar para ordenar. 
-        -->
         <table>
           <thead>
             <tr>
@@ -565,13 +556,10 @@
             </tr>
           </thead>
           <tbody id="orders-table">
-            <!-- Dados dinâmicos -->
           </tbody>
         </table>
 
-        <div class="pagination" id="pagination-controls">
-          <!-- Controles de paginação -->
-        </div>
+        <div class="pagination" id="pagination-controls"></div>
       </div>
     </div>
   </main>
@@ -587,37 +575,26 @@
     const rowsPerPage = 10;
     let combinedOrders = [];
 
-    // Será o array filtrado + ordenado que exibimos na tabela
     let displayedOrders = [];
 
-    // Intervalo padrão (ex.: primeiro dia do mês até o último dia)
     let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-    let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+    let selectedEndDate   = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
-    // Exemplo: última cotação do dia útil (5,79) + 0,98% ≈ 5,85
-    const ultimaCotacaoFechamento = 5.79;
-    const penultimaCotacaoFechamento = 5.75;
+    const ultimaCotacaoFechamento   = 5.79;
+    const penultimaCotacaoFechamento= 5.75;
 
-    // Cotação padrão, caso o usuário não informe manualmente
-    let cotacaoEmUso = parseFloat((ultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2));
-    // (Não exibimos mais se subiu ou desceu em relação à penúltima)
+    let cotacaoEmUso     = parseFloat((ultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2));
     let cotacaoPenultima = parseFloat((penultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2));
+    let userCotacaoManual= null;
 
-    // Valor que o usuário digitar (ou null caso não digite)
-    let userCotacaoManual = null;
-
-    // Objeto que armazena a direção atual de ordenação por coluna
-    // Pode ser 'asc', 'desc' ou null
     const sortDirections = {};
 
     /* ======================================
-       FUNÇÃO PARA APLICAR A COTAÇÃO
-       DIGITADA PELO USUÁRIO
+       FUNÇÕES PRINCIPAIS
     ====================================== */
     function applyUserDollar() {
       const val = parseFloat(document.getElementById('inputDollarRate').value);
       if (!isNaN(val) && val > 0) {
-        // Soma 0,98%
         userCotacaoManual = parseFloat((val * (1 + 0.0098)).toFixed(2));
         filterOrders();
       } else {
@@ -625,9 +602,6 @@
       }
     }
 
-    /* ======================================
-       FUNÇÕES COMPARTILHADAS
-    ====================================== */
     function decodeHtmlEntities(str) {
       const el = document.createElement('textarea');
       el.innerHTML = str;
@@ -638,12 +612,11 @@
       let st = decodeHtmlEntities(status || '');
       st = st.toLowerCase().normalize('NFKC');
       st = st.replace(/[\u00A0\u200B\uFEFF\u2060]/g, '');
-      st = st.replace(/[\u2013\u2014-]/g, '–'); 
+      st = st.replace(/[\u2013\u2014-]/g, '–');
       return st.trim();
     }
 
     function formatDate(dateString) {
-      // Converte "YYYY-MM-DD" para "DD/MM/YYYY"
       if (!dateString) return '';
       const [year, month, day] = dateString.split('-').map(Number);
       return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
@@ -722,9 +695,49 @@
       };
     }
 
-    /* ======================================
-       RENDERIZA TABELA E PAGINAÇÃO
-    ====================================== */
+    function calcularResumoEComparativo(dataToCalc) {
+      const intervaloAtual = calculateIntervalData(dataToCalc, selectedStartDate, selectedEndDate);
+      const totalHoje = intervaloAtual.totalUsd;
+      const pedidosDiferentes = intervaloAtual.pedidosDiferentes;
+
+      const [prevStart, prevEnd] = getPreviousInterval(selectedStartDate, selectedEndDate);
+      const intervaloAnterior = calculateIntervalData(combinedOrders, prevStart, prevEnd);
+      const totalHojeAnterior = intervaloAnterior.totalUsd;
+      const pedidosDiferentesAnterior = intervaloAnterior.pedidosDiferentes;
+
+      const pctHoje = calcPercentChange(totalHoje, totalHojeAnterior);
+      let comparativoHoje = '';
+      if (pctHoje > 0) {
+        comparativoHoje = `+${pctHoje.toFixed(1)}% em relação ao período anterior`;
+      } else if (pctHoje < 0) {
+        comparativoHoje = `${pctHoje.toFixed(1)}% em relação ao período anterior`;
+      } else {
+        comparativoHoje = 'Nenhuma variação em relação ao período anterior';
+      }
+
+      const pctPedidos = calcPercentChange(pedidosDiferentes, pedidosDiferentesAnterior);
+      let comparativoPedidos = '';
+      if (pctPedidos > 0) {
+        comparativoPedidos = `+${pctPedidos.toFixed(1)}% em relação ao período anterior`;
+      } else if (pctPedidos < 0) {
+        comparativoPedidos = `${pctPedidos.toFixed(1)}% em relação ao período anterior`;
+      } else {
+        comparativoPedidos = 'Nenhuma variação em relação ao período anterior';
+      }
+
+      const cotacaoFinal = (userCotacaoManual !== null) ? userCotacaoManual : cotacaoEmUso;
+      const valorReais = totalHoje * cotacaoFinal;
+
+      document.getElementById("totalPagarHoje").innerText = `U$ ${totalHoje.toFixed(2)}`;
+      document.getElementById("totalPagarHojeCompare").innerText = comparativoHoje;
+
+      document.getElementById("totalPedidos").innerText = pedidosDiferentes;
+      document.getElementById("totalPedidosCompare").innerText = comparativoPedidos;
+
+      document.getElementById("valorEstimadoReais").innerText = `R$ ${valorReais.toFixed(2)}`;
+      document.getElementById("valorEstimadoCompare").innerText = '';
+    }
+
     function renderTable(dataToDisplay) {
       const ordersTable = document.getElementById('orders-table');
       const start = (currentPage - 1) * rowsPerPage;
@@ -768,63 +781,7 @@
       }
     }
 
-    /* ======================================
-       CÁLCULO DE RESUMO
-    ====================================== */
-    function calcularResumoEComparativo(dataToCalc) {
-      // 1) Intervalo atual
-      const intervaloAtual = calculateIntervalData(dataToCalc, selectedStartDate, selectedEndDate);
-      const totalHoje = intervaloAtual.totalUsd;
-      const pedidosDiferentes = intervaloAtual.pedidosDiferentes;
-
-      // 2) Intervalo anterior
-      const [prevStart, prevEnd] = getPreviousInterval(selectedStartDate, selectedEndDate);
-      const intervaloAnterior = calculateIntervalData(combinedOrders, prevStart, prevEnd);
-      const totalHojeAnterior = intervaloAnterior.totalUsd;
-      const pedidosDiferentesAnterior = intervaloAnterior.pedidosDiferentes;
-
-      // Comparativo do totalHoje
-      const pctHoje = calcPercentChange(totalHoje, totalHojeAnterior);
-      let comparativoHoje = '';
-      if (pctHoje > 0) {
-        comparativoHoje = `+${pctHoje.toFixed(1)}% em relação ao período anterior`;
-      } else if (pctHoje < 0) {
-        comparativoHoje = `${pctHoje.toFixed(1)}% em relação ao período anterior`;
-      } else {
-        comparativoHoje = 'Nenhuma variação em relação ao período anterior';
-      }
-
-      // Comparativo dos pedidos
-      const pctPedidos = calcPercentChange(pedidosDiferentes, pedidosDiferentesAnterior);
-      let comparativoPedidos = '';
-      if (pctPedidos > 0) {
-        comparativoPedidos = `+${pctPedidos.toFixed(1)}% em relação ao período anterior`;
-      } else if (pctPedidos < 0) {
-        comparativoPedidos = `${pctPedidos.toFixed(1)}% em relação ao período anterior`;
-      } else {
-        comparativoPedidos = 'Nenhuma variação em relação ao período anterior';
-      }
-
-      // 3) Valor em reais
-      const cotacaoFinal = (userCotacaoManual !== null) ? userCotacaoManual : cotacaoEmUso;
-      const valorReais = totalHoje * cotacaoFinal;
-
-      document.getElementById("totalPagarHoje").innerText = `U$ ${totalHoje.toFixed(2)}`;
-      document.getElementById("totalPagarHojeCompare").innerText = comparativoHoje;
-
-      document.getElementById("totalPedidos").innerText = pedidosDiferentes;
-      document.getElementById("totalPedidosCompare").innerText = comparativoPedidos;
-
-      document.getElementById("valorEstimadoReais").innerText = `R$ ${valorReais.toFixed(2)}`;
-      // Aqui está vazio, pois não comparamos mais com a penúltima
-      document.getElementById("valorEstimadoCompare").innerText = '';
-    }
-
-    /* ======================================
-       FILTRO (INTERVALO) E RENDERIZA
-    ====================================== */
     function filterOrders() {
-      // Filtrar com base no intervalo de datas escolhido
       let filtered = combinedOrders;
       if (selectedStartDate && selectedEndDate) {
         filtered = combinedOrders.filter(order => {
@@ -834,108 +791,20 @@
           return paymentDate >= selectedStartDate && paymentDate <= selectedEndDate;
         });
       }
-
-      // Guardamos no displayedOrders (antes de ordenar)
       displayedOrders = filtered;
 
-      // Se tiver alguma ordenação ativa, aplicamos
-      // (Caso contrário, apenas segue sem ordenar explicitamente)
       const activeColumn = Object.keys(sortDirections).find(col => sortDirections[col] !== null);
       if (activeColumn) {
-        sortColumn(activeColumn); 
+        sortColumn(activeColumn);
       } else {
-        // Se não há coluna ativa, apenas renderizamos
-        currentPage = 1; // resetar para página 1
+        currentPage = 1;
         renderTable(displayedOrders);
         renderPagination(displayedOrders);
         calcularResumoEComparativo(displayedOrders);
       }
     }
 
-    /* ======================================
-       FUNÇÕES DE ORDENAÇÃO
-    ====================================== */
-    function sortColumn(columnKey) {
-      // Alterna a direção: se estiver asc, muda pra desc; se desc, muda pra asc; se null, começa asc
-      const currentDirection = sortDirections[columnKey] || null;
-      let newDirection = 'asc';
-      if (currentDirection === 'asc') {
-        newDirection = 'desc';
-      } else if (currentDirection === 'desc') {
-        newDirection = 'asc';
-      }
-      // Zera a direção de outras colunas
-      for (let key in sortDirections) {
-        sortDirections[key] = null;
-      }
-      // A coluna clicada passa a ter newDirection
-      sortDirections[columnKey] = newDirection;
-
-      // Faz a ordenação do displayedOrders
-      displayedOrders.sort((a, b) => compareValues(a, b, columnKey, newDirection));
-
-      // Atualiza indicadores visuais no cabeçalho (setas)
-      updateSortIndicators(columnKey, newDirection);
-
-      // Renderiza tabela/paginação e recalcula o resumo
-      currentPage = 1; 
-      renderTable(displayedOrders);
-      renderPagination(displayedOrders);
-      calcularResumoEComparativo(displayedOrders);
-    }
-
-    function compareValues(a, b, columnKey, direction) {
-      let valA = a[columnKey];
-      let valB = b[columnKey];
-
-      // Caso seja valor numérico
-      if (columnKey === 'valor_calculado' || columnKey === 'raw_total_usd') {
-        valA = parseFloat(valA) || 0;
-        valB = parseFloat(valB) || 0;
-      }
-      // Caso seja data no formato "YYYY-MM-DD"
-      else if (columnKey === 'data_uso' || columnKey === 'data_pagamento') {
-        // Se estiver vazio, tratamos como 0
-        if (!valA) valA = '0000-00-00';
-        if (!valB) valB = '0000-00-00';
-        const dateA = new Date(valA);
-        const dateB = new Date(valB);
-        valA = dateA.getTime();
-        valB = dateB.getTime();
-      }
-      // Caso seja string normal (nome, produto, etc.)
-      else {
-        valA = String(valA).toLowerCase();
-        valB = String(valB).toLowerCase();
-      }
-
-      if (valA < valB) return direction === 'asc' ? -1 : 1;
-      if (valA > valB) return direction === 'asc' ? 1 : -1;
-      return 0;
-    }
-
-    function updateSortIndicators(activeKey, direction) {
-      // Remove indicadores de todas as colunas
-      const thElements = document.querySelectorAll('table thead th');
-      thElements.forEach(th => {
-        const span = th.querySelector('.sort-indicator');
-        if (span) {
-          span.classList.remove('asc', 'desc');
-        }
-      });
-      // Aplica na coluna ativa
-      const activeTh = document.querySelector(`th[data-sort-key="${activeKey}"]`);
-      if (activeTh) {
-        const span = activeTh.querySelector('.sort-indicator');
-        if (span) {
-          if (direction === 'asc') span.classList.add('asc');
-          if (direction === 'desc') span.classList.add('desc');
-        }
-      }
-    }
-
     function initSortingEvents() {
-      // Adicionar eventListener em cada TH que tenha data-sort-key
       const thElements = document.querySelectorAll('table thead th');
       thElements.forEach(th => {
         const sortKey = th.getAttribute('data-sort-key');
@@ -947,9 +816,68 @@
       });
     }
 
-    /* ======================================
-       CARREGA SIDEBAR
-    ====================================== */
+    function sortColumn(columnKey) {
+      const currentDirection = sortDirections[columnKey] || null;
+      let newDirection = 'asc';
+      if (currentDirection === 'asc') {
+        newDirection = 'desc';
+      } else if (currentDirection === 'desc') {
+        newDirection = 'asc';
+      }
+      for (let key in sortDirections) {
+        sortDirections[key] = null;
+      }
+      sortDirections[columnKey] = newDirection;
+      displayedOrders.sort((a, b) => compareValues(a, b, columnKey, newDirection));
+      updateSortIndicators(columnKey, newDirection);
+      currentPage = 1;
+      renderTable(displayedOrders);
+      renderPagination(displayedOrders);
+      calcularResumoEComparativo(displayedOrders);
+    }
+
+    function compareValues(a, b, columnKey, direction) {
+      let valA = a[columnKey];
+      let valB = b[columnKey];
+
+      if (columnKey === 'valor_calculado' || columnKey === 'raw_total_usd') {
+        valA = parseFloat(valA) || 0;
+        valB = parseFloat(valB) || 0;
+      } else if (columnKey === 'data_uso' || columnKey === 'data_pagamento') {
+        if (!valA) valA = '0000-00-00';
+        if (!valB) valB = '0000-00-00';
+        const dateA = new Date(valA).getTime();
+        const dateB = new Date(valB).getTime();
+        valA = dateA;
+        valB = dateB;
+      } else {
+        valA = String(valA).toLowerCase();
+        valB = String(valB).toLowerCase();
+      }
+
+      if (valA < valB) return direction === 'asc' ? -1 : 1;
+      if (valA > valB) return direction === 'asc' ? 1 : -1;
+      return 0;
+    }
+
+    function updateSortIndicators(activeKey, direction) {
+      const thElements = document.querySelectorAll('table thead th');
+      thElements.forEach(th => {
+        const span = th.querySelector('.sort-indicator');
+        if (span) {
+          span.classList.remove('asc', 'desc');
+        }
+      });
+      const activeTh = document.querySelector(`th[data-sort-key="${activeKey}"]`);
+      if (activeTh) {
+        const span = activeTh.querySelector('.sort-indicator');
+        if (span) {
+          if (direction === 'asc')  span.classList.add('asc');
+          if (direction === 'desc') span.classList.add('desc');
+        }
+      }
+    }
+
     async function loadSidebar() {
       try {
         const response = await fetch('https://business.magictraveltur.com/sidebar.html');
@@ -962,20 +890,18 @@
       }
     }
 
-    /* ======================================
-       CARREGA DADOS DAS APIS E UNIFICA
-    ====================================== */
     async function loadOrders() {
       try {
         const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
-        const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
+        const endDate   = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
 
         const apiUrlPlanilhas = `https://www.magictraveltur.com/api_planilhas.php?start_date=${startDate}&end_date=${endDate}`;
-        const apiUrlPedidos = `https://www.magictraveltur.com/api_pedidos.php`;
+        const apiUrlPedidos   = `https://www.magictraveltur.com/api_pedidos.php`;
 
+        // Adicionamos credentials: 'include' para enviar cookie de sessão
         const [responsePlanilhas, responsePedidos] = await Promise.all([
-          fetch(apiUrlPlanilhas),
-          fetch(apiUrlPedidos)
+          fetch(apiUrlPlanilhas, { credentials: 'include' }),
+          fetch(apiUrlPedidos,   { credentials: 'include' }),
         ]);
 
         if (!responsePlanilhas.ok) {
@@ -986,7 +912,27 @@
         }
 
         const planilhasData = await responsePlanilhas.json();
-        const pedidosData = await responsePedidos.json();
+        const pedidosData   = await responsePedidos.json();
+
+        // Se a API retornar erro (objeto ao invés de array), trate aqui:
+        if (!Array.isArray(planilhasData)) {
+          console.error('Planilhas retornou erro:', planilhasData);
+          document.getElementById('orders-table').innerHTML = `
+            <tr><td colspan="10" style="text-align: center; color:red;">
+              ${planilhasData.message || 'Erro ao carregar planilhas'}
+            </td></tr>
+          `;
+          return;
+        }
+        if (!Array.isArray(pedidosData)) {
+          console.error('Pedidos retornou erro:', pedidosData);
+          document.getElementById('orders-table').innerHTML = `
+            <tr><td colspan="10" style="text-align: center; color:red;">
+              ${pedidosData.message || 'Erro ao carregar pedidos'}
+            </td></tr>
+          `;
+          return;
+        }
 
         // Mapeia id -> nome do pedido
         const pedidosMap = {};
@@ -997,23 +943,22 @@
         // Monta array unificado
         combinedOrders = planilhasData.map(planilha => {
           const totalUsd = parseFloat(planilha.total_usd) || 0;
-          const lobista = parseFloat(planilha.lobista) || 0;
+          const lobista  = parseFloat(planilha.lobista)   || 0;
 
           return {
-            nome: pedidosMap[planilha.id_pedido] || 'N/A',
-            id_pedido: planilha.id_pedido,
-            produto: planilha.produto || '',
+            nome:          pedidosMap[planilha.id_pedido] || 'N/A',
+            id_pedido:     planilha.id_pedido,
+            produto:       planilha.produto || '',
             valor_calculado: (totalUsd - lobista).toFixed(2),
-            raw_total_usd: totalUsd.toFixed(2),
-            data_uso: planilha.data || '',
+            raw_total_usd:   totalUsd.toFixed(2),
+            data_uso:      planilha.data || '',
             data_pagamento: planilha.data_pagamento || '',
             identificador: planilha.identificador || '',
-            fornecedor: planilha.fornecedor || '',
-            status: planilha.status || ''
+            fornecedor:    planilha.fornecedor || '',
+            status:        planilha.status || ''
           };
         });
 
-        // Chama o filtro inicial (sem ordem definida de imediato)
         filterOrders();
       } catch (error) {
         console.error('Erro ao carregar os dados:', error);
@@ -1026,28 +971,23 @@
       }
     }
 
-    /* ======================================
-       INICIALIZA O CALENDÁRIO E EVENTOS
-    ====================================== */
     function initializeCalendar() {
-      const openCalendarBtn = document.getElementById("open-calendar-btn");
-      const backBtn = document.getElementById("back-btn");
-      const applyBtn = document.getElementById("apply-btn");
-      const calendarModal = document.getElementById("calendarModal");
-      const bootstrapModal = new bootstrap.Modal(calendarModal);
+      const openCalendarBtn        = document.getElementById("open-calendar-btn");
+      const backBtn                = document.getElementById("back-btn");
+      const applyBtn               = document.getElementById("apply-btn");
+      const calendarModal          = document.getElementById("calendarModal");
+      const bootstrapModal         = new bootstrap.Modal(calendarModal);
       const calendarDatesContainer = document.querySelector(".calendar__dates");
-      const monthSelect = document.getElementById("calendar__month");
-      const yearSelect = document.getElementById("calendar__year");
-      const selectedDateDisplay = document.getElementById("datas-selecionadas");
+      const monthSelect            = document.getElementById("calendar__month");
+      const yearSelect             = document.getElementById("calendar__year");
+      const selectedDateDisplay    = document.getElementById("datas-selecionadas");
 
       openCalendarBtn.addEventListener("click", () => {
         bootstrapModal.show();
       });
-
       backBtn.addEventListener("click", () => {
         bootstrapModal.hide();
       });
-
       applyBtn.addEventListener("click", () => {
         if (selectedStartDate && !selectedEndDate) {
           selectedEndDate = selectedStartDate;
@@ -1058,7 +998,7 @@
         }
         updateSelectedDateDisplay();
         bootstrapModal.hide();
-        loadOrders(); 
+        loadOrders();
       });
 
       monthSelect.addEventListener("change", renderCalendar);
@@ -1066,19 +1006,17 @@
 
       function renderCalendar() {
         const month = parseInt(monthSelect.value);
-        const year = parseInt(yearSelect.value);
+        const year  = parseInt(yearSelect.value);
         const firstDayOfMonth = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        calendarDatesContainer.innerHTML = '';
+        const daysInMonth     = new Date(year, month + 1, 0).getDate();
 
-        // Espaços "cinzas" antes do dia 1
+        calendarDatesContainer.innerHTML = '';
         for (let i = 0; i < firstDayOfMonth; i++) {
           const emptyDate = document.createElement('div');
-          emptyDate.classList.add('calendar__date', 'calendar__date--grey');
+          emptyDate.classList.add('calendar__date','calendar__date--grey');
           calendarDatesContainer.appendChild(emptyDate);
         }
 
-        // Dias do mês
         for (let i = 1; i <= daysInMonth; i++) {
           const dateElement = document.createElement('div');
           dateElement.classList.add('calendar__date');
@@ -1089,12 +1027,12 @@
 
             if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
               selectedStartDate = clickedDate;
-              selectedEndDate = null;
+              selectedEndDate   = null;
               clearSelection();
               dateElement.classList.add('calendar__date--selected','calendar__date--range-start');
             } else if (clickedDate < selectedStartDate) {
               selectedStartDate = clickedDate;
-              selectedEndDate = null;
+              selectedEndDate   = null;
               clearSelection();
               dateElement.classList.add('calendar__date--selected','calendar__date--range-start');
             } else {
@@ -1118,7 +1056,7 @@
       function highlightRange(start, end) {
         const allDates = document.querySelectorAll('.calendar__date');
         const startTimestamp = start.getTime();
-        const endTimestamp = end.getTime();
+        const endTimestamp   = end.getTime();
 
         allDates.forEach(el => {
           const day = parseInt(el.textContent);
@@ -1126,12 +1064,8 @@
           const elDate = new Date(yearSelect.value, monthSelect.value, day).getTime();
           if (elDate >= startTimestamp && elDate <= endTimestamp) {
             el.classList.add('calendar__date--selected');
-            if (elDate === startTimestamp) {
-              el.classList.add('calendar__date--range-start');
-            }
-            if (elDate === endTimestamp) {
-              el.classList.add('calendar__date--range-end');
-            }
+            if (elDate === startTimestamp) el.classList.add('calendar__date--range-start');
+            if (elDate === endTimestamp)   el.classList.add('calendar__date--range-end');
           }
         });
       }
@@ -1139,7 +1073,7 @@
       function updateSelectedDateDisplay() {
         if (selectedStartDate && selectedEndDate) {
           const startDateStr = formatDisplayDate(selectedStartDate);
-          const endDateStr = formatDisplayDate(selectedEndDate);
+          const endDateStr   = formatDisplayDate(selectedEndDate);
           selectedDateDisplay.textContent = `Datas selecionadas: ${startDateStr} - ${endDateStr}`;
         } else if (selectedStartDate) {
           selectedDateDisplay.textContent = `Data selecionada: ${formatDisplayDate(selectedStartDate)}`;
@@ -1149,19 +1083,16 @@
       }
 
       monthSelect.value = selectedStartDate.getMonth();
-      yearSelect.value = selectedStartDate.getFullYear();
+      yearSelect.value  = selectedStartDate.getFullYear();
       renderCalendar();
       updateSelectedDateDisplay();
     }
 
-    /* ======================================
-       DOMContentLoaded
-    ====================================== */
     document.addEventListener('DOMContentLoaded', () => {
       initializeCalendar();
       loadSidebar();
       loadOrders();
-      initSortingEvents(); // Inicializa eventos de clique para ordenar
+      initSortingEvents();
     });
   </script>
 </body>
