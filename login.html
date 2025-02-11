@@ -270,26 +270,29 @@
       const password = document.getElementById('password').value.trim();
       const errorMessageDiv = document.getElementById('errorMessage');
 
-      errorMessageDiv.textContent = ''; // Limpa mensagem anterior
+      // Limpa mensagem anterior
+      errorMessageDiv.textContent = '';
 
-      // Chama o endpoint de login do api_log.php no domínio magictraveltur.com
+      // Faz a requisição de login, enviando cookie (credentials:'include')
       fetch('https://magictraveltur.com/api_log.php/login', {
         method: 'POST',
-        // ADICIONE 'credentials: "include"' para enviar/receber cookies cross-site
-        credentials: 'include',
+        credentials: 'include', // <--- IMPORTANTE: envia e recebe cookie de sessão
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: new URLSearchParams({ email, password })
+        body: new URLSearchParams({
+          email: email,
+          password: password
+        })
       })
       .then(response => response.text())
       .then(data => {
-        // Se o backend retornar "Login bem-sucedido!" no texto, checkamos:
+        // Se o backend retornar "Login bem-sucedido!" no texto, consideramos ok
         if (data.includes('Login bem-sucedido')) {
           // Redireciona para a área logada
           window.location.href = 'https://business.magictraveltur.com';
         } else {
-          // Caso contrário, exibe mensagem de erro retornada pelo servidor
+          // Caso contrário, exibe a mensagem de erro retornada pelo servidor
           errorMessageDiv.textContent = data;
         }
       })
