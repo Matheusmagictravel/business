@@ -14,9 +14,6 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 
   <style>
-    /* ============================================
-       Variáveis Globais e Reset
-    ============================================ */
     :root {
       --primary-color: #0071e3;
       --secondary-color: #1cbb8c;
@@ -26,7 +23,6 @@
       --light-bg: #f9f9fa;
       --text-color: #1d1d1f;
 
-      /* Extras do segundo código */
       --primary-hover: #005bb5;
       --secondary-hover: #17a2b8;
       --sidebar-bg: #222e3c;
@@ -66,9 +62,7 @@
       overflow: hidden;
     }
 
-    /* ============================================
-       SIDEBAR
-    ============================================ */
+    /* SIDEBAR */
     #sidebar-container {
       width: 260px;
       flex-shrink: 0;
@@ -81,9 +75,7 @@
       background: var(--sidebar-bg);
     }
 
-    /* ============================================
-       CONTEÚDO PRINCIPAL
-    ============================================ */
+    /* CONTEÚDO PRINCIPAL */
     main.content {
       margin-left: 260px;
       margin-top: 100px;
@@ -92,9 +84,7 @@
       overflow-y: auto;
     }
 
-    /* ============================================
-       BLOCOS DE RESUMO
-    ============================================ */
+    /* BLOCOS DE RESUMO */
     .summary-container {
       display: flex;
       gap: 20px;
@@ -126,27 +116,18 @@
       margin-top: 5px;
     }
 
-    .summary-change {
-      font-size: 14px;
-      font-weight: 600;
-      margin-left: 10px;
+    /* Linha para comparativo */
+    .summary-compare {
+      font-size: 13px;
+      margin-top: 5px;
+      color: #555;
     }
 
     .summary-icon {
       font-size: 18px;
     }
 
-    .positive {
-      color: var(--secondary-color);
-    }
-
-    .negative {
-      color: var(--danger-color);
-    }
-
-    /* ============================================
-       SELETOR DE DATAS (CALENDÁRIO)
-    ============================================ */
+    /* SELETOR DE DATAS (CALENDÁRIO) */
     .date-selector-container {
       display: flex;
       align-items: center;
@@ -168,17 +149,13 @@
       height: 95%;
     }
 
-    /* ============================================
-       MODAL DO CALENDÁRIO
-    ============================================ */
+    /* MODAL DO CALENDÁRIO */
     .modal {
       z-index: var(--modal-z-index) !important;
     }
-
     .modal-backdrop {
       z-index: var(--modal-backdrop-z-index);
     }
-
     .modal-dialog {
       position: absolute;
       left: 50%;
@@ -195,7 +172,6 @@
       transform-origin: top;
       padding: 0;
     }
-
     .calendar__opts {
       background-color: #fff;
       display: grid;
@@ -205,7 +181,6 @@
       border-top-left-radius: var(--calendar-border-radius);
       border-top-right-radius: var(--calendar-border-radius);
     }
-
     .calendar__days {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -215,14 +190,12 @@
       padding: 0 10px;
       font-size: 0.85rem;
     }
-
     .calendar__dates {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 5px;
       padding: 10px;
     }
-
     .calendar__date {
       height: var(--calendar-date-height);
       line-height: var(--calendar-date-height);
@@ -235,35 +208,29 @@
       transition: background-color 0.3s, transform 0.2s;
       position: relative;
     }
-
     .calendar__date:hover {
       background-color: #eaeaea;
       transform: scale(1.05);
     }
-
     .calendar__date--selected {
       background-color: #4b37ff;
       color: #fff;
       font-weight: bold;
       box-shadow: 0 3px 6px rgba(75, 55, 255, 0.3);
     }
-
     .calendar__date--range-start {
       border-top-left-radius: var(--calendar-accent-radius);
       border-bottom-left-radius: var(--calendar-accent-radius);
     }
-
     .calendar__date--range-end {
       border-top-right-radius: var(--calendar-accent-radius);
       border-bottom-right-radius: var(--calendar-accent-radius);
     }
-
     .calendar__date--grey {
       background-color: #f2f2f2;
       color: #ccc;
       cursor: not-allowed;
     }
-
     .calendar__buttons {
       display: flex;
       justify-content: space-between;
@@ -271,7 +238,6 @@
       border-bottom-left-radius: var(--calendar-border-radius);
       border-bottom-right-radius: var(--calendar-border-radius);
     }
-
     .calendar__button {
       padding: 8px 12px;
       font-size: 0.9rem;
@@ -279,23 +245,19 @@
       border-radius: var(--calendar-accent-radius);
       cursor: pointer;
     }
-
     .calendar__button--grey {
       background-color: #e0e0e0;
       color: #333;
     }
-
     .calendar__button--primary {
       background-color: #4b37ff;
       color: #fff;
       transition: background-color 0.3s, transform 0.2s;
     }
-
     .calendar__button--primary:hover {
       background-color: #3b27d9;
       transform: scale(1.05);
     }
-
     @media (max-width: 768px) {
       .calendar {
         width: 240px;
@@ -310,9 +272,7 @@
       }
     }
 
-    /* ============================================
-       DASHBOARD - TABELA DE PEDIDOS
-    ============================================ */
+    /* DASHBOARD - TABELA DE PEDIDOS */
     .dashboard-orders {
       padding: 20px;
       margin: 0 auto;
@@ -321,7 +281,6 @@
       border-radius: var(--dashboard-border-radius);
       box-shadow: var(--dashboard-box-shadow);
     }
-
     .dashboard-orders-container {
       max-width: var(--max-width);
       margin: 0 auto;
@@ -330,19 +289,16 @@
       border-radius: var(--dashboard-container-border-radius);
       box-shadow: var(--dashboard-box-shadow);
     }
-
     .dashboard-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 20px;
     }
-
     .dashboard-header h1 {
       font-weight: 600;
       color: var(--text-color);
     }
-
     .add-order-button {
       background-color: var(--secondary-color);
       color: #fff;
@@ -353,54 +309,44 @@
       font-size: 12px;
       cursor: pointer;
     }
-
     .add-order-button:hover {
       background-color: var(--secondary-hover);
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 20px;
     }
-
     th, td {
       padding: 12px 15px;
       font-size: 12px;
       text-align: left;
     }
-
     th {
       font-weight: 600;
       color: var(--header-text);
       background-color: var(--header-bg);
     }
-
     tr:nth-child(odd) {
       background-color: var(--table-odd);
     }
-
     tr:nth-child(even) {
       background: var(--table-even-gradient);
     }
-
     td {
       color: var(--text-color);
       border-bottom: 1px solid var(--border-color);
     }
-
     tr:hover {
       background-color: #cceeff;
       cursor: pointer;
     }
-
     /* Paginação */
     .pagination {
       display: flex;
       justify-content: center;
       margin-top: 20px;
     }
-
     .pagination button {
       background-color: var(--primary-color);
       color: #fff;
@@ -411,19 +357,15 @@
       font-weight: 600;
       cursor: pointer;
     }
-
     .pagination button:hover {
       background-color: var(--primary-hover);
     }
-
     .pagination button:disabled {
       background-color: #cccccc;
       cursor: not-allowed;
     }
 
-    /* ============================================
-       BADGE DE STATUS
-    ============================================ */
+    /* BADGE DE STATUS */
     .status-badge {
       display: inline-flex;
       align-items: center;
@@ -444,39 +386,45 @@
 
   <!-- CONTEÚDO -->
   <main class="content">
-    <!-- Seletor de datas fixo (com Modal) -->
+    <!-- Seletor de datas (com Modal) -->
     <div class="date-selector-container">
       <span id="datas-selecionadas" class="selected-date-display"></span>
       <button id="open-calendar-btn" class="btn btn-primary">Selecionar Data</button>
     </div>
 
-    <!-- Blocos de resumo -->
+    <!-- Blocos de Resumo -->
     <div class="summary-container">
-      <!-- IDs para atualizar dinamicamente, se quiser mostrar o intervalo nos títulos -->
+      <!-- 1) Total a Pagar Hoje (intervalo) -->
       <div class="summary-box">
-        <div class="summary-title" id="totalPagarHojeLabel">
+        <div class="summary-title">
           <i class="bi bi-credit-card summary-icon"></i> 
           Total a Pagar Hoje (USD)
         </div>
         <div class="summary-value" id="totalPagarHoje">-</div>
-        <div class="summary-change positive" id="totalPagarHojeChange"></div>
+        <!-- Comparativo com intervalo anterior -->
+        <div class="summary-compare" id="totalPagarHojeCompare"></div>
       </div>
 
+      <!-- 2) Pedidos Diferentes -->
       <div class="summary-box">
-        <div class="summary-title" id="totalPedidosLabel">
+        <div class="summary-title">
           <i class="bi bi-file-earmark-text summary-icon"></i> 
           Pedidos Diferentes
         </div>
         <div class="summary-value" id="totalPedidos">-</div>
+        <!-- Comparativo com intervalo anterior -->
+        <div class="summary-compare" id="totalPedidosCompare"></div>
       </div>
 
+      <!-- 3) Valor Estimado em Reais -->
       <div class="summary-box">
-        <div class="summary-title" id="totalSemanaLabel">
-          <i class="bi bi-calendar-event summary-icon"></i> 
-          Total a Pagar na Semana
+        <div class="summary-title">
+          <i class="bi bi-cash-coin summary-icon"></i>
+          Valor Estimado em Reais
         </div>
-        <div class="summary-value" id="totalSemana">-</div>
-        <div class="summary-change positive" id="totalSemanaChange"></div>
+        <div class="summary-value" id="valorEstimadoReais">-</div>
+        <!-- Comparativo com penúltimo dia útil -->
+        <div class="summary-compare" id="valorEstimadoCompare"></div>
       </div>
     </div>
 
@@ -508,7 +456,6 @@
                   <option value="2028">2028</option>
                 </select>
               </div>
-
               <div class="calendar__body">
                 <div class="calendar__days">
                   <div>Dom</div>
@@ -523,7 +470,6 @@
                   <!-- Dias do calendario -->
                 </div>
               </div>
-
               <div class="calendar__buttons">
                 <button class="calendar__button calendar__button--grey" id="back-btn">Back</button>
                 <button class="calendar__button calendar__button--primary" id="apply-btn">Apply</button>
@@ -571,19 +517,28 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    /* ============================================
-       VARIÁVEIS GLOBAIS
-    ============================================ */
+    /* ======================================
+       VARIÁVEIS GLOBAIS E COTAÇÃO EXEMPLO
+    ====================================== */
     let currentPage = 1;
     const rowsPerPage = 10;
-    let combinedOrders = []; // Array unificado (Planilha + Pedidos)
-    // Intervalo padrão (primeiro dia do mês até o último dia)
+    let combinedOrders = [];
+
+    // Intervalo padrão (ex.: primeiro dia do mês até o último dia)
     let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
-    /* ============================================
+    // Exemplo: última cotação do dia útil (5,79) + 0,98% ≈ 5,85
+    const ultimaCotacaoFechamento = 5.79;
+    const penultimaCotacaoFechamento = 5.75;
+
+    // Calculamos a cotação em uso e a do penúltimo dia útil (para comparativo)
+    const cotacaoEmUso = parseFloat((ultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2));    // ~ 5.85
+    const cotacaoPenultima = parseFloat((penultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2)); // ~ 5.80 ou 5.81
+
+    /* ======================================
        FUNÇÕES COMPARTILHADAS
-    ============================================ */
+    ====================================== */
     function decodeHtmlEntities(str) {
       const el = document.createElement('textarea');
       el.innerHTML = str;
@@ -594,7 +549,7 @@
       let st = decodeHtmlEntities(status || '');
       st = st.toLowerCase().normalize('NFKC');
       st = st.replace(/[\u00A0\u200B\uFEFF\u2060]/g, '');
-      st = st.replace(/[\u2013\u2014-]/g, '–'); 
+      st = st.replace(/[\u2013\u2014-]/g, '–');
       return st.trim();
     }
 
@@ -605,7 +560,7 @@
       return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
     }
 
-    // Formata objeto Date -> DD/MM/YYYY
+    // Formata objeto Date -> DD/MM/YYYY (para exibir no label)
     function formatDisplayDate(dateObj) {
       const d = String(dateObj.getDate()).padStart(2, '0');
       const m = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -642,9 +597,59 @@
       }
     }
 
-    /* ============================================
-       RENDERIZAÇÃO DE TABELA E PAGINAÇÃO
-    ============================================ */
+    /* ======================================
+       COMPARATIVO DE PERCENTUAL
+    ====================================== */
+    function calcPercentChange(newValue, oldValue) {
+      if (oldValue === 0) {
+        if (newValue === 0) return 0;
+        return 100; // se antes era 0 e agora >0 => 100% (ou infinito)
+      }
+      return ((newValue - oldValue) / oldValue) * 100;
+    }
+
+    // Retorna [startDateAnterior, endDateAnterior] do mesmo tamanho
+    function getPreviousInterval(startDate, endDate) {
+      // Ex.: se 10/02 a 12/02 => length=3 => anterior= 07/02 a 09/02
+      const oneDayMs = 86400000;
+      const lengthMs = endDate - startDate + oneDayMs; // total ms do intervalo
+
+      const endDateAnterior = new Date(startDate.getTime() - oneDayMs); 
+      const startDateAnterior = new Date(endDateAnterior.getTime() - (lengthMs - oneDayMs));
+
+      return [startDateAnterior, endDateAnterior];
+    }
+
+    // Filtra e soma "Total a Pagar" (USD) e "Pedidos Diferentes" num range
+    function calculateIntervalData(orders, rangeStart, rangeEnd) {
+      let totalUsd = 0;
+      let pedidosSet = new Set();
+
+      orders.forEach(order => {
+        const status = normalizeStatus(order.status);
+        const valorPedido = parseFloat(order.raw_total_usd) || 0;
+        if (!order.data_pagamento) return;
+
+        // data_pagamento => date
+        const [yyyy, mm, dd] = order.data_pagamento.split('-').map(Number);
+        const dataPagamento = new Date(yyyy, mm - 1, dd);
+
+        if (dataPagamento >= rangeStart && dataPagamento <= rangeEnd) {
+          if (["emissão bloqueada", "emitido – não pago", "emitido tif"].includes(status)) {
+            totalUsd += valorPedido;
+          }
+          pedidosSet.add(order.id_pedido);
+        }
+      });
+      return {
+        totalUsd,
+        pedidosDiferentes: pedidosSet.size
+      };
+    }
+
+    /* ======================================
+       RENDERIZA TABELA E PAGINAÇÃO
+    ====================================== */
     function renderTable(filteredOrders) {
       const ordersTable = document.getElementById('orders-table');
       const start = (currentPage - 1) * rowsPerPage;
@@ -656,7 +661,6 @@
           <td>${order.nome}</td>
           <td>${order.id_pedido}</td>
           <td>${order.produto}</td>
-          <!-- Exibe (total_usd - lobista) conforme estava originalmente -->
           <td>U$ ${order.valor_calculado}</td>
           <td>${order.data_uso ? formatDate(order.data_uso) : ''}</td>
           <td>${formatDate(order.data_pagamento)}</td>
@@ -689,104 +693,78 @@
       }
     }
 
-    /* ============================================
-       ATUALIZA TÍTULOS DOS BLOCOS DE RESUMO 
-       (se quiser mostrar intervalo neles)
-    ============================================ */
-    function updateSummaryLabels() {
-      if (!selectedStartDate || !selectedEndDate) return;
+    /* ======================================
+       CÁLCULO DE RESUMO + COMPARATIVOS
+    ====================================== */
+    function calcularResumoEComparativo(filteredOrders) {
+      // 1) Dados do intervalo selecionado
+      const intervaloAtual = calculateIntervalData(filteredOrders, selectedStartDate, selectedEndDate);
+      const totalHoje = intervaloAtual.totalUsd; 
+      const pedidosDiferentes = intervaloAtual.pedidosDiferentes;
 
-      const startStr = formatDisplayDate(selectedStartDate);
-      const endStr = formatDisplayDate(selectedEndDate);
+      // 2) Comparativo com intervalo anterior
+      const [prevStart, prevEnd] = getPreviousInterval(selectedStartDate, selectedEndDate);
+      const intervaloAnterior = calculateIntervalData(combinedOrders, prevStart, prevEnd);
+      const totalHojeAnterior = intervaloAnterior.totalUsd;
+      const pedidosDiferentesAnterior = intervaloAnterior.pedidosDiferentes;
 
-      // "Total a Pagar Hoje (USD) (start-end)"
-      document.getElementById('totalPagarHojeLabel').innerHTML = `
-        <i class="bi bi-credit-card summary-icon"></i>
-        Total a Pagar Hoje (USD) (${startStr} - ${endStr})
-      `;
+      // 2a) % variação do totalHoje
+      const pctHoje = calcPercentChange(totalHoje, totalHojeAnterior);
+      let comparativoHoje = '';
+      if (pctHoje > 0) {
+        comparativoHoje = `+${pctHoje.toFixed(1)}% em relação ao período anterior`;
+      } else if (pctHoje < 0) {
+        comparativoHoje = `${pctHoje.toFixed(1)}% em relação ao período anterior`;
+      } else {
+        comparativoHoje = 'Nenhuma variação em relação ao período anterior';
+      }
 
-      // "Pedidos Diferentes (start-end)"
-      document.getElementById('totalPedidosLabel').innerHTML = `
-        <i class="bi bi-file-earmark-text summary-icon"></i>
-        Pedidos Diferentes (${startStr} - ${endStr})
-      `;
+      // 2b) % variação pedidos
+      const pctPedidos = calcPercentChange(pedidosDiferentes, pedidosDiferentesAnterior);
+      let comparativoPedidos = '';
+      if (pctPedidos > 0) {
+        comparativoPedidos = `+${pctPedidos.toFixed(1)}% em relação ao período anterior`;
+      } else if (pctPedidos < 0) {
+        comparativoPedidos = `${pctPedidos.toFixed(1)}% em relação ao período anterior`;
+      } else {
+        comparativoPedidos = 'Nenhuma variação em relação ao período anterior';
+      }
 
-      // "Total a Pagar na Semana (mantém a mesma lógica de exibição)"
-      document.getElementById('totalSemanaLabel').innerHTML = `
-        <i class="bi bi-calendar-event summary-icon"></i>
-        Total a Pagar na Semana
-      `;
+      // 3) Valor estimado em Reais: totalHoje * cotaçãoEmUso
+      const valorReais = totalHoje * cotacaoEmUso;
+
+      // Comparativo com penúltimo dia útil (só a cotação)
+      // Ex.: se cotacaoEmUso=5.85 e penultima=5.80 => dif = +0.86%
+      const pctCotacao = calcPercentChange(cotacaoEmUso, cotacaoPenultima);
+      let comparativoReais = '';
+      if (pctCotacao > 0) {
+        comparativoReais = `Cotação subiu +${pctCotacao.toFixed(2)}% comparado à penúltima`;
+      } else if (pctCotacao < 0) {
+        comparativoReais = `Cotação caiu ${pctCotacao.toFixed(2)}% comparado à penúltima`;
+      } else {
+        comparativoReais = 'Cotação inalterada em relação à penúltima';
+      }
+
+      /* ======================================
+         EXIBE VALORES NA TELA
+      ====================================== */
+      document.getElementById("totalPagarHoje").innerText = `U$ ${totalHoje.toFixed(2)}`;
+      document.getElementById("totalPagarHojeCompare").innerText = comparativoHoje;
+
+      document.getElementById("totalPedidos").innerText = pedidosDiferentes;
+      document.getElementById("totalPedidosCompare").innerText = comparativoPedidos;
+
+      document.getElementById("valorEstimadoReais").innerText = `R$ ${valorReais.toFixed(2)}`;
+      document.getElementById("valorEstimadoCompare").innerText = comparativoReais;
     }
 
-    /* ============================================
-       AGORA "Total a Pagar Hoje (USD)" SOMA 
-       TODO O INTERVALO SELECIONADO.
-    ============================================ */
-    function calcularResumo(orders) {
-      let totalPagarHoje = 0;
-      let totalSemana = 0;
-      let pedidosDiferentes = new Set();
-
-      // "orders" já está filtrado para o intervalo 
-      // (selectedStartDate <= data_pagamento <= selectedEndDate)
-      orders.forEach(order => {
-        const status = normalizeStatus(order.status);
-        const valorPedido = parseFloat(order.raw_total_usd) || 0;
-
-        // Soma somente se status for Emissão Bloqueada, Emitido – Não Pago, Emitido TIF
-        if (["emissão bloqueada", "emitido – não pago", "emitido tif"].includes(status)) {
-          // Agora, "Total a Pagar Hoje" = soma do intervalo
-          totalPagarHoje += valorPedido;
-        }
-
-        pedidosDiferentes.add(order.id_pedido);
-      });
-
-      // Exibe no HTML
-      document.getElementById("totalPagarHoje").innerText = `U$ ${totalPagarHoje.toFixed(2)}`;
-      document.getElementById("totalPedidos").innerText = pedidosDiferentes.size;
-
-      // Mantemos a lógica antiga para "Total a Pagar na Semana" 
-      // (segunda a domingo do dia do sistema).
-      // Se quiser somar também só o intervalo selecionado,
-      // troque o que está abaixo para algo compatível.
-      const hoje = new Date();
-      hoje.setHours(0,0,0,0);
-      const dayOfWeek = hoje.getDay();
-      const distanceFromMonday = (dayOfWeek + 6) % 7;
-      const inicioSemana = new Date(hoje);
-      inicioSemana.setDate(inicioSemana.getDate() - distanceFromMonday);
-      inicioSemana.setHours(0,0,0,0);
-
-      const fimSemana = new Date(inicioSemana);
-      fimSemana.setDate(fimSemana.getDate() + 6);
-      fimSemana.setHours(23,59,59,999);
-
-      let totalSemanaTemp = 0;
-      orders.forEach(order => {
-        const status = normalizeStatus(order.status);
-        const valorPedido = parseFloat(order.raw_total_usd) || 0;
-        if (["emissão bloqueada", "emitido – não pago", "emitido tif"].includes(status)) {
-          if (order.data_pagamento) {
-            const [yyyy, mm, dd] = order.data_pagamento.split('-').map(Number);
-            const dataPagamento = new Date(yyyy, mm - 1, dd);
-            if (dataPagamento >= inicioSemana && dataPagamento <= fimSemana) {
-              totalSemanaTemp += valorPedido;
-            }
-          }
-        }
-      });
-      totalSemana = totalSemanaTemp;
-      document.getElementById("totalSemana").innerText = `U$ ${totalSemana.toFixed(2)}`;
-    }
-
-    /* ============================================
-       FILTRA (pela data_pagamento no range) 
-       e depois chama renderização e cálculo resumo
-    ============================================ */
+    /* ======================================
+       FILTRO (INTERVALO SELECIONADO) + RENDER
+    ====================================== */
     function filterOrders() {
       let filteredOrders = combinedOrders;
 
+      // Filtra data_pagamento entre selectedStartDate e selectedEndDate
       if (selectedStartDate && selectedEndDate) {
         filteredOrders = combinedOrders.filter(order => {
           if (!order.data_pagamento) return false;
@@ -796,17 +774,17 @@
         });
       }
 
+      // Renderiza tabela e paginação
       renderTable(filteredOrders);
       renderPagination(filteredOrders);
-      calcularResumo(filteredOrders);
 
-      // Atualiza títulos dos blocos para exibir datas escolhidas (opcional)
-      updateSummaryLabels();
+      // Calcula e exibe o resumo + comparativos
+      calcularResumoEComparativo(filteredOrders);
     }
 
-    /* ============================================
+    /* ======================================
        CARREGA SIDEBAR
-    ============================================ */
+    ====================================== */
     async function loadSidebar() {
       try {
         const response = await fetch('https://business.magictraveltur.com/sidebar.html');
@@ -819,9 +797,9 @@
       }
     }
 
-    /* ============================================
+    /* ======================================
        CARREGA DADOS DAS APIs E UNIFICA
-    ============================================ */
+    ====================================== */
     async function loadOrders() {
       try {
         const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
@@ -870,20 +848,22 @@
           };
         });
 
-        // Filtra de acordo com o intervalo selecionado
+        // Filtra e renderiza
         filterOrders();
       } catch (error) {
         console.error('Erro ao carregar os dados:', error);
         document.getElementById('orders-table').innerHTML = `
           <tr>
-            <td colspan="10" style="text-align: center; color: red;">Erro ao carregar os pedidos.</td>
+            <td colspan="10" style="text-align: center; color: red;">
+              Erro ao carregar os pedidos.
+            </td>
           </tr>`;
       }
     }
 
-    /* ============================================
-       INICIALIZA O CALENDÁRIO E EVENTOS
-    ============================================ */
+    /* ======================================
+       INICIALIZA CALENDÁRIO E EVENTOS
+    ====================================== */
     function initializeCalendar() {
       const openCalendarBtn = document.getElementById("open-calendar-btn");
       const backBtn = document.getElementById("back-btn");
@@ -904,7 +884,6 @@
       });
 
       applyBtn.addEventListener("click", () => {
-        // Se só selecionou data inicial
         if (selectedStartDate && !selectedEndDate) {
           selectedEndDate = selectedStartDate;
         }
@@ -914,7 +893,7 @@
         }
         updateSelectedDateDisplay();
         bootstrapModal.hide();
-        loadOrders(); // Recarrega dados com as novas datas
+        loadOrders(); // recarrega com as novas datas
       });
 
       monthSelect.addEventListener("change", renderCalendar);
@@ -949,15 +928,12 @@
               selectedEndDate = null;
               clearSelection();
               dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
-            }
-            else if (clickedDate < selectedStartDate) {
-              // Se clicou antes do startDate, reinicia
+            } else if (clickedDate < selectedStartDate) {
               selectedStartDate = clickedDate;
               selectedEndDate = null;
               clearSelection();
               dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
-            }
-            else {
+            } else {
               // Seleciona data final
               selectedEndDate = clickedDate;
               highlightRange(selectedStartDate, selectedEndDate);
@@ -1010,16 +986,15 @@
         }
       }
 
-      // Inicializa com a data do selectedStartDate
       monthSelect.value = selectedStartDate.getMonth();
       yearSelect.value = selectedStartDate.getFullYear();
       renderCalendar();
       updateSelectedDateDisplay();
     }
 
-    /* ============================================
+    /* ======================================
        DOM CARREGADO
-    ============================================ */
+    ====================================== */
     document.addEventListener('DOMContentLoaded', () => {
       initializeCalendar();
       loadSidebar();
