@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login - Magic Travel</title>
-  
+
   <style>
     /* 
       Usando a paleta de cores do site:
@@ -24,7 +24,7 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      overflow: hidden; 
+      overflow: hidden;
       position: relative;
     }
 
@@ -275,6 +275,8 @@
       // Chama o endpoint de login do api_log.php no domínio magictraveltur.com
       fetch('https://magictraveltur.com/api_log.php/login', {
         method: 'POST',
+        // ADICIONE 'credentials: "include"' para enviar/receber cookies cross-site
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
@@ -282,11 +284,12 @@
       })
       .then(response => response.text())
       .then(data => {
+        // Se o backend retornar "Login bem-sucedido!" no texto, checkamos:
         if (data.includes('Login bem-sucedido')) {
           // Redireciona para a área logada
           window.location.href = 'https://business.magictraveltur.com';
         } else {
-          // Exibe mensagem de erro retornada pelo servidor
+          // Caso contrário, exibe mensagem de erro retornada pelo servidor
           errorMessageDiv.textContent = data;
         }
       })
