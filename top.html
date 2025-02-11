@@ -38,10 +38,10 @@
       --max-width: 1200px;
       --dashboard-bg: #fff;
       --dashboard-border-radius: 8px;
-      --dashboard-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      --dashboard-box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       --dashboard-container-border-radius: 12px;
       --calendar-bg: #fff;
-      --calendar-box-shadow: 0 0 .875rem 0 rgba(33, 37, 41, 0.05);
+      --calendar-box-shadow: 0 0 .875rem 0 rgba(33,37,41,0.05);
       --calendar-width: 280px;
       --calendar-border-radius: 15px;
       --calendar-date-height: 30px;
@@ -116,7 +116,6 @@
       margin-top: 5px;
     }
 
-    /* Linha para comparativo */
     .summary-compare {
       font-size: 13px;
       margin-top: 5px;
@@ -245,7 +244,7 @@
       background-color: #4b37ff;
       color: #fff;
       font-weight: bold;
-      box-shadow: 0 3px 6px rgba(75, 55, 255, 0.3);
+      box-shadow: 0 3px 6px rgba(75,55,255,0.3);
     }
     .calendar__date--range-start {
       border-top-left-radius: var(--calendar-accent-radius);
@@ -371,7 +370,6 @@
       background-color: #cceeff;
       cursor: pointer;
     }
-
     /* Paginação */
     .pagination {
       display: flex;
@@ -432,7 +430,6 @@
           Total a Pagar Hoje (USD)
         </div>
         <div class="summary-value" id="totalPagarHoje">-</div>
-        <!-- Comparativo com intervalo anterior -->
         <div class="summary-compare" id="totalPagarHojeCompare"></div>
       </div>
 
@@ -453,10 +450,10 @@
           Valor Estimado em Reais
         </div>
         <div class="summary-value" id="valorEstimadoReais">-</div>
-        <!-- Comparativo com penúltimo dia útil -->
+        <!-- Removemos a comparação com a penúltima cotação -->
         <div class="summary-compare" id="valorEstimadoCompare"></div>
 
-        <!-- Form para o usuário digitar a cotação manual -->
+        <!-- Campo para digitar manualmente a cotação do dólar -->
         <div class="custom-dollar-form">
           <label for="inputDollarRate">Cotação do Dólar:</label>
           <input 
@@ -527,7 +524,7 @@
     <div class="dashboard-orders">
       <div class="dashboard-orders-container">
         <div class="dashboard-header">
-          <h1>Pedidos</h1>
+          <h1>Financeiro dos Pedidos</h1>
           <button class="add-order-button" onclick="addNewOrder()">Adicionar Pedido</button>
         </div>
         <table>
@@ -575,12 +572,12 @@
     const ultimaCotacaoFechamento = 5.79;
     const penultimaCotacaoFechamento = 5.75;
 
-    // Calculamos a cotação em uso e a do penúltimo dia útil (para comparativo).
-    // Se o usuário não digitar nada, vamos usar estes valores.
-    let cotacaoEmUso = parseFloat((ultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2));    
-    let cotacaoPenultima = parseFloat((penultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2)); 
+    // Cotação padrão, caso o usuário não informe manualmente
+    let cotacaoEmUso = parseFloat((ultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2));
+    // (Não exibimos mais se subiu ou desceu em relação à penúltima)
+    let cotacaoPenultima = parseFloat((penultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2));
 
-    // Caso o usuário forneça manualmente, salvamos aqui (ou null se não fornecido).
+    // Valor que o usuário digitar (ou null caso não digite)
     let userCotacaoManual = null;
 
     /* ======================================
@@ -592,7 +589,6 @@
       if (!isNaN(val) && val > 0) {
         // Soma 0,98%
         userCotacaoManual = parseFloat((val * (1 + 0.0098)).toFixed(2));
-        // Recalcula a tabela e o resumo
         filterOrders();
       } else {
         alert('Por favor, informe um valor válido para a cotação.');
@@ -742,21 +738,21 @@
     }
 
     /* ======================================
-       CÁLCULO DE RESUMO + COMPARATIVOS
+       CÁLCULO DE RESUMO
     ====================================== */
     function calcularResumoEComparativo(filteredOrders) {
-      // 1) Dados do intervalo selecionado
+      // 1) Intervalo atual
       const intervaloAtual = calculateIntervalData(filteredOrders, selectedStartDate, selectedEndDate);
-      const totalHoje = intervaloAtual.totalUsd; 
+      const totalHoje = intervaloAtual.totalUsd;
       const pedidosDiferentes = intervaloAtual.pedidosDiferentes;
 
-      // 2) Comparativo com intervalo anterior
+      // 2) Intervalo anterior
       const [prevStart, prevEnd] = getPreviousInterval(selectedStartDate, selectedEndDate);
       const intervaloAnterior = calculateIntervalData(combinedOrders, prevStart, prevEnd);
       const totalHojeAnterior = intervaloAnterior.totalUsd;
       const pedidosDiferentesAnterior = intervaloAnterior.pedidosDiferentes;
 
-      // Comparativos
+      // Comparativo do totalHoje
       const pctHoje = calcPercentChange(totalHoje, totalHojeAnterior);
       let comparativoHoje = '';
       if (pctHoje > 0) {
@@ -767,6 +763,7 @@
         comparativoHoje = 'Nenhuma variação em relação ao período anterior';
       }
 
+      // Comparativo dos pedidos
       const pctPedidos = calcPercentChange(pedidosDiferentes, pedidosDiferentesAnterior);
       let comparativoPedidos = '';
       if (pctPedidos > 0) {
@@ -777,23 +774,17 @@
         comparativoPedidos = 'Nenhuma variação em relação ao período anterior';
       }
 
-      // 3) Valor Estimado em Reais:
-      // Se o usuário digitou algo, priorizamos userCotacaoManual.
+      // 3) Valor em reais = totalHoje * (cotação final)
+      // Se usuário digitou, pegamos userCotacaoManual; senão, cotacaoEmUso
       const cotacaoFinal = (userCotacaoManual !== null) ? userCotacaoManual : cotacaoEmUso;
       const valorReais = totalHoje * cotacaoFinal;
 
-      // Comparativo com penúltima cotação
-      const pctCotacao = calcPercentChange(cotacaoFinal, cotacaoPenultima);
-      let comparativoReais = '';
-      if (pctCotacao > 0) {
-        comparativoReais = `Cotação subiu +${pctCotacao.toFixed(2)}% comparado à penúltima`;
-      } else if (pctCotacao < 0) {
-        comparativoReais = `Cotação caiu ${pctCotacao.toFixed(2)}% comparado à penúltima`;
-      } else {
-        comparativoReais = 'Cotação inalterada em relação à penúltima';
-      }
+      // Não exibimos mais comparativo com a penúltima
+      // (Removemos “Cotação subiu +X% comparado à penúltima”)
+      // Podemos exibir alguma info simples, se quiser
+      const comparativoReais = '';
 
-      // Exibe valores
+      // Exibe
       document.getElementById("totalPagarHoje").innerText = `U$ ${totalHoje.toFixed(2)}`;
       document.getElementById("totalPagarHojeCompare").innerText = comparativoHoje;
 
@@ -809,7 +800,6 @@
     ====================================== */
     function filterOrders() {
       let filteredOrders = combinedOrders;
-
       if (selectedStartDate && selectedEndDate) {
         filteredOrders = combinedOrders.filter(order => {
           if (!order.data_pagamento) return false;
@@ -818,7 +808,6 @@
           return paymentDate >= selectedStartDate && paymentDate <= selectedEndDate;
         });
       }
-
       renderTable(filteredOrders);
       renderPagination(filteredOrders);
       calcularResumoEComparativo(filteredOrders);
@@ -880,8 +869,8 @@
             nome: pedidosMap[planilha.id_pedido] || 'N/A',
             id_pedido: planilha.id_pedido,
             produto: planilha.produto || '',
-            valor_calculado: (totalUsd - lobista).toFixed(2), // exibido na tabela
-            raw_total_usd: totalUsd.toFixed(2),               // usado no resumo
+            valor_calculado: (totalUsd - lobista).toFixed(2),
+            raw_total_usd: totalUsd.toFixed(2),
             data_uso: planilha.data || '',
             data_pagamento: planilha.data_pagamento || '',
             identificador: planilha.identificador || '',
@@ -890,7 +879,7 @@
           };
         });
 
-        // Agora filtra e exibe
+        // Filtra e renderiza
         filterOrders();
       } catch (error) {
         console.error('Erro ao carregar os dados:', error);
@@ -935,7 +924,7 @@
         }
         updateSelectedDateDisplay();
         bootstrapModal.hide();
-        loadOrders(); // recarrega com as novas datas
+        loadOrders(); 
       });
 
       monthSelect.addEventListener("change", renderCalendar);
@@ -965,18 +954,16 @@
             const clickedDate = new Date(year, month, i);
 
             if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
-              // Reinicia intervalo
               selectedStartDate = clickedDate;
               selectedEndDate = null;
               clearSelection();
-              dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+              dateElement.classList.add('calendar__date--selected','calendar__date--range-start');
             } else if (clickedDate < selectedStartDate) {
               selectedStartDate = clickedDate;
               selectedEndDate = null;
               clearSelection();
-              dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+              dateElement.classList.add('calendar__date--selected','calendar__date--range-start');
             } else {
-              // Seleciona data final
               selectedEndDate = clickedDate;
               highlightRange(selectedStartDate, selectedEndDate);
             }
@@ -990,7 +977,7 @@
       function clearSelection() {
         document.querySelectorAll('.calendar__date--selected, .calendar__date--range-start, .calendar__date--range-end')
           .forEach(el => {
-            el.classList.remove('calendar__date--selected', 'calendar__date--range-start', 'calendar__date--range-end');
+            el.classList.remove('calendar__date--selected','calendar__date--range-start','calendar__date--range-end');
           });
       }
 
@@ -1003,7 +990,6 @@
           const day = parseInt(el.textContent);
           if (isNaN(day)) return;
           const elDate = new Date(yearSelect.value, monthSelect.value, day).getTime();
-
           if (elDate >= startTimestamp && elDate <= endTimestamp) {
             el.classList.add('calendar__date--selected');
             if (elDate === startTimestamp) {
@@ -1034,14 +1020,9 @@
       updateSelectedDateDisplay();
     }
 
-    /* ======================================
-       DOM CARREGADO
-    ====================================== */
     document.addEventListener('DOMContentLoaded', () => {
-      // Inicializa o calendário e a sidebar
       initializeCalendar();
       loadSidebar();
-      // Carrega pedidos e planilhas
       loadOrders();
     });
   </script>
