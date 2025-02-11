@@ -1,28 +1,31 @@
-
 <?php include 'auth.php'; ?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Pedidos - Magic Travel</title>
-  <!-- Adicionando o CSS do Bootstrap -->
+
+  <!-- CSS do Bootstrap -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Bootstrap Icons (caso precise do ícone bi-eye) -->
+
+  <!-- Bootstrap Icons -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 
   <style>
-    /*==================================================
-      Variáveis Globais
-    ==================================================*/
     :root {
       --primary-color: #0071e3;
-      --primary-hover: #005bb5;
       --secondary-color: #1cbb8c;
+      --warning-color: #fcb92c;
+      --danger-color: #dc3545;
+      --info-color: #3b7ddd;
+      --light-bg: #f9f9fa;
+      --text-color: #1d1d1f;
+
+      --primary-hover: #005bb5;
       --secondary-hover: #17a2b8;
       --sidebar-bg: #222e3c;
-      --text-color: #1d1d1f;
       --header-text: #6e6e73;
       --header-bg: #f9f9fa;
       --table-odd: #ffffff;
@@ -35,19 +38,16 @@
       --max-width: 1200px;
       --dashboard-bg: #fff;
       --dashboard-border-radius: 8px;
-      --dashboard-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      --dashboard-box-shadow: 0 4px 10px rgba(0,0,0,0.1);
       --dashboard-container-border-radius: 12px;
       --calendar-bg: #fff;
-      --calendar-box-shadow: 0 0 .875rem 0 rgba(33, 37, 41, 0.05);
+      --calendar-box-shadow: 0 0 .875rem 0 rgba(33,37,41,0.05);
       --calendar-width: 280px;
       --calendar-border-radius: 15px;
       --calendar-date-height: 30px;
       --calendar-accent-radius: 10px;
     }
 
-    /*==================================================
-      Reset e Configurações Globais
-    ==================================================*/
     * {
       box-sizing: border-box;
       margin: 0;
@@ -62,9 +62,7 @@
       overflow: hidden;
     }
 
-    /*==================================================
-      Sidebar
-    ==================================================*/
+    /* SIDEBAR */
     #sidebar-container {
       width: 260px;
       flex-shrink: 0;
@@ -77,289 +75,87 @@
       background: var(--sidebar-bg);
     }
 
-    /*==================================================
-      Conteúdo Principal
-    ==================================================*/
+    /* CONTEÚDO PRINCIPAL */
     main.content {
       margin-left: 260px;
-      margin-top: 100px;
+      margin-top: 85px;
       flex-grow: 1;
       padding: 40px;
       overflow-y: auto;
     }
 
-    /*==================================================
-      Dashboard - Pedidos
-    ==================================================*/
-    .dashboard-orders {
-      padding: 20px;
-      margin: 0 auto;
-      max-width: var(--max-width);
-      background-color: var(--dashboard-bg);
-      border-radius: var(--dashboard-border-radius);
-      box-shadow: var(--dashboard-box-shadow);
-    }
-
-    .dashboard-orders-container {
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 20px;
-      background-color: var(--dashboard-bg);
-      border-radius: var(--dashboard-container-border-radius);
-      box-shadow: var(--dashboard-box-shadow);
-    }
-
-    .dashboard-header {
+    /* BLOCOS DE RESUMO */
+    .summary-container {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
     }
 
-    .dashboard-header h1 {
+    .summary-box {
+      flex: 1;
+      padding: 20px;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: var(--dashboard-box-shadow);
+      min-width: 250px;
+    }
+
+    .summary-title {
+      font-size: 16px;
       font-weight: 600;
       color: var(--text-color);
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .add-order-button {
+    .summary-value {
+      font-size: 24px;
+      font-weight: 700;
+      margin-top: 5px;
+    }
+
+    .summary-compare {
+      font-size: 13px;
+      margin-top: 5px;
+      color: #555;
+    }
+
+    .summary-icon {
+      font-size: 18px;
+    }
+
+    /* Formulário para o usuário digitar a cotação do dólar */
+    .custom-dollar-form {
+      margin-top: 10px;
+    }
+    .custom-dollar-form label {
+      margin-right: 5px;
+      font-size: 13px;
+    }
+    .custom-dollar-form input {
+      width: 80px;
+      padding: 5px;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .custom-dollar-form button {
+      font-size: 13px;
+      padding: 5px 10px;
+      margin-left: 5px;
       background-color: var(--secondary-color);
       color: #fff;
       border: none;
-      border-radius: 8px;
-      padding: 10px 15px;
-      font-weight: 600;
-      font-size: 12px;
+      border-radius: 4px;
       cursor: pointer;
-      text-align: center;
     }
-
-    .add-order-button:hover {
+    .custom-dollar-form button:hover {
       background-color: var(--secondary-hover);
     }
 
-    /*==================================================
-      Tabela de Pedidos
-    ==================================================*/
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-
-    th, td {
-      padding: 12px 15px;
-      font-size: 12px;
-      text-align: left;
-    }
-
-    th {
-      font-weight: 600;
-      color: var(--header-text);
-      background-color: var(--header-bg);
-    }
-
-    tr:nth-child(odd) {
-      background-color: var(--table-odd);
-    }
-
-    tr:nth-child(even) {
-      background: var(--table-even-gradient);
-    }
-
-    td {
-      color: var(--text-color);
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    tr:hover {
-      background-color: #cceeff;
-      cursor: pointer;
-    }
-
-    /*==================================================
-      Paginação
-    ==================================================*/
-    .pagination {
-      display: flex;
-      justify-content: center;
-      margin-top: 20px;
-    }
-
-    .pagination button {
-      background-color: var(--primary-color);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 10px 15px;
-      margin: 0 5px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .pagination button:hover {
-      background-color: var(--primary-hover);
-    }
-
-    .pagination button:disabled {
-      background-color: #cccccc;
-      cursor: not-allowed;
-    }
-
-    /*==================================================
-      Calendário
-    ==================================================*/
-    .calendar {
-      width: var(--calendar-width);
-      margin: auto;
-      background-color: var(--calendar-bg);
-      border-radius: 5px;
-      box-shadow: var(--calendar-box-shadow);
-      transform: scale(1);
-      transform-origin: top;
-      padding: 0;
-    }
-
-    .calendar__body {
-      border-radius: var(--calendar-border-radius);
-      padding: 10px;
-    }
-
-    .calendar__opts {
-      background-color: #fff;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      padding: 10px;
-      border-top-left-radius: var(--calendar-border-radius);
-      border-top-right-radius: var(--calendar-border-radius);
-    }
-
-    .calendar__days {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      text-align: center;
-      font-weight: bold;
-      color: #999;
-      padding: 0 10px;
-      font-size: 0.85rem;
-    }
-
-    .calendar__dates {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
-      padding: 10px;
-    }
-
-    .calendar__date {
-      height: var(--calendar-date-height);
-      line-height: var(--calendar-date-height);
-      text-align: center;
-      background-color: #fff;
-      color: #333;
-      border-radius: var(--calendar-accent-radius);
-      font-size: 0.9rem;
-      cursor: pointer;
-      transition: background-color 0.3s, transform 0.2s;
-      position: relative;
-    }
-
-    .calendar__date:hover {
-      background-color: #eaeaea;
-      transform: scale(1.05);
-    }
-
-    .calendar__date--selected {
-      background-color: #4b37ff;
-      color: #fff;
-      font-weight: bold;
-      box-shadow: 0 3px 6px rgba(75, 55, 255, 0.3);
-    }
-
-    .calendar__date--range-start {
-      border-top-left-radius: var(--calendar-accent-radius);
-      border-bottom-left-radius: var(--calendar-accent-radius);
-    }
-
-    .calendar__date--range-end {
-      border-top-right-radius: var(--calendar-accent-radius);
-      border-bottom-right-radius: var(--calendar-accent-radius);
-    }
-
-    .calendar__date--grey {
-      background-color: #f2f2f2;
-      color: #ccc;
-      cursor: not-allowed;
-    }
-
-    /* Botões do Calendário */
-    .calendar__buttons {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px;
-      border-bottom-left-radius: var(--calendar-border-radius);
-      border-bottom-right-radius: var(--calendar-border-radius);
-    }
-
-    .calendar__button {
-      padding: 8px 12px;
-      font-size: 0.9rem;
-      border: none;
-      border-radius: var(--calendar-accent-radius);
-      cursor: pointer;
-    }
-
-    .calendar__button--grey {
-      background-color: #e0e0e0;
-      color: #333;
-    }
-
-    .calendar__button--primary {
-      background-color: #4b37ff;
-      color: #fff;
-      transition: background-color 0.3s, transform 0.2s;
-    }
-
-    .calendar__button--primary:hover {
-      background-color: #3b27d9;
-      transform: scale(1.05);
-    }
-
-    @media (max-width: 768px) {
-      .calendar {
-        width: 240px;
-      }
-      .calendar__date {
-        height: 35px;
-        line-height: 35px;
-        font-size: 0.8rem;
-      }
-      .calendar__dates {
-        gap: 4px;
-      }
-    }
-
-    /*==================================================
-      Modal
-    ==================================================*/
-    .modal {
-      z-index: var(--modal-z-index) !important;
-    }
-
-    .modal-backdrop {
-      z-index: var(--modal-backdrop-z-index);
-    }
-
-    .modal-dialog {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      margin-top: 10px;
-    }
-
-    /*==================================================
-      Seletor de Datas (Date Selector)
-    ==================================================*/
+    /* SELETOR DE DATAS (CALENDÁRIO) */
     .date-selector-container {
       display: flex;
       align-items: center;
@@ -381,15 +177,231 @@
       height: 95%;
     }
 
-    /*==================================================
-      Badge de Status (altura/largura fixas, texto centralizado)
-    ==================================================*/
+    /* MODAL DO CALENDÁRIO */
+    .modal {
+      z-index: var(--modal-z-index) !important;
+    }
+    .modal-backdrop {
+      z-index: var(--modal-backdrop-z-index);
+    }
+    .modal-dialog {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-top: 10px;
+    }
+
+    .calendar {
+      width: var(--calendar-width);
+      margin: auto;
+      background-color: var(--calendar-bg);
+      border-radius: 5px;
+      box-shadow: var(--calendar-box-shadow);
+      transform-origin: top;
+      padding: 0;
+    }
+    .calendar__opts {
+      background-color: #fff;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 10px;
+      border-top-left-radius: var(--calendar-border-radius);
+      border-top-right-radius: var(--calendar-border-radius);
+    }
+    .calendar__days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-weight: bold;
+      color: #999;
+      padding: 0 10px;
+      font-size: 0.85rem;
+    }
+    .calendar__dates {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      padding: 10px;
+    }
+    .calendar__date {
+      height: var(--calendar-date-height);
+      line-height: var(--calendar-date-height);
+      text-align: center;
+      background-color: #fff;
+      color: #333;
+      border-radius: var(--calendar-accent-radius);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+      position: relative;
+    }
+    .calendar__date:hover {
+      background-color: #eaeaea;
+      transform: scale(1.05);
+    }
+    .calendar__date--selected {
+      background-color: #4b37ff;
+      color: #fff;
+      font-weight: bold;
+      box-shadow: 0 3px 6px rgba(75,55,255,0.3);
+    }
+    .calendar__date--range-start {
+      border-top-left-radius: var(--calendar-accent-radius);
+      border-bottom-left-radius: var(--calendar-accent-radius);
+    }
+    .calendar__date--range-end {
+      border-top-right-radius: var(--calendar-accent-radius);
+      border-bottom-right-radius: var(--calendar-accent-radius);
+    }
+    .calendar__date--grey {
+      background-color: #f2f2f2;
+      color: #ccc;
+      cursor: not-allowed;
+    }
+    .calendar__buttons {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom-left-radius: var(--calendar-border-radius);
+      border-bottom-right-radius: var(--calendar-border-radius);
+    }
+    .calendar__button {
+      padding: 8px 12px;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: var(--calendar-accent-radius);
+      cursor: pointer;
+    }
+    .calendar__button--grey {
+      background-color: #e0e0e0;
+      color: #333;
+    }
+    .calendar__button--primary {
+      background-color: #4b37ff;
+      color: #fff;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .calendar__button--primary:hover {
+      background-color: #3b27d9;
+      transform: scale(1.05);
+    }
+
+    @media (max-width: 768px) {
+      .calendar {
+        width: 240px;
+      }
+      .calendar__date {
+        height: 35px;
+        line-height: 35px;
+        font-size: 0.8rem;
+      }
+      .calendar__dates {
+        gap: 4px;
+      }
+    }
+
+    /* DASHBOARD - TABELA DE PEDIDOS */
+    .dashboard-orders {
+      padding: 20px;
+      margin: 0 auto;
+      max-width: var(--max-width);
+      background-color: var(--dashboard-bg);
+      border-radius: var(--dashboard-border-radius);
+      box-shadow: var(--dashboard-box-shadow);
+    }
+    .dashboard-orders-container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 20px;
+      background-color: var(--dashboard-bg);
+      border-radius: var(--dashboard-container-border-radius);
+      box-shadow: var(--dashboard-box-shadow);
+    }
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .dashboard-header h1 {
+      font-weight: 600;
+      color: var(--text-color);
+      font-size: 18px;
+    }
+    .add-order-button {
+      background-color: var(--secondary-color);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .add-order-button:hover {
+      background-color: var(--secondary-hover);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      padding: 12px 15px;
+      font-size: 12px;
+      text-align: left;
+    }
+    th {
+      font-weight: 600;
+      color: var(--header-text);
+      background-color: var(--header-bg);
+    }
+    tr:nth-child(odd) {
+      background-color: var(--table-odd);
+    }
+    tr:nth-child(even) {
+      background: var(--table-even-gradient);
+    }
+    td {
+      color: var(--text-color);
+      border-bottom: 1px solid var(--border-color);
+    }
+    tr:hover {
+      background-color: #cceeff;
+      cursor: pointer;
+    }
+    /* Paginação */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+    .pagination button {
+      background-color: var(--primary-color);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin: 0 5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .pagination button:hover {
+      background-color: var(--primary-hover);
+    }
+    .pagination button:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+
+    /* BADGE DE STATUS */
     .status-badge {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 130px; 
-      height: 40px; 
+      width: 130px;
+      height: 40px;
       color: #fff;
       font-size: 12px;
       font-weight: 600;
@@ -399,13 +411,62 @@
   </style>
 </head>
 <body>
-  <!-- Sidebar será carregado aqui -->
+  <!-- SIDEBAR -->
   <div id="sidebar-container"></div>
 
+  <!-- CONTEÚDO -->
   <main class="content">
+    <!-- Seletor de datas (com Modal) -->
     <div class="date-selector-container">
       <span id="datas-selecionadas" class="selected-date-display"></span>
       <button id="open-calendar-btn" class="btn btn-primary">Selecionar Data</button>
+    </div>
+
+    <!-- Blocos de Resumo -->
+    <div class="summary-container">
+      <!-- 1) Total a Pagar Hoje (intervalo) -->
+      <div class="summary-box">
+        <div class="summary-title">
+          <i class="bi bi-credit-card summary-icon"></i> 
+          Total a Pagar Hoje (USD)
+        </div>
+        <div class="summary-value" id="totalPagarHoje">-</div>
+        <div class="summary-compare" id="totalPagarHojeCompare"></div>
+      </div>
+
+      <!-- 2) Pedidos Diferentes -->
+      <div class="summary-box">
+        <div class="summary-title">
+          <i class="bi bi-file-earmark-text summary-icon"></i> 
+          Pedidos Diferentes
+        </div>
+        <div class="summary-value" id="totalPedidos">-</div>
+        <div class="summary-compare" id="totalPedidosCompare"></div>
+      </div>
+
+      <!-- 3) Valor Estimado em Reais -->
+      <div class="summary-box">
+        <div class="summary-title">
+          <i class="bi bi-cash-coin summary-icon"></i>
+          Valor Estimado em Reais
+        </div>
+        <div class="summary-value" id="valorEstimadoReais">-</div>
+        <!-- Removemos a comparação com a penúltima cotação -->
+        <div class="summary-compare" id="valorEstimadoCompare"></div>
+
+        <!-- Campo para digitar manualmente a cotação do dólar -->
+        <div class="custom-dollar-form">
+          <label for="inputDollarRate">Cotação do Dólar:</label>
+          <input 
+            type="number" 
+            step="0.0001" 
+            id="inputDollarRate" 
+            placeholder="Ex: 5.79"
+            min="0"
+          />
+          <button onclick="applyUserDollar()">Aplicar</button>
+        </div>
+      </div>
     </div>
 
     <!-- Modal do Calendário -->
@@ -436,7 +497,6 @@
                   <option value="2028">2028</option>
                 </select>
               </div>
-
               <div class="calendar__body">
                 <div class="calendar__days">
                   <div>Dom</div>
@@ -451,7 +511,6 @@
                   <!-- Dias do calendario -->
                 </div>
               </div>
-
               <div class="calendar__buttons">
                 <button class="calendar__button calendar__button--grey" id="back-btn">Back</button>
                 <button class="calendar__button calendar__button--primary" id="apply-btn">Apply</button>
@@ -466,7 +525,7 @@
     <div class="dashboard-orders">
       <div class="dashboard-orders-container">
         <div class="dashboard-header">
-          <h1>Pedidos</h1>
+          <h1>Financeiro | Pedidos</h1>
           <button class="add-order-button" onclick="addNewOrder()">Adicionar Pedido</button>
         </div>
         <table>
@@ -481,11 +540,11 @@
               <th>Identificador</th>
               <th>Fornecedor</th>
               <th>Status</th>
-              <th style="width: 50px; text-align:center;">Ação</th>
+              <th style="width:50px; text-align:center;">Ação</th>
             </tr>
           </thead>
           <tbody id="orders-table">
-            <!-- Os dados serão carregados dinamicamente -->
+            <!-- Dados dinâmicos -->
           </tbody>
         </table>
         <div class="pagination" id="pagination-controls">
@@ -495,133 +554,147 @@
     </div>
   </main>
 
-  <!-- Adicionando o JS do Bootstrap -->
+  <!-- JS do Bootstrap -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
   <script>
+    /* ======================================
+       VARIÁVEIS GLOBAIS
+    ====================================== */
     let currentPage = 1;
     const rowsPerPage = 10;
     let combinedOrders = [];
+
+    // Intervalo padrão (ex.: primeiro dia do mês até o último dia)
     let selectedStartDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     let selectedEndDate = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
 
-    // 1️⃣ Decodifica entidades HTML (&NoBreak;, etc.)
-    function decodeHtmlEntities(str) {
-        const el = document.createElement('textarea');
-        el.innerHTML = str;
-        return el.value;
-    }
+    // Exemplo: última cotação do dia útil (5,79) + 0,98% ≈ 5,85
+    const ultimaCotacaoFechamento = 5.79;
+    const penultimaCotacaoFechamento = 5.75;
 
-    // 2️⃣ Normaliza e remove caracteres invisíveis dos status
-    function normalizeStatus(status) {
-        let st = decodeHtmlEntities(status || ''); // Decodifica entidades HTML
-        st = st.toLowerCase().normalize('NFKC');  // Normaliza Unicode e minúsculas
-        st = st.replace(/[\u00A0\u200B\uFEFF\u2060]/g, ''); // Remove espaços invisíveis
-        st = st.replace(/[\u2013\u2014-]/g, '–'); // Unifica todos os traços para "–"
-        return st.trim();
-    }
+    // Cotação padrão, caso o usuário não informe manualmente
+    let cotacaoEmUso = parseFloat((ultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2));
+    // (Não exibimos mais se subiu ou desceu em relação à penúltima)
+    let cotacaoPenultima = parseFloat((penultimaCotacaoFechamento * (1 + 0.0098)).toFixed(2));
 
-    // Função para carregar a sidebar
-    async function loadSidebar() {
-      try {
-        const response = await fetch('https://business.magictraveltur.com/sidebar.html');
-        if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
-        const sidebarContent = await response.text();
-        document.getElementById('sidebar-container').innerHTML = sidebarContent;
-      } catch (error) {
-        console.error('Erro ao carregar a sidebar:', error);
-        document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
-      }
-    }
+    // Valor que o usuário digitar (ou null caso não digite)
+    let userCotacaoManual = null;
 
-    // Função para carregar os dados (planilhas/pedidos) e combiná-los
-    async function loadOrders() {
-      try {
-        const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
-        const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
-        const apiUrlPlanilhas = `https://www.magictraveltur.com/api_planilhas.php?start_date=${startDate}&end_date=${endDate}`;
-        const apiUrlPedidos = `https://www.magictraveltur.com/api_pedidos.php`;
-
-        const [responsePlanilhas, responsePedidos] = await Promise.all([
-          fetch(apiUrlPlanilhas),
-          fetch(apiUrlPedidos)
-        ]);
-
-        if (!responsePlanilhas.ok) throw new Error(`Erro ao carregar dados da planilha: ${responsePlanilhas.status}`);
-        if (!responsePedidos.ok) throw new Error(`Erro ao carregar dados dos pedidos: ${responsePedidos.status}`);
-
-        const planilhasData = await responsePlanilhas.json();
-        const pedidosData = await responsePedidos.json();
-
-        // Mapeia ID -> nome do pedido
-        const pedidosMap = {};
-        pedidosData.forEach(pedido => {
-          pedidosMap[pedido.id] = pedido.nome;
-        });
-
-        // Combina
-        combinedOrders = planilhasData.map(planilha => {
-          return {
-            nome: pedidosMap[planilha.id_pedido] || 'N/A',
-            id_pedido: planilha.id_pedido,
-            produto: planilha.produto || '',
-            // Valor = total_usd - lobista
-            valor: (planilha.total_usd && planilha.lobista)
-              ? (parseFloat(planilha.total_usd) - parseFloat(planilha.lobista)).toFixed(2)
-              : '0.00',
-            data_uso: planilha.data || '',
-            data_pagamento: planilha.data_pagamento,
-            identificador: planilha.identificador,
-            fornecedor: planilha.fornecedor,
-            status: planilha.status
-          };
-        });
-
-        console.log('Dados combinados:', combinedOrders);
+    /* ======================================
+       FUNÇÃO PARA APLICAR A COTAÇÃO
+       DIGITADA PELO USUÁRIO
+    ====================================== */
+    function applyUserDollar() {
+      const val = parseFloat(document.getElementById('inputDollarRate').value);
+      if (!isNaN(val) && val > 0) {
+        // Soma 0,98%
+        userCotacaoManual = parseFloat((val * (1 + 0.0098)).toFixed(2));
         filterOrders();
-      } catch (error) {
-        console.error('Erro ao carregar os dados:', error);
-        document.getElementById('orders-table').innerHTML = `<tr>
-          <td colspan="10" style="text-align: center; color: red;">Erro ao carregar os pedidos.</td>
-        </tr>`;
+      } else {
+        alert('Por favor, informe um valor válido para a cotação.');
       }
     }
 
-    // Filtra de acordo com a data de pagamento
-    function filterOrders() {
-      let filteredOrders = combinedOrders;
-      if (selectedStartDate && selectedEndDate) {
-        filteredOrders = combinedOrders.filter(order => {
-          if (!order.data_pagamento) return false;
-          const [year, month, day] = order.data_pagamento.split('-').map(Number);
-          const paymentDate = new Date(year, month - 1, day);
-          return paymentDate >= selectedStartDate && paymentDate <= selectedEndDate;
-        });
-      }
-      renderTable(filteredOrders);
-      renderPagination(filteredOrders);
+    /* ======================================
+       FUNÇÕES COMPARTILHADAS
+    ====================================== */
+    function decodeHtmlEntities(str) {
+      const el = document.createElement('textarea');
+      el.innerHTML = str;
+      return el.value;
     }
 
-    // Ajusta a cor do status baseado no texto normalizado
+    function normalizeStatus(status) {
+      let st = decodeHtmlEntities(status || '');
+      st = st.toLowerCase().normalize('NFKC');
+      st = st.replace(/[\u00A0\u200B\uFEFF\u2060]/g, '');
+      st = st.replace(/[\u2013\u2014-]/g, '–'); 
+      return st.trim();
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      const [year, month, day] = dateString.split('-').map(Number);
+      return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
+    }
+
+    function formatDisplayDate(dateObj) {
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const y = dateObj.getFullYear();
+      return `${d}/${m}/${y}`;
+    }
+
+    function openDetailsPage(orderId) {
+      window.open(`detalhes.html?pedido=${orderId}`, '_blank');
+    }
+
+    function addNewOrder() {
+      window.location.href = 'https://business.magictraveltur.com/loti.html';
+    }
+
     function getStatusBadge(status) {
-        const st = normalizeStatus(status);
-
-        switch (st) {
+      const st = normalizeStatus(status);
+      switch (st) {
         case 'concluído':
-            return `<button class="status-badge" style="background-color:#1cbb8c;">Concluído</button>`;
+          return `<button class="status-badge" style="background-color:#1cbb8c;">Concluído</button>`;
         case 'emitido – não pago':
-            return `<button class="status-badge" style="background-color:#dc3545;">Emitido – Não Pago</button>`;
+          return `<button class="status-badge" style="background-color:#dc3545;">Emitido – Não Pago</button>`;
         case 'emitido tif':
-            return `<button class="status-badge" style="background-color:#fcb92c;">Emitido TIF</button>`;
+          return `<button class="status-badge" style="background-color:#fcb92c;">Emitido TIF</button>`;
         case 'aguardando emissão':
-            return `<button class="status-badge" style="background-color:#3b7ddd;">Aguardando Emissão</button>`;
+          return `<button class="status-badge" style="background-color:#3b7ddd;">Aguardando Emissão</button>`;
         case 'emissão bloqueada':
-            return `<button class="status-badge" style="background-color:#dc3545;">Emissão Bloqueada</button>`;
+          return `<button class="status-badge" style="background-color:#dc3545;">Emissão Bloqueada</button>`;
         default:
-            return `<button class="status-badge" style="background-color:#6c757d;">${status || 'Sem Status'}</button>`;
-        }
+          return `<button class="status-badge" style="background-color:#6c757d;">${status || 'Sem Status'}</button>`;
+      }
     }
 
-    // Renderiza a tabela de pedidos
+    function calcPercentChange(newValue, oldValue) {
+      if (oldValue === 0) {
+        if (newValue === 0) return 0;
+        return 100;
+      }
+      return ((newValue - oldValue) / oldValue) * 100;
+    }
+
+    function getPreviousInterval(startDate, endDate) {
+      const oneDayMs = 86400000;
+      const lengthMs = endDate - startDate + oneDayMs;
+      const endDateAnterior = new Date(startDate.getTime() - oneDayMs);
+      const startDateAnterior = new Date(endDateAnterior.getTime() - (lengthMs - oneDayMs));
+      return [startDateAnterior, endDateAnterior];
+    }
+
+    function calculateIntervalData(orders, rangeStart, rangeEnd) {
+      let totalUsd = 0;
+      let pedidosSet = new Set();
+
+      orders.forEach(order => {
+        const status = normalizeStatus(order.status);
+        const valorPedido = parseFloat(order.raw_total_usd) || 0;
+        if (!order.data_pagamento) return;
+        const [yyyy, mm, dd] = order.data_pagamento.split('-').map(Number);
+        const dataPagamento = new Date(yyyy, mm - 1, dd);
+
+        if (dataPagamento >= rangeStart && dataPagamento <= rangeEnd) {
+          if (["emissão bloqueada", "emitido – não pago", "emitido tif"].includes(status)) {
+            totalUsd += valorPedido;
+          }
+          pedidosSet.add(order.id_pedido);
+        }
+      });
+      return {
+        totalUsd,
+        pedidosDiferentes: pedidosSet.size
+      };
+    }
+
+    /* ======================================
+       RENDERIZA TABELA E PAGINAÇÃO
+    ====================================== */
     function renderTable(filteredOrders) {
       const ordersTable = document.getElementById('orders-table');
       const start = (currentPage - 1) * rowsPerPage;
@@ -633,13 +706,12 @@
           <td>${order.nome}</td>
           <td>${order.id_pedido}</td>
           <td>${order.produto}</td>
-          <td>U$ ${order.valor}</td>
+          <td>U$ ${order.valor_calculado}</td>
           <td>${order.data_uso ? formatDate(order.data_uso) : ''}</td>
           <td>${formatDate(order.data_pagamento)}</td>
           <td>${order.identificador}</td>
           <td>${order.fornecedor}</td>
           <td>${getStatusBadge(order.status)}</td>
-          <!-- Ícone de olho (se quiser trocar, fique à vontade) -->
           <td style="width:50px; text-align:center;">
             <i class="bi bi-eye" style="cursor:pointer; font-size:1.2rem;"
                onclick="openDetailsPage('${order.id_pedido}')"></i>
@@ -648,18 +720,11 @@
       `).join('');
     }
 
-    // Formata data YYYY-MM-DD -> DD/MM/YYYY
-    function formatDate(dateString) {
-      if (!dateString) return '';
-      const [year, month, day] = dateString.split('-').map(Number);
-      return `${String(day).padStart(2, '0')}/${String(month).padStart(2, '0')}/${year}`;
-    }
-
-    // Renderiza botões de paginação
     function renderPagination(filteredOrders) {
       const paginationControls = document.getElementById('pagination-controls');
       const totalPages = Math.ceil(filteredOrders.length / rowsPerPage);
       paginationControls.innerHTML = '';
+
       for (let i = 1; i <= totalPages; i++) {
         const button = document.createElement('button');
         button.textContent = i;
@@ -673,17 +738,164 @@
       }
     }
 
-    // Abre detalhes em nova aba
-    function openDetailsPage(orderId) {
-      window.open(`detalhes.html?pedido=${orderId}`, '_blank');
+    /* ======================================
+       CÁLCULO DE RESUMO
+    ====================================== */
+    function calcularResumoEComparativo(filteredOrders) {
+      // 1) Intervalo atual
+      const intervaloAtual = calculateIntervalData(filteredOrders, selectedStartDate, selectedEndDate);
+      const totalHoje = intervaloAtual.totalUsd;
+      const pedidosDiferentes = intervaloAtual.pedidosDiferentes;
+
+      // 2) Intervalo anterior
+      const [prevStart, prevEnd] = getPreviousInterval(selectedStartDate, selectedEndDate);
+      const intervaloAnterior = calculateIntervalData(combinedOrders, prevStart, prevEnd);
+      const totalHojeAnterior = intervaloAnterior.totalUsd;
+      const pedidosDiferentesAnterior = intervaloAnterior.pedidosDiferentes;
+
+      // Comparativo do totalHoje
+      const pctHoje = calcPercentChange(totalHoje, totalHojeAnterior);
+      let comparativoHoje = '';
+      if (pctHoje > 0) {
+        comparativoHoje = `+${pctHoje.toFixed(1)}% em relação ao período anterior`;
+      } else if (pctHoje < 0) {
+        comparativoHoje = `${pctHoje.toFixed(1)}% em relação ao período anterior`;
+      } else {
+        comparativoHoje = 'Nenhuma variação em relação ao período anterior';
+      }
+
+      // Comparativo dos pedidos
+      const pctPedidos = calcPercentChange(pedidosDiferentes, pedidosDiferentesAnterior);
+      let comparativoPedidos = '';
+      if (pctPedidos > 0) {
+        comparativoPedidos = `+${pctPedidos.toFixed(1)}% em relação ao período anterior`;
+      } else if (pctPedidos < 0) {
+        comparativoPedidos = `${pctPedidos.toFixed(1)}% em relação ao período anterior`;
+      } else {
+        comparativoPedidos = 'Nenhuma variação em relação ao período anterior';
+      }
+
+      // 3) Valor em reais = totalHoje * (cotação final)
+      // Se usuário digitou, pegamos userCotacaoManual; senão, cotacaoEmUso
+      const cotacaoFinal = (userCotacaoManual !== null) ? userCotacaoManual : cotacaoEmUso;
+      const valorReais = totalHoje * cotacaoFinal;
+
+      // Não exibimos mais comparativo com a penúltima
+      // (Removemos “Cotação subiu +X% comparado à penúltima”)
+      // Podemos exibir alguma info simples, se quiser
+      const comparativoReais = '';
+
+      // Exibe
+      document.getElementById("totalPagarHoje").innerText = `U$ ${totalHoje.toFixed(2)}`;
+      document.getElementById("totalPagarHojeCompare").innerText = comparativoHoje;
+
+      document.getElementById("totalPedidos").innerText = pedidosDiferentes;
+      document.getElementById("totalPedidosCompare").innerText = comparativoPedidos;
+
+      document.getElementById("valorEstimadoReais").innerText = `R$ ${valorReais.toFixed(2)}`;
+      document.getElementById("valorEstimadoCompare").innerText = comparativoReais;
     }
 
-    // Adicionar novo pedido
-    function addNewOrder() {
-      window.location.href = 'https://business.magictraveltur.com/loti.html';
+    /* ======================================
+       FILTRO (INTERVALO) E RENDERIZA
+    ====================================== */
+    function filterOrders() {
+      let filteredOrders = combinedOrders;
+      if (selectedStartDate && selectedEndDate) {
+        filteredOrders = combinedOrders.filter(order => {
+          if (!order.data_pagamento) return false;
+          const [year, month, day] = order.data_pagamento.split('-').map(Number);
+          const paymentDate = new Date(year, month - 1, day);
+          return paymentDate >= selectedStartDate && paymentDate <= selectedEndDate;
+        });
+      }
+      renderTable(filteredOrders);
+      renderPagination(filteredOrders);
+      calcularResumoEComparativo(filteredOrders);
     }
 
-    // Inicializa calendário (modal e datas)
+    /* ======================================
+       CARREGA SIDEBAR
+    ====================================== */
+    async function loadSidebar() {
+      try {
+        const response = await fetch('https://business.magictraveltur.com/sidebar.html');
+        if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
+        const sidebarContent = await response.text();
+        document.getElementById('sidebar-container').innerHTML = sidebarContent;
+      } catch (error) {
+        console.error('Erro ao carregar a sidebar:', error);
+        document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
+      }
+    }
+
+    /* ======================================
+       CARREGA DADOS DAS APIS E UNIFICA
+    ====================================== */
+    async function loadOrders() {
+      try {
+        const startDate = selectedStartDate ? selectedStartDate.toISOString().split('T')[0] : null;
+        const endDate = selectedEndDate ? selectedEndDate.toISOString().split('T')[0] : null;
+
+        const apiUrlPlanilhas = `https://www.magictraveltur.com/api_planilhas.php?start_date=${startDate}&end_date=${endDate}`;
+        const apiUrlPedidos = `https://www.magictraveltur.com/api_pedidos.php`;
+
+        const [responsePlanilhas, responsePedidos] = await Promise.all([
+          fetch(apiUrlPlanilhas),
+          fetch(apiUrlPedidos)
+        ]);
+
+        if (!responsePlanilhas.ok) {
+          throw new Error(`Erro ao carregar dados da planilha: ${responsePlanilhas.status}`);
+        }
+        if (!responsePedidos.ok) {
+          throw new Error(`Erro ao carregar dados dos pedidos: ${responsePedidos.status}`);
+        }
+
+        const planilhasData = await responsePlanilhas.json();
+        const pedidosData = await responsePedidos.json();
+
+        // Mapeia id -> nome do pedido
+        const pedidosMap = {};
+        pedidosData.forEach(pedido => {
+          pedidosMap[pedido.id] = pedido.nome;
+        });
+
+        // Monta array unificado
+        combinedOrders = planilhasData.map(planilha => {
+          const totalUsd = parseFloat(planilha.total_usd) || 0;
+          const lobista = parseFloat(planilha.lobista) || 0;
+
+          return {
+            nome: pedidosMap[planilha.id_pedido] || 'N/A',
+            id_pedido: planilha.id_pedido,
+            produto: planilha.produto || '',
+            valor_calculado: (totalUsd - lobista).toFixed(2),
+            raw_total_usd: totalUsd.toFixed(2),
+            data_uso: planilha.data || '',
+            data_pagamento: planilha.data_pagamento || '',
+            identificador: planilha.identificador || '',
+            fornecedor: planilha.fornecedor || '',
+            status: planilha.status || ''
+          };
+        });
+
+        // Filtra e renderiza
+        filterOrders();
+      } catch (error) {
+        console.error('Erro ao carregar os dados:', error);
+        document.getElementById('orders-table').innerHTML = `
+          <tr>
+            <td colspan="10" style="text-align: center; color: red;">
+              Erro ao carregar os pedidos.
+            </td>
+          </tr>`;
+      }
+    }
+
+    /* ======================================
+       INICIALIZA O CALENDÁRIO E EVENTOS
+    ====================================== */
     function initializeCalendar() {
       const openCalendarBtn = document.getElementById("open-calendar-btn");
       const backBtn = document.getElementById("back-btn");
@@ -704,17 +916,16 @@
       });
 
       applyBtn.addEventListener("click", () => {
+        if (selectedStartDate && !selectedEndDate) {
+          selectedEndDate = selectedStartDate;
+        }
         if (!selectedStartDate || !selectedEndDate) {
-          if (selectedStartDate && !selectedEndDate) {
-            selectedEndDate = selectedStartDate;
-          } else {
-            alert("Por favor, selecione um intervalo completo de datas.");
-            return;
-          }
+          alert("Por favor, selecione um intervalo completo de datas.");
+          return;
         }
         updateSelectedDateDisplay();
         bootstrapModal.hide();
-        loadOrders();
+        loadOrders(); 
       });
 
       monthSelect.addEventListener("change", renderCalendar);
@@ -727,7 +938,7 @@
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         calendarDatesContainer.innerHTML = '';
 
-        // Espaços em branco antes do dia 1
+        // Espaços "cinzas" antes do dia 1
         for (let i = 0; i < firstDayOfMonth; i++) {
           const emptyDate = document.createElement('div');
           emptyDate.classList.add('calendar__date', 'calendar__date--grey');
@@ -739,24 +950,27 @@
           const dateElement = document.createElement('div');
           dateElement.classList.add('calendar__date');
           dateElement.textContent = i;
-          dateElement.addEventListener("click", function () {
+
+          dateElement.addEventListener("click", () => {
             const clickedDate = new Date(year, month, i);
+
             if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
               selectedStartDate = clickedDate;
               selectedEndDate = null;
               clearSelection();
-              dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+              dateElement.classList.add('calendar__date--selected','calendar__date--range-start');
             } else if (clickedDate < selectedStartDate) {
               selectedStartDate = clickedDate;
               selectedEndDate = null;
               clearSelection();
-              dateElement.classList.add('calendar__date--selected', 'calendar__date--range-start');
+              dateElement.classList.add('calendar__date--selected','calendar__date--range-start');
             } else {
               selectedEndDate = clickedDate;
               highlightRange(selectedStartDate, selectedEndDate);
             }
             updateSelectedDateDisplay();
           });
+
           calendarDatesContainer.appendChild(dateElement);
         }
       }
@@ -764,7 +978,7 @@
       function clearSelection() {
         document.querySelectorAll('.calendar__date--selected, .calendar__date--range-start, .calendar__date--range-end')
           .forEach(el => {
-            el.classList.remove('calendar__date--selected', 'calendar__date--range-start', 'calendar__date--range-end');
+            el.classList.remove('calendar__date--selected','calendar__date--range-start','calendar__date--range-end');
           });
       }
 
@@ -772,14 +986,19 @@
         const allDates = document.querySelectorAll('.calendar__date');
         const startTimestamp = start.getTime();
         const endTimestamp = end.getTime();
+
         allDates.forEach(el => {
           const day = parseInt(el.textContent);
           if (isNaN(day)) return;
           const elDate = new Date(yearSelect.value, monthSelect.value, day).getTime();
           if (elDate >= startTimestamp && elDate <= endTimestamp) {
             el.classList.add('calendar__date--selected');
-            if (elDate === startTimestamp) el.classList.add('calendar__date--range-start');
-            if (elDate === endTimestamp) el.classList.add('calendar__date--range-end');
+            if (elDate === startTimestamp) {
+              el.classList.add('calendar__date--range-start');
+            }
+            if (elDate === endTimestamp) {
+              el.classList.add('calendar__date--range-end');
+            }
           }
         });
       }
@@ -796,21 +1015,12 @@
         }
       }
 
-      function formatDisplayDate(dateObj) {
-        const d = dateObj.getDate().toString().padStart(2, '0');
-        const m = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-        const y = dateObj.getFullYear();
-        return `${d}/${m}/${y}`;
-      }
-
-      // Seta os selects (mês/ano) com a data inicial
       monthSelect.value = selectedStartDate.getMonth();
       yearSelect.value = selectedStartDate.getFullYear();
       renderCalendar();
       updateSelectedDateDisplay();
     }
 
-    // Ao carregar DOM
     document.addEventListener('DOMContentLoaded', () => {
       initializeCalendar();
       loadSidebar();
