@@ -11,7 +11,7 @@
     href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.css"
   />
 
-  <!-- Fonte recomendada (ex: Google Fonts) -->
+  <!-- Fonte (exemplo) -->
   <link
     href="https://fonts.googleapis.com/css?family=Nunito:400,600,700&display=swap"
     rel="stylesheet"
@@ -51,6 +51,7 @@
       z-index: 999;
     }
 
+    /* Ao colapsar, esconde lateral */
     .sidebar.collapsed {
       margin-left: -260px;
     }
@@ -86,7 +87,6 @@
       outline: none;
       transition: transform 0.3s ease;
     }
-
     .sidebar-toggle:hover {
       transform: scale(1.1);
     }
@@ -113,7 +113,7 @@
       transform: translateX(-10px);
       animation: slideIn 0.4s forwards;
     }
-    /* Pequenino delay para cada item */
+    /* Pequeno delay para cada item */
     .sidebar-item:nth-child(n) {
       animation-delay: calc(0.05s * var(--i));
     }
@@ -166,18 +166,11 @@
       .active-orders: quando for a página "pages-orders.html"
       .active-loti:   quando for a página "loti.html"
     */
-
-    /* Exemplo:
-       "Pedidos" com borda vermelha
-       "Cadastrar Venda (loti)" com borda verde
-       Ajuste ao seu gosto
-    */
     .sidebar-item.active-orders > .sidebar-link {
       background: rgba(255, 0, 0, 0.1);
       color: #fff;
       border-left: 3px solid #e74c3c; /* tom de vermelho */
     }
-
     .sidebar-item.active-loti > .sidebar-link {
       background: rgba(0, 255, 0, 0.1);
       color: #fff;
@@ -247,13 +240,15 @@
         <ul class="sidebar-nav">
           <li class="sidebar-header" style="--i:1">Páginas</li>
 
-          <li class="sidebar-item active" style="--i:2">
+          <!-- Dashboard -->
+          <li class="sidebar-item" style="--i:2">
             <a class="sidebar-link" href="https://business.magictraveltur.com/">
               <i data-feather="sliders"></i>
               <span>Dashboard</span>
             </a>
           </li>
 
+          <!-- Pedidos -->
           <li class="sidebar-item" style="--i:3">
             <a
               class="sidebar-link"
@@ -264,6 +259,7 @@
             </a>
           </li>
 
+          <!-- Cadastrar Venda -->
           <li class="sidebar-item" style="--i:4">
             <a
               class="sidebar-link"
@@ -274,6 +270,7 @@
             </a>
           </li>
 
+          <!-- Financeiro -->
           <li class="sidebar-item" style="--i:5">
             <a
               class="sidebar-link"
@@ -284,6 +281,7 @@
             </a>
           </li>
 
+          <!-- Blank -->
           <li class="sidebar-item" style="--i:6">
             <a class="sidebar-link" href="pages-blank.html">
               <i data-feather="book"></i>
@@ -293,6 +291,7 @@
 
           <li class="sidebar-header" style="--i:7">Ferramentas & Componentes</li>
 
+          <!-- Buttons -->
           <li class="sidebar-item" style="--i:8">
             <a class="sidebar-link" href="ui-buttons.html">
               <i data-feather="square"></i>
@@ -300,6 +299,7 @@
             </a>
           </li>
 
+          <!-- Forms -->
           <li class="sidebar-item" style="--i:9">
             <a class="sidebar-link" href="ui-forms.html">
               <i data-feather="check-square"></i>
@@ -307,6 +307,7 @@
             </a>
           </li>
 
+          <!-- Cards -->
           <li class="sidebar-item" style="--i:10">
             <a class="sidebar-link" href="ui-cards.html">
               <i data-feather="grid"></i>
@@ -314,6 +315,7 @@
             </a>
           </li>
 
+          <!-- Typography -->
           <li class="sidebar-item" style="--i:11">
             <a class="sidebar-link" href="ui-typography.html">
               <i data-feather="align-left"></i>
@@ -321,6 +323,7 @@
             </a>
           </li>
 
+          <!-- Icons -->
           <li class="sidebar-item" style="--i:12">
             <a class="sidebar-link" href="icons-feather.html">
               <i data-feather="coffee"></i>
@@ -330,6 +333,7 @@
 
           <li class="sidebar-header" style="--i:13">Plugins & Addons</li>
 
+          <!-- Charts -->
           <li class="sidebar-item" style="--i:14">
             <a class="sidebar-link" href="charts-chartjs.html">
               <i data-feather="bar-chart-2"></i>
@@ -337,6 +341,7 @@
             </a>
           </li>
 
+          <!-- Maps -->
           <li class="sidebar-item" style="--i:15">
             <a class="sidebar-link" href="maps-google.html">
               <i data-feather="map"></i>
@@ -346,6 +351,15 @@
         </ul>
       </div>
     </nav>
+
+    <!-- Conteúdo principal -->
+    <div class="main-content">
+      <h1>Exemplo de Conteúdo</h1>
+      <p>
+        Este é um exemplo de área de conteúdo. Altere a URL para ver qual item da sidebar
+        fica ativo.
+      </p>
+    </div>
   </div>
 
   <!-- SimpleBar JS (rolagem customizada) -->
@@ -355,18 +369,21 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // Ativa feather icons
+      // Substitui os ícones pelo Feather
       feather.replace();
 
-      // Identifica a URL atual (sem barra final)
+      // Captura o pathname atual e remove barra final se existir
       var currentPath = window.location.pathname.replace(/\/$/, "");
+
       console.log("📌 URL Atual:", currentPath);
 
       let ativado = false;
       document.querySelectorAll(".sidebar-item").forEach(function (item) {
         var link = item.querySelector(".sidebar-link");
         if (link) {
+          // Converte o href em URL absoluta e remove barra final
           var linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, "");
+
           console.log("🔎 Verificando:", linkPath);
 
           // Se a URL atual for igual ou contiver o linkPath
