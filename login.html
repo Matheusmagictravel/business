@@ -14,7 +14,7 @@
       - Texto claro (#fff)
     */
 
-    /* Fundo com gradiente, seguindo o padrão do sidebar */
+    /* Fundo com gradiente */
     body {
       margin: 0;
       padding: 0;
@@ -24,11 +24,11 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      overflow: hidden; /* Esconde barra de rolagem (opcional) */
+      overflow: hidden; 
       position: relative;
     }
 
-    /* Bolhas animadas de fundo (bubbles), agora em cor azul #3b7ddd */
+    /* Bolhas animadas de fundo (bubbles) */
     .bg-bubbles {
       position: absolute;
       width: 100%;
@@ -46,42 +46,42 @@
       display: block;
       width: 40px;
       height: 40px;
-      background: rgba(59, 125, 221, 0.2); /* Azul #3b7ddd transparente */
+      background: rgba(59, 125, 221, 0.2);
       bottom: -160px;
       animation: square 25s infinite;
       transition-timing-function: linear;
     }
-    .bg-bubbles li:nth-child(1) { left: 10%; }
-    .bg-bubbles li:nth-child(2) {
+    .bg-bubbles li:nth-child(1)  { left: 10%; }
+    .bg-bubbles li:nth-child(2)  {
       left: 20%;
       width: 60px; height: 60px;
       animation-delay: 2s;
       animation-duration: 20s;
     }
-    .bg-bubbles li:nth-child(3) { left: 25%; animation-delay: 4s; }
-    .bg-bubbles li:nth-child(4) {
+    .bg-bubbles li:nth-child(3)  { left: 25%; animation-delay: 4s; }
+    .bg-bubbles li:nth-child(4)  {
       left: 40%;
       width: 60px; height: 60px;
       animation-duration: 22s;
       background: rgba(59, 125, 221, 0.3);
     }
-    .bg-bubbles li:nth-child(5) { left: 70%; }
-    .bg-bubbles li:nth-child(6) {
+    .bg-bubbles li:nth-child(5)  { left: 70%; }
+    .bg-bubbles li:nth-child(6)  {
       left: 80%;
       width: 70px; height: 70px;
       animation-delay: 3s;
       background: rgba(59, 125, 221, 0.3);
     }
-    .bg-bubbles li:nth-child(7) {
+    .bg-bubbles li:nth-child(7)  {
       left: 50%;
       width: 80px; height: 80px;
       animation-delay: 7s;
     }
-    .bg-bubbles li:nth-child(8) {
+    .bg-bubbles li:nth-child(8)  {
       left: 65%;
       animation-delay: 15s;
     }
-    .bg-bubbles li:nth-child(9) {
+    .bg-bubbles li:nth-child(9)  {
       left: 90%;
       width: 60px; height: 60px;
       animation-delay: 8s;
@@ -107,7 +107,7 @@
       position: relative;
       width: 400px;
       padding: 40px;
-      background: rgba(34, 46, 60, 0.95); /* #222e3c levemente transparente */
+      background: rgba(34, 46, 60, 0.95);
       box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
       border-radius: 10px;
       z-index: 1;
@@ -116,7 +116,6 @@
       transform: translateY(20px);
     }
 
-    /* Animação de fade in para a .login-box */
     @keyframes fadeInUp {
       to {
         opacity: 1;
@@ -139,7 +138,6 @@
       position: relative;
       margin-bottom: 30px;
     }
-
     .login-box .user-box input {
       width: 100%;
       padding: 10px 8px;
@@ -151,13 +149,9 @@
       outline: none;
       transition: border-color 0.3s;
     }
-
-    /* Foco do input realçado em azul #3b7ddd */
     .login-box .user-box input:focus {
       border-color: #3b7ddd;
     }
-
-    /* Label flutuante */
     .login-box .user-box label {
       position: absolute;
       top: 0;
@@ -205,7 +199,7 @@
       text-align: center;
       margin-top: 10px;
       font-weight: bold;
-      min-height: 20px; /* para manter espaço mesmo sem mensagem */
+      min-height: 20px;
     }
 
     /* Texto menor ao final */
@@ -216,7 +210,6 @@
       margin-top: 15px;
     }
 
-    /* Link "Cadastre-se" */
     .login-box .a2 {
       color: #3b7ddd;
       text-decoration: none;
@@ -227,7 +220,7 @@
       text-decoration: underline;
     }
 
-    /* Responsividade para telas pequenas */
+    /* Responsividade */
     @media (max-width: 480px) {
       .login-box {
         width: 90%;
@@ -242,7 +235,6 @@
 </head>
 
 <body>
-  <!-- Bolhas animadas de fundo -->
   <ul class="bg-bubbles">
     <li></li><li></li><li></li><li></li><li></li>
     <li></li><li></li><li></li><li></li><li></li>
@@ -250,7 +242,6 @@
 
   <div class="login-box">
     <p>Login</p>
-    <!-- Observe que NÃO definimos action aqui, pois vamos tratar via JavaScript -->
     <form id="loginForm" method="POST">
       <div class="user-box">
         <input type="email" id="email" name="email" required />
@@ -273,41 +264,33 @@
   <script>
     // Captura o evento de envio do form
     document.getElementById('loginForm').addEventListener('submit', function(event) {
-      event.preventDefault(); // Impede o submit padrão
+      event.preventDefault();
 
-      // Coletar valores do form
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
       const errorMessageDiv = document.getElementById('errorMessage');
 
-      // Limpa a mensagem de erro anterior
-      errorMessageDiv.textContent = '';
+      errorMessageDiv.textContent = ''; // Limpa mensagem anterior
 
-      // Envia requisição para a rota de LOGIN da sua API
-      // Ajuste a URL conforme onde seu api_log.php estiver hospedado
+      // Chama o endpoint de login do api_log.php no domínio magictraveltur.com
       fetch('https://magictraveltur.com/api_log.php/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         },
-        body: new URLSearchParams({
-          email: email,
-          password: password
-        })
+        body: new URLSearchParams({ email, password })
       })
       .then(response => response.text())
       .then(data => {
-        // Se o PHP retornar "Login bem-sucedido!", fazemos o redirecionamento
         if (data.includes('Login bem-sucedido')) {
-          // Redireciona para a área logada (ou home) em business.magictraveltur.com
+          // Redireciona para a área logada
           window.location.href = 'https://business.magictraveltur.com';
         } else {
-          // Caso contrário, exibe mensagem de erro retornada pelo servidor
+          // Exibe mensagem de erro retornada pelo servidor
           errorMessageDiv.textContent = data;
         }
       })
       .catch(error => {
-        // Se houver erro de rede ou algo assim
         console.error('Erro na requisição:', error);
         errorMessageDiv.textContent = 'Ocorreu um erro. Tente novamente.';
       });
