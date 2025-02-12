@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,301 +7,295 @@
   <title>Login - Magic Travel</title>
 
   <style>
-    /* 
-      Usando a paleta de cores do site:
-      - Gradiente principal: #222e3c -> #1b2733
-      - Cor de destaque (hover, bordas, foco): #3b7ddd
-      - Fundo escurecido na login-box: base #222e3c
-      - Texto claro (#fff)
-    */
+    /* ---------------------------------------------------------------
+       RESET BÁSICO
+    ----------------------------------------------------------------*/
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    /* Fundo com gradiente */
     body {
-      margin: 0;
-      padding: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #222e3c, #1b2733);
+      color: #333;
+      background-color: #f2f2f2; /* leve cinza de fundo */
+    }
+
+    /* ---------------------------------------------------------------
+       CONTAINER PRINCIPAL (2 colunas)
+    ----------------------------------------------------------------*/
+    .container {
       display: flex;
-      justify-content: center;
-      align-items: center;
+      width: 100%;
       height: 100vh;
-      overflow: hidden;
-      position: relative;
+      overflow: hidden; /* evita scroll se algo ultrapassar */
     }
 
-    /* Bolhas animadas de fundo (bubbles) */
-    .bg-bubbles {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      overflow: hidden;
-      top: 0;
-      left: 0;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-    .bg-bubbles li {
-      position: absolute;
-      display: block;
-      width: 40px;
-      height: 40px;
-      background: rgba(59, 125, 221, 0.2);
-      bottom: -160px;
-      animation: square 25s infinite;
-      transition-timing-function: linear;
-    }
-    .bg-bubbles li:nth-child(1)  { left: 10%; }
-    .bg-bubbles li:nth-child(2)  {
-      left: 20%;
-      width: 60px; height: 60px;
-      animation-delay: 2s;
-      animation-duration: 20s;
-    }
-    .bg-bubbles li:nth-child(3)  { left: 25%; animation-delay: 4s; }
-    .bg-bubbles li:nth-child(4)  {
-      left: 40%;
-      width: 60px; height: 60px;
-      animation-duration: 22s;
-      background: rgba(59, 125, 221, 0.3);
-    }
-    .bg-bubbles li:nth-child(5)  { left: 70%; }
-    .bg-bubbles li:nth-child(6)  {
-      left: 80%;
-      width: 70px; height: 70px;
-      animation-delay: 3s;
-      background: rgba(59, 125, 221, 0.3);
-    }
-    .bg-bubbles li:nth-child(7)  {
-      left: 50%;
-      width: 80px; height: 80px;
-      animation-delay: 7s;
-    }
-    .bg-bubbles li:nth-child(8)  {
-      left: 65%;
-      animation-delay: 15s;
-    }
-    .bg-bubbles li:nth-child(9)  {
-      left: 90%;
-      width: 60px; height: 60px;
-      animation-delay: 8s;
-    }
-    .bg-bubbles li:nth-child(10) {
-      left: 85%;
-      width: 100px; height: 100px;
-      animation-delay: 5s;
-      background: rgba(59, 125, 221, 0.4);
+    /* ---------------------------------------------------------------
+       COLUNA ESQUERDA (Área de Login)
+    ----------------------------------------------------------------*/
+    .left-panel {
+      width: 40%;
+      background: linear-gradient(145deg, #ffffff, #f0f4f8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 60px;
+      box-shadow: 5px 0 30px rgba(0, 0, 0, 0.15); /* Sombra robusta */
     }
 
-    @keyframes square {
-      0% {
-        transform: translateY(0);
-      }
-      100% {
-        transform: translateY(-1000px) rotate(600deg);
-      }
-    }
-
-    /* Container do login */
-    .login-box {
-      position: relative;
-      width: 400px;
-      padding: 40px;
-      background: rgba(34, 46, 60, 0.95);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-      border-radius: 10px;
-      z-index: 1;
-      animation: fadeInUp 0.8s forwards;
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    @keyframes fadeInUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Título */
-    .login-box p {
-      margin: 0 0 30px;
-      color: #fff;
-      text-align: center;
-      font-size: 1.7rem;
-      font-weight: bold;
-      letter-spacing: 1px;
-    }
-
-    /* Container para cada input */
-    .login-box .user-box {
-      position: relative;
-      margin-bottom: 30px;
-    }
-    .login-box .user-box input {
-      width: 100%;
-      padding: 10px 8px;
-      font-size: 16px;
-      color: #fff;
-      border: none;
-      border-bottom: 2px solid #fff;
-      background: transparent;
-      outline: none;
-      transition: border-color 0.3s;
-    }
-    .login-box .user-box input:focus {
-      border-color: #3b7ddd;
-    }
-    .login-box .user-box label {
-      position: absolute;
-      top: 0;
-      left: 0;
-      padding: 10px 0;
-      font-size: 16px;
-      color: #fff;
-      pointer-events: none;
-      transition: 0.5s;
-    }
-    .login-box .user-box input:focus ~ label,
-    .login-box .user-box input:valid ~ label {
-      top: -20px;
-      font-size: 12px;
-      color: #3b7ddd;
-    }
-
-    /* Botão de login */
-    .login-box button {
-      position: relative;
-      display: inline-block;
-      width: 100%;
-      padding: 12px 20px;
-      font-weight: bold;
-      color: #fff;
-      font-size: 16px;
-      text-decoration: none;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      background: transparent;
-      border: 2px solid #fff;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.4s;
-    }
-    .login-box button:hover {
-      background: #3b7ddd;
-      border-color: #3b7ddd;
-      color: #fff;
-    }
-
-    /* Mensagem de erro */
-    .error-message {
-      color: #ff6565;
-      text-align: center;
-      margin-top: 10px;
-      font-weight: bold;
-      min-height: 20px;
-    }
-
-    /* Texto menor ao final */
-    .login-box p:last-child {
-      color: #aaa;
+    /* Link "Back to Home" */
+    .back-to-home {
       font-size: 14px;
-      text-align: center;
-      margin-top: 15px;
-    }
-
-    .login-box .a2 {
-      color: #3b7ddd;
+      color: #7f8c8d;
       text-decoration: none;
-      font-weight: bold;
+      margin-bottom: 20px;
+      transition: color 0.3s;
     }
-    .login-box .a2:hover {
-      color: #fff;
+    .back-to-home:hover {
+      color: #3b7ddd;
       text-decoration: underline;
     }
 
-    /* Responsividade */
-    @media (max-width: 480px) {
-      .login-box {
-        width: 90%;
-        padding: 20px;
+    /* Título principal: "Log in" */
+    .login-title {
+      font-size: 2rem;
+      margin-bottom: 40px;
+      font-weight: bold;
+      color: #2c3e50;
+    }
+
+    /* Botões de login social */
+    .social-button {
+      width: 100%;
+      border: none;
+      border-radius: 6px;
+      padding: 15px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      cursor: pointer;
+      margin-bottom: 15px;
+      transition: box-shadow 0.3s, transform 0.2s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .social-button:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
+    }
+    .social-button.google {
+      background-color: #DB4437; /* Google */
+    }
+    .social-button.facebook {
+      background-color: #4267B2; /* Facebook */
+    }
+    /* Ícones (falso ícone para "G" e "f") */
+    .icon {
+      margin-left: 10px;
+      font-style: normal; 
+    }
+
+    /* DIVISÓRIA ( "or" ) */
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 30px 0;
+    }
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #ddd;
+    }
+    .divider-text {
+      font-size: 14px;
+      color: #aaa;
+      padding: 0 10px;
+    }
+
+    /* "Sign up with your email address" */
+    .signup-text {
+      font-size: 15px;
+      color: #666;
+      margin-bottom: 20px;
+    }
+
+    /* Formulário de Email + Senha */
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-size: 14px;
+      margin-bottom: 5px;
+      color: #2c3e50;
+      font-weight: 500;
+    }
+    input[type="email"],
+    input[type="password"] {
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: #3b7ddd;
+      box-shadow: 0 0 5px rgba(59, 125, 221, 0.3);
+    }
+
+    /* Mensagem de erro do backend */
+    .error-message {
+      color: #e74c3c;
+      text-align: center;
+      min-height: 20px;
+      font-weight: bold;
+      margin: 5px 0 15px 0;
+    }
+
+    /* Botão "Login" */
+    .login-button {
+      background-color: #3b7ddd;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 14px 20px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 5px;
+      transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    .login-button:hover {
+      background-color: #2e66be;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* ---------------------------------------------------------------
+       COLUNA DIREITA (Imagem de Fundo)
+    ----------------------------------------------------------------*/
+    .right-panel {
+      width: 60%;
+      background: url('http://raw.githubusercontent.com/Matheusmagictravel/bis/15fe46c1b4aa2a393a833c3d61065d8a983e776b/WDW%20-%20%20Photography%20-%20LGBTQ%20Family%20-%20Mickey%20Mouse%20-%20Magic%20Kingdom%205.jpg')
+                  no-repeat center center;
+      background-size: cover;
+      /* Sombra para a coluna direita (opcional) */
+      box-shadow: -5px 0 30px rgba(0, 0, 0, 0.15);
+    }
+
+    /* ---------------------------------------------------------------
+       RESPONSIVIDADE (max-width: 768px)
+       As colunas empilham verticalmente
+    ----------------------------------------------------------------*/
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        height: auto;
       }
-      .login-box p {
-        font-size: 1.3rem;
-        margin-bottom: 20px;
+      .left-panel,
+      .right-panel {
+        width: 100%;
+        min-height: 300px;
+        box-shadow: none; /* Removemos sombras laterais para não ficar estranho */
+      }
+      .left-panel {
+        padding: 30px;
       }
     }
   </style>
 </head>
-
 <body>
-  <ul class="bg-bubbles">
-    <li></li><li></li><li></li><li></li><li></li>
-    <li></li><li></li><li></li><li></li><li></li>
-  </ul>
 
-  <div class="login-box">
-    <p>Login</p>
+<div class="container">
+  <!-- Esquerda: Formulário -->
+  <div class="left-panel">
+
+    <!-- Título -->
+    <h1 class="login-title">Log in</h1>
+
+    <!-- Botões de Login Social -->
+    <button class="social-button google">
+      Não basta vender
+    </button>
+    <button class="social-button facebook">
+      Tem que ser Mágico
+    </button>
+
+    <!-- Divider "or" -->
+    <div class="divider">
+      <span class="divider-text"></span>
+    </div>
+
+    <!-- Texto explicativo -->
+    <p class="signup-text">Faça login com seu e-mail corporativo</p>
+
+    <!-- Formulário de Email e Senha -->
     <form id="loginForm" method="POST">
-      <div class="user-box">
-        <input type="email" id="email" name="email" required />
-        <label>Email</label>
-      </div>
-      <div class="user-box">
-        <input type="password" id="password" name="password" required />
-        <label>Senha</label>
-      </div>
-      <button type="submit">Entrar</button>
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="password">Senha</label>
+      <input type="password" id="password" name="password" required />
+
+      <!-- Área para exibir eventuais erros do backend -->
+      <div class="error-message" id="errorMessage"></div>
+
+      <!-- Botão de Login -->
+      <button type="submit" class="login-button">Login</button>
     </form>
-
-    <div class="error-message" id="errorMessage"></div>
-
-    <p>Não tem uma conta?
-      <a href="register.html" class="a2">Cadastre-se!</a>
-    </p>
   </div>
 
-  <script>
-    // Captura o evento de envio do form
-    document.getElementById('loginForm').addEventListener('submit', function(event) {
-      event.preventDefault();
+  <!-- Direita: Imagem de Fundo -->
+  <div class="right-panel"></div>
+</div>
 
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-      const errorMessageDiv = document.getElementById('errorMessage');
+<script>
+  // Captura o evento de envio do formulário
+  document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-      // Limpa mensagem anterior
-      errorMessageDiv.textContent = '';
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const errorMessageDiv = document.getElementById('errorMessage');
 
-      // Faz a requisição de login, enviando cookie (credentials:'include')
-      fetch('https://magictraveltur.com/api_log.php/login', {
-        method: 'POST',
-        credentials: 'include', // <--- IMPORTANTE: envia e recebe cookie de sessão
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        },
-        body: new URLSearchParams({
-          email: email,
-          password: password
-        })
+    // Limpa mensagem anterior
+    errorMessageDiv.textContent = '';
+
+    // Faz a requisição de login, enviando cookie (credentials:'include')
+    fetch('https://magictraveltur.com/api_log.php/login', {
+      method: 'POST',
+      credentials: 'include', // <--- IMPORTANTE: envia e recebe cookie de sessão
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        email: email,
+        password: password
       })
-      .then(response => response.text())
-      .then(data => {
-        // Se o backend retornar "Login bem-sucedido!" no texto, consideramos ok
-        if (data.includes('Login bem-sucedido')) {
-          // Redireciona para a área logada
-          window.location.href = 'https://business.magictraveltur.com';
-        } else {
-          // Caso contrário, exibe a mensagem de erro retornada pelo servidor
-          errorMessageDiv.textContent = data;
-        }
-      })
-      .catch(error => {
-        console.error('Erro na requisição:', error);
-        errorMessageDiv.textContent = 'Ocorreu um erro. Tente novamente.';
-      });
+    })
+    .then(response => response.text())
+    .then(data => {
+      // Se o backend retornar "Login bem-sucedido!" no texto
+      if (data.includes('Login bem-sucedido')) {
+        window.location.href = 'https://business.magictraveltur.com';
+      } else {
+        // Exibe a mensagem de erro retornada
+        errorMessageDiv.textContent = data;
+      }
+    })
+    .catch(error => {
+      console.error('Erro na requisição:', error);
+      errorMessageDiv.textContent = 'Ocorreu um erro. Tente novamente.';
     });
-  </script>
+  });
+</script>
+
 </body>
 </html>
