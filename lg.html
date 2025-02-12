@@ -4,62 +4,80 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login - Magic Travel</title>
+
   <style>
-    /* --------------------------------------------------------------------
+    /* ---------------------------------------------------------------
        RESET BÁSICO
-    -------------------------------------------------------------------- */
+    ----------------------------------------------------------------*/
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-
     body {
       font-family: Arial, sans-serif;
       color: #333;
+      background-color: #fafafa;
     }
 
-    /* --------------------------------------------------------------------
-       CONTAINER PRINCIPAL (duas colunas)
-    -------------------------------------------------------------------- */
+    /* ---------------------------------------------------------------
+       CONTAINER PRINCIPAL (2 colunas)
+    ----------------------------------------------------------------*/
     .container {
       display: flex;
       width: 100%;
-      height: 100vh; /* ocupa a tela inteira */
-      overflow: hidden; /* garante que nada vaze a rolagem se ajustado */
+      height: 100vh;
+      overflow: hidden; /* evita scroll se algo ultrapassar */
+      position: relative;
     }
 
-    /* --------------------------------------------------------------------
-       COLUNA ESQUERDA (Formulário de Login)
-    -------------------------------------------------------------------- */
+    /* ---------------------------------------------------------------
+       COLUNA ESQUERDA (Área de Login)
+    ----------------------------------------------------------------*/
     .left-panel {
       width: 50%;
-      background-color: #f9f9f9;
+      background: linear-gradient(145deg, #ffffff, #f0f4f8); 
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 40px;
+      padding: 40px 60px;
+      box-shadow: 3px 0 15px rgba(0, 0, 0, 0.05);
+      animation: fadeInLeft 1s ease forwards;
+      opacity: 0; /* para a animação */
+    }
+    @keyframes fadeInLeft {
+      0% {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
-    /* Link "Back to Home" no topo */
+    /* Link "Back to Home" */
     .back-to-home {
       font-size: 14px;
       color: #7f8c8d;
       text-decoration: none;
       margin-bottom: 20px;
+      transition: color 0.3s;
     }
     .back-to-home:hover {
+      color: #3b7ddd;
       text-decoration: underline;
     }
 
-    /* Título principal "Log in" */
+    /* Título principal: "Log in" */
     .login-title {
       font-size: 2rem;
-      margin-bottom: 30px;
-      color: #000;
+      margin-bottom: 40px;
+      font-weight: bold;
+      color: #2c3e50;
     }
 
-    /* Botões de Login Social */
+    /* Botões de login social */
     .social-button {
       width: 100%;
       border: none;
@@ -70,21 +88,25 @@
       color: #fff;
       cursor: pointer;
       margin-bottom: 15px;
+      transition: box-shadow 0.3s, transform 0.2s;
+    }
+    .social-button:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
     }
     .social-button.google {
-      background-color: #DB4437; /* cor oficial do Google */
+      background-color: #DB4437; /* Google */
     }
     .social-button.facebook {
-      background-color: #4267B2; /* cor oficial do Facebook */
+      background-color: #4267B2; /* Facebook */
     }
-
-    /* Estilos para ícone “G” e “f” (opcional, simulando ícones) */
+    /* Ícones (falso ícone para G e f) */
     .icon {
       margin-left: 10px;
-      font-style: normal; /* garante que não sofra itálico */
+      font-style: normal;
     }
 
-    /* "or" line */
+    /* DIVISÓRIA ( "or" ) */
     .divider {
       display: flex;
       align-items: center;
@@ -96,21 +118,21 @@
       flex: 1;
       height: 1px;
       background: #ddd;
-      margin: 0 10px;
     }
     .divider-text {
       font-size: 14px;
       color: #aaa;
+      padding: 0 10px;
     }
 
-    /* Texto "Sign up with your email address" */
+    /* "Sign up with your email address" */
     .signup-text {
-      font-size: 14px;
-      color: #999;
+      font-size: 15px;
+      color: #666;
       margin-bottom: 20px;
     }
 
-    /* Formulário e campos */
+    /* Formulário de Email + Senha */
     form {
       display: flex;
       flex-direction: column;
@@ -118,7 +140,8 @@
     label {
       font-size: 14px;
       margin-bottom: 5px;
-      color: #333;
+      color: #2c3e50;
+      font-weight: 500;
     }
     input[type="email"],
     input[type="password"] {
@@ -127,9 +150,25 @@
       border: 1px solid #ccc;
       border-radius: 5px;
       font-size: 14px;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      outline: none;
+      border-color: #3b7ddd;
+      box-shadow: 0 0 5px rgba(59, 125, 221, 0.3);
     }
 
-    /* Botão Login */
+    /* Mensagem de erro do backend */
+    .error-message {
+      color: #e74c3c;
+      text-align: center;
+      min-height: 20px;
+      font-weight: bold;
+      margin: 5px 0 15px 0;
+    }
+
+    /* Botão "Login" */
     .login-button {
       background-color: #3b7ddd;
       color: #fff;
@@ -140,74 +179,86 @@
       font-weight: bold;
       cursor: pointer;
       margin-top: 5px;
+      transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
     }
     .login-button:hover {
-      background-color: #345f9c;
+      background-color: #2e66be;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
     }
 
-    /* Mensagem de erro no formulário */
-    .error-message {
-      color: #e74c3c;
-      text-align: center;
-      min-height: 20px;
-      font-weight: bold;
-      margin: 10px 0;
-    }
-
-    /* --------------------------------------------------------------------
+    /* ---------------------------------------------------------------
        COLUNA DIREITA (Imagem de Fundo)
-    -------------------------------------------------------------------- */
+    ----------------------------------------------------------------*/
     .right-panel {
       width: 50%;
-      background: url('https://wallpapers.com/images/featured/disney-4k-ultra-wide-8a0mnvmtrpzlb72x.jpg') no-repeat center center;
+      background: url('https://wallpapers.com/images/featured/disney-4k-ultra-wide-8a0mnvmtrpzlb72x.jpg') 
+                  no-repeat center center;
       background-size: cover;
+      animation: fadeInRight 1s ease forwards;
+      opacity: 0;
+    }
+    @keyframes fadeInRight {
+      0% {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
-    /* --------------------------------------------------------------------
-       RESPONSIVIDADE (telas menores que 768px)
-    -------------------------------------------------------------------- */
+    /* ---------------------------------------------------------------
+       RESPONSIVIDADE (max-width: 768px)
+       As colunas empilham verticalmente
+    ----------------------------------------------------------------*/
     @media (max-width: 768px) {
       .container {
         flex-direction: column;
         height: auto;
       }
-      .left-panel, .right-panel {
-        width: 100%;
-        height: auto;
-      }
+      .left-panel,
       .right-panel {
-        min-height: 300px; /* só para garantir alguma altura */
+        width: 100%;
+        min-height: 300px;
+      }
+      .left-panel {
+        padding: 30px;
+        box-shadow: none;
       }
     }
+
   </style>
 </head>
 <body>
 
 <div class="container">
-  <!-- Esquerda: Formulário de Login -->
+  <!-- Esquerda: Formulário -->
   <div class="left-panel">
+    <!-- Link "Back to Home" -->
     <a href="#" class="back-to-home">&lt; Back To Home</a>
+
+    <!-- Título -->
     <h1 class="login-title">Log in</h1>
 
     <!-- Botões de Login Social -->
     <button class="social-button google">
-      Continue with Google 
-      <span class="icon">G</span>
+      Continue with Google <span class="icon">G</span>
     </button>
     <button class="social-button facebook">
-      Continue with Facebook
-      <span class="icon">f</span>
+      Continue with Facebook <span class="icon">f</span>
     </button>
 
-    <!-- Linha divisória "or" -->
+    <!-- Divider "or" -->
     <div class="divider">
       <span class="divider-text">or</span>
     </div>
 
-    <!-- Texto "Sign up with your email address" -->
+    <!-- Texto explicativo -->
     <p class="signup-text">Sign up with your email address</p>
 
-    <!-- Formulário normal -->
+    <!-- Formulário de Email e Senha -->
     <form id="loginForm" method="POST">
       <label for="email">Email</label>
       <input type="email" id="email" name="email" required />
@@ -215,9 +266,10 @@
       <label for="password">Password</label>
       <input type="password" id="password" name="password" required />
 
-      <!-- Div para exibir msg de erro do backend -->
+      <!-- Área para exibir eventuais erros do backend -->
       <div class="error-message" id="errorMessage"></div>
 
+      <!-- Botão de Login -->
       <button type="submit" class="login-button">Login</button>
     </form>
   </div>
@@ -252,12 +304,11 @@
     })
     .then(response => response.text())
     .then(data => {
-      // Se o backend retornar "Login bem-sucedido!" no texto, consideramos ok
+      // Se o backend retornar "Login bem-sucedido!" no texto
       if (data.includes('Login bem-sucedido')) {
-        // Redireciona para a área logada
         window.location.href = 'https://business.magictraveltur.com';
       } else {
-        // Caso contrário, exibe a mensagem de erro retornada pelo servidor
+        // Exibe a mensagem de erro retornada
         errorMessageDiv.textContent = data;
       }
     })
