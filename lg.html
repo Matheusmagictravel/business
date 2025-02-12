@@ -14,10 +14,11 @@
       margin: 0;
       padding: 0;
     }
+
     body {
       font-family: Arial, sans-serif;
       color: #333;
-      background-color: #fafafa;
+      background-color: #f2f2f2; /* leve cinza de fundo */
     }
 
     /* ---------------------------------------------------------------
@@ -28,7 +29,6 @@
       width: 100%;
       height: 100vh;
       overflow: hidden; /* evita scroll se algo ultrapassar */
-      position: relative;
     }
 
     /* ---------------------------------------------------------------
@@ -36,24 +36,12 @@
     ----------------------------------------------------------------*/
     .left-panel {
       width: 50%;
-      background: linear-gradient(145deg, #ffffff, #f0f4f8); 
+      background: linear-gradient(145deg, #ffffff, #f0f4f8);
       display: flex;
       flex-direction: column;
       justify-content: center;
       padding: 40px 60px;
-      box-shadow: 3px 0 15px rgba(0, 0, 0, 0.05);
-      animation: fadeInLeft 1s ease forwards;
-      opacity: 0; /* para a animação */
-    }
-    @keyframes fadeInLeft {
-      0% {
-        opacity: 0;
-        transform: translateX(-50px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateX(0);
-      }
+      box-shadow: 5px 0 30px rgba(0, 0, 0, 0.15); /* Sombra robusta */
     }
 
     /* Link "Back to Home" */
@@ -89,9 +77,10 @@
       cursor: pointer;
       margin-bottom: 15px;
       transition: box-shadow 0.3s, transform 0.2s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
     .social-button:hover {
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
       transform: translateY(-2px);
     }
     .social-button.google {
@@ -100,10 +89,10 @@
     .social-button.facebook {
       background-color: #4267B2; /* Facebook */
     }
-    /* Ícones (falso ícone para G e f) */
+    /* Ícones (falso ícone para "G" e "f") */
     .icon {
       margin-left: 10px;
-      font-style: normal;
+      font-style: normal; 
     }
 
     /* DIVISÓRIA ( "or" ) */
@@ -180,10 +169,11 @@
       cursor: pointer;
       margin-top: 5px;
       transition: background-color 0.3s, box-shadow 0.3s, transform 0.2s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
     .login-button:hover {
       background-color: #2e66be;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
       transform: translateY(-2px);
     }
 
@@ -192,21 +182,11 @@
     ----------------------------------------------------------------*/
     .right-panel {
       width: 50%;
-      background: url('https://wallpapers.com/images/featured/disney-4k-ultra-wide-8a0mnvmtrpzlb72x.jpg') 
+      background: url('https://wallpapers.com/images/featured/disney-4k-ultra-wide-8a0mnvmtrpzlb72x.jpg')
                   no-repeat center center;
       background-size: cover;
-      animation: fadeInRight 1s ease forwards;
-      opacity: 0;
-    }
-    @keyframes fadeInRight {
-      0% {
-        opacity: 0;
-        transform: translateX(50px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateX(0);
-      }
+      /* Sombra para a coluna direita (opcional) */
+      box-shadow: -5px 0 30px rgba(0, 0, 0, 0.15);
     }
 
     /* ---------------------------------------------------------------
@@ -222,13 +202,12 @@
       .right-panel {
         width: 100%;
         min-height: 300px;
+        box-shadow: none; /* Removemos sombras laterais para não ficar estranho */
       }
       .left-panel {
         padding: 30px;
-        box-shadow: none;
       }
     }
-
   </style>
 </head>
 <body>
