@@ -91,42 +91,18 @@
     /*--------------------------------
       Utilitárias próprias
     ----------------------------------*/
-    .m-0 {
-      margin: 0 !important;
-    }
-    .mb-8 {
-      margin-bottom: 8px !important;
-    }
-    .mb-24 {
-      margin-bottom: 24px !important;
-    }
-    .mb-30 {
-      margin-bottom: 30px !important;
-    }
-    .p-0 {
-      padding: 0 !important;
-    }
-    .color-white {
-      color: #F8F8FF !important;
-    }
-    .bg-white {
-      background-color: #F8F8FF !important;
-    }
-    .light-black {
-      color: #16191A !important;
-    }
-    .d-flex {
-      display: flex !important;
-    }
-    .justify-content-end {
-      justify-content: flex-end !important;
-    }
-    .align-items-center {
-      align-items: center !important;
-    }
-    .justify-content-center {
-      justify-content: center !important;
-    }
+    .m-0 { margin: 0 !important; }
+    .mb-8 { margin-bottom: 8px !important; }
+    .mb-24 { margin-bottom: 24px !important; }
+    .mb-30 { margin-bottom: 30px !important; }
+    .p-0 { padding: 0 !important; }
+    .color-white { color: #F8F8FF !important; }
+    .bg-white { background-color: #F8F8FF !important; }
+    .light-black { color: #16191A !important; }
+    .d-flex { display: flex !important; }
+    .justify-content-end { justify-content: flex-end !important; }
+    .align-items-center { align-items: center !important; }
+    .justify-content-center { justify-content: center !important; }
 
     /*----------------------------------------------------
       Estrutura principal
@@ -154,7 +130,7 @@
       align-items: center;
       background: #F8F8FF;
       z-index: 9999999;
-      top: 0;
+      top: 0; 
       left: 0;
     }
     #preloader .loader {
@@ -358,8 +334,10 @@
     }
     .mobile-nav__overlay {
       position: absolute;
-      top: 0; left: 0;
-      right: 0; bottom: 0;
+      top: 0; 
+      left: 0;
+      right: 0; 
+      bottom: 0;
       background-color: #0B0C0D;
       opacity: 0.3;
       cursor: pointer;
@@ -408,7 +386,8 @@
     .mobile-nav__container,
     .mobile-nav__social,
     .mobile-nav__contact {
-      margin: 0; padding: 0;
+      margin: 0; 
+      padding: 0;
     }
     .mobile-nav__contact li {
       color: #F8F8FF;
@@ -469,7 +448,8 @@
                 <!-- Botão Google -->
                 <div class="google mb-24">
                   <h6 class="color-white">
-                    <a href="" class="link-btn">Continue with Google
+                    <a href="" class="link-btn">
+                      Continue with Google
                       <img src="assets/media/icons/google-icon.png" alt="">
                     </a>
                   </h6>
@@ -478,7 +458,8 @@
                 <!-- Botão Facebook -->
                 <div class="facebook mb-30">
                   <h6 class="color-white">
-                    <a href="" class="link-btn">Continue with Facebook
+                    <a href="" class="link-btn">
+                      Continue with Facebook
                       <img src="assets/media/icons/facebook-icon.png" alt="">
                     </a>
                   </h6>
@@ -523,7 +504,7 @@
     <div class="mobile-nav__content">
       <span class="mobile-nav__close mobile-nav__toggler"></span>
       <div class="logo-box">
-        <!-- Se desejar exibir logo:
+        <!-- Caso queira exibir uma logo:
              <a href="index.html"><img src="assets/media/logo.png" alt="Logo"></a> -->
       </div>
       <div class="mobile-nav__container"></div>
@@ -551,13 +532,15 @@
   <!-- Script principal da página (caso use) -->
   <script src="assets/js/app.js"></script>
   
-  <!-- Remover Preloader após carregamento da página -->
+  <!-- Remove Preloader após carregamento da página (JS puro) -->
   <script>
-    // Quando a página terminar de carregar...
-    $(window).on("load", function() {
-      // Faz o preloader sumir lentamente
-      $("#preloader").fadeOut("slow");
+    window.addEventListener('load', function() {
+      var preloader = document.getElementById('preloader');
+      if (preloader) {
+        preloader.style.display = 'none';
+      }
     });
   </script>
+
 </body>
 </html>
