@@ -1,546 +1,272 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="FlyNow HTML5 Template">
-
-  <title>Login</title>
-  
-  <!-- Favicon (caso necessário) -->
-  <link rel="shortcut icon" type="image/x-icon" href="assets/media/favicon.png">
-
-  <!-- Fontes e ícones -->
-  <link rel="stylesheet" href="assets/css/vendor/font-awesome.css">
-  <link rel="stylesheet" href="assets/css/fonts/icomoon/style.css">
-
-  <!-- Bootstrap CSS -->
-  <link rel="stylesheet" href="assets/css/vendor/bootstrap.min.css">
-
-  <!-- Slick (caso utilize carrosséis) -->
-  <link rel="stylesheet" href="assets/css/vendor/slick.css">
-  <link rel="stylesheet" href="assets/css/vendor/slick-theme.css">
-
-  <!-- Player de Vídeo (caso utilize) -->
-  <link rel="stylesheet" href="assets/css/vendor/aksVideoPlayer.css">
-
-  <!-- Estilos principais reduzidos -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - Magic Travel</title>
   <style>
-    /*----------------------------------------------------
-      Import da fonte Inter
-    -----------------------------------------------------*/
-    @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
-
-    /*----------------------------------------------------
-      RESET & BASE
-    -----------------------------------------------------*/
-    html {
-      scroll-behavior: smooth;
+    /* --------------------------------------------------------------------
+       RESET BÁSICO
+    -------------------------------------------------------------------- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      font-family: "Inter", sans-serif;
-      color: #0B0C0D;
-      background-color: #ECECF2; /* fundo claro do body */
-      font-size: 16px;
-      font-weight: 400;
-      line-height: 140%;
-      height: 100%;
-      margin: 0;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      text-rendering: optimizeLegibility;
+      font-family: Arial, sans-serif;
+      color: #333;
     }
 
-    img {
-      max-width: 100%;
-      height: auto;
-      vertical-align: middle;
+    /* --------------------------------------------------------------------
+       CONTAINER PRINCIPAL (duas colunas)
+    -------------------------------------------------------------------- */
+    .container {
+      display: flex;
+      width: 100%;
+      height: 100vh; /* ocupa a tela inteira */
+      overflow: hidden; /* garante que nada vaze a rolagem se ajustado */
+    }
+
+    /* --------------------------------------------------------------------
+       COLUNA ESQUERDA (Formulário de Login)
+    -------------------------------------------------------------------- */
+    .left-panel {
+      width: 50%;
+      background-color: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    /* Link "Back to Home" no topo */
+    .back-to-home {
+      font-size: 14px;
+      color: #7f8c8d;
+      text-decoration: none;
+      margin-bottom: 20px;
+    }
+    .back-to-home:hover {
+      text-decoration: underline;
+    }
+
+    /* Título principal "Log in" */
+    .login-title {
+      font-size: 2rem;
+      margin-bottom: 30px;
+      color: #000;
+    }
+
+    /* Botões de Login Social */
+    .social-button {
+      width: 100%;
       border: none;
-    }
-
-    a {
-      text-decoration: none;
-      color: inherit;
-    }
-
-    h1, h2, h3, h4, h5, h6, p {
-      margin: 0;
-      font-weight: 500;
-    }
-
-    ul, ol {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    /*--------------------------------
-      Classes utilitárias do Bootstrap
-    ----------------------------------*/
-    .row {
-      margin-left: -15px;
-      margin-right: -15px;
-    }
-    .row > [class*=col] {
-      padding-left: 15px;
-      padding-right: 15px;
-    }
-
-    /*--------------------------------
-      Utilitárias próprias
-    ----------------------------------*/
-    .m-0 { margin: 0 !important; }
-    .mb-8 { margin-bottom: 8px !important; }
-    .mb-24 { margin-bottom: 24px !important; }
-    .mb-30 { margin-bottom: 30px !important; }
-    .p-0 { padding: 0 !important; }
-    .color-white { color: #F8F8FF !important; }
-    .bg-white { background-color: #F8F8FF !important; }
-    .light-black { color: #16191A !important; }
-    .d-flex { display: flex !important; }
-    .justify-content-end { justify-content: flex-end !important; }
-    .align-items-center { align-items: center !important; }
-    .justify-content-center { justify-content: center !important; }
-
-    /*----------------------------------------------------
-      Estrutura principal
-    -----------------------------------------------------*/
-    .o-scroll {
-      height: 100vh;
-      overflow-x: hidden;
-    }
-    .main-wrapper {
-      height: auto;
-      overflow-x: hidden;
-    }
-    .page-content {
-      margin: 20px 0;
-    }
-
-    /*----------------------------------------------------
-      Preloader
-    -----------------------------------------------------*/
-    #preloader {
-      position: fixed;
-      width: 100%;
-      height: 100vh;
-      display: grid;
-      align-items: center;
-      background: #F8F8FF;
-      z-index: 9999999;
-      top: 0; 
-      left: 0;
-    }
-    #preloader .loader {
-      width: 100%;
-      max-width: 35rem;
-      height: 18rem;
-      margin: 0 auto;
-      position: relative;
-    }
-    #preloader .plane {
-      position: absolute;
-      width: 100%;
-      text-align: center;
-    }
-    #preloader .plane .plane-img {
-      -webkit-animation: spin 2.5s linear infinite;
-      animation: spin 2.5s linear infinite;
-    }
-    @keyframes spin {
-      100% { transform: rotate(360deg); }
-    }
-    #preloader .earth-wrapper {
-      position: absolute;
-      width: 100%;
-      padding-top: 2.7rem;
-    }
-    #preloader .earth-wrapper .earth {
-      width: 160px;
-      height: 160px;
-      background: url("https://zupimages.net/up/19/34/6vlb.gif");
-      border-radius: 100%;
-      background-size: 340px;
-      animation: earthAnim 12s infinite linear;
-      margin: 0 auto;
-      border: 1px solid #CDD1D3;
-    }
-    @keyframes earthAnim {
-      0% { background-position-x: 0; }
-      100% { background-position-x: -340px; }
-    }
-
-    /*----------------------------------------------------
-      Botão de Voltar ao Topo
-    -----------------------------------------------------*/
-    .back-to-top {
-      position: fixed;
-      bottom: 0px;
-      right: 12px;
-      width: 120px;
-      height: 120px;
-      font-size: 100px;
-      padding: 11px 0;
-      background: #4D73FC;
-      color: #F8F8FF;
-      text-align: center;
-      opacity: 0;
-      transform: scale(0.3);
-      z-index: 9999;
-      transition: all 0.3s;
-      box-shadow: 4px 4px 10px 0px rgba(77, 115, 252, 0.3);
-      text-decoration: none;
-    }
-    .back-to-top:hover {
-      background: #212627;
-      color: #F8F8FF;
-    }
-    .back-to-top.show {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    /*----------------------------------------------------
-      Formulários
-    -----------------------------------------------------*/
-    .form-group .form-control {
-      padding: 12px 16px;
-      border-radius: 5px;
-      border: 0;
-      outline: 0;
-      box-shadow: none;
-      background: rgba(77, 115, 252, 0.1);
-      font-size: 16px;
-      color: #16191A;
-    }
-    .form-group .form-control:focus {
-      background: rgba(77, 115, 252, 0.1);
-      box-shadow: none;
-    }
-
-    .contact-form {
-      width: 100%;
-    }
-
-    /*----------------------------------------------------
-      Botões
-    -----------------------------------------------------*/
-    .cus-btn {
-      font-family: "Inter", sans-serif;
+      border-radius: 6px;
+      padding: 15px 20px;
       font-size: 16px;
       font-weight: 600;
-      line-height: 150%;
-      letter-spacing: 0.32px;
-      padding: 10px 20px;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.5s ease-in-out;
-      border-radius: 10px;
-      border: none;
-      background: #4D73FC;
-      color: #F8F8FF;
-      box-shadow: 4px 4px 10px 0px rgba(77, 115, 252, 0.3);
-    }
-    .cus-btn:hover {
-      background-color: #ECECF2;
-      color: #16191A;
-    }
-    .cus-btn.small-pad {
-      padding: 8px 16px;
-    }
-
-    /*----------------------------------------------------
-      Seção de Login / Signup
-    -----------------------------------------------------*/
-    .signup {
-      background: #F8F8FF;
-    }
-    .signup .form-block {
-      border-radius: 20px;
-      background: #F8F8FF;
-      padding: 32px;
-    }
-    .signup .form-block .google,
-    .signup .form-block .facebook {
-      border: 0;
-      border-radius: 10px;
-      box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.04),
-                  6px 3px 14px 0px rgba(0, 0, 0, 0.04),
-                  23px 12px 26px 0px rgba(0, 0, 0, 0.03);
-      padding: 0;
-    }
-    .signup .form-block .google {
-      background: #FC4D4D;
-    }
-    .signup .form-block .facebook {
-      background: #4D73FC;
-    }
-    .signup .form-block .link-btn {
-      padding: 16px 32px;
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      color: #F8F8FF;
-      align-items: center;
-    }
-    .signup .form-block .or {
-      position: relative;
-      text-align: center;
-    }
-    .signup .form-block .or::before,
-    .signup .form-block .or::after {
-      content: "";
-      height: 1px;
-      width: 46%;
-      background: #7A7F85;
-      position: absolute;
-      top: 14px;
-    }
-    .signup .form-block .or::before {
-      left: 0;
-    }
-    .signup .form-block .or::after {
-      right: 0;
-    }
-    .signup .img-block img {
-      width: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    /*----------------------------------------------------
-      Mobile Menu (navegação offcanvas)
-    -----------------------------------------------------*/
-    .mobile-nav__wrapper {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 999;
-      transform: translateX(-100%);
-      visibility: hidden;
-      transition: transform 500ms ease 500ms,
-                  visibility 500ms ease 500ms;
-    }
-    .mobile-nav__wrapper.expanded {
-      transform: translateX(0%);
-      visibility: visible;
-      transition: transform 500ms ease 0ms,
-                  visibility 500ms ease 0ms;
-    }
-    .mobile-nav__overlay {
-      position: absolute;
-      top: 0; 
-      left: 0;
-      right: 0; 
-      bottom: 0;
-      background-color: #0B0C0D;
-      opacity: 0.3;
+      color: #fff;
       cursor: pointer;
-    }
-    .mobile-nav__content {
-      width: 300px;
-      background-color: #0B0C0D;
-      z-index: 10;
-      position: relative;
-      height: 100%;
-      overflow-y: auto;
-      padding: 30px 15px;
-      transform: translateX(-100%);
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 500ms ease 0ms,
-                  visibility 500ms ease 0ms,
-                  transform 500ms ease 0ms;
-    }
-    .mobile-nav__wrapper.expanded .mobile-nav__content {
-      opacity: 1;
-      visibility: visible;
-      transform: translateX(0);
-      transition: opacity 500ms ease 500ms,
-                  visibility 500ms ease 500ms,
-                  transform 500ms ease 500ms;
-    }
-    .mobile-nav__close {
-      position: absolute;
-      top: 20px;
-      right: 15px;
-      font-size: 18px;
-      color: #F8F8FF;
-      cursor: pointer;
-    }
-    .mobile-nav__toggler {
-      font-size: 24px;
-      font-weight: 300;
-      color: #0B0C0D;
-      cursor: pointer;
-      transition: 500ms;
-    }
-    .mobile-nav__toggler:hover {
-      color: #4D73FC;
-    }
-    .mobile-nav__container,
-    .mobile-nav__social,
-    .mobile-nav__contact {
-      margin: 0; 
-      padding: 0;
-    }
-    .mobile-nav__contact li {
-      color: #F8F8FF;
-      font-size: 14px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
       margin-bottom: 15px;
     }
-    .mobile-nav__contact li i {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      background-color: #4D73FC;
+    .social-button.google {
+      background-color: #DB4437; /* cor oficial do Google */
+    }
+    .social-button.facebook {
+      background-color: #4267B2; /* cor oficial do Facebook */
+    }
+
+    /* Estilos para ícone “G” e “f” (opcional, simulando ícones) */
+    .icon {
+      margin-left: 10px;
+      font-style: normal; /* garante que não sofra itálico */
+    }
+
+    /* "or" line */
+    .divider {
       display: flex;
-      justify-content: center;
       align-items: center;
-      color: #F8F8FF;
-      margin-right: 10px;
+      margin: 30px 0;
+    }
+    .divider::before,
+    .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: #ddd;
+      margin: 0 10px;
+    }
+    .divider-text {
+      font-size: 14px;
+      color: #aaa;
+    }
+
+    /* Texto "Sign up with your email address" */
+    .signup-text {
+      font-size: 14px;
+      color: #999;
+      margin-bottom: 20px;
+    }
+
+    /* Formulário e campos */
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      font-size: 14px;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    input[type="email"],
+    input[type="password"] {
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    /* Botão Login */
+    .login-button {
+      background-color: #3b7ddd;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 14px 20px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 5px;
+    }
+    .login-button:hover {
+      background-color: #345f9c;
+    }
+
+    /* Mensagem de erro no formulário */
+    .error-message {
+      color: #e74c3c;
+      text-align: center;
+      min-height: 20px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+
+    /* --------------------------------------------------------------------
+       COLUNA DIREITA (Imagem de Fundo)
+    -------------------------------------------------------------------- */
+    .right-panel {
+      width: 50%;
+      background: url('https://wallpapers.com/images/featured/disney-4k-ultra-wide-8a0mnvmtrpzlb72x.jpg') no-repeat center center;
+      background-size: cover;
+    }
+
+    /* --------------------------------------------------------------------
+       RESPONSIVIDADE (telas menores que 768px)
+    -------------------------------------------------------------------- */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        height: auto;
+      }
+      .left-panel, .right-panel {
+        width: 100%;
+        height: auto;
+      }
+      .right-panel {
+        min-height: 300px; /* só para garantir alguma altura */
+      }
     }
   </style>
 </head>
+<body>
 
-<body class="o-scroll" id="js-scroll">
-  <!-- Preloader-->
-  <div id="preloader">
-    <div class="loader">
-      <div class="plane">
-        <img src="https://zupimages.net/up/19/34/4820.gif" class="plane-img" alt="">
-      </div>
-      <div class="earth-wrapper">
-        <div class="earth"></div>
-      </div>
+<div class="container">
+  <!-- Esquerda: Formulário de Login -->
+  <div class="left-panel">
+    <a href="#" class="back-to-home">&lt; Back To Home</a>
+    <h1 class="login-title">Log in</h1>
+
+    <!-- Botões de Login Social -->
+    <button class="social-button google">
+      Continue with Google 
+      <span class="icon">G</span>
+    </button>
+    <button class="social-button facebook">
+      Continue with Facebook
+      <span class="icon">f</span>
+    </button>
+
+    <!-- Linha divisória "or" -->
+    <div class="divider">
+      <span class="divider-text">or</span>
     </div>
+
+    <!-- Texto "Sign up with your email address" -->
+    <p class="signup-text">Sign up with your email address</p>
+
+    <!-- Formulário normal -->
+    <form id="loginForm" method="POST">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required />
+
+      <!-- Div para exibir msg de erro do backend -->
+      <div class="error-message" id="errorMessage"></div>
+
+      <button type="submit" class="login-button">Login</button>
+    </form>
   </div>
-  
-  <!-- Back To Top -->
-  <a href="#main-wrapper" id="backto-top" class="back-to-top">
-    <i class="fas fa-angle-up"></i>
-  </a>
 
-  <!-- Main Wrapper -->
-  <div id="main-wrapper" class="main-wrapper overflow-hidden">
+  <!-- Direita: Imagem de Fundo -->
+  <div class="right-panel"></div>
+</div>
 
-    <!-- Página / Conteúdo -->
-    <div class="page-content m-0">
-      <!-- Seção de Login -->
-      <section class="signup bg-white">
-        <div class="row align-items-center justify-content-center">
-          <div class="col-lg-5 col-md-9 col-sm-10 p-0">
-            <div class="container-fluid">
-              <div class="form-block">
-                <a href="index.html" class="color-primary h6 mb-30">
-                  <i class="fal fa-chevron-left"></i>&nbsp;&nbsp;Back To Home
-                </a>
-                <h2 class="mb-30 light-black">Log in</h2>
+<script>
+  // Captura o evento de envio do formulário
+  document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-                <!-- Botão Google -->
-                <div class="google mb-24">
-                  <h6 class="color-white">
-                    <a href="" class="link-btn">
-                      Continue with Google
-                      <img src="assets/media/icons/google-icon.png" alt="">
-                    </a>
-                  </h6>
-                </div>
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const errorMessageDiv = document.getElementById('errorMessage');
 
-                <!-- Botão Facebook -->
-                <div class="facebook mb-30">
-                  <h6 class="color-white">
-                    <a href="" class="link-btn">
-                      Continue with Facebook
-                      <img src="assets/media/icons/facebook-icon.png" alt="">
-                    </a>
-                  </h6>
-                </div>
+    // Limpa mensagem anterior
+    errorMessageDiv.textContent = '';
 
-                <h5 class="or mb-8">or</h5>
-                <h6 class="mb-24 text-center">Sign up with your email address</h6>
-
-                <form method="post" action="login.html" class="form-group contact-form">
-                  <div class="row">
-                    <div class="col-sm-12 mb-24">
-                      <input type="email" class="form-control" name="email" required placeholder="Email">
-                    </div>
-                    <div class="col-sm-12 mb-24">
-                      <input type="password" class="form-control" name="password" required placeholder="Password">
-                    </div>
-                    <div class="d-flex justify-content-end">
-                      <button type="submit" class="cus-btn small-pad mb-24">Login</button>
-                      <!-- Alerta ou mensagem -->
-                      <div id="message" class="alert-msg"></div>
-                    </div>
-                  </div>
-                </form>
-
-              </div> <!-- /.form-block -->
-            </div>
-          </div>
-          <div class="col-lg-7 p-0">
-            <div class="img-block">
-              <img src="assets/media/images/login.jpg" alt="">
-            </div>
-          </div>
-        </div>
-      </section>
-    </div> <!-- /.page-content -->
-
-  </div> <!-- /.main-wrapper -->
-
-  <!-- Mobile Menu -->
-  <div class="mobile-nav__wrapper">
-    <div class="mobile-nav__overlay mobile-nav__toggler"></div>
-    <div class="mobile-nav__content">
-      <span class="mobile-nav__close mobile-nav__toggler"></span>
-      <div class="logo-box">
-        <!-- Caso queira exibir uma logo:
-             <a href="index.html"><img src="assets/media/logo.png" alt="Logo"></a> -->
-      </div>
-      <div class="mobile-nav__container"></div>
-      <ul class="mobile-nav__contact list-unstyled">
-        <li>
-          <i class="fas fa-envelope"></i>
-          <a href="mailto:example@company.com">example@company.com</a>
-        </li>
-        <li>
-          <i class="fa fa-phone-alt"></i>
-          <a href="tel:+12345678">+123 (4567) -890</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-  
-  <!-- JS Principais -->
-  <script src="assets/js/vendor/jquery-3.6.3.min.js"></script>
-  <script src="assets/js/vendor/bootstrap.min.js"></script>
-  <script src="assets/js/vendor/slick.min.js"></script>
-  <script src="assets/js/vendor/jquery-appear.js"></script>
-  <script src="assets/js/vendor/jquery-validator.js"></script>
-  <script src="assets/js/vendor/aksVideoPlayer.js"></script>
-
-  <!-- Script principal da página (caso use) -->
-  <script src="assets/js/app.js"></script>
-  
-  <!-- Remove Preloader após carregamento da página (JS puro) -->
-  <script>
-    window.addEventListener('load', function() {
-      var preloader = document.getElementById('preloader');
-      if (preloader) {
-        preloader.style.display = 'none';
+    // Faz a requisição de login, enviando cookie (credentials:'include')
+    fetch('https://magictraveltur.com/api_log.php/login', {
+      method: 'POST',
+      credentials: 'include', // <--- IMPORTANTE: envia e recebe cookie de sessão
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: new URLSearchParams({
+        email: email,
+        password: password
+      })
+    })
+    .then(response => response.text())
+    .then(data => {
+      // Se o backend retornar "Login bem-sucedido!" no texto, consideramos ok
+      if (data.includes('Login bem-sucedido')) {
+        // Redireciona para a área logada
+        window.location.href = 'https://business.magictraveltur.com';
+      } else {
+        // Caso contrário, exibe a mensagem de erro retornada pelo servidor
+        errorMessageDiv.textContent = data;
       }
+    })
+    .catch(error => {
+      console.error('Erro na requisição:', error);
+      errorMessageDiv.textContent = 'Ocorreu um erro. Tente novamente.';
     });
-  </script>
+  });
+</script>
 
 </body>
 </html>
