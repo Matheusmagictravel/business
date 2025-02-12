@@ -3,11 +3,10 @@
  * 1) Incluir 'auth.php'
  *    Se 'auth.php' estiver na raiz do site, use:
  *    include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
- *    ou ajuste conforme a sua estrutura.
+ *    ou ajuste conforme a sua estrutura de diretórios.
  **************************************************************/
 include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 ?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -15,15 +14,27 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Detalhes do Pedido - Magic Travel" />
   <title>Detalhes do Pedido - Magic Travel</title>
+
+  <!-- CSS do Bootstrap -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" />
+
+  <!-- Ícones Font Awesome (opcional, caso já esteja usando) -->
   <link
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     rel="stylesheet"
   />
 
-  <style>
-    @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+  <!-- Google Fonts (Montserrat) -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
 
-    /* Estilos gerais do body e layout */
+  <style>
+    /* Corpo geral */
     body {
       font-family: "Montserrat", sans-serif;
       margin: 0;
@@ -34,6 +45,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       min-height: 100vh;
     }
 
+    /* SIDEBAR */
     #sidebar-container {
       width: 260px;
       position: fixed;
@@ -56,6 +68,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       color: #ccc;
     }
 
+    /* CONTEÚDO PRINCIPAL */
     .order-details {
       margin-left: 260px;
       padding: 40px;
@@ -147,6 +160,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       border: 1px solid #ccc;
       border-radius: 4px;
     }
+    /* Arredondar cantos da tabela */
     .emissao-tabela thead th:first-child {
       border-top-left-radius: 12px;
     }
@@ -232,6 +246,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     .delete-row-button i {
       pointer-events: none;
     }
+
     .hr3 {
       border: 0;
       height: 2px;
@@ -440,7 +455,9 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     </div>
   </div>
 
-  <!-- Scripts principais -->
+  <!-- JS do Bootstrap (Bundle) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
+
   <script>
     /************************************************************
      *  VARIÁVEIS E OBJETOS GLOBAIS
@@ -475,11 +492,14 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     }
 
     /************************************************************
-     *  CARREGAR SIDEBAR
+     *  CARREGAR SIDEBAR (C/ credentials: 'include' se precisar)
      ************************************************************/
     async function loadSidebar() {
       try {
-        const response = await fetch('sidebar.html');
+        // Se a sidebar exigir cookie de sessão, usar { credentials: 'include' }
+        const response = await fetch('sidebar.html', {
+          credentials: 'include'
+        });
         if (!response.ok) throw new Error('Erro ao carregar a sidebar.');
         const sidebarContent = await response.text();
         document.getElementById('sidebar-container').innerHTML = sidebarContent;
@@ -500,8 +520,14 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       }
 
       try {
+        // Precisamos enviar o cookie de sessão => credentials: 'include'
         const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?id_pedido=${pedidoId}`;
-        const response = await fetch(apiUrl);
+        const response = await fetch(apiUrl, {
+          credentials: 'include'
+        });
+        if (!response.ok) {
+          throw new Error(`Erro ao buscar pedido: ${response.status}`);
+        }
         const pedidos = await response.json();
 
         let pedido;
@@ -586,6 +612,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
             <td>${pedido.observacoes_financeiras || '<input type="text" placeholder="Observações Financeiras">'}</td>
           </tr>`;
 
+        // Por fim, carrega a planilha do pedido:
         await loadPlanilhaPedido();
       } catch (error) {
         console.error("Erro ao carregar detalhes do pedido:", error);
@@ -601,8 +628,12 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       if (!pedidoId || pedidoId === "Carregando...") return;
 
       try {
+        // credentials: 'include' para enviar cookie
         const planilhaApiUrl = `https://magictraveltur.com/api_planilhas.php?id_pedido=${pedidoId}&v=${Date.now()}`;
-        const response = await fetch(planilhaApiUrl, { cache: 'no-store' });
+        const response = await fetch(planilhaApiUrl, {
+          cache: 'no-store',
+          credentials: 'include'
+        });
         if (!response.ok) {
           throw new Error(`Erro ao buscar planilhas. Status: ${response.status}`);
         }
@@ -632,6 +663,9 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       }
     }
 
+    /************************************************************
+     *  MONTAR / ATUALIZAR TABELAS DA PLANILHA
+     ************************************************************/
     function montarPlanilhaPrincipal(planilhas) {
       const spreadsheetInfo = document.getElementById("spreadsheet-info");
       spreadsheetInfo.innerHTML = "";
@@ -733,6 +767,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       `;
       spreadsheetInfo.insertAdjacentHTML("beforeend", newRow);
 
+      // Add event listener p/ recalcular ao editar
       spreadsheetInfo.querySelectorAll('input, select').forEach((element) => {
         element.removeEventListener('input', calcularValoresPlanilha);
         element.addEventListener('input', calcularValoresPlanilha);
@@ -748,7 +783,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
       if (!planilhaId) {
         // Linha ainda não salva no banco
-        if (confirm("Linha não salva no banco. Remover mesmo assim?")) {
+        if (confirm("Linha ainda não salva no banco. Remover mesmo assim?")) {
           row.remove();
           calcularValoresPlanilha();
         }
@@ -763,6 +798,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ id_pedido: pedidoId, id: planilhaId }),
+          credentials: 'include'
         });
         if (!response.ok) {
           const textErr = await response.text();
@@ -783,7 +819,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     }
 
     /************************************************************
-     *  SALVAR PLANILHA
+     *  SALVAR PLANILHA (POST/PUT)
      ************************************************************/
     async function salvarPlanilha() {
       const pedidoId = document.getElementById("pedido-id").textContent;
@@ -801,7 +837,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
       for (let linha of linhas) {
         const planilhaId = linha.getAttribute("data-planilha-id");
-        const produto    = linha.querySelector('input[name="produto"]')?.value || "";
+        const produto    = linha.querySelector('input[name="produto"]')?.value.trim() || "";
         const data       = linha.querySelector('input[name="data"]')?.value || "";
         const idade      = linha.querySelector('select[name="idade"]')?.value || "";
         const netDollar  = parseFloat(linha.querySelector('input[name="netDollar"]')?.value) || 0;
@@ -847,9 +883,11 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
           // Linha existente (UPDATE)
           const original = window.planilhasEmMemoria.find(p => p.id == planilhaId);
           if (!original) {
+            // Se não achar no array em memória, trata como novo
             novos.push(objLinha);
           } else {
             const atualizado = { ...original };
+            // Atualiza campos
             atualizado.produto      = produto;
             atualizado.data         = data;
             atualizado.idade        = idade;
@@ -876,6 +914,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
           const resPost = await fetch("https://magictraveltur.com/api_planilhas.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            credentials: 'include',
             body: JSON.stringify(novos),
           });
           if (!resPost.ok) {
@@ -883,11 +922,13 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
             throw new Error(`Erro no POST: ${txtErr}`);
           }
         }
+
         // PUT (existentes)
         if (existentes.length > 0) {
           const resPut = await fetch("https://magictraveltur.com/api_planilhas.php", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
+            credentials: 'include',
             body: JSON.stringify(existentes),
           });
           if (!resPut.ok) {
@@ -910,7 +951,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     }
 
     /************************************************************
-     *  SALVAR EMISSÃO
+     *  SALVAR EMISSÃO (PUT)
      ************************************************************/
     async function salvarEmissao() {
       const pedidoId     = document.getElementById("pedido-id").textContent;
@@ -953,6 +994,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
         const resPut = await fetch("https://magictraveltur.com/api_planilhas.php", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
+          credentials: 'include',
           body: JSON.stringify(updates),
         });
         if (!resPut.ok) {
@@ -1017,7 +1059,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
     function updateDolarMagic() {
       const dolarCambio = parseFloat(document.getElementById('dolar-cambio').value) || 0;
-      // Exemplo de taxa base, você pode alterar
+      // Exemplo de taxa base, você pode alterar:
       const dolarMagic  = (dolarCambio * 1.0098).toFixed(2);
       document.getElementById('dolar-magic').textContent = dolarMagic;
       calcularValoresPlanilha();
