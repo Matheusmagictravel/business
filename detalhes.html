@@ -1,4 +1,13 @@
-<?php include 'auth.php'; ?>
+<?php
+/**************************************************************
+ * 1) Incluir 'auth.php'
+ *    Se 'auth.php' estiver na raiz do site, use:
+ *    include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
+ *    ou ajuste conforme a sua estrutura.
+ **************************************************************/
+include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -10,10 +19,12 @@
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     rel="stylesheet"
   />
+
   <style>
-    /* Ocultar body até a sessão ser confirmada */
+    @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
+
+    /* Estilos gerais do body e layout */
     body {
-      display: none;
       font-family: "Montserrat", sans-serif;
       margin: 0;
       background-color: #f4f4f9;
@@ -22,8 +33,6 @@
       flex-direction: column;
       min-height: 100vh;
     }
-
-    @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap");
 
     #sidebar-container {
       width: 260px;
@@ -37,11 +46,9 @@
       box-shadow: 3px 0 6px rgba(0, 0, 0, 0.2);
       transition: background-color 0.3s;
     }
-
     #sidebar-container:hover {
       background-color: #2b3947;
     }
-
     .sidebar-loading {
       padding: 20px;
       text-align: center;
@@ -61,7 +68,6 @@
       display: flex;
       flex-direction: column;
     }
-
     .order-details h1 {
       font-size: 24px;
       font-weight: bold;
@@ -69,7 +75,6 @@
       color: #4a4a4a;
       text-align: left;
     }
-
     .order-details h3 {
       font-size: 24px;
       font-weight: 600;
@@ -78,7 +83,6 @@
       animation: fadeIn 1.2s ease-in-out;
       text-align: center;
     }
-
     .order-details p {
       font-size: 16px;
       color: #ff6f61;
@@ -101,15 +105,12 @@
       transition: background-color 0.3s ease;
       margin-right: auto;
     }
-
     .back-button:hover {
       background-color: #dc3545;
       color: white;
     }
 
-    /*************************************************************
-     *  TABELA PADRÃO ( .emissao-tabela ) - mesmo design para tudo
-     *************************************************************/
+    /* Tabela padrão (emissao-tabela) */
     .emissao-tabela {
       width: 100%;
       border-collapse: collapse;
@@ -120,7 +121,6 @@
       table-layout: fixed;
       animation: fadeIn 1.8s ease-in-out; /* suave fade-in */
     }
-
     .emissao-tabela thead th {
       text-align: center;
       background-color: #222e3c;
@@ -131,16 +131,14 @@
       padding: 10px;
       text-transform: capitalize;
     }
-
     .emissao-tabela td {
       color: #333;
       background-color: #f9f9f9;
       text-align: center;
       padding: 12px;
       border: 1px solid #d9d9d9;
-      word-wrap: break-word;
+      word-wrap: break-word; /* para não estourar se for muito texto */
     }
-
     .emissao-tabela input,
     .emissao-tabela select {
       width: 100%;
@@ -149,8 +147,6 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-
-    /* Arredondar cantos top e bottom */
     .emissao-tabela thead th:first-child {
       border-top-left-radius: 12px;
     }
@@ -163,7 +159,6 @@
     .emissao-tabela tbody tr:last-child td:last-child {
       border-bottom-right-radius: 12px;
     }
-
     @media (max-width: 480px) {
       .emissao-tabela th,
       .emissao-tabela td {
@@ -171,17 +166,12 @@
       }
     }
 
-    /*************************************************************
-     *  Seções - padronizadas
-     *************************************************************/
     .section {
       display: flex;
       flex-direction: column;
     }
 
-    /*************************************************************
-     *  Ajuste de colunas ESPECÍFICAS na Planilha do Pedido
-     *************************************************************/
+    /* Ajustes de largura de colunas na planilha do pedido */
     .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(1)  { width: 14%; }
     .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(2)  { width: 10%; }
     .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(3)  { width: 8%; }
@@ -195,9 +185,6 @@
     .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(11) { width: 8%; }
     .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(12) { width: 9%; }
 
-    /*************************************************************
-     *  Botões e animações
-     *************************************************************/
     .add-row-button {
       background-color: #1cbb8c;
       color: white;
@@ -209,12 +196,10 @@
       animation: fadeIn 2s ease-in-out;
       align-self: center;
     }
-
     .add-row-button:hover {
       background-color: #17a37a;
       transform: scale(1.05);
     }
-
     @keyframes fadeIn {
       0% {
         opacity: 0;
@@ -225,14 +210,12 @@
         transform: translateY(0);
       }
     }
-
     .button-container {
       display: flex;
       gap: 10px;
       justify-content: center;
       margin-top: 10px;
     }
-
     .delete-row-button {
       position: relative;
       background-color: transparent;
@@ -249,7 +232,6 @@
     .delete-row-button i {
       pointer-events: none;
     }
-
     .hr3 {
       border: 0;
       height: 2px;
@@ -258,6 +240,7 @@
     }
   </style>
 </head>
+
 <body>
   <!-- Sidebar -->
   <div id="sidebar-container">
@@ -457,37 +440,14 @@
     </div>
   </div>
 
-  <!-- Verificação de Sessão via JavaScript -->
+  <!-- Scripts principais -->
   <script>
-    async function checkSession() {
-      try {
-        const response = await fetch("https://magictraveltur.com/api_log.php/check", {
-          credentials: 'include'
-        });
-        const result = await response.json();
-        console.log("Resposta da Sessão:", result);
-
-        if (result.logged_in) {
-          document.body.style.display = "block";
-        } else {
-          window.location.replace("https://business.magictraveltur.com/login.html");
-        }
-      } catch (error) {
-        console.error("Erro ao verificar a sessão:", error);
-        window.location.replace("https://business.magictraveltur.com/login.html");
-      }
-    }
-
-    document.addEventListener("DOMContentLoaded", checkSession);
-  </script>
-
-  <!-- JS principal da página -->
-  <script>
+    /************************************************************
+     *  VARIÁVEIS E OBJETOS GLOBAIS
+     ************************************************************/
     window.planilhasEmMemoria = [];
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Somente carregamos a sidebar e detalhes do pedido se a sessão já estiver OK
-      // (A verificação final vem acima, mas aqui repetimos a checagem "se DOMContentLoaded e user logado" para manter consistência.)
       if (document.getElementById('sidebar-container')) {
         loadSidebar();
       }
@@ -499,6 +459,9 @@
       document.getElementById('add-row-button').addEventListener('click', addNewRow);
     });
 
+    /************************************************************
+     *  FUNÇÃO PARA OBTER O ID DO PEDIDO VIA QUERYSTRING
+     ************************************************************/
     function getPedidoId() {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get('pedido') || 'Não informado';
@@ -511,6 +474,9 @@
       return d.toLocaleDateString('pt-BR');
     }
 
+    /************************************************************
+     *  CARREGAR SIDEBAR
+     ************************************************************/
     async function loadSidebar() {
       try {
         const response = await fetch('sidebar.html');
@@ -523,6 +489,9 @@
       }
     }
 
+    /************************************************************
+     *  CARREGAR DADOS DO PEDIDO (api_pedidos.php)
+     ************************************************************/
     async function loadOrderDetails() {
       const pedidoId = getPedidoId();
       if (pedidoId === "Não informado") {
@@ -538,10 +507,11 @@
         let pedido;
         if (Array.isArray(pedidos)) {
           if (pedidos.length === 0) {
-            throw new Error(`Erro ao buscar detalhes do pedido. Status: ${response.status}`);
+            throw new Error(`Erro ao buscar detalhes do pedido. Nenhum pedido encontrado.`);
           }
           pedido = pedidos[0];
         } else {
+          // Se a API retornou um objeto único
           pedido = pedidos;
         }
 
@@ -623,6 +593,9 @@
       }
     }
 
+    /************************************************************
+     *  CARREGAR PLANILHA (api_planilhas.php)
+     ************************************************************/
     async function loadPlanilhaPedido() {
       const pedidoId = document.getElementById("pedido-id").textContent;
       if (!pedidoId || pedidoId === "Carregando...") return;
@@ -638,18 +611,17 @@
         window.planilhasEmMemoria = planilhas || [];
 
         document.getElementById("spreadsheet-info").innerHTML = "";
-        document.getElementById("emission-info").innerHTML = "";
+        document.getElementById("emission-info").innerHTML    = "";
 
         if (planilhas && planilhas.length > 0) {
           montarPlanilhaPrincipal(planilhas);
-          document.getElementById("dolar-cambio").value = planilhas[0].dolar_cambio || 0;
+          document.getElementById("dolar-cambio").value   = planilhas[0].dolar_cambio || 0;
           document.getElementById("dolar-magic").textContent = planilhas[0].dolar_magic || "0.00";
-        } else {
-          // Se não vier nada, deixa a planilha vazia (nenhuma linha)
         }
 
         montarEmissao(planilhas);
 
+        // Adiciona listeners para recalcular valores
         document.querySelectorAll("#spreadsheet-info input, #spreadsheet-info select").forEach((el) => {
           el.addEventListener("input", calcularValoresPlanilha);
         });
@@ -719,7 +691,7 @@
                 <option value="⁠Emissão Bloqueada" ${item.status === "⁠Emissão Bloqueada" ? "selected" : ""}>⁠Emissão Bloqueada</option>
                 <option value="⁠Emitido – Não Pago" ${item.status === "⁠Emitido – Não Pago" ? "selected" : ""}>⁠Emitido – Não Pago</option>
                 <option value="Emitido TIF" ${item.status === "Emitido TIF" ? "selected" : ""}>Emitido TIF</option>
-                <option value="Concluído"             ${item.status === "Concluído" ? "selected" : ""}>Concluído</option>
+                <option value="Concluído" ${item.status === "Concluído" ? "selected" : ""}>Concluído</option>
               </select>
             </td>
           </tr>
@@ -728,6 +700,9 @@
       });
     }
 
+    /************************************************************
+     *  ADICIONAR NOVA LINHA NA PLANILHA
+     ************************************************************/
     function addNewRow() {
       const spreadsheetInfo = document.getElementById("spreadsheet-info");
       const newRow = `
@@ -764,8 +739,11 @@
       });
     }
 
+    /************************************************************
+     *  EXCLUIR LINHA
+     ************************************************************/
     async function deleteRow(button) {
-      const row = button.closest('tr');
+      const row        = button.closest('tr');
       const planilhaId = row.getAttribute("data-planilha-id");
 
       if (!planilhaId) {
@@ -804,6 +782,9 @@
       }
     }
 
+    /************************************************************
+     *  SALVAR PLANILHA
+     ************************************************************/
     async function salvarPlanilha() {
       const pedidoId = document.getElementById("pedido-id").textContent;
       if (!pedidoId) {
@@ -811,11 +792,11 @@
         return;
       }
 
-      const linhas = document.querySelectorAll("#spreadsheet-info tr");
-      const dolarCambio = parseFloat(document.getElementById("dolar-cambio").value) || 0;
-      const dolarMagic  = parseFloat(document.getElementById("dolar-magic").textContent) || 0;
+      const linhas     = document.querySelectorAll("#spreadsheet-info tr");
+      const dolarCambio= parseFloat(document.getElementById("dolar-cambio").value) || 0;
+      const dolarMagic = parseFloat(document.getElementById("dolar-magic").textContent) || 0;
 
-      const novos = [];
+      const novos      = [];
       const existentes = [];
 
       for (let linha of linhas) {
@@ -829,36 +810,34 @@
         const margem     = parseFloat(linha.querySelector('input[name="margem"]')?.value) || 0;
         const taxa       = parseFloat(linha.querySelector('input[name="taxa"]')?.value) || 0;
 
-        // Calcula totalUsd
+        // Cálculos
         const totalUsd = (netDollar + lobista) * quantidade;
         const netBrl   = totalUsd * dolarMagic;
-        // margem e taxa são valores percentuais; lembre-se de dividir por 100 ao fazer conta
         const totalPix = netBrl / (1 - (margem / 100));
         const total10x = totalPix / (1 - (taxa / 100));
 
-        // Verifica campos obrigatórios
+        // Campos obrigatórios
         if (!produto || !data) {
           alert("Campos obrigatórios (produto e data) não foram preenchidos em uma linha.");
           return;
         }
 
-        // Monta objeto para envio
         const objLinha = {
-          id_pedido: pedidoId,
+          id_pedido:    pedidoId,
           produto,
           data,
           idade,
-          net_usd: netDollar,
+          net_usd:      netDollar,
           lobista,
           quantidade,
-          total_usd: totalUsd,
-          net_brl: netBrl,
+          total_usd:    totalUsd,
+          net_brl:      netBrl,
           margem,
-          total_pix: totalPix,
+          total_pix:    totalPix,
           taxa,
-          total_10x: total10x,
+          total_10x:    total10x,
           dolar_cambio: dolarCambio,
-          dolar_magic: dolarMagic
+          dolar_magic:  dolarMagic
         };
 
         if (!planilhaId) {
@@ -866,10 +845,8 @@
           novos.push(objLinha);
         } else {
           // Linha existente (UPDATE)
-          // Busca no array em memória para preservar ID
           const original = window.planilhasEmMemoria.find(p => p.id == planilhaId);
           if (!original) {
-            // Se não achar no array "planilhasEmMemoria", trata como novo
             novos.push(objLinha);
           } else {
             const atualizado = { ...original };
@@ -894,9 +871,8 @@
       }
 
       try {
-        // Se houver linhas novas, POST
+        // POST (novos)
         if (novos.length > 0) {
-          console.log("Debug POST (novos) =>", JSON.stringify(novos, null, 2));
           const resPost = await fetch("https://magictraveltur.com/api_planilhas.php", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -907,10 +883,8 @@
             throw new Error(`Erro no POST: ${txtErr}`);
           }
         }
-
-        // Se houver linhas existentes, PUT
+        // PUT (existentes)
         if (existentes.length > 0) {
-          console.log("Debug PUT (existentes) =>", JSON.stringify(existentes, null, 2));
           const resPut = await fetch("https://magictraveltur.com/api_planilhas.php", {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
@@ -935,8 +909,11 @@
       }
     }
 
+    /************************************************************
+     *  SALVAR EMISSÃO
+     ************************************************************/
     async function salvarEmissao() {
-      const pedidoId = document.getElementById("pedido-id").textContent;
+      const pedidoId     = document.getElementById("pedido-id").textContent;
       const emissionRows = document.querySelectorAll("#emission-info tr");
 
       if (!pedidoId) {
@@ -973,7 +950,6 @@
       }
 
       try {
-        console.log("Debug PUT Emissão =>", JSON.stringify(updates, null, 2));
         const resPut = await fetch("https://magictraveltur.com/api_planilhas.php", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -992,9 +968,12 @@
       }
     }
 
+    /************************************************************
+     *  CÁLCULOS E RESUMOS
+     ************************************************************/
     function calcularValoresPlanilha() {
       const dolarMagic = parseFloat(document.getElementById("dolar-magic").textContent) || 0;
-      const rows = document.querySelectorAll("#spreadsheet-info tr");
+      const rows       = document.querySelectorAll("#spreadsheet-info tr");
 
       rows.forEach((row) => {
         const netDollar  = parseFloat(row.querySelector('input[name="netDollar"]')?.value) || 0;
@@ -1025,9 +1004,9 @@
 
       document.querySelectorAll("#spreadsheet-info tr").forEach((row) => {
         totalDollar += parseFloat(row.querySelector('td[name="totalDollar"]')?.textContent) || 0;
-        totalReal   += parseFloat(row.querySelector('td[name="netReal"]')?.textContent) || 0;
-        totalPix    += parseFloat(row.querySelector('td[name="totalPix"]')?.textContent) || 0;
-        total10x    += parseFloat(row.querySelector('td[name="total10x"]')?.textContent) || 0;
+        totalReal   += parseFloat(row.querySelector('td[name="netReal"]').textContent)     || 0;
+        totalPix    += parseFloat(row.querySelector('td[name="totalPix"]').textContent)    || 0;
+        total10x    += parseFloat(row.querySelector('td[name="total10x"]').textContent)    || 0;
       });
 
       document.getElementById("resumo-total-dollar").textContent = totalDollar.toFixed(2);
@@ -1039,7 +1018,7 @@
     function updateDolarMagic() {
       const dolarCambio = parseFloat(document.getElementById('dolar-cambio').value) || 0;
       // Exemplo de taxa base, você pode alterar
-      const dolarMagic = (dolarCambio * 1.0098).toFixed(2);
+      const dolarMagic  = (dolarCambio * 1.0098).toFixed(2);
       document.getElementById('dolar-magic').textContent = dolarMagic;
       calcularValoresPlanilha();
     }
