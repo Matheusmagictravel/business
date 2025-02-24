@@ -5,27 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   <title>Magic Travel - Sidebar Premium</title>
 
-  <!-- SimpleBar CSS -->
+  <!-- SimpleBar CSS (Scroll customizado) -->
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.css"
   />
 
-  <!-- Fonte recomendada (ex: Google Fonts) -->
+  <!-- Fonte (Google Fonts) -->
   <link
     href="https://fonts.googleapis.com/css?family=Nunito:400,600,700&display=swap"
     rel="stylesheet"
   />
 
   <style>
-    /* RESET BÁSICO */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    /* ================= RESET BÁSICO ================= */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-    /* CORPO */
     body {
       display: flex;
       flex-direction: column;
@@ -35,45 +30,43 @@
       overflow-x: hidden;
     }
 
-    /* CONTAINER PRINCIPAL */
     .page-container {
       display: flex;
       flex: 1;
     }
 
-    /* SIDEBAR */
-    .sidebar {
+    /* ================= SIDEBAR ================= */
+    /* Usamos ID #mySidebar para ficar mais específico e evitar conflitos */
+    #mySidebar.sidebar {
       width: 260px;
       background: #1b2733;
       position: relative;
       z-index: 999;
-      transition: margin-left 0.3s ease-in-out !important; /* !important para forçar */
+      transition: margin-left 0.3s ease-in-out !important;
     }
-    .sidebar.collapsed {
+    #mySidebar.sidebar.collapsed {
       margin-left: -260px !important;
     }
 
-    .sidebar-content {
+    #mySidebar .sidebar-content {
       display: flex;
       flex-direction: column;
       height: 100vh;
       overflow-y: auto;
     }
 
-    /* LOGO + BOTÃO TOGGLE */
-    .sidebar-brand {
+    #mySidebar .sidebar-brand {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 1rem;
       background-color: rgba(255, 255, 255, 0.05);
     }
-    .sidebar-brand img {
+    #mySidebar .sidebar-brand img {
       height: auto;
       max-width: 125px;
     }
-
-    .sidebar-toggle {
+    #mySidebar .sidebar-toggle {
       background: none;
       border: none;
       cursor: pointer;
@@ -82,13 +75,12 @@
       outline: none;
     }
 
-    /* LISTA DE NAVEGAÇÃO */
-    .sidebar-nav {
+    #mySidebar .sidebar-nav {
       list-style: none;
       margin: 0;
       padding: 0;
     }
-    .sidebar-header {
+    #mySidebar .sidebar-header {
       color: #ced4da;
       font-size: 0.75rem;
       padding: 1rem 1.5rem 0.375rem;
@@ -96,13 +88,10 @@
       letter-spacing: 1px;
     }
 
-    /* ITEM DA SIDEBAR */
-    .sidebar-item {
-      /* Mantido vazio propositalmente */
-    }
+    /* ================= LINKS DA SIDEBAR ================= */
+    #mySidebar .sidebar-item { }
 
-    /* LINK DA SIDEBAR */
-    .sidebar-link {
+    #mySidebar .sidebar-link {
       display: flex;
       align-items: center;
       padding: 0.75rem 1.5rem;
@@ -112,50 +101,47 @@
     }
 
     /*
-      MELHORIAS DE ÍCONES (ESPAÇO "PREMIUM" ENTRE ÍCONE E TEXTO):
-      - Maior stroke-width,
-      - Ícone um pouco maior,
-      - Espaçamento bem grande (2rem),
-      - Uso de !important para evitar override de estilos.
+      Seletor hiper-específico para forçar o espaçamento premium do ícone:
+      body #mySidebar.sidebar ul.sidebar-nav li.sidebar-item a.sidebar-link i {}
     */
-    .sidebar-link i {
-      margin-right: 2rem !important;  /* AQUI: espaçamento maior entre ícone e texto */
-      width: 1.5em !important;
-      height: 1.5em !important;
+    body #mySidebar.sidebar ul.sidebar-nav li.sidebar-item a.sidebar-link i {
+      margin-right: 3rem !important; /* <<< AQUI: ajuste o valor para mais/menos espaço */
       stroke-width: 3 !important;
-      color: rgba(233, 236, 239, 0.6) !important;
       flex-shrink: 0 !important;
+      color: rgba(233, 236, 239, 0.6) !important;
+      /* Se quiser aumentar TAMBÉM via CSS (além do JS do feather.replace) =>:
+      width: 30px !important;
+      height: 30px !important;
+      */
     }
 
-    /* HOVER */
-    .sidebar-link:hover {
+    #mySidebar .sidebar-link:hover {
       background: rgba(255, 255, 255, 0.08) !important;
       color: #fff !important;
     }
-    .sidebar-link:hover i {
+    #mySidebar .sidebar-link:hover i {
       color: #fff !important;
     }
 
-    /* ACTIVE GERAL */
-    .sidebar-item.active > .sidebar-link {
+    #mySidebar .sidebar-item.active > .sidebar-link {
       background: rgba(255, 255, 255, 0.15) !important;
       color: #fff !important;
     }
-    .sidebar-item.active > .sidebar-link i {
+    #mySidebar .sidebar-item.active > .sidebar-link i {
       color: #fff !important;
     }
 
-    /* EXEMPLOS DE ACTIVE ESPECÍFICO */
-    .sidebar-item.active-orders > .sidebar-link {
+    /* Exemplos de "active" específicos */
+    #mySidebar .sidebar-item.active-orders > .sidebar-link {
       background: rgba(255, 0, 0, 0.2) !important;
       border-left: 3px solid #e74c3c !important;
     }
-    .sidebar-item.active-loti > .sidebar-link {
+    #mySidebar .sidebar-item.active-loti > .sidebar-link {
       background: rgba(0, 255, 0, 0.2) !important;
       border-left: 3px solid #2ecc71 !important;
     }
 
-    /* CONTEÚDO PRINCIPAL */
+    /* ================= CONTEÚDO ================= */
     .main-content {
       flex: 1;
       padding: 2rem;
@@ -165,7 +151,7 @@
       margin-left: 0 !important;
     }
 
-    /* SCROLLBAR CUSTOMIZADA (SimpleBar) */
+    /* ================= SCROLLBAR CUSTOMIZADA ================= */
     .js-simplebar .simplebar-track.simplebar-vertical .simplebar-scrollbar {
       background: rgba(255, 255, 255, 0.2) !important;
       width: 6px !important;
@@ -175,9 +161,9 @@
       background: rgba(255, 255, 255, 0.5) !important;
     }
 
-    /* RESPONSIVIDADE */
+    /* ================= RESPONSIVIDADE ================= */
     @media (max-width: 768px) {
-      .sidebar {
+      #mySidebar.sidebar {
         position: fixed !important;
         top: 0;
         left: 0;
@@ -186,17 +172,16 @@
       .main-content {
         margin-left: 0 !important;
       }
-      .sidebar:not(.collapsed) ~ .main-content {
+      #mySidebar.sidebar:not(.collapsed) ~ .main-content {
         margin-left: 260px !important;
       }
     }
   </style>
 </head>
-
 <body>
   <div class="page-container">
-    <!-- SIDEBAR -->
-    <nav id="sidebar" class="sidebar js-sidebar">
+    <!-- SIDEBAR com ID #mySidebar -->
+    <nav id="mySidebar" class="sidebar js-sidebar">
       <div class="sidebar-content js-simplebar">
         <div class="sidebar-brand">
           <a href="https://business.magictraveltur.com/">
@@ -205,7 +190,6 @@
               alt="Magic Travel"
             />
           </a>
-          <!-- Botão Toggle -->
           <button class="sidebar-toggle" id="sidebarToggle">
             <i data-feather="menu"></i>
           </button>
@@ -332,25 +316,27 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // Substitui [i data-feather="..."] pelos SVGs
-      feather.replace();
+      // Substitui [i data-feather="..."] por SVGs,
+      // forçando tamanho e espessura:
+      feather.replace({
+        width: 30,
+        height: 30,
+        'stroke-width': 3
+      });
 
-      // EXEMPLO de como capturar a URL para "ativar" o menu
+      // Captura URL para "ativar" menu
       const currentUrl = window.location.href.split('#')[0].split('?')[0].replace(/\/$/, '');
-      console.log("currentUrl =>", currentUrl);
-
       let algumAtivado = false;
-      document.querySelectorAll(".sidebar-item").forEach((item) => {
+
+      document.querySelectorAll("#mySidebar .sidebar-item").forEach((item) => {
         const linkEl = item.querySelector(".sidebar-link");
         if (linkEl) {
-          // Normaliza o href
           const linkUrl = linkEl.href.split('#')[0].split('?')[0].replace(/\/$/, '');
-
           if (currentUrl === linkUrl || currentUrl.includes(linkUrl)) {
             item.classList.add("active");
             algumAtivado = true;
 
-            // Regras específicas (exemplo)
+            // Regras específicas
             if (linkUrl.includes("pages-orders.html")) {
               item.classList.add("active-orders");
             } else if (linkUrl.includes("loti.html")) {
@@ -361,12 +347,12 @@
       });
 
       if (!algumAtivado) {
-        console.warn("Nenhum item foi destacado. Verifique se a URL bate.");
+        console.warn("Nenhum item ativo. Verifique a URL ou ajuste a comparação.");
       }
 
       // Botão de colapsar
       const toggleButton = document.getElementById("sidebarToggle");
-      const sidebar = document.getElementById("sidebar");
+      const sidebar = document.getElementById("mySidebar");
       toggleButton.addEventListener("click", () => {
         sidebar.classList.toggle("collapsed");
       });
