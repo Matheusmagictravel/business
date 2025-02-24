@@ -114,22 +114,17 @@
 </head>
 <body>
   <div id="voucher-page-container">
-    <!-- 
-      =================================================
-      CONTAINER DO SIDEBAR - IMPORTANDO O ARQUIVO EXTERNO
-      =================================================
-    -->
+    <!-- =========================================
+         SIDEBAR (iframe carregando sidebar.html)
+         ========================================= -->
     <div id="sidebar-container">
       <iframe src="sidebar.html" id="sidebar-frame"></iframe>
     </div>
 
-    <!-- 
-      =============================
-      CONTEÚDO PRINCIPAL DA PÁGINA
-      =============================
-    -->
+    <!-- =====================================
+         CONTEÚDO PRINCIPAL
+         ===================================== -->
     <div id="main-content">
-      <!-- FORMULÁRIO -->
       <div class="voucher-form-container">
         <h2>Voucher PDF - Edição Disney</h2>
         <form id="voucherForm">
@@ -145,7 +140,7 @@
             </select>
           </div>
 
-          <!-- Anexar o PDF (original) -->
+          <!-- Anexar PDF original -->
           <div class="form-group">
             <label for="pdfFile">Anexar PDF (original):</label>
             <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" required />
@@ -156,7 +151,7 @@
         </form>
       </div>
 
-      <!-- LISTA DAS ALTERAÇÕES RECENTES -->
+      <!-- Lista de alterações recentes -->
       <div id="recentChangesContainer">
         <h3>Alterações Recentes</h3>
         <table>
@@ -169,102 +164,89 @@
             </tr>
           </thead>
           <tbody id="recentChangesBody">
-            <!-- Aqui entram as linhas com as alterações recentes -->
+            <!-- Linhas de histórico -->
           </tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- Biblioteca PDF-Lib via CDN -->
+  <!-- PDF-Lib via CDN -->
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 
   <script>
     /*
-      ======================================================================================
-       1) Ao clicar em "Converter":
-          - Lê o PDF (input file).
-          - Se "Disney", sobrepõe as imagens (Tarja + Logofundo) via PDF-Lib nas coordenadas informadas.
-          - Envia o PDF resultante a "upload_voucher.php" em magictraveltur.com.
-       2) "upload_voucher.php" salva em 'voucher_log' (file_path, category, etc).
-       3) Chamamos "list_vouchers.php" para exibir as últimas alterações na tabela.
-      ======================================================================================
+      -----------------------------------------------------------------------------------
+      1) Se "Disney", carrega o PDF, insere as imagens Tarja + Logofundo usando 'left' e 'top'
+         e converte para o sistema do PDF (origin bottom-left).
+      2) Envia o PDF final a 'upload_voucher.php' em magictraveltur.com.
+      3) Chamamos 'list_vouchers.php' para exibir últimos registros na tabela.
+      -----------------------------------------------------------------------------------
     */
 
-    // Ajuste para o local real dos seus scripts no HostGator
+    // URLs do backend
     const UPLOAD_URL = "https://magictraveltur.com/upload_voucher.php";
     const LIST_URL   = "https://magictraveltur.com/list_vouchers.php";
 
-    // JSON do "Disney" com as coordenadas desejadas:
+    // Config "Disney" usando top/left
+    // Exemplo: left = 66, top = 47 => 66 pts da borda esquerda, 47 pts do topo
     const disneyVoucherConfig = {
-      "url": "nao tem URL",
-      "async": false,
-      "encrypt": false,
-      "inline": true,
       "annotations": [],
       "images": [
         {
           "url": "https://business.magictraveltur.com/image/Tarja.png",
-          "x": 56.32,
-          "y": 55.07,
-          "width": 178.74,
-          "height": 41.61,
+          "left": 66,    // Distância da esquerda
+          "top": 47,     // Distância do topo
+          "width": 171,
+          "height": 47,
           "pages": "0",
           "keepAspectRatio": true
         },
         {
           "url": "https://business.magictraveltur.com/image/Logofundo.png",
-          "x": 173,
-          "y": 24,
-          "width": 364,
-          "height": 34,
+          "left": 178,
+          "top": 31,
+          "width": 350,
+          "height": 26,
           "pages": "0",
           "keepAspectRatio": true
         }
-      ],
-      "fields": []
+      ]
     };
 
     // Referências
-    const voucherTypeSelect   = document.getElementById('voucherType');
-    const pdfFileInput        = document.getElementById('pdfFile');
-    const convertButton       = document.getElementById('convertButton');
-    const recentChangesBody   = document.getElementById('recentChangesBody');
+    const voucherTypeSelect  = document.getElementById('voucherType');
+    const pdfFileInput       = document.getElementById('pdfFile');
+    const convertButton      = document.getElementById('convertButton');
+    const recentChangesBody  = document.getElementById('recentChangesBody');
 
-    // Ao carregar a página, buscar lista de vouchers do BD
+    // Ao carregar, obter lista de vouchers
     window.addEventListener('DOMContentLoaded', () => {
       loadRecentChanges();
     });
 
-    // -------------------------------------------------------------------------
-    // FUNÇÃO para buscar e renderizar as últimas alterações
-    // -------------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // 1) Carrega e exibe últimos vouchers
+    // ---------------------------------------------------------------------
     async function loadRecentChanges() {
       try {
         const response = await fetch(LIST_URL);
         if (!response.ok) {
-          throw new Error("Erro ao buscar lista de vouchers");
+          throw new Error("Falha ao listar vouchers");
         }
         const data = await response.json(); 
-        // data = [ {id, category, file_path, created_at, downloadURL}, ... ]
+        // Exemplo: [ {id, category, file_path, created_at, downloadURL}, ... ]
 
-        // Exibir só os 10 últimos (ou tudo, se preferir)
-        const maxItems = 10;
-        const lastItems = data.slice(-maxItems);
-
+        // Exibir só 10 últimos se quiser
+        const lastItems = data.slice(-10);
         renderRecentChanges(lastItems);
-
       } catch (error) {
-        console.error("Erro loadRecentChanges():", error);
+        console.error("Erro ao carregar alterações:", error);
       }
     }
 
-    // -------------------------------------------------------------------------
-    // FUNÇÃO para renderizar a tabela
-    // -------------------------------------------------------------------------
     function renderRecentChanges(records) {
-      recentChangesBody.innerHTML = '';
-
+      recentChangesBody.innerHTML = "";
       records.forEach(item => {
         const row = document.createElement('tr');
 
@@ -277,9 +259,8 @@
         dateTd.textContent     = item.created_at;
         categoryTd.textContent = item.category;
 
-        // Link de download
         const link = document.createElement('a');
-        link.href = item.downloadURL;  // ex: https://magictraveltur.com/uploads/voucher_....
+        link.href = item.downloadURL;
         link.textContent = "Download";
         link.classList.add('download-link');
         link.setAttribute('target', '_blank');
@@ -296,21 +277,21 @@
       });
     }
 
-    // -------------------------------------------------------------------------
-    // LEITURA DE ARQUIVO (File -> ArrayBuffer)
-    // -------------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // 2) Leitura de arquivo (input File -> ArrayBuffer)
+    // ---------------------------------------------------------------------
     function fileToArrayBuffer(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = evt => resolve(evt.target.result);
-        reader.onerror = err => reject(err);
+        reader.onload = e => resolve(e.target.result);
+        reader.onerror = e => reject(e);
         reader.readAsArrayBuffer(file);
       });
     }
 
-    // -------------------------------------------------------------------------
-    // BAIXAR IMAGEM (URL) -> ArrayBuffer
-    // -------------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // 3) Baixar imagem (URL) -> ArrayBuffer
+    // ---------------------------------------------------------------------
     async function fetchImageAsBytes(url) {
       const resp = await fetch(url);
       if (!resp.ok) {
@@ -319,26 +300,19 @@
       return await resp.arrayBuffer();
     }
 
-    // -------------------------------------------------------------------------
-    // MERGE PDF COM AS IMAGENS DISNEY (PDF-Lib)
-    // -------------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // 4) Merge PDF (Disney) usando 'top' e 'left'
+    // ---------------------------------------------------------------------
     async function mergePDFWithDisney(originalPdfBytes) {
       // Carrega o PDF
       const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
-
-      // (Opcional) LOGAR dimensões da página para facilitar debug
-      const pageCount = pdfDoc.getPageCount();
-      console.log("Quantidade de páginas no PDF:", pageCount);
-
-      // Se for alterar várias páginas, pode iterar. Aqui, supomos 'pages': "0".
-      const page0 = pdfDoc.getPage(0);
-      const { width, height } = page0.getSize();
-      console.log("Dimensões da página 0:", width, height);
+      const totalPages = pdfDoc.getPageCount();
 
       for (const imgCfg of disneyVoucherConfig.images) {
+        // Baixa a imagem
         const imgBytes = await fetchImageAsBytes(imgCfg.url);
 
-        // Tenta PNG, senão JPG
+        // Tenta incorporar PNG; se falhar, JPG
         let embeddedImg;
         try {
           embeddedImg = await pdfDoc.embedPng(imgBytes);
@@ -346,40 +320,46 @@
           embeddedImg = await pdfDoc.embedJpg(imgBytes);
         }
 
+        // Página
         const pageIndex = parseInt(imgCfg.pages, 10) || 0;
-        if (pageIndex < 0 || pageIndex >= pageCount) {
-          console.warn("Página inválida:", pageIndex);
-          continue;
-        }
-
+        if (pageIndex < 0 || pageIndex >= totalPages) continue;
         const page = pdfDoc.getPage(pageIndex);
 
-        const x = imgCfg.x || 0;
-        const y = imgCfg.y || 0;
-        const w = imgCfg.width || embeddedImg.width;
-        const h = imgCfg.height || embeddedImg.height;
+        // Dimensões da página
+        const { width: pageWidth, height: pageHeight } = page.getSize();
 
-        // Desenha a imagem no PDF
+        // Pega 'left' e 'top' do JSON
+        const left = imgCfg.left || 0;
+        const top  = imgCfg.top  || 0;
+
+        // Se a imagem tem "height" definido no JSON, use esse valor
+        const itemWidth  = imgCfg.width  || embeddedImg.width;
+        const itemHeight = imgCfg.height || embeddedImg.height;
+
+        // Converte top => y (no PDF, (0,0) é canto inferior esquerdo)
+        // Se top=0 => parte de cima => pageHeight - itemHeight
+        // Geralmente: y = pageHeight - top - itemHeight
+        const yPDF = pageHeight - top - itemHeight;
+        const xPDF = left; // left é igual a x se definimos origin à esquerda
+
+        // Desenha a imagem
         page.drawImage(embeddedImg, {
-          x: x,
-          y: y,
-          width: w,
-          height: h
+          x: xPDF,
+          y: yPDF,
+          width: itemWidth,
+          height: itemHeight
         });
       }
 
-      // Gera o PDF final
-      return await pdfDoc.save(); // Uint8Array
+      return await pdfDoc.save(); // Uint8Array final
     }
 
-    // -------------------------------------------------------------------------
-    // FUNÇÃO para subir o PDF final ao servidor
-    // -------------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // 5) Envia PDF final ao servidor
+    // ---------------------------------------------------------------------
     async function uploadFinalPDF(pdfBytes, category) {
       const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const formData = new FormData();
-
-      // O "upload_voucher.php" espera "pdfFile" e "voucherType"
       formData.append("pdfFile", blob, "VoucherEditado.pdf");
       formData.append("voucherType", category);
 
@@ -387,10 +367,9 @@
         method: "POST",
         body: formData
       });
-
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || "Falha no upload_voucher.php");
+        const errData = await response.json().catch(() => ({}));
+        throw new Error(errData.error || "Falha no upload_voucher.php");
       }
 
       const result = await response.json();
@@ -398,49 +377,46 @@
         throw new Error(result.error || "Falha ao salvar PDF no servidor");
       }
 
-      // Ex: result.downloadURL
-      return result;
+      return result; // { success:true, downloadURL:..., ... }
     }
 
-    // -------------------------------------------------------------------------
-    // EVENTO "CLICK" NO BOTÃO "Converter"
-    // -------------------------------------------------------------------------
+    // ---------------------------------------------------------------------
+    // 6) "Converter" => faz merge e upload
+    // ---------------------------------------------------------------------
     convertButton.addEventListener('click', async () => {
       const selectedCategory = voucherTypeSelect.value;
       const file = pdfFileInput.files[0];
 
       if (!selectedCategory) {
-        alert("Por favor, selecione uma categoria de voucher.");
+        alert("Selecione uma categoria de voucher!");
         return;
       }
       if (!file) {
-        alert("Por favor, selecione um PDF original.");
+        alert("Selecione um arquivo PDF!");
         return;
       }
 
       try {
-        // 1) Ler PDF original
+        // Ler PDF original
         const originalPdfBytes = await fileToArrayBuffer(file);
 
-        let finalPdfBytes = originalPdfBytes; // por padrão, sem edição
-        // 2) Se for "Disney", aplicamos as imagens do config
+        let finalPdfBytes = originalPdfBytes; // se não for "Disney", fica como está
         if (selectedCategory === "Disney") {
+          // Aplica imagens Tarja/Logofundo
           finalPdfBytes = await mergePDFWithDisney(originalPdfBytes);
         }
-        // Se quiser, poderia ter configs para "Universal", etc.
 
-        // 3) Envia PDF resultante ao servidor (upload_voucher.php)
+        // Envia PDF resultante ao servidor
         const result = await uploadFinalPDF(finalPdfBytes, selectedCategory);
 
-        // 4) Feedback ao usuário
         alert("PDF salvo com sucesso! Categoria: " + selectedCategory);
 
-        // 5) Atualizar lista de vouchers
+        // Atualiza lista
         loadRecentChanges();
 
       } catch (error) {
         console.error(error);
-        alert("Erro na conversão ou upload: " + error.message);
+        alert("Erro ao converter ou enviar PDF: " + error.message);
       }
     });
   </script>
