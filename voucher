@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Página de Voucher</title>
+  <style>
+    /* 
+      ==============================
+      CSS PARA A PÁGINA DE VOUCHER
+      ==============================
+    */
+    #voucher-page-container {
+      display: flex;
+      flex-direction: row;
+      font-family: Arial, sans-serif;
+    }
+
+    /* SIDEBAR */
+    #sidebar-container {
+      width: 250px;
+      min-height: 100vh;
+      border-right: 1px solid #ccc;
+    }
+
+    #sidebar-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* CONTEÚDO PRINCIPAL */
+    #main-content {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .voucher-form-container {
+      max-width: 600px;
+      margin: 0 auto 40px auto;
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 5px;
+    }
+
+    .voucher-form-container h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .form-group select,
+    .form-group input[type="file"] {
+      width: 100%;
+      padding: 8px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    #convertButton {
+      display: inline-block;
+      background-color: #007bff;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    #convertButton:hover {
+      background-color: #0056b3;
+    }
+
+    /* LISTA DE ALTERAÇÕES RECENTES */
+    #recentChangesContainer {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    #recentChangesContainer h3 {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    table thead tr {
+      background-color: #007bff;
+      color: #fff;
+    }
+
+    table th, table td {
+      text-align: left;
+      padding: 8px;
+      border: 1px solid #ccc;
+    }
+
+    table tbody tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+
+    .download-link {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .download-link:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div id="voucher-page-container">
+    <!-- 
+      =================================================
+      CONTAINER DO SIDEBAR - IMPORTANDO O ARQUIVO EXTERNO
+      =================================================
+    -->
+    <div id="sidebar-container">
+      <!-- 
+        Aqui estamos usando um iframe para "importar" o sidebar.html
+        Caso seu ambiente permita uso de fetch ou Ajax, você poderia
+        injetar dinamicamente, mas via iframe é mais simples e direto.
+      -->
+      <iframe src="sidebar.html" id="sidebar-frame"></iframe>
+    </div>
+
+    <!-- 
+      =============================
+      CONTEÚDO PRINCIPAL DA PÁGINA
+      =============================
+    -->
+    <div id="main-content">
+      <div class="voucher-form-container">
+        <h2>Voucher</h2>
+        <form id="voucherForm">
+          <!-- Selecionar qual voucher -->
+          <div class="form-group">
+            <label for="voucherType">Selecione qual voucher deseja editar:</label>
+            <select id="voucherType" name="voucherType" required>
+              <option value="">-- Selecione --</option>
+              <option value="Disney">Disney</option>
+              <option value="Universal">Universal</option>
+              <option value="SeaWorld">SeaWorld</option>
+              <option value="Hospedagem">Hospedagem</option>
+            </select>
+          </div>
+
+          <!-- Anexar o PDF -->
+          <div class="form-group">
+            <label for="pdfFile">Anexar PDF:</label>
+            <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" required />
+          </div>
+
+          <!-- Botão de Converter -->
+          <button type="button" id="convertButton">Converter</button>
+        </form>
+      </div>
+
+      <!-- Lista das alterações recentes -->
+      <div id="recentChangesContainer">
+        <h3>Alterações Recentes</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Data/Hora</th>
+              <th>Categoria</th>
+              <th>Download</th>
+            </tr>
+          </thead>
+          <tbody id="recentChangesBody">
+            <!-- Aqui entram as linhas com as alterações recentes -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /*
+      ======================================================================================
+      CÓDIGO JS COMPLETO PARA A FUNCIONALIDADE DE CONVERSÃO E LISTA DE ALTERAÇÕES RECENTES
+      ======================================================================================
+    */
+
+    // Exemplo de objeto JSON para o voucher Disney fornecido na descrição
+    // (Podemos usar isso futuramente para gerar o voucher final ou armazenar no servidor.)
+    const disneyVoucherConfig = {
+      "url": "nao tem URL",
+      "async": false,
+      "encrypt": false,
+      "inline": true,
+      "annotations": [],
+      "images": [
+        {
+          "url": "https://drive.google.com/file/d/17Hky5mKw9IbCtOm57ZPjKLB-a2yxzVv6/view?usp=sharing",
+          "x": 178,
+          "y": 31,
+          "width": 350,
+          "height": 26,
+          "pages": "0",
+          "keepAspectRatio": true
+        },
+        {
+          "url": "https://drive.google.com/file/d/1eWUvk94Hr6nKMShzdzDpCQVDdiO0AfQc/view?usp=sharing",
+          "x": 66,
+          "y": 47,
+          "width": 171,
+          "height": 47,
+          "pages": "0",
+          "keepAspectRatio": true
+        }
+      ],
+      "fields": []
+    };
+
+    // Você poderia ter um objeto contendo as configurações dos outros vouchers, por exemplo:
+    const voucherConfigs = {
+      "Disney": disneyVoucherConfig,
+      "Universal": {},   // quando quiser, pode preencher
+      "SeaWorld": {},    // quando quiser, pode preencher
+      "Hospedagem": {}   // quando quiser, pode preencher
+    };
+
+    // Array para armazenar as alterações recentes
+    let recentChanges = [];
+
+    // Referências aos elementos
+    const voucherForm = document.getElementById('voucherForm');
+    const voucherTypeSelect = document.getElementById('voucherType');
+    const pdfFileInput = document.getElementById('pdfFile');
+    const convertButton = document.getElementById('convertButton');
+    const recentChangesBody = document.getElementById('recentChangesBody');
+
+    // Função para renderizar as alterações recentes na tabela
+    function renderRecentChanges() {
+      // Limpa o conteúdo atual
+      recentChangesBody.innerHTML = '';
+
+      // Exibe no máximo 10 itens (os mais recentes ficam por último)
+      const maxItems = 10;
+      // Caso queira exibir do mais recente para o mais antigo, podemos fazer um slice
+      const itemsToDisplay = recentChanges.slice(-maxItems);
+
+      itemsToDisplay.forEach(item => {
+        const row = document.createElement('tr');
+
+        const dateTd = document.createElement('td');
+        const categoryTd = document.createElement('td');
+        const downloadTd = document.createElement('td');
+
+        dateTd.textContent = item.dateTime;
+        categoryTd.textContent = item.category;
+
+        // Link de download fictício
+        const downloadLink = document.createElement('a');
+        downloadLink.href = item.downloadURL;   // URL gerada pelo "converter"
+        downloadLink.textContent = 'Download';
+        downloadLink.classList.add('download-link');
+        downloadLink.setAttribute('download', 'VoucherEditado.pdf'); 
+        // 'download' => sugere ao browser o nome do arquivo na hora de salvar
+
+        downloadTd.appendChild(downloadLink);
+
+        row.appendChild(dateTd);
+        row.appendChild(categoryTd);
+        row.appendChild(downloadTd);
+
+        recentChangesBody.appendChild(row);
+      });
+    }
+
+    // Função simulada para converter o PDF
+    // Aqui você poderia enviar via AJAX para o servidor, que processaria e devolveria o PDF editado.
+    function simulateConversion(category, file) {
+      return new Promise((resolve) => {
+        // Simula um tempo de processamento
+        setTimeout(() => {
+          // Gera uma URL fictícia para "download" do PDF
+          // Em produção você receberia um link real do backend.
+          const dummyDownloadURL = URL.createObjectURL(new Blob(["PDF editado para " + category], { type: "application/pdf" }));
+          resolve(dummyDownloadURL);
+        }, 2000); // 2 segundos
+      });
+    }
+
+    // Evento de clique no botão "Converter"
+    convertButton.addEventListener('click', async () => {
+      const selectedCategory = voucherTypeSelect.value;
+      const pdfFile = pdfFileInput.files[0];
+
+      if (!selectedCategory) {
+        alert('Por favor, selecione uma categoria de voucher.');
+        return;
+      }
+
+      if (!pdfFile) {
+        alert('Por favor, anexe um arquivo PDF.');
+        return;
+      }
+
+      // Aqui podemos usar a configuração do voucher, se necessário
+      const currentVoucherConfig = voucherConfigs[selectedCategory] || {};
+
+      // Exemplo: Impressão no console para teste
+      console.log("Configuração do voucher selecionado:", currentVoucherConfig);
+
+      // Simula conversão do arquivo PDF (chamada assíncrona)
+      try {
+        const downloadURL = await simulateConversion(selectedCategory, pdfFile);
+        
+        // Quando a conversão termina, adicionamos ao array de alterações recentes
+        const now = new Date();
+        const formattedDateTime = now.toLocaleString('pt-BR'); // ex: 23/02/2025 10:30:00
+
+        recentChanges.push({
+          dateTime: formattedDateTime,
+          category: selectedCategory,
+          downloadURL: downloadURL
+        });
+
+        // Renderiza novamente a tabela
+        renderRecentChanges();
+
+        // Feedback para o usuário
+        alert(`O PDF foi convertido com sucesso! Voucher: ${selectedCategory}`);
+        // Em produção, você poderia redirecionar o usuário para o link ou algo similar.
+
+      } catch (error) {
+        console.error('Erro na conversão:', error);
+        alert('Ocorreu um erro ao converter o PDF.');
+      }
+    });
+
+    // Renderiza inicial (caso haja registros pré-existentes)
+    renderRecentChanges();
+  </script>
+</body>
+</html>
