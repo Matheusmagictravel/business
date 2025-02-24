@@ -1,327 +1,511 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Magic Travel - Sidebar Apple-Like</title>
+  <meta charset="UTF-8" />
+  <title>Magic Travel - Navbar com Links e Active</title>
 
-  <!-- Fonte minimalista (San Francisco-like) -->
-  <!-- Você pode usar a SF UI Text (exclusiva da Apple) ou uma substituta como 'Inter' ou 'Nunito' -->
+  <!-- Ícones (Font Awesome 5.15.3) -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap"
     rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
   />
 
   <style>
-    /* RESET BÁSICO */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    :root {
+      /* Ajuste as variáveis de cor conforme desejar */
+      --background: #9c88ff;             /* Fundo do body */
+      --navbar-width: 256px;            /* Largura normal do menu */
+      --navbar-width-min: 80px;         /* Largura colapsada */
+      --navbar-dark-primary: #18283b;   /* Fundo principal do menu */
+      --navbar-dark-secondary: #2c3e50; /* Fundo secundário */
+      --navbar-light-primary: #f5f6fa;  /* Texto claro */
+      --navbar-light-secondary: #8392a5;/* Texto cinza claro */
     }
 
-    /* CORPO */
-    body {
+    html, body {
+      margin: 0;
+      background: var(--background);
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      overflow: hidden; /* Evita barra de rolagem caso o menu extrapole */
+    }
+
+    /* O #nav-toggle colapsa o menu ao ser marcado */
+    #nav-toggle:checked ~ #nav-header {
+      width: calc(var(--navbar-width-min) - 16px);
+    }
+    #nav-toggle:checked ~ #nav-content,
+    #nav-toggle:checked ~ #nav-footer {
+      width: var(--navbar-width-min);
+    }
+    #nav-toggle:checked ~ #nav-header #nav-title {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.1s;
+    }
+    #nav-toggle:checked ~ #nav-header label[for="nav-toggle"] {
+      left: calc(50% - 8px);
+      transform: translate(-50%);
+    }
+    #nav-toggle:checked ~ #nav-header #nav-toggle-burger {
+      background: var(--navbar-light-primary);
+    }
+    #nav-toggle:checked
+      ~ #nav-header
+      #nav-toggle-burger:before,
+    #nav-toggle:checked
+      ~ #nav-header
+      #nav-toggle-burger::after {
+      width: 16px;
+      background: var(--navbar-light-secondary);
+      transform: translate(0, 0) rotate(0deg);
+    }
+    #nav-toggle:checked ~ #nav-content .nav-button span {
+      opacity: 0;
+      transition: opacity 0.1s;
+    }
+    #nav-toggle:checked ~ #nav-content .nav-button .fas {
+      min-width: calc(100% - 16px);
+    }
+    #nav-toggle:checked ~ #nav-footer #nav-footer-avatar {
+      margin-left: 0;
+      left: 50%;
+      transform: translate(-50%);
+    }
+    #nav-toggle:checked ~ #nav-footer #nav-footer-titlebox,
+    #nav-toggle:checked ~ #nav-footer label[for="nav-footer-toggle"] {
+      opacity: 0;
+      transition: opacity 0.1s;
+      pointer-events: none;
+    }
+
+    /* NAV-BAR CONTAINER */
+    #nav-bar {
+      position: absolute;
+      left: 1vw;
+      top: 1vw;
+      height: calc(100% - 2vw);
+      background: var(--navbar-dark-primary);
+      border-radius: 16px;
       display: flex;
-      height: 100vh;
-      font-family: 'Inter', sans-serif;
-      background-color: #f5f5f7; /* Fundo clean, no estilo Apple */
-      color: #333;
+      flex-direction: column;
+      color: var(--navbar-light-primary);
       overflow: hidden;
+      user-select: none; /* Evita seleção de texto arrastando */
+    }
+    #nav-bar hr {
+      margin: 0;
+      position: relative;
+      left: 16px;
+      width: calc(100% - 32px);
+      border: none;
+      border-top: solid 1px var(--navbar-dark-secondary);
+    }
+    #nav-bar a {
+      color: inherit;
+      text-decoration: inherit;
+    }
+    #nav-bar input[type="checkbox"] {
+      display: none;
     }
 
-    /* CONTAINER PRINCIPAL (engloba sidebar e conteúdo) */
-    .container {
-      display: flex;
-      flex: 1;
-    }
-
-    /* SIDEBAR ESTILO APPLE-LIKE */
-    .sidebar {
-      width: 220px;
-      background-color: #fff; /* Lado esquerdo branco, clean */
-      border-right: 1px solid #dadada; /* Linha sutil de separação */
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      transition: width 0.2s ease;
-    }
-    /* Se quiser colapsar em mobile, pode esconder com media queries. Exemplos adiante. */
-
-    /* LOGO & BRANDING */
-    .sidebar-brand {
+    /* HEADER (TOPO) */
+    #nav-header {
+      position: relative;
+      width: var(--navbar-width);
+      left: 16px;
+      width: calc(var(--navbar-width) - 16px);
+      min-height: 80px;
+      background: var(--navbar-dark-primary);
+      border-radius: 16px;
+      z-index: 2;
       display: flex;
       align-items: center;
-      padding: 1rem;
-      border-bottom: 1px solid #dadada;
+      transition: width 0.2s;
     }
-    .sidebar-brand img {
-      height: 24px; /* Logo menor, estilo Apple */
-      margin-right: 0.5rem; /* Pequeno espaçamento */
+    #nav-header hr {
+      position: absolute;
+      bottom: 0;
     }
-    .sidebar-brand h1 {
-      font-size: 12px;
-      font-weight: 500;
-      color: #333;
-      margin: 0;
+    #nav-title {
+      font-size: 1.4rem;
+      transition: opacity 1s;
     }
-
-    /* LISTA DE NAVEGAÇÃO */
-    .sidebar-nav {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* TÍTULO DE SESSÃO (DADOS, FERRAMENTES...) */
-    .sidebar-header {
-      font-size: 11px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: #999;
-      margin-top: 1rem;
-      margin-bottom: 0.25rem;
-      padding-left: 1rem;
-    }
-
-    /* ITEM DE MENU */
-    .sidebar-item {
-      /* Mantemos em branco */
-    }
-
-    /* LINK DO MENU */
-    .sidebar-link {
+    label[for="nav-toggle"] {
+      position: absolute;
+      right: 0;
+      width: 3rem;
+      height: 100%;
       display: flex;
       align-items: center;
-      font-size: 12px;  /* Texto pequeno */
-      color: #555;
-      text-decoration: none;
-      padding: 0.45rem 1rem;
-      transition: background 0.15s ease;
+      justify-content: center;
+      cursor: pointer;
     }
-    .sidebar-link:hover {
-      background-color: #f2f2f2; /* Hover suave */
+    /* Botão hamburguer */
+    #nav-toggle-burger {
+      position: relative;
+      width: 16px;
+      height: 2px;
+      background: var(--navbar-dark-primary);
+      border-radius: 99px;
+      transition: background 0.2s;
+    }
+    #nav-toggle-burger:before,
+    #nav-toggle-burger:after {
+      content: "";
+      position: absolute;
+      top: -6px;
+      width: 10px;
+      height: 2px;
+      background: var(--navbar-light-primary);
+      border-radius: 99px;
+      transform: translate(2px, 8px) rotate(30deg);
+      transition: 0.2s;
+    }
+    #nav-toggle-burger:after {
+      top: 6px;
+      transform: translate(2px, -8px) rotate(-30deg);
     }
 
-    /* ÍCONE FEATHER MENOR */
-    .sidebar-link i {
-      width: 12px;
-      height: 12px;
-      stroke-width: 2;
-      margin-right: 2rem;
-      color: #777;
-      flex-shrink: 0;
-    }
-
-    /* ITEM ATIVO */
-    .sidebar-item.active > .sidebar-link {
-      background-color: #e2e2e6; /* Destaque sutil */
-      color: #111;
-    }
-    .sidebar-item.active > .sidebar-link i {
-      color: #111;
-    }
-
-    /* CONTEÚDO PRINCIPAL */
-    .main-content {
+    /* CONTEÚDO (itens do menu) */
+    #nav-content {
+      margin: -16px 0;
+      padding: 16px 0;
+      position: relative;
       flex: 1;
-      background-color: #f5f5f7;
-      padding: 2rem;
-      overflow-y: auto;
+      width: var(--navbar-width);
+      background: var(--navbar-dark-primary);
+      box-shadow: 0 0 0 16px var(--navbar-dark-primary);
+      direction: rtl; /* "truque" para o highlight se mover no :hover */
+      overflow-x: hidden;
+      transition: width 0.2s;
     }
-    .main-content h1 {
-      font-size: 1.25rem;
-      margin-bottom: 0.5rem;
+    #nav-content::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
     }
-
-    /* SCROLLBARS SUAVES (Opcional) */
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #f5f5f7;
-    }
-    ::-webkit-scrollbar-thumb {
-      background-color: #ccc;
-      border-radius: 3px;
+    #nav-content::-webkit-scrollbar-thumb {
+      border-radius: 99px;
+      background-color: #d62929;
     }
 
-    /* RESPONSIVIDADE BÁSICA */
-    @media (max-width: 768px) {
-      .sidebar {
-        width: 60px; /* Sidebar bem colapsada no mobile, por exemplo */
-      }
-      .sidebar-brand {
-        justify-content: center; /* Oculta texto do brand, se quiser */
-      }
-      .sidebar-brand h1 {
-        display: none; /* Some o texto do logo no mobile */
-      }
-      .sidebar-header {
-        display: none;
-      }
-      .sidebar-link {
-        justify-content: center; /* Centraliza ícones */
-        padding: 0.6rem 0;
-      }
-      .sidebar-link span {
-        display: none; /* Some o texto dos links no mobile */
-      }
+    /* BLOCO DE DESTAQUE QUE SE MOVE AO HOVER */
+    #nav-content-highlight {
+      position: absolute;
+      left: 16px;
+      top: -70px;
+      width: calc(100% - 16px);
+      height: 54px;
+      background: var(--background);
+      background-attachment: fixed;
+      border-radius: 16px 0 0 16px;
+      transition: top 0.2s;
+      z-index: 0;
+    }
+    #nav-content-highlight:before,
+    #nav-content-highlight:after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: 100%;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      box-shadow: 16px 16px var(--background);
+    }
+    #nav-content-highlight:after {
+      top: 100%;
+      box-shadow: 16px -16px var(--background);
+    }
+
+    /*
+      Cada item do menu é .nav-button.
+      AGORA SÃO <a> COM LINKS DE VERDADE.
+    */
+    .nav-button {
+      position: relative;
+      margin-left: 16px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      color: var(--navbar-light-secondary);
+      direction: ltr; /* retorna normal */
+      cursor: pointer;
+      z-index: 1;
+      transition: color 0.2s;
+    }
+    .nav-button span {
+      transition: opacity 1s;
+    }
+    .nav-button .fas {
+      transition: min-width 0.2s;
+      min-width: 3rem;
+      text-align: center;
+    }
+
+    /*
+      Hover => movemos #nav-content-highlight via nth-of-type
+      Precisamos contar 1,2,3,... sem quebrar nos <hr>.
+      Então a contagem ignora <hr>. Ajustar se inserir/remover itens.
+    */
+    .nav-button:nth-of-type(1):hover ~ #nav-content-highlight {
+      top: 16px;
+    }
+    .nav-button:nth-of-type(2):hover ~ #nav-content-highlight {
+      top: 70px;
+    }
+    .nav-button:nth-of-type(3):hover ~ #nav-content-highlight {
+      top: 124px;
+    }
+    .nav-button:nth-of-type(4):hover ~ #nav-content-highlight {
+      top: 178px;
+    }
+    .nav-button:nth-of-type(5):hover ~ #nav-content-highlight {
+      top: 232px;
+    }
+    .nav-button:nth-of-type(6):hover ~ #nav-content-highlight {
+      top: 286px;
+    }
+    .nav-button:nth-of-type(7):hover ~ #nav-content-highlight {
+      top: 340px;
+    }
+    .nav-button:nth-of-type(8):hover ~ #nav-content-highlight {
+      top: 394px;
+    }
+    .nav-button:nth-of-type(9):hover ~ #nav-content-highlight {
+      top: 448px;
+    }
+    .nav-button:nth-of-type(10):hover ~ #nav-content-highlight {
+      top: 502px;
+    }
+    .nav-button:nth-of-type(11):hover ~ #nav-content-highlight {
+      top: 556px;
+    }
+    .nav-button:nth-of-type(12):hover ~ #nav-content-highlight {
+      top: 610px;
+    }
+
+    /* ESTADO "ACTIVE" (quando a URL atual bate com o link) */
+    /* Faremos no JS => .active */
+    .nav-button.active {
+      color: var(--navbar-light-primary) !important; /* cor do texto */
+      background-color: #34495e; /* leve destaque */
+    }
+
+    /* FOOTER DO MENU (Expansível via #nav-footer-toggle) */
+    #nav-footer {
+      position: relative;
+      width: var(--navbar-width);
+      height: 54px;
+      background: var(--navbar-dark-secondary);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      z-index: 2;
+      transition: width 0.2s, height 0.2s;
+    }
+    #nav-footer-heading {
+      position: relative;
+      width: 100%;
+      height: 54px;
+      display: flex;
+      align-items: center;
+    }
+    #nav-footer-avatar {
+      position: relative;
+      margin: 11px 0 11px 16px;
+      left: 0;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      overflow: hidden;
+      transform: translate(0);
+      transition: 0.2s;
+    }
+    #nav-footer-avatar img {
+      height: 100%;
+    }
+    #nav-footer-titlebox {
+      position: relative;
+      margin-left: 16px;
+      width: 10px;
+      display: flex;
+      flex-direction: column;
+      transition: opacity 1s;
+    }
+    #nav-footer-subtitle {
+      color: var(--navbar-light-secondary);
+      font-size: 0.6rem;
+    }
+    #nav-footer-toggle:checked + #nav-footer {
+      height: 30%;
+      min-height: 54px;
+    }
+    #nav-footer-toggle:checked + #nav-footer label[for="nav-footer-toggle"] {
+      transform: rotate(180deg);
+    }
+    label[for="nav-footer-toggle"] {
+      position: absolute;
+      right: 0;
+      width: 3rem;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s;
+    }
+    #nav-footer-content {
+      margin: 0 16px 16px 16px;
+      border-top: solid 1px var(--navbar-light-secondary);
+      padding: 16px 0;
+      color: var(--navbar-light-secondary);
+      font-size: 0.8rem;
+      overflow: auto;
+    }
+    #nav-footer-content::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    #nav-footer-content::-webkit-scrollbar-thumb {
+      border-radius: 99px;
+      background-color: #d62929;
     }
   </style>
-
-  <!-- Feather Icons -->
-  <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body>
-  <div class="container">
-    <!-- SIDEBAR -->
-    <nav class="sidebar" id="appleSidebar">
-      <!-- Branding -->
-      <div class="sidebar-brand">
-        <img 
-          src="https://www.magictraveltur.com/wp-content/uploads/2024/11/Escrita-_-Branco.png"
-          alt="Magic Travel"
-          style="filter: invert(0%); /* Se precisar para ficar escuro/claro */"
-        />
-        <h1>Magic Travel</h1>
-      </div>
 
-      <ul class="sidebar-nav">
-        <li class="sidebar-header">Dados</li>
+<!-- NAV-BAR -->
+<div id="nav-bar">
 
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="https://business.magictraveltur.com/">
-            <i data-feather="sliders"></i>
-            <span>Dashboard</span>
-          </a>
-        </li>
+  <!-- Checkbox para colapsar a barra -->
+  <input id="nav-toggle" type="checkbox" />
 
-        <li class="sidebar-item">
-          <a
-            class="sidebar-link"
-            href="https://business.magictraveltur.com/pages-orders.html"
-          >
-            <i data-feather="user"></i>
-            <span>Pedidos</span>
-          </a>
-        </li>
-
-        <li class="sidebar-item">
-          <a
-            class="sidebar-link"
-            href="https://business.magictraveltur.com/loti.html"
-          >
-            <i data-feather="bar-chart-2"></i>
-            <span>Cadastrar Venda</span>
-          </a>
-        </li>
-
-        <li class="sidebar-item">
-          <a
-            class="sidebar-link"
-            href="https://business.magictraveltur.com/finance.html"
-          >
-            <i data-feather="user-plus"></i>
-            <span>Financeiro</span>
-          </a>
-        </li>
-
-        <li class="sidebar-item">
-          <a
-            class="sidebar-link"
-            href="https://business.magictraveltur.com/ranking.html"
-          >
-            <i data-feather="book"></i>
-            <span>Ranking</span>
-          </a>
-        </li>
-
-        <li class="sidebar-header">Ferramentes</li>
-
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="https://business.magictraveltur.com/voucher">
-            <i data-feather="square"></i>
-            <span>Voucher</span>
-          </a>
-        </li>
-
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="ui-forms.html">
-            <i data-feather="check-square"></i>
-            <span>Forms</span>
-          </a>
-        </li>
-
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="ui-cards.html">
-            <i data-feather="grid"></i>
-            <span>Cards</span>
-          </a>
-        </li>
-
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="ui-typography.html">
-            <i data-feather="align-left"></i>
-            <span>Typography</span>
-          </a>
-        </li>
-
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="icons-feather.html">
-            <i data-feather="coffee"></i>
-            <span>Icons</span>
-          </a>
-        </li>
-
-        <li class="sidebar-header">Plugins &amp; Addons</li>
-
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="charts-chartjs.html">
-            <i data-feather="bar-chart-2"></i>
-            <span>Charts</span>
-          </a>
-        </li>
-
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="maps-google.html">
-            <i data-feather="map"></i>
-            <span>Maps</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-
+  <!-- HEADER DO NAV -->
+  <div id="nav-header">
+    <a id="nav-title" href="#" target="_blank">
+      Magic<i class="fab fa-codepen"></i>Travel
+    </a>
+    <label for="nav-toggle">
+      <span id="nav-toggle-burger"></span>
+    </label>
+    <hr />
   </div>
 
-  <script>
-    // Substituir os <i data-feather="..."> pelos SVGs
-    document.addEventListener("DOMContentLoaded", () => {
-      feather.replace();
+  <!-- CONTEÚDO (itens do menu). Substituímos <div class="nav-button"> por <a class="nav-button" href="..."> -->
+  <div id="nav-content">
 
-      // Lógica simples de "active" com base na URL
-      const currentUrl = window.location.href.replace(/\/$/, "");
-      let foundActive = false;
+    <a class="nav-button" href="https://business.magictraveltur.com/">
+      <i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
+    </a>
+    <a class="nav-button" href="https://business.magictraveltur.com/pages-orders.html">
+      <i class="fas fa-shopping-cart"></i><span>Pedidos</span>
+    </a>
+    <a class="nav-button" href="https://business.magictraveltur.com/loti.html">
+      <i class="fas fa-cash-register"></i><span>Cadastrar Venda</span>
+    </a>
+    <a class="nav-button" href="https://business.magictraveltur.com/finance.html">
+      <i class="fas fa-dollar-sign"></i><span>Financeiro</span>
+    </a>
+    <a class="nav-button" href="https://business.magictraveltur.com/ranking.html">
+      <i class="fas fa-medal"></i><span>Ranking</span>
+    </a>
 
-      document.querySelectorAll(".sidebar-item").forEach((item) => {
-        const link = item.querySelector(".sidebar-link");
-        if (link) {
-          const linkUrl = link.href.replace(/\/$/, "");
-          if (currentUrl === linkUrl || currentUrl.includes(linkUrl)) {
-            item.classList.add("active");
-            foundActive = true;
-          }
+    <hr />
+
+    <a class="nav-button" href="https://business.magictraveltur.com/voucher">
+      <i class="fas fa-ticket-alt"></i><span>Voucher</span>
+    </a>
+    <a class="nav-button" href="ui-forms.html">
+      <i class="fas fa-file-alt"></i><span>Forms</span>
+    </a>
+    <a class="nav-button" href="ui-cards.html">
+      <i class="fas fa-th-large"></i><span>Cards</span>
+    </a>
+    <a class="nav-button" href="ui-typography.html">
+      <i class="fas fa-font"></i><span>Typography</span>
+    </a>
+    <a class="nav-button" href="icons-feather.html">
+      <i class="fas fa-icons"></i><span>Icons</span>
+    </a>
+
+    <hr />
+
+    <a class="nav-button" href="charts-chartjs.html">
+      <i class="fas fa-chart-pie"></i><span>Charts</span>
+    </a>
+    <a class="nav-button" href="maps-google.html">
+      <i class="fas fa-map-marked-alt"></i><span>Maps</span>
+    </a>
+
+    <!-- Destaque que se move no hover -->
+    <div id="nav-content-highlight"></div>
+  </div>
+
+  <!-- Checkbox para expandir o footer -->
+  <input id="nav-footer-toggle" type="checkbox" />
+
+  <!-- RODAPÉ (avatar e info) -->
+  <div id="nav-footer">
+    <div id="nav-footer-heading">
+      <div id="nav-footer-avatar">
+        <img src="https://gravatar.com/avatar/4474ca42d303761c2901fa819c4f2547" />
+      </div>
+      <div id="nav-footer-titlebox">
+        <a id="nav-footer-title" href="#" target="_blank">Admin</a>
+        <span id="nav-footer-subtitle">Magic Travel</span>
+      </div>
+      <label for="nav-footer-toggle">
+        <i class="fas fa-caret-up"></i>
+      </label>
+    </div>
+    <div id="nav-footer-content">
+      Texto de perfil, biografia ou outras informações adicionais do usuário.
+      Esta área é rolável quando expandida.
+    </div>
+  </div>
+</div>
+
+<!-- SCRIPT: define "active" e posiciona highlight se tiver item ativo -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Captura a URL atual (remoção de parâmetros, #, barra final)
+    let currentUrl = window.location.href.split("?")[0].split("#")[0].replace(/\/$/, "");
+    console.log("URL atual =>", currentUrl);
+
+    // Seleciona todos os links
+    const links = document.querySelectorAll("#nav-content .nav-button");
+    // Precisamos da mesma lista para saber qual o nth-of-type do item ativo
+    let highlightPositions = [
+      16, 70, 124, 178, 232,  /* 1..5 */
+      286, 340, 394, 448, 502,/* 6..10 */
+      556, 610                 /* 11..12 */
+    ];
+
+    let highlight = document.getElementById("nav-content-highlight");
+    let foundActive = false;
+
+    links.forEach((link, index) => {
+      // Normaliza link.href
+      let linkUrl = link.href.split("?")[0].split("#")[0].replace(/\/$/, "");
+
+      // Se a URL atual "bate" ou "contém" -> .active
+      // Se quiser exato, use (currentUrl === linkUrl)
+      if (currentUrl.includes(linkUrl)) {
+        console.log("Ativando =>", linkUrl);
+        link.classList.add("active");
+        foundActive = true;
+
+        // Ajusta a posição do highlight para esse item
+        if (highlightPositions[index] !== undefined) {
+          highlight.style.top = highlightPositions[index] + "px";
         }
-      });
-
-      if (!foundActive) {
-        console.log("Nenhum item destacado. Ajuste a lógica de URL se necessário.");
       }
     });
-  </script>
+
+    if (!foundActive) {
+      console.warn("Nenhum link ativo. Ajuste a lógica de comparação se necessário.");
+    }
+  });
+</script>
+
 </body>
 </html>
