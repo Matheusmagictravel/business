@@ -2,13 +2,11 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Página de Voucher</title>
+  <title>Página de Voucher - Edição PDF (Disney)</title>
   <style>
-    /* 
-      ==============================
-      CSS PARA A PÁGINA DE VOUCHER
-      ==============================
-    */
+    /* ==============================
+       CSS PARA A PÁGINA DE VOUCHER
+       ============================== */
     #voucher-page-container {
       display: flex;
       flex-direction: row;
@@ -21,7 +19,6 @@
       min-height: 100vh;
       border-right: 1px solid #ccc;
     }
-
     #sidebar-frame {
       width: 100%;
       height: 100%;
@@ -42,23 +39,19 @@
       padding: 20px;
       border-radius: 5px;
     }
-
     .voucher-form-container h2 {
       margin-top: 0;
       margin-bottom: 20px;
       text-align: center;
     }
-
     .form-group {
       margin-bottom: 15px;
     }
-
     .form-group label {
       display: block;
       font-weight: bold;
       margin-bottom: 5px;
     }
-
     .form-group select,
     .form-group input[type="file"] {
       width: 100%;
@@ -78,7 +71,6 @@
       cursor: pointer;
       font-size: 16px;
     }
-
     #convertButton:hover {
       background-color: #0056b3;
     }
@@ -88,39 +80,33 @@
       max-width: 600px;
       margin: 0 auto;
     }
-
     #recentChangesContainer h3 {
       margin-bottom: 15px;
       text-align: center;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 20px;
     }
-
     table thead tr {
       background-color: #007bff;
       color: #fff;
     }
-
-    table th, table td {
+    table th,
+    table td {
       text-align: left;
       padding: 8px;
       border: 1px solid #ccc;
     }
-
     table tbody tr:nth-child(even) {
       background-color: #f2f2f2;
     }
-
     .download-link {
       color: #007bff;
       text-decoration: none;
       font-weight: bold;
     }
-
     .download-link:hover {
       text-decoration: underline;
     }
@@ -134,11 +120,6 @@
       =================================================
     -->
     <div id="sidebar-container">
-      <!-- 
-        Aqui estamos usando um iframe para "importar" o sidebar.html
-        Caso seu ambiente permita uso de fetch ou Ajax, você poderia
-        injetar dinamicamente, mas via iframe é mais simples e direto.
-      -->
       <iframe src="sidebar.html" id="sidebar-frame"></iframe>
     </div>
 
@@ -148,8 +129,9 @@
       =============================
     -->
     <div id="main-content">
+      <!-- FORMULÁRIO -->
       <div class="voucher-form-container">
-        <h2>Voucher</h2>
+        <h2>Voucher PDF - Edição Disney</h2>
         <form id="voucherForm">
           <!-- Selecionar qual voucher -->
           <div class="form-group">
@@ -163,9 +145,9 @@
             </select>
           </div>
 
-          <!-- Anexar o PDF -->
+          <!-- Anexar o PDF (original) -->
           <div class="form-group">
-            <label for="pdfFile">Anexar PDF:</label>
+            <label for="pdfFile">Anexar PDF (original):</label>
             <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" required />
           </div>
 
@@ -174,12 +156,13 @@
         </form>
       </div>
 
-      <!-- Lista das alterações recentes -->
+      <!-- LISTA DAS ALTERAÇÕES RECENTES -->
       <div id="recentChangesContainer">
         <h3>Alterações Recentes</h3>
         <table>
           <thead>
             <tr>
+              <th>ID</th>
               <th>Data/Hora</th>
               <th>Categoria</th>
               <th>Download</th>
@@ -193,15 +176,29 @@
     </div>
   </div>
 
+  <!-- Biblioteca PDF-Lib via CDN (para sobrepor imagens) -->
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+
   <script>
     /*
       ======================================================================================
-      CÓDIGO JS COMPLETO PARA A FUNCIONALIDADE DE CONVERSÃO E LISTA DE ALTERAÇÕES RECENTES
+       1) Ao clicar em "Converter", o front-end:
+          - Lê o PDF original (input file).
+          - Se "Disney", sobrepõe as imagens do JSON "disneyVoucherConfig" usando PDF-Lib.
+          - Gera o PDF final (Blob).
+          - Envia esse Blob para "upload_voucher.php" (como se fosse 'pdfFile'),
+            junto com a categoria (Disney, etc).
+       2) "upload_voucher.php" salva em 'voucher_log' (file_path, category, etc).
+       3) Chamamos "list_vouchers.php" para exibir as últimas alterações na tabela.
       ======================================================================================
     */
 
-    // Exemplo de objeto JSON para o voucher Disney fornecido na descrição
-    // (Podemos usar isso futuramente para gerar o voucher final ou armazenar no servidor.)
+    // URLs dos endpoints
+    // AJUSTE para o local real dos seus scripts no HostGator
+    const UPLOAD_URL = "https://business.magictraveltur.com/upload_voucher.php";
+    const LIST_URL   = "https://business.magictraveltur.com/list_vouchers.php";
+
+    // JSON do "Disney" com links diretos (export=download) do Google Drive
     const disneyVoucherConfig = {
       "url": "nao tem URL",
       "async": false,
@@ -210,7 +207,7 @@
       "annotations": [],
       "images": [
         {
-          "url": "https://drive.google.com/file/d/17Hky5mKw9IbCtOm57ZPjKLB-a2yxzVv6/view?usp=sharing",
+          "url": "https://drive.usercontent.google.com/u/0/uc?id=17Hky5mKw9IbCtOm57ZPjKLB-a2yxzVv6&export=download",
           "x": 178,
           "y": 31,
           "width": 350,
@@ -219,7 +216,7 @@
           "keepAspectRatio": true
         },
         {
-          "url": "https://drive.google.com/file/d/1eWUvk94Hr6nKMShzdzDpCQVDdiO0AfQc/view?usp=sharing",
+          "url": "https://drive.usercontent.google.com/u/0/uc?id=1eWUvk94Hr6nKMShzdzDpCQVDdiO0AfQc&export=download",
           "x": 66,
           "y": 47,
           "width": 171,
@@ -231,54 +228,69 @@
       "fields": []
     };
 
-    // Você poderia ter um objeto contendo as configurações dos outros vouchers, por exemplo:
-    const voucherConfigs = {
-      "Disney": disneyVoucherConfig,
-      "Universal": {},   // quando quiser, pode preencher
-      "SeaWorld": {},    // quando quiser, pode preencher
-      "Hospedagem": {}   // quando quiser, pode preencher
-    };
+    // Referências
+    const voucherTypeSelect   = document.getElementById('voucherType');
+    const pdfFileInput        = document.getElementById('pdfFile');
+    const convertButton       = document.getElementById('convertButton');
+    const recentChangesBody   = document.getElementById('recentChangesBody');
 
-    // Array para armazenar as alterações recentes
-    let recentChanges = [];
+    // Ao carregar a página, buscar lista de vouchers do BD
+    window.addEventListener('DOMContentLoaded', () => {
+      loadRecentChanges();
+    });
 
-    // Referências aos elementos
-    const voucherForm = document.getElementById('voucherForm');
-    const voucherTypeSelect = document.getElementById('voucherType');
-    const pdfFileInput = document.getElementById('pdfFile');
-    const convertButton = document.getElementById('convertButton');
-    const recentChangesBody = document.getElementById('recentChangesBody');
+    // -------------------------------------------------------------------------
+    // FUNÇÃO para buscar e renderizar as últimas alterações
+    // -------------------------------------------------------------------------
+    async function loadRecentChanges() {
+      try {
+        const response = await fetch(LIST_URL);
+        if (!response.ok) {
+          throw new Error("Erro ao buscar lista de vouchers");
+        }
+        const data = await response.json(); 
+        // data = array de objetos: [ {id, category, file_path, created_at, downloadURL}, ... ]
 
-    // Função para renderizar as alterações recentes na tabela
-    function renderRecentChanges() {
-      // Limpa o conteúdo atual
+        // Exibir só os 10 últimos (caso o back-end não limite)
+        const maxItems = 10;
+        const lastItems = data.slice(-maxItems);
+
+        renderRecentChanges(lastItems);
+
+      } catch (error) {
+        console.error("Erro loadRecentChanges():", error);
+      }
+    }
+
+    // -------------------------------------------------------------------------
+    // FUNÇÃO para renderizar a tabela
+    // -------------------------------------------------------------------------
+    function renderRecentChanges(records) {
       recentChangesBody.innerHTML = '';
 
-      // Exibe no máximo 10 itens (os mais recentes ficam por último)
-      const maxItems = 10;
-      // Caso queira exibir do mais recente para o mais antigo, podemos fazer um slice
-      const itemsToDisplay = recentChanges.slice(-maxItems);
-
-      itemsToDisplay.forEach(item => {
+      records.forEach(item => {
         const row = document.createElement('tr');
 
-        const dateTd = document.createElement('td');
+        const idTd       = document.createElement('td');
+        const dateTd     = document.createElement('td');
         const categoryTd = document.createElement('td');
         const downloadTd = document.createElement('td');
 
-        dateTd.textContent = item.dateTime;
+        idTd.textContent       = item.id;
+        dateTd.textContent     = item.created_at; // ou formate se preferir
         categoryTd.textContent = item.category;
 
-        // Link de download fictício
-        const downloadLink = document.createElement('a');
-        downloadLink.href = item.downloadURL;   // URL gerada pelo "converter"
-        downloadLink.textContent = 'Download';
-        downloadLink.classList.add('download-link');
-        downloadLink.setAttribute('download', 'VoucherEditado.pdf'); 
-        // 'download' => sugere ao browser o nome do arquivo na hora de salvar
+        // Link de download
+        const link = document.createElement('a');
+        link.href = item.downloadURL;
+        link.textContent = "Download";
+        link.classList.add('download-link');
+        link.setAttribute('target', '_blank'); 
+        link.setAttribute('download', "VoucherEditado.pdf");
 
-        downloadTd.appendChild(downloadLink);
+        downloadTd.appendChild(link);
 
+        row.appendChild(idTd);
         row.appendChild(dateTd);
         row.appendChild(categoryTd);
         row.appendChild(downloadTd);
@@ -287,70 +299,141 @@
       });
     }
 
-    // Função simulada para converter o PDF
-    // Aqui você poderia enviar via AJAX para o servidor, que processaria e devolveria o PDF editado.
-    function simulateConversion(category, file) {
-      return new Promise((resolve) => {
-        // Simula um tempo de processamento
-        setTimeout(() => {
-          // Gera uma URL fictícia para "download" do PDF
-          // Em produção você receberia um link real do backend.
-          const dummyDownloadURL = URL.createObjectURL(new Blob(["PDF editado para " + category], { type: "application/pdf" }));
-          resolve(dummyDownloadURL);
-        }, 2000); // 2 segundos
+    // -------------------------------------------------------------------------
+    // LEITURA DE ARQUIVO (File -> ArrayBuffer)
+    // -------------------------------------------------------------------------
+    function fileToArrayBuffer(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = evt => resolve(evt.target.result);
+        reader.onerror = err => reject(err);
+        reader.readAsArrayBuffer(file);
       });
     }
 
-    // Evento de clique no botão "Converter"
+    // -------------------------------------------------------------------------
+    // BAIXAR IMAGEM (URL) -> ArrayBuffer
+    // -------------------------------------------------------------------------
+    async function fetchImageAsBytes(url) {
+      const resp = await fetch(url);
+      if (!resp.ok) {
+        throw new Error("Erro ao buscar imagem: " + url);
+      }
+      return await resp.arrayBuffer();
+    }
+
+    // -------------------------------------------------------------------------
+    // MERGE PDF COM AS IMAGENS DISNEY (PDF-Lib)
+    // -------------------------------------------------------------------------
+    async function mergePDFWithDisney(originalPdfBytes) {
+      const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
+
+      for (const imgCfg of disneyVoucherConfig.images) {
+        const imgBytes = await fetchImageAsBytes(imgCfg.url);
+
+        // Tenta PNG -> fallback JPG
+        let embeddedImg;
+        try {
+          embeddedImg = await pdfDoc.embedPng(imgBytes);
+        } catch {
+          embeddedImg = await pdfDoc.embedJpg(imgBytes);
+        }
+
+        const pageIndex = parseInt(imgCfg.pages, 10) || 0;
+        if (pageIndex < 0 || pageIndex >= pdfDoc.getPageCount()) {
+          console.warn("Página inválida:", pageIndex);
+          continue;
+        }
+        const page = pdfDoc.getPage(pageIndex);
+
+        const x = imgCfg.x || 0;
+        const y = imgCfg.y || 0;
+        const w = imgCfg.width || embeddedImg.width;
+        const h = imgCfg.height || embeddedImg.height;
+
+        page.drawImage(embeddedImg, {
+          x: x,
+          y: y,
+          width: w,
+          height: h
+        });
+      }
+
+      return await pdfDoc.save(); // retorna Uint8Array
+    }
+
+    // -------------------------------------------------------------------------
+    // FUNÇÃO para subir o PDF final ao servidor
+    // -------------------------------------------------------------------------
+    async function uploadFinalPDF(pdfBytes, category) {
+      // Monta um Blob e um FormData
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const formData = new FormData();
+
+      // O back-end espera "pdfFile" e "voucherType" (ajuste se necessário)
+      formData.append("pdfFile", blob, "VoucherEditado.pdf");
+      formData.append("voucherType", category);
+
+      const response = await fetch(UPLOAD_URL, {
+        method: "POST",
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Falha no upload_voucher.php");
+      }
+
+      const result = await response.json();
+      if (!result.success) {
+        throw new Error(result.error || "Falha ao salvar PDF no servidor");
+      }
+
+      // Retornamos o "downloadURL" e etc. (se o back-end fornecer)
+      return result;
+    }
+
+    // -------------------------------------------------------------------------
+    // EVENTO "CLICK" NO BOTÃO "Converter"
+    // -------------------------------------------------------------------------
     convertButton.addEventListener('click', async () => {
       const selectedCategory = voucherTypeSelect.value;
-      const pdfFile = pdfFileInput.files[0];
+      const file = pdfFileInput.files[0];
 
       if (!selectedCategory) {
-        alert('Por favor, selecione uma categoria de voucher.');
+        alert("Selecione uma categoria de voucher.");
+        return;
+      }
+      if (!file) {
+        alert("Selecione um PDF original.");
         return;
       }
 
-      if (!pdfFile) {
-        alert('Por favor, anexe um arquivo PDF.');
-        return;
-      }
-
-      // Aqui podemos usar a configuração do voucher, se necessário
-      const currentVoucherConfig = voucherConfigs[selectedCategory] || {};
-
-      // Exemplo: Impressão no console para teste
-      console.log("Configuração do voucher selecionado:", currentVoucherConfig);
-
-      // Simula conversão do arquivo PDF (chamada assíncrona)
       try {
-        const downloadURL = await simulateConversion(selectedCategory, pdfFile);
-        
-        // Quando a conversão termina, adicionamos ao array de alterações recentes
-        const now = new Date();
-        const formattedDateTime = now.toLocaleString('pt-BR'); // ex: 23/02/2025 10:30:00
+        // 1) Ler PDF original
+        const originalPdfBytes = await fileToArrayBuffer(file);
 
-        recentChanges.push({
-          dateTime: formattedDateTime,
-          category: selectedCategory,
-          downloadURL: downloadURL
-        });
+        let finalPdfBytes = originalPdfBytes; // Por padrão, sem edição
+        // 2) Se for "Disney", aplicamos as imagens do config
+        if (selectedCategory === "Disney") {
+          finalPdfBytes = await mergePDFWithDisney(originalPdfBytes);
+        }
+        // Se quiser, poderia fazer if (selectedCategory === "Universal") { ... } etc.
 
-        // Renderiza novamente a tabela
-        renderRecentChanges();
+        // 3) Enviar PDF resultante ao servidor (upload_voucher.php)
+        const result = await uploadFinalPDF(finalPdfBytes, selectedCategory);
 
-        // Feedback para o usuário
-        alert(`O PDF foi convertido com sucesso! Voucher: ${selectedCategory}`);
-        // Em produção, você poderia redirecionar o usuário para o link ou algo similar.
+        // 4) Exibir feedback ao usuário
+        alert("PDF salvo com sucesso! Categoria: " + selectedCategory);
+
+        // 5) Atualizar lista de vouchers
+        loadRecentChanges();
 
       } catch (error) {
-        console.error('Erro na conversão:', error);
-        alert('Ocorreu um erro ao converter o PDF.');
+        console.error(error);
+        alert("Erro na conversão ou upload: " + error.message);
       }
     });
-
-    // Renderiza inicial (caso haja registros pré-existentes)
-    renderRecentChanges();
   </script>
 </body>
 </html>
