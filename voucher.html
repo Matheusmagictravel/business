@@ -175,7 +175,6 @@
       <div class="voucher-form-container">
         <h2>Voucher PDF - Edição</h2>
         <form id="voucherForm">
-          <!-- Selecionar qual voucher -->
           <div class="form-group">
             <label for="voucherType">Selecione qual voucher deseja editar:</label>
             <select id="voucherType" name="voucherType" required>
@@ -187,13 +186,11 @@
             </select>
           </div>
 
-          <!-- Anexar PDF original -->
           <div class="form-group">
             <label for="pdfFile">Anexar PDF (original):</label>
             <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" required />
           </div>
 
-          <!-- Botão de Converter -->
           <button type="button" id="convertButton">Converter</button>
         </form>
       </div>
@@ -210,11 +207,9 @@
             </tr>
           </thead>
           <tbody id="recentChangesBody">
-            <!-- Linhas de histórico (paginado) -->
+            <!-- Itens com paginação -->
           </tbody>
         </table>
-
-        <!-- Controles de paginação -->
         <div id="paginationControls">
           <button id="prevPageBtn">&laquo; Anterior</button>
           <div id="paginationInfo"></div>
@@ -224,134 +219,120 @@
     </div>
   </div>
 
-  <!-- PDF-Lib via CDN -->
+  <!-- PDF-Lib -->
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 
   <script>
     /*
-      ============================================================================
-      CONFIGURAÇÕES DE VOUCHERS
-      ============================================================================
-      - Disney: Aplica só na 1ª página => pages:"0".
-      - Universal: Aplica em todas => pages:"all".
-      - SeaWorld: Agora também só na 1ª página => pages:"0".
+      ============================================================
+      CONFIGS DE VOUCHERS
+      - "top" e "left" => iremos converter p/ x,y = canto inferior
+      - "pages": "all" ou "0", etc.
+      ============================================================
     */
 
-    // Disney
+    // Disney => 1ª página
     const disneyVoucherConfig = {
       images: [
         {
           url: "https://business.magictraveltur.com/image/Logofundo.png",
-          x: 66,
-          y: 47,
+          left: 66,
+          top: 47,
           width: 171,
           height: 47,
-          pages: "0",
-          keepAspectRatio: true
+          pages: "0"
         },
         {
           url: "https://business.magictraveltur.com/image/Tarja.png",
-          x: 178,
-          y: 31,
+          left: 178,
+          top: 31,
           width: 350,
           height: 26,
-          pages: "0",
-          keepAspectRatio: true
+          pages: "0"
         }
       ]
     };
 
-    // Universal (todas as páginas => "all")
+    // Universal => todas as páginas
     const universalVoucherConfig = {
       images: [
         {
           url: "https://business.magictraveltur.com/image/Logofundo.png",
-          x: 352,
-          y: 47,
+          left: 352,
+          top: 47,
           width: 196,
           height: 44,
-          pages: "all",
-          keepAspectRatio: true
+          pages: "all"
         },
         {
           url: "https://business.magictraveltur.com/image/Tarja.png",
-          x: 15.92,
-          y: 504.22,
+          left: 15.92,
+          top: 504.22,
           width: 571.74,
           height: 160.32,
-          pages: "all",
-          keepAspectRatio: true
+          pages: "all"
         }
       ]
     };
 
-    // SeaWorld (agora só na primeira página => pages:"0")
+    // SeaWorld => todas as páginas, mas se quer somente 1ª, mude pages:"0"
     const seaWorldVoucherConfig = {
       images: [
         {
           url: "https://business.magictraveltur.com/image/Tarja.png",
-          x: 225,
-          y: 644,
+          left: 225,
+          top: 644,
           width: 146,
           height: 16,
-          pages: "0",
-          keepAspectRatio: true
+          pages: "all"
         },
         {
           url: "https://business.magictraveltur.com/image/Logofundo.png",
-          x: 447,
-          y: 51,
+          left: 447,
+          top: 51,
           width: 83,
           height: 23,
-          pages: "0",
-          keepAspectRatio: true
+          pages: "all"
         }
       ]
     };
 
-    // URLs do backend
+    // Endpoints
     const UPLOAD_URL = "https://magictraveltur.com/upload_voucher.php";
     const LIST_URL   = "https://magictraveltur.com/list_vouchers.php";
 
-    // Referências
-    const voucherTypeSelect  = document.getElementById('voucherType');
-    const pdfFileInput       = document.getElementById('pdfFile');
-    const convertButton      = document.getElementById('convertButton');
+    // DOM
+    const voucherTypeSelect = document.getElementById('voucherType');
+    const pdfFileInput      = document.getElementById('pdfFile');
+    const convertButton     = document.getElementById('convertButton');
 
     // Paginação
-    const recentChangesBody  = document.getElementById('recentChangesBody');
-    const prevPageBtn        = document.getElementById('prevPageBtn');
-    const nextPageBtn        = document.getElementById('nextPageBtn');
-    const paginationInfo     = document.getElementById('paginationInfo');
+    const recentChangesBody = document.getElementById('recentChangesBody');
+    const prevPageBtn       = document.getElementById('prevPageBtn');
+    const nextPageBtn       = document.getElementById('nextPageBtn');
+    const paginationInfo    = document.getElementById('paginationInfo');
     let allRecords = [];
     let currentPage = 1;
     const pageSize = 10;
 
-    // -----------------------------------------
-    // 1) Carrega a lista (com paginação)
-    // -----------------------------------------
+    // Carrega a lista
     async function loadRecentChanges() {
       try {
-        const response = await fetch(LIST_URL);
-        if (!response.ok) {
-          throw new Error("Falha ao listar vouchers");
-        }
-        const data = await response.json();
+        const resp = await fetch(LIST_URL);
+        if (!resp.ok) throw new Error("Falha ao listar vouchers");
+        const data = await resp.json();
+
         allRecords = data;
         currentPage = 1;
         renderCurrentPage();
       } catch (error) {
-        console.error("Erro ao carregar alterações:", error);
+        console.error("Erro loadRecentChanges:", error);
       }
     }
-
     function renderCurrentPage() {
       recentChangesBody.innerHTML = "";
-
       const totalPages = Math.ceil(allRecords.length / pageSize);
-      if (currentPage > totalPages) {
-        currentPage = totalPages || 1;
-      }
+      if (currentPage > totalPages) currentPage = totalPages || 1;
 
       const startIndex = (currentPage - 1) * pageSize;
       const endIndex   = startIndex + pageSize;
@@ -359,7 +340,6 @@
 
       pageItems.forEach(item => {
         const row = document.createElement('tr');
-
         const idTd       = document.createElement('td');
         const dateTd     = document.createElement('td');
         const categoryTd = document.createElement('td');
@@ -373,7 +353,7 @@
         link.href = item.downloadURL;
         link.textContent = "Download";
         link.classList.add('download-link');
-        link.setAttribute('target', '_blank');
+        link.target = "_blank";
         link.setAttribute('download', "VoucherEditado.pdf");
 
         downloadTd.appendChild(link);
@@ -382,7 +362,6 @@
         row.appendChild(dateTd);
         row.appendChild(categoryTd);
         row.appendChild(downloadTd);
-
         recentChangesBody.appendChild(row);
       });
 
@@ -390,7 +369,6 @@
       prevPageBtn.disabled = (currentPage <= 1);
       nextPageBtn.disabled = (currentPage >= totalPages);
     }
-
     prevPageBtn.addEventListener('click', () => {
       if (currentPage > 1) {
         currentPage--;
@@ -405,32 +383,24 @@
       }
     });
 
-    // -----------------------------------------
-    // 2) File -> ArrayBuffer
-    // -----------------------------------------
+    // Ler PDF
     function fileToArrayBuffer(file) {
       return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = e => resolve(e.target.result);
-        reader.onerror = e => reject(e);
-        reader.readAsArrayBuffer(file);
+        const r = new FileReader();
+        r.onload = e => resolve(e.target.result);
+        r.onerror = e => reject(e);
+        r.readAsArrayBuffer(file);
       });
     }
 
-    // -----------------------------------------
-    // 3) fetchImageAsBytes
-    // -----------------------------------------
+    // fetchImage
     async function fetchImageAsBytes(url) {
       const resp = await fetch(url);
-      if (!resp.ok) {
-        throw new Error("Erro ao buscar imagem: " + url);
-      }
+      if (!resp.ok) throw new Error("Erro ao buscar imagem: " + url);
       return await resp.arrayBuffer();
     }
 
-    // -----------------------------------------
-    // 4) merge PDF
-    // -----------------------------------------
+    // Mesclar (conversão top->y)
     async function mergePDFWithConfig(originalPdfBytes, config) {
       const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
       const totalPages = pdfDoc.getPageCount();
@@ -438,34 +408,45 @@
       for (const img of config.images) {
         const imgBytes = await fetchImageAsBytes(img.url);
         let embeddedImg;
-        try {
+        try { 
           embeddedImg = await pdfDoc.embedPng(imgBytes);
         } catch {
           embeddedImg = await pdfDoc.embedJpg(imgBytes);
         }
 
-        // Se pages === 'all', aplicar em todas as páginas
-        if (img.pages === 'all') {
-          for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
-            const page = pdfDoc.getPage(pageIndex);
+        // pages => "all" ou "0"
+        if (img.pages === "all") {
+          // Aplica a todas
+          for (let i = 0; i < totalPages; i++) {
+            const page = pdfDoc.getPage(i);
+            const { width: pageWidth, height: pageHeight } = page.getSize();
 
-            const x = img.x || 0;
-            const y = img.y || 0;
-            const w = img.width  || embeddedImg.width;
-            const h = img.height || embeddedImg.height;
+            // Converte left,top => x,y
+            const left = img.left ?? 0;
+            const top  = img.top  ?? 0;
+            const w    = img.width  ?? embeddedImg.width;
+            const h    = img.height ?? embeddedImg.height;
+
+            // y = pageHeight - top - h => se top for “distância do topo”
+            const x = left;
+            const y = pageHeight - top - h;
 
             page.drawImage(embeddedImg, { x, y, width: w, height: h });
           }
         } else {
-          // pages = "0", "1", etc.
+          // pages => "0", "1", etc.
           const pageIndex = parseInt(img.pages, 10) || 0;
           if (pageIndex >= 0 && pageIndex < totalPages) {
             const page = pdfDoc.getPage(pageIndex);
+            const { width: pageWidth, height: pageHeight } = page.getSize();
 
-            const x = img.x || 0;
-            const y = img.y || 0;
-            const w = img.width  || embeddedImg.width;
-            const h = img.height || embeddedImg.height;
+            const left = img.left ?? 0;
+            const top  = img.top  ?? 0;
+            const w    = img.width  ?? embeddedImg.width;
+            const h    = img.height ?? embeddedImg.height;
+
+            const x = left;
+            const y = pageHeight - top - h;
 
             page.drawImage(embeddedImg, { x, y, width: w, height: h });
           }
@@ -475,74 +456,63 @@
       return pdfDoc.save();
     }
 
-    // -----------------------------------------
-    // 5) uploadFinalPDF
-    // -----------------------------------------
+    // upload PDF
     async function uploadFinalPDF(pdfBytes, category) {
       const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const formData = new FormData();
       formData.append("pdfFile", blob, "VoucherEditado.pdf");
       formData.append("voucherType", category);
 
-      const response = await fetch(UPLOAD_URL, {
-        method: "POST",
-        body: formData
-      });
-      if (!response.ok) {
-        const errData = await response.json().catch(() => ({}));
-        throw new Error(errData.error || "Falha ao enviar PDF ao servidor");
+      const resp = await fetch(UPLOAD_URL, { method: "POST", body: formData });
+      if (!resp.ok) {
+        const errData = await resp.json().catch(()=>({}));
+        throw new Error(errData.error || "Falha no upload_voucher.php");
       }
-
-      const result = await response.json();
-      if (!result.success) {
-        throw new Error(result.error || "Falha ao salvar PDF no servidor");
-      }
+      const result = await resp.json();
+      if (!result.success) throw new Error(result.error || "Falha ao salvar PDF");
       return result;
     }
 
-    // -----------------------------------------
-    // 6) Clique em "Converter"
-    // -----------------------------------------
+    // Botão "Converter"
     convertButton.addEventListener('click', async () => {
-      const selectedCategory = voucherTypeSelect.value;
+      const category = voucherTypeSelect.value;
       const file = pdfFileInput.files[0];
-
-      if (!selectedCategory) {
-        alert("Selecione uma categoria de voucher!");
-        return;
-      }
-      if (!file) {
-        alert("Selecione um arquivo PDF!");
-        return;
-      }
+      if (!category) { alert("Selecione uma categoria!"); return; }
+      if (!file) { alert("Selecione um arquivo PDF!"); return; }
 
       try {
         const originalPdfBytes = await fileToArrayBuffer(file);
-        let finalPdfBytes = originalPdfBytes;
 
-        // Decide qual config usar
-        if (selectedCategory === "Disney") {
-          finalPdfBytes = await mergePDFWithConfig(originalPdfBytes, disneyVoucherConfig);
-        } else if (selectedCategory === "Universal") {
-          finalPdfBytes = await mergePDFWithConfig(originalPdfBytes, universalVoucherConfig);
-        } else if (selectedCategory === "SeaWorld") {
-          finalPdfBytes = await mergePDFWithConfig(originalPdfBytes, seaWorldVoucherConfig);
+        // Seleciona config
+        let config;
+        if (category === "Disney") {
+          config = disneyVoucherConfig;
+        } else if (category === "Universal") {
+          config = universalVoucherConfig;
+        } else if (category === "SeaWorld") {
+          config = seaWorldVoucherConfig;
+        } else {
+          // Hospedagem => sem manipulação
+          config = { images: [] };
         }
-        // "Hospedagem" => sem manipulação ou crie config se quiser
 
-        // Envia o PDF resultante
-        const result = await uploadFinalPDF(finalPdfBytes, selectedCategory);
+        // Mescla
+        const finalPdfBytes = await mergePDFWithConfig(originalPdfBytes, config);
 
-        alert("PDF salvo com sucesso! Categoria: " + selectedCategory);
+        // Sobe pro servidor
+        const result = await uploadFinalPDF(finalPdfBytes, category);
+
+        alert("PDF salvo com sucesso! Voucher: " + category);
+
+        // Recarrega lista
         loadRecentChanges();
-
-      } catch (error) {
-        console.error(error);
-        alert("Erro ao converter/enviar PDF: " + error.message);
+      } catch (err) {
+        console.error(err);
+        alert("Erro: " + err.message);
       }
     });
 
-    // Carrega a lista inicial de vouchers
+    // Carrega ao abrir
     window.addEventListener('DOMContentLoaded', () => {
       loadRecentChanges();
     });
