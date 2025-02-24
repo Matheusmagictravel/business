@@ -3,24 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <title>Página de Voucher - Edição PDF</title>
-  <!-- Design refinado estilo Apple -->
+  <!-- Fonte inspirada na SF Pro da Apple (usando fallback no system) -->
   <style>
-    /* ==========================================
-       INSPIRADO NO DESIGN APPLE, AINDA MAIS REFINADO
-       ========================================== */
-    :root {
-      /* Azul iOS padrão */
-      --accent-color: #007aff;
-      /* Sombra sutil para cards e elementos */
-      --card-shadow: 0 2px 8px rgba(0,0,0,0.07);
-    }
-
-    /* Habilita reconhecimento de modo claro/escuro (opcional) */
-    html {
-      color-scheme: light dark;
-    }
-
-    /* RESET & FONTE DE SISTEMA APPLE */
+    /* =============================
+       INSPIRED BY APPLE DESIGN
+       ============================= */
     * {
       margin: 0;
       padding: 0;
@@ -32,24 +19,25 @@
       font-family: -apple-system, BlinkMacSystemFont, 
                    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, 
                    "Open Sans", "Helvetica Neue", sans-serif;
-      background: linear-gradient(160deg, #f9f9f9 0%, #fefefe 80%);
-      color: #1c1c1c;
+      background-color: #fefefe; /* Muito claro, quase branco */
+      color: #1c1c1c; /* Texto bem escuro */
     }
 
-    /* CONTAINER PRINCIPAL */
+    /* CONTAINER PRINCIPAL (SIDEBAR + CONTEÚDO) */
     #voucher-page-container {
       display: flex;
       flex-direction: row;
       width: 100%;
       height: 100vh;
       overflow: hidden;
+      background-color: #fefefe; 
     }
 
     /* SIDEBAR */
     #sidebar-container {
       width: 250px;
       background-color: #ffffff;
-      border-right: 1px solid #ececec;
+      border-right: 1px solid #e0e0e0;
       box-shadow: 1px 0 4px rgba(0, 0, 0, 0.04);
     }
     #sidebar-frame {
@@ -64,59 +52,43 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      align-items: center; 
-      padding: 40px 20px;
+      align-items: center; /* Centraliza horizontalmente */
+      padding: 40px 20px;  /* Espaçamento amplo */
       overflow-y: auto;
     }
-    /* Rolagem suave e barra customizada (opcional) */
-    #main-content {
-      scrollbar-width: thin;
-      scrollbar-color: #bbb #e0e0e0;
-    }
-    #main-content::-webkit-scrollbar {
-      width: 10px;
-    }
-    #main-content::-webkit-scrollbar-track {
-      background: #e0e0e0;
-    }
-    #main-content::-webkit-scrollbar-thumb {
-      background-color: #aaa;
-      border-radius: 5px;
-    }
-    #main-content::-webkit-scrollbar-thumb:hover {
-      background-color: #888;
-    }
 
-    /* CONTENT WRAPPER */
+    /* LIMITE DE LARGURA */
     .content-wrapper {
       max-width: 800px;
       width: 100%;
     }
 
-    /* CARD (CAIXA PRINCIPAL) */
+    /* CARTÃO (CARD) */
     .card {
       background-color: #ffffff;
-      border-radius: 12px;
-      box-shadow: var(--card-shadow);
+      border-radius: 12px; /* Cantos suaves */
       padding: 30px;
       margin-bottom: 30px;
-      transition: box-shadow 0.2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      transition: box-shadow 0.2s ease;
     }
     .card:hover {
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.08);
     }
 
-    /* TÍTULOS */
+    /* TÍTULOS (forte ênfase na tipografia) */
     .card h2, .card h3 {
-      margin-bottom: 24px;
+      margin-bottom: 20px;
       font-weight: 600;
-      text-align: center;
-      letter-spacing: 0.5px;
       color: #1c1c1c;
+      text-align: center;
+      letter-spacing: 0.5px; /* pequeno espaçamento */
     }
 
     /* FORMULÁRIO */
-    .voucher-form-container { /* mesma classe do HTML */ }
+    .voucher-form-container {
+      /* É um .card */
+    }
     .form-group {
       margin-bottom: 20px;
     }
@@ -130,26 +102,22 @@
     .form-group select,
     .form-group input[type="file"] {
       width: 100%;
-      padding: 12px;
+      padding: 12px 14px;
       font-size: 15px;
       border: 1px solid #ccc;
-      border-radius: 8px;
+      border-radius: 6px;
       outline: none;
-      transition: border-color 0.2s, background-color 0.2s;
-    }
-    .form-group select:hover,
-    .form-group input[type="file"]:hover {
-      background-color: #fafafa;
+      transition: border-color 0.2s;
     }
     .form-group select:focus,
     .form-group input[type="file"]:focus {
-      border-color: var(--accent-color);
+      border-color: #007aff; /* Azul iOS */
     }
 
     /* BOTÃO */
     #convertButton {
       display: inline-block;
-      background-color: var(--accent-color);
+      background-color: #007aff; /* Azul iOS */
       color: #fff;
       padding: 12px 24px;
       border: none;
@@ -163,18 +131,23 @@
       background-color: #006ae6; 
     }
     #convertButton:active {
-      transform: scale(0.96);
+      transform: scale(0.98);
     }
 
-    /* TABELA DE ALTERAÇÕES RECENTES */
-    #recentChangesContainer { /* .card se aplica */ }
+    /* LISTA DE ALTERAÇÕES RECENTES */
+    #recentChangesContainer {
+      /* .card styling se aplica */
+    }
     table {
       width: 100%;
       border-collapse: collapse;
+      border-radius: 8px;
+      overflow: hidden; /* Para arredondar canto da tabela */
       font-size: 14px;
+      background-color: #fff;
     }
     table thead tr {
-      background-color: var(--accent-color);
+      background-color: #007aff;
       color: #fff;
     }
     table th, table td {
@@ -185,7 +158,6 @@
     table th {
       font-weight: 600;
       font-size: 14px;
-      letter-spacing: 0.3px;
     }
     table tbody tr:nth-child(even) {
       background-color: #fafafa;
@@ -193,7 +165,7 @@
 
     /* LINK DOWNLOAD */
     .download-link {
-      color: var(--accent-color);
+      color: #007aff;
       font-weight: 500;
       text-decoration: none;
       transition: color 0.2s;
@@ -211,13 +183,13 @@
       margin-top: 15px;
     }
     #paginationControls button {
-      background-color: var(--accent-color);
+      background-color: #007aff;
       color: #fff;
       border: none;
       padding: 8px 16px;
       margin: 0 5px;
       cursor: pointer;
-      border-radius: 8px;
+      border-radius: 6px;
       font-size: 14px;
       transition: background-color 0.2s, transform 0.1s;
     }
@@ -225,18 +197,33 @@
       background-color: #005fde;
     }
     #paginationControls button:active {
-      transform: scale(0.96);
+      transform: scale(0.97);
     }
     #paginationInfo {
       margin: 0 10px;
       font-weight: 500;
       color: #333;
     }
+
+    /* SCROLLBAR PERSONALIZADA (OPCIONAL) */
+    #main-content::-webkit-scrollbar {
+      width: 10px;
+    }
+    #main-content::-webkit-scrollbar-track {
+      background: #ddd;
+    }
+    #main-content::-webkit-scrollbar-thumb {
+      background-color: #aaa;
+      border-radius: 5px;
+    }
+    #main-content::-webkit-scrollbar-thumb:hover {
+      background-color: #888;
+    }
   </style>
 </head>
 <body>
   <div id="voucher-page-container">
-    <!-- SIDEBAR (mantida) -->
+    <!-- SIDEBAR (intacta) -->
     <div id="sidebar-container">
       <iframe src="sidebar.html" id="sidebar-frame"></iframe>
     </div>
@@ -245,7 +232,7 @@
     <div id="main-content">
       <div class="content-wrapper">
         
-        <!-- CARTÃO: FORMULÁRIO -->
+        <!-- FORMULÁRIO (CARD) -->
         <div class="card voucher-form-container">
           <h2>Voucher PDF - Edição</h2>
           <form id="voucherForm">
@@ -269,7 +256,7 @@
           </form>
         </div>
 
-        <!-- CARTÃO: LISTA DE ALTERAÇÕES RECENTES -->
+        <!-- LISTA DE ALTERAÇÕES (CARD) -->
         <div class="card" id="recentChangesContainer">
           <h3>Alterações Recentes</h3>
           <table>
@@ -296,17 +283,16 @@
     </div>
   </div>
 
-  <!-- PDF-Lib E SCRIPT ORIGINAL (Sem alterações na lógica) -->
+  <!-- PDF-Lib E SCRIPT ORIGINAL -->
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
   <script>
-    /* 
-       ============================================================
-       TODA A LÓGICA DE PDF, UPLOAD E PAGINAÇÃO MANTIDA
-       APENAS O CSS FOI REFINADO
-       ============================================================
+    /*
+      ============================================================
+      TODO O MESMO JS DE LOGICA (PDF, UPLOAD, PAGINAÇÃO) 
+      ============================================================
     */
 
-    // Configs dos vouchers
+    // Disney => 1ª página
     const disneyVoucherConfig = {
       images: [
         {
@@ -327,6 +313,8 @@
         }
       ]
     };
+
+    // Universal => todas as páginas
     const universalVoucherConfig = {
       images: [
         {
@@ -347,6 +335,8 @@
         }
       ]
     };
+
+    // SeaWorld => todas as páginas
     const seaWorldVoucherConfig = {
       images: [
         {
@@ -386,12 +376,13 @@
     let currentPage = 1;
     const pageSize = 10;
 
-    // Carrega e exibe a lista de vouchers
+    // Carrega a lista
     async function loadRecentChanges() {
       try {
         const resp = await fetch(LIST_URL);
         if (!resp.ok) throw new Error("Falha ao listar vouchers");
         const data = await resp.json();
+
         allRecords = data;
         currentPage = 1;
         renderCurrentPage();
@@ -453,7 +444,7 @@
       }
     });
 
-    // Funções para manipular PDF
+    // Ler PDF
     function fileToArrayBuffer(file) {
       return new Promise((resolve, reject) => {
         const r = new FileReader();
@@ -470,7 +461,7 @@
     async function mergePDFWithConfig(originalPdfBytes, config) {
       const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
       const totalPages = pdfDoc.getPageCount();
-      
+
       for (const img of config.images) {
         const imgBytes = await fetchImageAsBytes(img.url);
         let embeddedImg;
@@ -517,7 +508,7 @@
       return result;
     }
 
-    // Evento converter
+    // Botão "Converter"
     convertButton.addEventListener('click', async () => {
       const category = voucherTypeSelect.value;
       const file = pdfFileInput.files[0];
@@ -541,10 +532,11 @@
         } else if (category === "SeaWorld") {
           config = seaWorldVoucherConfig;
         } else {
-          config = { images: [] }; // Hospedagem => sem manipulação
+          config = { images: [] }; // Hospedagem => sem manipular
         }
 
         const finalPdfBytes = await mergePDFWithConfig(originalPdfBytes, config);
+
         await uploadFinalPDF(finalPdfBytes, category);
 
         alert("PDF salvo com sucesso! Voucher: " + category);
@@ -555,7 +547,7 @@
       }
     });
 
-    // Ao carregar a página
+    // Carrega ao iniciar
     window.addEventListener('DOMContentLoaded', () => {
       loadRecentChanges();
     });
