@@ -232,12 +232,12 @@
       ============================================================================
       CONFIGURAÇÕES DE VOUCHERS
       ============================================================================
-      - Disney: Aplica somente na primeira página (pages = "0").
-      - Universal / SeaWorld: Aplica em todas as páginas (pages = "all").
-      - x,y são coordenadas do canto inferior esquerdo.
+      - Disney: Aplica só na 1ª página => pages:"0".
+      - Universal: Aplica em todas => pages:"all".
+      - SeaWorld: Agora também só na 1ª página => pages:"0".
     */
 
-    // Disney (somente 1 página => pages:"0")
+    // Disney
     const disneyVoucherConfig = {
       images: [
         {
@@ -261,7 +261,7 @@
       ]
     };
 
-    // Universal (todas as páginas => pages:"all")
+    // Universal (todas as páginas => "all")
     const universalVoucherConfig = {
       images: [
         {
@@ -285,7 +285,7 @@
       ]
     };
 
-    // SeaWorld (também todas as páginas => pages:"all")
+    // SeaWorld (agora só na primeira página => pages:"0")
     const seaWorldVoucherConfig = {
       images: [
         {
@@ -294,7 +294,8 @@
           y: 644,
           width: 146,
           height: 16,
-          pages: "all"
+          pages: "0",
+          keepAspectRatio: true
         },
         {
           url: "https://business.magictraveltur.com/image/Logofundo.png",
@@ -302,7 +303,8 @@
           y: 51,
           width: 83,
           height: 23,
-          pages: "all"
+          pages: "0",
+          keepAspectRatio: true
         }
       ]
     };
@@ -326,7 +328,7 @@
     const pageSize = 10;
 
     // -----------------------------------------
-    // 1) Carrega a lista de vouchers (com paginação no front)
+    // 1) Carrega a lista (com paginação)
     // -----------------------------------------
     async function loadRecentChanges() {
       try {
@@ -335,7 +337,6 @@
           throw new Error("Falha ao listar vouchers");
         }
         const data = await response.json();
-        // Armazena e inicia paginação
         allRecords = data;
         currentPage = 1;
         renderCurrentPage();
@@ -428,7 +429,7 @@
     }
 
     // -----------------------------------------
-    // 4) mergePDFWithConfig
+    // 4) merge PDF
     // -----------------------------------------
     async function mergePDFWithConfig(originalPdfBytes, config) {
       const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
@@ -443,12 +444,11 @@
           embeddedImg = await pdfDoc.embedJpg(imgBytes);
         }
 
-        // pages = "all" => aplica em todas as páginas
+        // Se pages === 'all', aplicar em todas as páginas
         if (img.pages === 'all') {
           for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
             const page = pdfDoc.getPage(pageIndex);
 
-            // Usa x,y do canto inferior esquerdo
             const x = img.x || 0;
             const y = img.y || 0;
             const w = img.width  || embeddedImg.width;
@@ -461,6 +461,7 @@
           const pageIndex = parseInt(img.pages, 10) || 0;
           if (pageIndex >= 0 && pageIndex < totalPages) {
             const page = pdfDoc.getPage(pageIndex);
+
             const x = img.x || 0;
             const y = img.y || 0;
             const w = img.width  || embeddedImg.width;
@@ -527,7 +528,7 @@
         } else if (selectedCategory === "SeaWorld") {
           finalPdfBytes = await mergePDFWithConfig(originalPdfBytes, seaWorldVoucherConfig);
         }
-        // "Hospedagem" => sem manipulação ou crie outro config se quiser
+        // "Hospedagem" => sem manipulação ou crie config se quiser
 
         // Envia o PDF resultante
         const result = await uploadFinalPDF(finalPdfBytes, selectedCategory);
