@@ -258,8 +258,6 @@
     };
 
     // Universal
-    // Agora também usando "left/top" em vez de x/y diretos,
-    // para fazermos a mesma conversão do Disney.
     const universalVoucherConfig = {
       images: [
         {
@@ -277,6 +275,32 @@
           top: 504.22,
           width: 571.74,
           height: 160.32,
+          pages: "0",
+          keepAspectRatio: true
+        }
+      ]
+    };
+
+    // SeaWorld
+    // Você forneceu x=225, y=644 etc. 
+    // Vamos interpretar como left/top => mesmo approach
+    const seaWorldVoucherConfig = {
+      images: [
+        {
+          url: "https://business.magictraveltur.com/image/Tarja.png",
+          left: 225,
+          top: 644,
+          width: 146,
+          height: 16,
+          pages: "0",
+          keepAspectRatio: true
+        },
+        {
+          url: "https://business.magictraveltur.com/image/Logofundo.png",
+          left: 447,
+          top: 51,
+          width: 83,
+          height: 23,
           pages: "0",
           keepAspectRatio: true
         }
@@ -301,7 +325,7 @@
     const nextPageBtn        = document.getElementById('nextPageBtn');
     const paginationInfo     = document.getElementById('paginationInfo');
 
-    // Armazena todos os registros para paginação no front
+    // Armazena todos os registros para paginação
     let allRecords = [];
     let currentPage = 1;
     const pageSize = 10;
@@ -327,21 +351,24 @@
 
     // Renderiza a página atual
     function renderCurrentPage() {
-      // Limpa
       recentChangesBody.innerHTML = "";
 
-      // Paginação
       const totalPages = Math.ceil(allRecords.length / pageSize);
-      if (currentPage > totalPages) {
-        currentPage = totalPages || 1;
+      if (totalPages < 1) {
+        paginationInfo.textContent = "Nenhum registro";
+        prevPageBtn.disabled = true;
+        nextPageBtn.disabled = true;
+        return;
       }
 
-      // Slice do array
+      if (currentPage > totalPages) {
+        currentPage = totalPages;
+      }
+
       const startIndex = (currentPage - 1) * pageSize;
       const endIndex   = startIndex + pageSize;
       const pageItems  = allRecords.slice(startIndex, endIndex);
 
-      // Renderiza as linhas
       pageItems.forEach(item => {
         const row = document.createElement('tr');
 
@@ -371,15 +398,11 @@
         recentChangesBody.appendChild(row);
       });
 
-      // Paginação Info
-      paginationInfo.textContent = `Página ${currentPage} de ${totalPages || 1}`;
-
-      // Botões
+      paginationInfo.textContent = `Página ${currentPage} de ${totalPages}`;
       prevPageBtn.disabled = (currentPage <= 1);
       nextPageBtn.disabled = (currentPage >= totalPages);
     }
 
-    // Botão "Anterior"
     prevPageBtn.addEventListener('click', () => {
       if (currentPage > 1) {
         currentPage--;
@@ -387,7 +410,6 @@
       }
     });
 
-    // Botão "Próxima"
     nextPageBtn.addEventListener('click', () => {
       const totalPages = Math.ceil(allRecords.length / pageSize);
       if (currentPage < totalPages) {
@@ -420,7 +442,7 @@
     }
 
     // ================================
-    // 4) merge PDF (usa top/left => canto sup/esq => converter)
+    // 4) merge PDF com config (top/left => canto sup)
     // ================================
     async function mergePDFWithConfig(originalPdfBytes, config) {
       const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
@@ -442,13 +464,12 @@
         const page = pdfDoc.getPage(pageIndex);
         const { width: pageWidth, height: pageHeight } = page.getSize();
 
-        // Converte top/left => x,y
-        const left = img.left || 0; 
-        const top  = img.top  || 0; 
+        const left = img.left || 0;
+        const top  = img.top  || 0;
         const w    = img.width  || embeddedImg.width;
         const h    = img.height || embeddedImg.height;
 
-        // y = pageHeight - top - h
+        // converte top-> y
         const x = left;
         const y = pageHeight - top - h;
 
@@ -508,10 +529,12 @@
           finalPdfBytes = await mergePDFWithConfig(originalPdfBytes, disneyVoucherConfig);
         } else if (selectedCategory === "Universal") {
           finalPdfBytes = await mergePDFWithConfig(originalPdfBytes, universalVoucherConfig);
+        } else if (selectedCategory === "SeaWorld") {
+          finalPdfBytes = await mergePDFWithConfig(originalPdfBytes, seaWorldVoucherConfig);
         }
-        // Se for SeaWorld/Hospedagem => sem manipulação (ou crie configs)
+        // "Hospedagem" => sem manipulação, ou crie outra config
 
-        // Envia PDF resultante p/ servidor
+        // Envia PDF final p/ servidor
         const result = await uploadFinalPDF(finalPdfBytes, selectedCategory);
 
         alert("PDF salvo com sucesso! Categoria: " + selectedCategory);
@@ -524,6 +547,9 @@
         alert("Erro ao converter ou enviar PDF: " + error.message);
       }
     });
+
+    // Carrega lista ao entrar
+    window.addEventListener('DOMContentLoaded', loadRecentChanges);
   </script>
 </body>
 </html>
