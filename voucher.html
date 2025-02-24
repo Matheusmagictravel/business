@@ -184,8 +184,8 @@
       ======================================================================================
        1) Ao clicar em "Converter":
           - Lê o PDF (input file).
-          - Se "Disney", sobrepõe as imagens (Logofundo.png e Tarja.png) via PDF-Lib.
-          - Envia o PDF resultante a "upload_voucher.php".
+          - Se "Disney", sobrepõe as imagens (Tarja + Logofundo) via PDF-Lib nas coordenadas informadas.
+          - Envia o PDF resultante a "upload_voucher.php" em magictraveltur.com.
        2) "upload_voucher.php" salva em 'voucher_log' (file_path, category, etc).
        3) Chamamos "list_vouchers.php" para exibir as últimas alterações na tabela.
       ======================================================================================
@@ -195,7 +195,7 @@
     const UPLOAD_URL = "https://magictraveltur.com/upload_voucher.php";
     const LIST_URL   = "https://magictraveltur.com/list_vouchers.php";
 
-    // JSON do "Disney" usando imagens do SEU domínio:
+    // JSON do "Disney" com as coordenadas desejadas:
     const disneyVoucherConfig = {
       "url": "nao tem URL",
       "async": false,
@@ -204,22 +204,20 @@
       "annotations": [],
       "images": [
         {
-          // Logofundo.png
-          "url": "https://business.magictraveltur.com/image/Logofundo.png",
-          "x": 178,
-          "y": 31,
-          "width": 350,
-          "height": 26,
+          "url": "https://business.magictraveltur.com/image/Tarja.png",
+          "x": 56.32,
+          "y": 55.07,
+          "width": 178.74,
+          "height": 41.61,
           "pages": "0",
           "keepAspectRatio": true
         },
         {
-          // Tarja.png
-          "url": "https://business.magictraveltur.com/image/Tarja.png",
-          "x": 66,
-          "y": 47,
-          "width": 171,
-          "height": 47,
+          "url": "https://business.magictraveltur.com/image/Logofundo.png",
+          "x": 173,
+          "y": 24,
+          "width": 364,
+          "height": 34,
           "pages": "0",
           "keepAspectRatio": true
         }
@@ -250,7 +248,7 @@
         const data = await response.json(); 
         // data = [ {id, category, file_path, created_at, downloadURL}, ... ]
 
-        // Exibir só os 10 últimos, se quiser (ou mostre tudo)
+        // Exibir só os 10 últimos (ou tudo, se preferir)
         const maxItems = 10;
         const lastItems = data.slice(-maxItems);
 
@@ -281,10 +279,10 @@
 
         // Link de download
         const link = document.createElement('a');
-        link.href = item.downloadURL;
+        link.href = item.downloadURL;  // ex: https://magictraveltur.com/uploads/voucher_....
         link.textContent = "Download";
         link.classList.add('download-link');
-        link.setAttribute('target', '_blank'); 
+        link.setAttribute('target', '_blank');
         link.setAttribute('download', "VoucherEditado.pdf");
 
         downloadTd.appendChild(link);
@@ -325,12 +323,22 @@
     // MERGE PDF COM AS IMAGENS DISNEY (PDF-Lib)
     // -------------------------------------------------------------------------
     async function mergePDFWithDisney(originalPdfBytes) {
+      // Carrega o PDF
       const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
+
+      // (Opcional) LOGAR dimensões da página para facilitar debug
+      const pageCount = pdfDoc.getPageCount();
+      console.log("Quantidade de páginas no PDF:", pageCount);
+
+      // Se for alterar várias páginas, pode iterar. Aqui, supomos 'pages': "0".
+      const page0 = pdfDoc.getPage(0);
+      const { width, height } = page0.getSize();
+      console.log("Dimensões da página 0:", width, height);
 
       for (const imgCfg of disneyVoucherConfig.images) {
         const imgBytes = await fetchImageAsBytes(imgCfg.url);
 
-        // Tenta PNG -> fallback JPG
+        // Tenta PNG, senão JPG
         let embeddedImg;
         try {
           embeddedImg = await pdfDoc.embedPng(imgBytes);
@@ -339,10 +347,11 @@
         }
 
         const pageIndex = parseInt(imgCfg.pages, 10) || 0;
-        if (pageIndex < 0 || pageIndex >= pdfDoc.getPageCount()) {
+        if (pageIndex < 0 || pageIndex >= pageCount) {
           console.warn("Página inválida:", pageIndex);
           continue;
         }
+
         const page = pdfDoc.getPage(pageIndex);
 
         const x = imgCfg.x || 0;
@@ -350,6 +359,7 @@
         const w = imgCfg.width || embeddedImg.width;
         const h = imgCfg.height || embeddedImg.height;
 
+        // Desenha a imagem no PDF
         page.drawImage(embeddedImg, {
           x: x,
           y: y,
@@ -358,14 +368,14 @@
         });
       }
 
-      return await pdfDoc.save(); // retorna Uint8Array
+      // Gera o PDF final
+      return await pdfDoc.save(); // Uint8Array
     }
 
     // -------------------------------------------------------------------------
     // FUNÇÃO para subir o PDF final ao servidor
     // -------------------------------------------------------------------------
     async function uploadFinalPDF(pdfBytes, category) {
-      // Monta um Blob e um FormData
       const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const formData = new FormData();
 
@@ -388,7 +398,7 @@
         throw new Error(result.error || "Falha ao salvar PDF no servidor");
       }
 
-      // Ex: result.downloadURL, etc.
+      // Ex: result.downloadURL
       return result;
     }
 
@@ -400,11 +410,11 @@
       const file = pdfFileInput.files[0];
 
       if (!selectedCategory) {
-        alert("Selecione uma categoria de voucher.");
+        alert("Por favor, selecione uma categoria de voucher.");
         return;
       }
       if (!file) {
-        alert("Selecione um PDF original.");
+        alert("Por favor, selecione um PDF original.");
         return;
       }
 
