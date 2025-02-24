@@ -230,16 +230,19 @@
   <script>
     /*
       ============================================================================
-      CONFIGURAÇÕES DE VOUCHERS (top/left => conversão interna)
+      CONFIGURAÇÕES DE VOUCHERS
+      Todas usam x,y => canto inferior esquerdo
+      Para aplicar EM TODAS AS PÁGINAS => "pages": "all"
       ============================================================================
     */
-    // Disney
+
+    // Disney (aplica apenas na primeira página => "pages": "0")
     const disneyVoucherConfig = {
       images: [
         {
           url: "https://business.magictraveltur.com/image/Logofundo.png",
-          left: 66,
-          top: 47,
+          x: 66,
+          y: 47,
           width: 171,
           height: 47,
           pages: "0",
@@ -247,8 +250,8 @@
         },
         {
           url: "https://business.magictraveltur.com/image/Tarja.png",
-          left: 178,
-          top: 31,
+          x: 178,
+          y: 31,
           width: 350,
           height: 26,
           pages: "0",
@@ -257,65 +260,59 @@
       ]
     };
 
-    // Universal
+    // Universal (aplica em todas as páginas => "pages": "all")
     const universalVoucherConfig = {
       images: [
         {
           url: "https://business.magictraveltur.com/image/Logofundo.png",
-          left: 352,
-          top: 47,
+          x: 352,
+          y: 47,
           width: 196,
           height: 44,
-          pages: "0",
+          pages: "all",
           keepAspectRatio: true
         },
         {
           url: "https://business.magictraveltur.com/image/Tarja.png",
-          left: 15.92,
-          top: 504.22,
+          x: 15.92,
+          y: 504.22,
           width: 571.74,
           height: 160.32,
-          pages: "0",
+          pages: "all",
           keepAspectRatio: true
         }
       ]
     };
 
-    // SeaWorld
-    // Você forneceu x=225, y=644 etc. 
-    // Vamos interpretar como left/top => mesmo approach
+    // SeaWorld (aplica em todas as páginas => "pages": "all")
     const seaWorldVoucherConfig = {
       images: [
         {
           url: "https://business.magictraveltur.com/image/Tarja.png",
-          left: 225,
-          top: 644,
+          x: 225,
+          y: 644,
           width: 146,
           height: 16,
-          pages: "0",
+          pages: "all",
           keepAspectRatio: true
         },
         {
           url: "https://business.magictraveltur.com/image/Logofundo.png",
-          left: 447,
-          top: 51,
+          x: 447,
+          y: 51,
           width: 83,
           height: 23,
-          pages: "0",
+          pages: "all",
           keepAspectRatio: true
         }
       ]
     };
 
-    // =======================
     // URLs do backend
-    // =======================
     const UPLOAD_URL = "https://magictraveltur.com/upload_voucher.php";
     const LIST_URL   = "https://magictraveltur.com/list_vouchers.php";
 
-    // =======================
     // Referências
-    // =======================
     const voucherTypeSelect  = document.getElementById('voucherType');
     const pdfFileInput       = document.getElementById('pdfFile');
     const convertButton      = document.getElementById('convertButton');
@@ -325,7 +322,7 @@
     const nextPageBtn        = document.getElementById('nextPageBtn');
     const paginationInfo     = document.getElementById('paginationInfo');
 
-    // Armazena todos os registros para paginação
+    // Armazena todos os registros para paginação no front
     let allRecords = [];
     let currentPage = 1;
     const pageSize = 10;
@@ -349,20 +346,12 @@
       }
     }
 
-    // Renderiza a página atual
     function renderCurrentPage() {
       recentChangesBody.innerHTML = "";
 
       const totalPages = Math.ceil(allRecords.length / pageSize);
-      if (totalPages < 1) {
-        paginationInfo.textContent = "Nenhum registro";
-        prevPageBtn.disabled = true;
-        nextPageBtn.disabled = true;
-        return;
-      }
-
       if (currentPage > totalPages) {
-        currentPage = totalPages;
+        currentPage = totalPages || 1;
       }
 
       const startIndex = (currentPage - 1) * pageSize;
@@ -398,7 +387,8 @@
         recentChangesBody.appendChild(row);
       });
 
-      paginationInfo.textContent = `Página ${currentPage} de ${totalPages}`;
+      paginationInfo.textContent = `Página ${currentPage} de ${totalPages || 1}`;
+
       prevPageBtn.disabled = (currentPage <= 1);
       nextPageBtn.disabled = (currentPage >= totalPages);
     }
@@ -409,7 +399,6 @@
         renderCurrentPage();
       }
     });
-
     nextPageBtn.addEventListener('click', () => {
       const totalPages = Math.ceil(allRecords.length / pageSize);
       if (currentPage < totalPages) {
@@ -442,7 +431,7 @@
     }
 
     // ================================
-    // 4) merge PDF com config (top/left => canto sup)
+    // 4) merge PDF
     // ================================
     async function mergePDFWithConfig(originalPdfBytes, config) {
       const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
@@ -450,7 +439,6 @@
 
       for (const img of config.images) {
         const imgBytes = await fetchImageAsBytes(img.url);
-
         let embeddedImg;
         try {
           embeddedImg = await pdfDoc.embedPng(imgBytes);
@@ -458,22 +446,34 @@
           embeddedImg = await pdfDoc.embedJpg(imgBytes);
         }
 
-        const pageIndex = parseInt(img.pages, 10) || 0;
-        if (pageIndex < 0 || pageIndex >= totalPages) continue;
+        // Se pages === 'all', aplicar em todas as páginas
+        if (img.pages === 'all') {
+          for (let pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+            const page = pdfDoc.getPage(pageIndex);
+            const { width: pageWidth, height: pageHeight } = page.getSize();
 
-        const page = pdfDoc.getPage(pageIndex);
-        const { width: pageWidth, height: pageHeight } = page.getSize();
+            const x = img.x || 0;
+            const y = img.y || 0;
+            const w = img.width  || embeddedImg.width;
+            const h = img.height || embeddedImg.height;
 
-        const left = img.left || 0;
-        const top  = img.top  || 0;
-        const w    = img.width  || embeddedImg.width;
-        const h    = img.height || embeddedImg.height;
+            page.drawImage(embeddedImg, { x, y, width: w, height: h });
+          }
+        } else {
+          // caso contrário, parse a page
+          const pageIndex = parseInt(img.pages, 10) || 0;
+          if (pageIndex >= 0 && pageIndex < totalPages) {
+            const page = pdfDoc.getPage(pageIndex);
+            const { width: pageWidth, height: pageHeight } = page.getSize();
 
-        // converte top-> y
-        const x = left;
-        const y = pageHeight - top - h;
+            const x = img.x || 0;
+            const y = img.y || 0;
+            const w = img.width  || embeddedImg.width;
+            const h = img.height || embeddedImg.height;
 
-        page.drawImage(embeddedImg, { x, y, width: w, height: h });
+            page.drawImage(embeddedImg, { x, y, width: w, height: h });
+          }
+        }
       }
 
       return pdfDoc.save();
@@ -532,9 +532,9 @@
         } else if (selectedCategory === "SeaWorld") {
           finalPdfBytes = await mergePDFWithConfig(originalPdfBytes, seaWorldVoucherConfig);
         }
-        // "Hospedagem" => sem manipulação, ou crie outra config
+        // Hospedagem => sem manipulação, ou crie config se necessário
 
-        // Envia PDF final p/ servidor
+        // Envia PDF resultante p/ servidor
         const result = await uploadFinalPDF(finalPdfBytes, selectedCategory);
 
         alert("PDF salvo com sucesso! Categoria: " + selectedCategory);
@@ -548,8 +548,10 @@
       }
     });
 
-    // Carrega lista ao entrar
-    window.addEventListener('DOMContentLoaded', loadRecentChanges);
+    // Carrega a lista inicial
+    window.addEventListener('DOMContentLoaded', () => {
+      loadRecentChanges();
+    });
   </script>
 </body>
 </html>
