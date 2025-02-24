@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <title>Magic Travel - Sidebar Minimalista</title>
+  <title>Magic Travel - Sidebar Premium</title>
 
-  <!-- SimpleBar CSS (Para rolagem customizada) -->
+  <!-- SimpleBar CSS -->
   <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.css"
@@ -35,7 +35,7 @@
       overflow-x: hidden;
     }
 
-    /* CONTAINER PRINCIPAL (engloba sidebar + conteúdo) */
+    /* CONTAINER PRINCIPAL */
     .page-container {
       display: flex;
       flex: 1;
@@ -44,13 +44,13 @@
     /* SIDEBAR */
     .sidebar {
       width: 260px;
-      background: #1b2733; /* Removemos o gradiente para ser mais minimalista */
+      background: #1b2733;
       position: relative;
       z-index: 999;
-      transition: margin-left 0.3s ease-in-out;
+      transition: margin-left 0.3s ease-in-out !important; /* !important para forçar */
     }
     .sidebar.collapsed {
-      margin-left: -260px;
+      margin-left: -260px !important;
     }
 
     .sidebar-content {
@@ -77,8 +77,8 @@
       background: none;
       border: none;
       cursor: pointer;
-      color: #fff;
-      font-size: 1.2rem;
+      color: #fff !important;
+      font-size: 1.4rem !important;
       outline: none;
     }
 
@@ -88,7 +88,6 @@
       margin: 0;
       padding: 0;
     }
-
     .sidebar-header {
       color: #ced4da;
       font-size: 0.75rem;
@@ -99,7 +98,7 @@
 
     /* ITEM DA SIDEBAR */
     .sidebar-item {
-      /* Removemos as animações de slideIn para ficar mais “limpo” */
+      /* Mantido vazio propositalmente */
     }
 
     /* LINK DA SIDEBAR */
@@ -109,68 +108,68 @@
       padding: 0.75rem 1.5rem;
       text-decoration: none;
       font-weight: 400;
-      color: rgba(233, 236, 239, 0.6);
+      color: rgba(233, 236, 239, 0.6) !important;
     }
 
     /*
-      MELHORIA DE ÍCONES:
-      - Aumentamos um pouco o tamanho,
-      - Mantemos espaçamento,
-      - Espessura maior (stroke-width)
+      MELHORIAS DE ÍCONES (ESPAÇO "PREMIUM" ENTRE ÍCONE E TEXTO):
+      - Maior stroke-width,
+      - Ícone um pouco maior,
+      - Espaçamento bem grande (2rem),
+      - Uso de !important para evitar override de estilos.
     */
     .sidebar-link i {
-      margin-right: 0.75rem;  /* Espaçamento antes do texto */
-      width: 1.2em;           /* Largura base p/ ícone Feather */
-      height: 1.2em;          /* Altura base p/ ícone Feather */
-      stroke-width: 2.5;      /* Espessura do traço do Feather */
-      color: rgba(233, 236, 239, 0.6);
-      flex-shrink: 0;         /* Garante que o ícone não encolha */
+      margin-right: 2rem !important;  /* AQUI: espaçamento maior entre ícone e texto */
+      width: 1.5em !important;
+      height: 1.5em !important;
+      stroke-width: 3 !important;
+      color: rgba(233, 236, 239, 0.6) !important;
+      flex-shrink: 0 !important;
     }
 
     /* HOVER */
     .sidebar-link:hover {
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff;
+      background: rgba(255, 255, 255, 0.08) !important;
+      color: #fff !important;
     }
     .sidebar-link:hover i {
-      color: #fff;
+      color: #fff !important;
     }
 
-    /* ESTADO ATIVO (POR PADRÃO) */
+    /* ACTIVE GERAL */
     .sidebar-item.active > .sidebar-link {
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
+      background: rgba(255, 255, 255, 0.15) !important;
+      color: #fff !important;
     }
     .sidebar-item.active > .sidebar-link i {
-      color: #fff;
+      color: #fff !important;
     }
 
-    /* ESTILOS ESPECÍFICOS (exemplo) */
+    /* EXEMPLOS DE ACTIVE ESPECÍFICO */
     .sidebar-item.active-orders > .sidebar-link {
-      background: rgba(255, 0, 0, 0.1);
-      border-left: 3px solid #e74c3c;
+      background: rgba(255, 0, 0, 0.2) !important;
+      border-left: 3px solid #e74c3c !important;
     }
     .sidebar-item.active-loti > .sidebar-link {
-      background: rgba(0, 255, 0, 0.1);
-      border-left: 3px solid #2ecc71;
+      background: rgba(0, 255, 0, 0.2) !important;
+      border-left: 3px solid #2ecc71 !important;
     }
 
-    /* CONTEÚDO PRINCIPAL (onde entra o restante da página) */
+    /* CONTEÚDO PRINCIPAL */
     .main-content {
       flex: 1;
       padding: 2rem;
-      transition: margin-left 0.3s ease-in-out;
+      transition: margin-left 0.3s ease-in-out !important;
     }
-    /* Ajuste quando colapsado */
     .collapsed ~ .main-content {
-      margin-left: 0;
+      margin-left: 0 !important;
     }
 
-    /* BARRA DE ROLAGEM CUSTOMIZADA (SimpleBar) */
+    /* SCROLLBAR CUSTOMIZADA (SimpleBar) */
     .js-simplebar .simplebar-track.simplebar-vertical .simplebar-scrollbar {
       background: rgba(255, 255, 255, 0.2) !important;
-      width: 6px;
-      border-radius: 3px;
+      width: 6px !important;
+      border-radius: 3px !important;
     }
     .js-simplebar .simplebar-track.simplebar-vertical:hover .simplebar-scrollbar {
       background: rgba(255, 255, 255, 0.5) !important;
@@ -179,7 +178,7 @@
     /* RESPONSIVIDADE */
     @media (max-width: 768px) {
       .sidebar {
-        position: fixed;
+        position: fixed !important;
         top: 0;
         left: 0;
         height: 100%;
@@ -188,14 +187,13 @@
         margin-left: 0 !important;
       }
       .sidebar:not(.collapsed) ~ .main-content {
-        margin-left: 260px;
+        margin-left: 260px !important;
       }
     }
   </style>
 </head>
 
 <body>
-  <!-- CONTAINER PRINCIPAL -->
   <div class="page-container">
     <!-- SIDEBAR -->
     <nav id="sidebar" class="sidebar js-sidebar">
@@ -214,7 +212,6 @@
         </div>
 
         <ul class="sidebar-nav">
-          <!-- Título alterado de "Páginas" para "Dados" -->
           <li class="sidebar-header">Dados</li>
 
           <li class="sidebar-item">
@@ -254,7 +251,6 @@
             </a>
           </li>
 
-          <!-- Troca de "blank" por "ranking" -->
           <li class="sidebar-item">
             <a
               class="sidebar-link"
@@ -265,10 +261,8 @@
             </a>
           </li>
 
-          <!-- Título alterado de "Ferramentas & Componentes" para "Ferramentes" -->
           <li class="sidebar-header">Ferramentes</li>
 
-          <!-- Troca de "Buttons" por "Voucher" -->
           <li class="sidebar-item">
             <a class="sidebar-link" href="https://business.magictraveltur.com/voucher">
               <i data-feather="square"></i>
@@ -324,58 +318,56 @@
     </nav>
     <!-- /SIDEBAR -->
 
-    <!-- MAIN CONTENT (exemplo de container para o conteúdo real) -->
+    <!-- MAIN CONTENT -->
     <div class="main-content">
-      <h1>Conteúdo Principal</h1>
-      <p>Exemplo de texto no corpo da página.</p>
+      <h1>Exemplo de Conteúdo</h1>
+      <p>Verifique agora o espaçamento premium entre o ícone e o texto na sidebar.</p>
     </div>
   </div>
 
-  <!-- SimpleBar JS (rolagem customizada) -->
+  <!-- SimpleBar JS -->
   <script src="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.js"></script>
   <!-- Feather Icons -->
   <script src="https://unpkg.com/feather-icons"></script>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      // Inicializa Feather Icons
+      // Substitui [i data-feather="..."] pelos SVGs
       feather.replace();
 
-      // Captura o pathname atual (removendo barra final)
-      var currentPath = window.location.pathname.replace(/\/$/, "");
-      let ativado = false;
+      // EXEMPLO de como capturar a URL para "ativar" o menu
+      const currentUrl = window.location.href.split('#')[0].split('?')[0].replace(/\/$/, '');
+      console.log("currentUrl =>", currentUrl);
 
-      // Verifica cada item .sidebar-item
-      document.querySelectorAll(".sidebar-item").forEach(function (item) {
-        var link = item.querySelector(".sidebar-link");
-        if (link) {
-          var linkPath = new URL(link.href, window.location.origin).pathname.replace(/\/$/, "");
-          if (
-            currentPath === linkPath ||
-            (currentPath.includes(linkPath) && linkPath !== "/")
-          ) {
+      let algumAtivado = false;
+      document.querySelectorAll(".sidebar-item").forEach((item) => {
+        const linkEl = item.querySelector(".sidebar-link");
+        if (linkEl) {
+          // Normaliza o href
+          const linkUrl = linkEl.href.split('#')[0].split('?')[0].replace(/\/$/, '');
+
+          if (currentUrl === linkUrl || currentUrl.includes(linkUrl)) {
             item.classList.add("active");
-            ativado = true;
+            algumAtivado = true;
 
-            // Regras específicas (exemplo de cor vermelha/verde)
-            if (linkPath.includes("pages-orders.html")) {
+            // Regras específicas (exemplo)
+            if (linkUrl.includes("pages-orders.html")) {
               item.classList.add("active-orders");
-            } else if (linkPath.includes("loti.html")) {
+            } else if (linkUrl.includes("loti.html")) {
               item.classList.add("active-loti");
             }
           }
         }
       });
 
-      if (!ativado) {
-        console.warn("Nenhum item foi ativado! Verifique se as URLs batem com os links.");
+      if (!algumAtivado) {
+        console.warn("Nenhum item foi destacado. Verifique se a URL bate.");
       }
 
-      // Botão de colapsar a sidebar
-      var toggleButton = document.getElementById("sidebarToggle");
-      var sidebar = document.getElementById("sidebar");
-
-      toggleButton.addEventListener("click", function () {
+      // Botão de colapsar
+      const toggleButton = document.getElementById("sidebarToggle");
+      const sidebar = document.getElementById("sidebar");
+      toggleButton.addEventListener("click", () => {
         sidebar.classList.toggle("collapsed");
       });
     });
