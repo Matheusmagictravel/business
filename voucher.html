@@ -13,19 +13,16 @@
       font-family: Arial, sans-serif;
       background-color: #f5f5f5;
     }
-
     #voucher-page-container {
       display: flex;
       flex-direction: row;
-      height: 100vh; /* ocupa a tela toda */
+      height: 100vh; /* Ocupa a tela toda */
     }
 
     /* SIDEBAR SEM PADDING */
     #sidebar-container {
       width: 250px;
       border-right: 1px solid #ccc;
-      margin: 0;
-      padding: 0; /* removendo qualquer padding */
       background-color: #fff;
       box-sizing: border-box;
     }
@@ -43,12 +40,14 @@
       flex: 1;
       padding: 20px;
       box-sizing: border-box;
-      overflow-y: auto; /* rolagem se exceder altura */
+      overflow-y: auto; /* Rolagem se exceder altura */
     }
 
-    /* CONTAINER PARA O FORMULÁRIO DE VOUCHER */
+    /* ==============================
+       FORMULÁRIO VOUCHER PDF
+       ============================== */
     .voucher-form-container {
-      max-width: 600px;
+      max-width: 700px;
       margin: 0 auto 40px auto;
       background: #fff;
       border: 1px solid #ccc;
@@ -70,8 +69,38 @@
       margin-bottom: 5px;
       color: #333;
     }
-    .form-group select,
-    .form-group input[type="file"] {
+
+    /* Área de upload estilo "arraste e solte" */
+    #dropArea {
+      border: 2px dashed #ccc;
+      border-radius: 5px;
+      padding: 20px;
+      text-align: center;
+      margin-bottom: 15px;
+      cursor: pointer;
+      transition: border-color 0.3s;
+    }
+    #dropArea:hover {
+      border-color: #999;
+    }
+    #dropArea p {
+      margin: 0;
+      font-size: 16px;
+      color: #555;
+      font-weight: bold;
+    }
+    #dropArea .upload-instructions {
+      font-size: 14px;
+      color: #777;
+      margin-top: 5px;
+      margin-bottom: 15px;
+    }
+    #pdfFileInput {
+      display: none; /* Oculto, pois usamos a div clicável */
+    }
+
+    /* SELECT, BUTTON */
+    .form-group select {
       width: 100%;
       padding: 8px;
       box-sizing: border-box;
@@ -79,7 +108,6 @@
       border-radius: 3px;
       font-size: 14px;
     }
-
     #convertButton {
       display: inline-block;
       background-color: #007bff;
@@ -94,9 +122,67 @@
       background-color: #0056b3;
     }
 
-    /* LISTA DE ALTERAÇÕES RECENTES */
+    /* ==============================
+       TABELA DE ÚLTIMOS PEDIDOS (Anexo 3)
+       ============================== */
+    .orders-container {
+      max-width: 900px;
+      margin: 0 auto 40px auto;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 20px;
+    }
+    .orders-container h3 {
+      margin-top: 0;
+      text-align: center;
+      color: #333;
+    }
+    .orders-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    .orders-table th {
+      background-color: #f2f2f2;
+      text-align: left;
+      padding: 8px;
+      border-bottom: 1px solid #ccc;
+      color: #333;
+      font-weight: bold;
+    }
+    .orders-table td {
+      padding: 8px;
+      border-bottom: 1px solid #ccc;
+      color: #333;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 12px;
+      color: #fff;
+    }
+    .status-aguardando {
+      background-color: #007bff; /* azul */
+    }
+    .status-concluido {
+      background-color: #28a745; /* verde */
+    }
+    /* Ícone de olho (visualizar) */
+    .view-icon {
+      cursor: pointer;
+      font-size: 16px;
+      color: #007bff;
+    }
+
+    /* ==============================
+       LISTA DE ALTERAÇÕES RECENTES
+       ============================== */
     #recentChangesContainer {
-      max-width: 600px;
+      max-width: 700px;
       margin: 0 auto;
       background: #fff;
       border: 1px solid #ccc;
@@ -167,11 +253,14 @@
   <div id="voucher-page-container">
     <!-- SIDEBAR (sem padding) -->
     <div id="sidebar-container">
+      <!-- Ajuste o src do iframe para seu menu lateral -->
       <iframe src="sidebar.html" id="sidebar-frame"></iframe>
     </div>
 
     <!-- CONTEÚDO PRINCIPAL -->
     <div id="main-content">
+
+      <!-- SEÇÃO: EDITAR VOUCHER PDF -->
       <div class="voucher-form-container">
         <h2>Voucher PDF - Edição</h2>
         <form id="voucherForm">
@@ -186,15 +275,42 @@
             </select>
           </div>
 
-          <div class="form-group">
-            <label for="pdfFile">Anexar PDF (original):</label>
-            <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" required />
+          <!-- Área de Upload estilo "Arraste e Solte" -->
+          <div id="dropArea">
+            <p>Arraste e solte um arquivo PDF</p>
+            <p class="upload-instructions">ou clique para selecionar do seu computador</p>
+            <input type="file" id="pdfFileInput" name="pdfFileInput" accept="application/pdf" required />
           </div>
 
           <button type="button" id="convertButton">Converter</button>
         </form>
       </div>
 
+      <!-- SEÇÃO: ÚLTIMOS PEDIDOS (Anexo 3) -->
+      <div class="orders-container">
+        <h3>Últimos Pedidos</h3>
+        <table class="orders-table" id="ordersTable">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>ID do Pedido</th>
+              <th>Itens</th>
+              <th>Valor (U$)</th>
+              <th>Data de Uso</th>
+              <th>Data de Pagamento</th>
+              <th>Identificador</th>
+              <th>Fornecedor</th>
+              <th>Status</th>
+              <th>Ação</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTbody">
+            <!-- Itens serão renderizados via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SEÇÃO: ALTERAÇÕES RECENTES (caso queira manter o histórico de vouchers) -->
       <div id="recentChangesContainer">
         <h3>Alterações Recentes</h3>
         <table>
@@ -219,19 +335,19 @@
     </div>
   </div>
 
-  <!-- PDF-Lib -->
+  <!-- Script da biblioteca PDF-lib -->
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 
   <script>
     /*
       ============================================================
-      CONFIGS DE VOUCHERS
-      - "top" e "left" => iremos converter p/ x,y = canto inferior
-      - "pages": "all" ou "0", etc.
+      CONFIGURAÇÕES PARA INSERIR IMAGENS NO PDF (Disney, Universal, SeaWorld etc.)
+      - "top" e "left" => iremos converter para x,y a partir do canto inferior
+      - "pages": "all" ou índice da página (ex: "0" para primeira página)
       ============================================================
     */
 
-    // Disney => 1ª página
+    // Exemplo: Disney => somente 1ª página
     const disneyVoucherConfig = {
       images: [
         {
@@ -275,7 +391,7 @@
       ]
     };
 
-    // SeaWorld => todas as páginas, mas se quer somente 1ª, mude pages:"0"
+    // SeaWorld => todas as páginas
     const seaWorldVoucherConfig = {
       images: [
         {
@@ -297,38 +413,48 @@
       ]
     };
 
-    // Endpoints
-    const UPLOAD_URL = "https://magictraveltur.com/upload_voucher.php";
-    const LIST_URL   = "https://magictraveltur.com/list_vouchers.php";
+    // Endpoints para upload e listagem (ajuste conforme seu servidor)
+    const UPLOAD_URL       = "https://magictraveltur.com/upload_voucher.php";
+    const LIST_URL         = "https://magictraveltur.com/list_vouchers.php";
+    const LIST_ORDERS_URL  = "https://magictraveltur.com/list_orders.php"; 
+    // (acima é exemplo; crie e ajuste aos seus endpoints reais)
 
     // DOM
     const voucherTypeSelect = document.getElementById('voucherType');
-    const pdfFileInput      = document.getElementById('pdfFile');
+    const pdfFileInput      = document.getElementById('pdfFileInput');
     const convertButton     = document.getElementById('convertButton');
 
-    // Paginação
+    // DOM para lista de vouchers (Alterações Recentes)
     const recentChangesBody = document.getElementById('recentChangesBody');
     const prevPageBtn       = document.getElementById('prevPageBtn');
     const nextPageBtn       = document.getElementById('nextPageBtn');
     const paginationInfo    = document.getElementById('paginationInfo');
-    let allRecords = [];
-    let currentPage = 1;
-    const pageSize = 10;
 
-    // Carrega a lista
+    // DOM para lista de Pedidos
+    const ordersTbody       = document.getElementById('ordersTbody');
+
+    // Variáveis de paginação
+    let allRecords   = [];
+    let currentPage  = 1;
+    const pageSize   = 10;
+
+    // ===========================================================
+    // CARREGAR LISTA DE "ALTERAÇÕES RECENTES" (PDFs gerados)
+    // ===========================================================
     async function loadRecentChanges() {
       try {
         const resp = await fetch(LIST_URL);
         if (!resp.ok) throw new Error("Falha ao listar vouchers");
         const data = await resp.json();
 
-        allRecords = data;
-        currentPage = 1;
+        allRecords   = data;
+        currentPage  = 1;
         renderCurrentPage();
       } catch (error) {
         console.error("Erro loadRecentChanges:", error);
       }
     }
+
     function renderCurrentPage() {
       recentChangesBody.innerHTML = "";
       const totalPages = Math.ceil(allRecords.length / pageSize);
@@ -339,21 +465,21 @@
       const pageItems  = allRecords.slice(startIndex, endIndex);
 
       pageItems.forEach(item => {
-        const row = document.createElement('tr');
-        const idTd       = document.createElement('td');
-        const dateTd     = document.createElement('td');
-        const categoryTd = document.createElement('td');
-        const downloadTd = document.createElement('td');
+        const row         = document.createElement('tr');
+        const idTd        = document.createElement('td');
+        const dateTd      = document.createElement('td');
+        const categoryTd  = document.createElement('td');
+        const downloadTd  = document.createElement('td');
 
         idTd.textContent       = item.id;
-        dateTd.textContent     = item.created_at;
+        dateTd.textContent     = item.created_at; // Ex.: "2025-02-20 14:35"
         categoryTd.textContent = item.category;
 
         const link = document.createElement('a');
-        link.href = item.downloadURL;
-        link.textContent = "Download";
+        link.href           = item.downloadURL;
+        link.textContent    = "Download";
         link.classList.add('download-link');
-        link.target = "_blank";
+        link.target         = "_blank";
         link.setAttribute('download', "VoucherEditado.pdf");
 
         downloadTd.appendChild(link);
@@ -369,6 +495,7 @@
       prevPageBtn.disabled = (currentPage <= 1);
       nextPageBtn.disabled = (currentPage >= totalPages);
     }
+
     prevPageBtn.addEventListener('click', () => {
       if (currentPage > 1) {
         currentPage--;
@@ -383,7 +510,102 @@
       }
     });
 
-    // Ler PDF
+    // ===========================================================
+    // CARREGAR "ÚLTIMOS PEDIDOS" (mock ou endpoint real)
+    // ===========================================================
+    async function loadOrders() {
+      try {
+        // Exemplo com fetch (substitua por seu endpoint real):
+        const resp = await fetch(LIST_ORDERS_URL);
+        if (!resp.ok) throw new Error("Falha ao listar pedidos");
+        const orders = await resp.json();
+
+        // Caso seja mock, substitua por algo como:
+        // const orders = [
+        //   {
+        //     name: "Marcela de Sousa Fonseca",
+        //     pedidoId: 18231240,
+        //     itens: "Magic Kingdom",
+        //     valor: 416.66,
+        //     dataUso: "21/02/2025",
+        //     dataPagamento: "20/02/2025",
+        //     identificador: "NAD124165",
+        //     fornecedor: "North American Destinations",
+        //     status: "Aguardando Emissão"
+        //   },
+        //   ...
+        // ];
+
+        renderOrders(orders);
+      } catch (error) {
+        console.error("Erro loadOrders:", error);
+      }
+    }
+
+    function renderOrders(orders) {
+      ordersTbody.innerHTML = "";
+      orders.forEach(order => {
+        const tr             = document.createElement('tr');
+        const tdNome         = document.createElement('td');
+        const tdPedidoId     = document.createElement('td');
+        const tdItens        = document.createElement('td');
+        const tdValor        = document.createElement('td');
+        const tdDataUso      = document.createElement('td');
+        const tdDataPag      = document.createElement('td');
+        const tdIdentificador= document.createElement('td');
+        const tdFornecedor   = document.createElement('td');
+        const tdStatus       = document.createElement('td');
+        const tdAcao         = document.createElement('td');
+
+        tdNome.textContent         = order.name;
+        tdPedidoId.textContent     = order.pedidoId;
+        tdItens.textContent        = order.itens;
+        tdValor.textContent        = `U$ ${order.valor.toFixed(2)}`;
+        tdDataUso.textContent      = order.dataUso;
+        tdDataPag.textContent      = order.dataPagamento;
+        tdIdentificador.textContent= order.identificador;
+        tdFornecedor.textContent   = order.fornecedor;
+
+        // Status com cor
+        const statusSpan = document.createElement('span');
+        statusSpan.classList.add('status-badge');
+        if (order.status === "Aguardando Emissão") {
+          statusSpan.classList.add('status-aguardando');
+        } else {
+          // Vamos considerar "Concluído" ou outros
+          statusSpan.classList.add('status-concluido');
+        }
+        statusSpan.textContent = order.status;
+        tdStatus.appendChild(statusSpan);
+
+        // Ação (ícone de olho)
+        const eyeIcon = document.createElement('span');
+        eyeIcon.classList.add('view-icon');
+        eyeIcon.textContent = "👁"; // Ou use FontAwesome, etc.
+        // Você pode adicionar um evento de click para ver detalhes
+        eyeIcon.addEventListener('click', () => {
+          alert(`Visualizar pedido #${order.pedidoId}`);
+        });
+        tdAcao.appendChild(eyeIcon);
+
+        tr.appendChild(tdNome);
+        tr.appendChild(tdPedidoId);
+        tr.appendChild(tdItens);
+        tr.appendChild(tdValor);
+        tr.appendChild(tdDataUso);
+        tr.appendChild(tdDataPag);
+        tr.appendChild(tdIdentificador);
+        tr.appendChild(tdFornecedor);
+        tr.appendChild(tdStatus);
+        tr.appendChild(tdAcao);
+
+        ordersTbody.appendChild(tr);
+      });
+    }
+
+    // ===========================================================
+    // MANIPULAÇÃO DO PDF (pdf-lib)
+    // ===========================================================
     function fileToArrayBuffer(file) {
       return new Promise((resolve, reject) => {
         const r = new FileReader();
@@ -393,14 +615,12 @@
       });
     }
 
-    // fetchImage
     async function fetchImageAsBytes(url) {
       const resp = await fetch(url);
       if (!resp.ok) throw new Error("Erro ao buscar imagem: " + url);
       return await resp.arrayBuffer();
     }
 
-    // Mesclar (conversão top->y)
     async function mergePDFWithConfig(originalPdfBytes, config) {
       const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
       const totalPages = pdfDoc.getPageCount();
@@ -414,41 +634,35 @@
           embeddedImg = await pdfDoc.embedJpg(imgBytes);
         }
 
-        // pages => "all" ou "0"
+        // pages => "all" ou índice "0", "1", etc.
         if (img.pages === "all") {
-          // Aplica a todas
           for (let i = 0; i < totalPages; i++) {
             const page = pdfDoc.getPage(i);
-            const { width: pageWidth, height: pageHeight } = page.getSize();
+            const { height: pageHeight } = page.getSize();
+            const x = img.left ?? 0;
+            const y = pageHeight - (img.top ?? 0) - (img.height ?? embeddedImg.height);
 
-            // Converte left,top => x,y
-            const left = img.left ?? 0;
-            const top  = img.top  ?? 0;
-            const w    = img.width  ?? embeddedImg.width;
-            const h    = img.height ?? embeddedImg.height;
-
-            // y = pageHeight - top - h => se top for “distância do topo”
-            const x = left;
-            const y = pageHeight - top - h;
-
-            page.drawImage(embeddedImg, { x, y, width: w, height: h });
+            page.drawImage(embeddedImg, {
+              x,
+              y,
+              width:  img.width  ?? embeddedImg.width,
+              height: img.height ?? embeddedImg.height
+            });
           }
         } else {
-          // pages => "0", "1", etc.
           const pageIndex = parseInt(img.pages, 10) || 0;
           if (pageIndex >= 0 && pageIndex < totalPages) {
             const page = pdfDoc.getPage(pageIndex);
-            const { width: pageWidth, height: pageHeight } = page.getSize();
+            const { height: pageHeight } = page.getSize();
+            const x = img.left ?? 0;
+            const y = pageHeight - (img.top ?? 0) - (img.height ?? embeddedImg.height);
 
-            const left = img.left ?? 0;
-            const top  = img.top  ?? 0;
-            const w    = img.width  ?? embeddedImg.width;
-            const h    = img.height ?? embeddedImg.height;
-
-            const x = left;
-            const y = pageHeight - top - h;
-
-            page.drawImage(embeddedImg, { x, y, width: w, height: h });
+            page.drawImage(embeddedImg, {
+              x,
+              y,
+              width:  img.width  ?? embeddedImg.width,
+              height: img.height ?? embeddedImg.height
+            });
           }
         }
       }
@@ -456,7 +670,6 @@
       return pdfDoc.save();
     }
 
-    // upload PDF
     async function uploadFinalPDF(pdfBytes, category) {
       const blob = new Blob([pdfBytes], { type: "application/pdf" });
       const formData = new FormData();
@@ -473,14 +686,49 @@
       return result;
     }
 
-    // Botão "Converter"
+    // ===========================================================
+    // EVENTOS DO FORMULÁRIO E DA ÁREA DE UPLOAD
+    // ===========================================================
+    // Arraste e Solte
+    const dropArea = document.getElementById('dropArea');
+    dropArea.addEventListener('click', () => {
+      pdfFileInput.click();
+    });
+    dropArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropArea.style.borderColor = '#007bff';
+    });
+    dropArea.addEventListener('dragleave', () => {
+      dropArea.style.borderColor = '#ccc';
+    });
+    dropArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropArea.style.borderColor = '#ccc';
+      if (e.dataTransfer.files.length) {
+        const file = e.dataTransfer.files[0];
+        if (file.type === "application/pdf") {
+          pdfFileInput.files = e.dataTransfer.files;
+        } else {
+          alert("Por favor, solte apenas arquivos PDF.");
+        }
+      }
+    });
+
+    // Botão "Converter" => gerar PDF editado
     convertButton.addEventListener('click', async () => {
       const category = voucherTypeSelect.value;
-      const file = pdfFileInput.files[0];
-      if (!category) { alert("Selecione uma categoria!"); return; }
-      if (!file) { alert("Selecione um arquivo PDF!"); return; }
+      const file     = pdfFileInput.files[0];
+      if (!category) {
+        alert("Selecione uma categoria de voucher!");
+        return;
+      }
+      if (!file) {
+        alert("Selecione ou arraste um arquivo PDF!");
+        return;
+      }
 
       try {
+        // Lê PDF como ArrayBuffer
         const originalPdfBytes = await fileToArrayBuffer(file);
 
         // Seleciona config
@@ -492,19 +740,19 @@
         } else if (category === "SeaWorld") {
           config = seaWorldVoucherConfig;
         } else {
-          // Hospedagem => sem manipulação
+          // Hospedagem => sem manipulação de imagens
           config = { images: [] };
         }
 
-        // Mescla
+        // Mescla imagens no PDF
         const finalPdfBytes = await mergePDFWithConfig(originalPdfBytes, config);
 
-        // Sobe pro servidor
+        // Upload para servidor
         const result = await uploadFinalPDF(finalPdfBytes, category);
 
         alert("PDF salvo com sucesso! Voucher: " + category);
 
-        // Recarrega lista
+        // Recarrega lista de vouchers
         loadRecentChanges();
       } catch (err) {
         console.error(err);
@@ -512,9 +760,14 @@
       }
     });
 
-    // Carrega ao abrir
+    // ===========================================================
+    // AO CARREGAR PÁGINA
+    // ===========================================================
     window.addEventListener('DOMContentLoaded', () => {
+      // Carrega lista de vouchers recentes
       loadRecentChanges();
+      // Carrega lista de pedidos (mock ou real)
+      loadOrders();
     });
   </script>
 </body>
