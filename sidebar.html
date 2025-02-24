@@ -2,250 +2,193 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Magic Travel - Navbar com Links e Active</title>
+  <title>Magic Travel - Navbar Pura CSS, Sem Fundo e Active Flexível</title>
 
-  <!-- Ícones (Font Awesome 5.15.3) -->
+  <!-- Ícones do Font Awesome -->
   <link
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
   />
 
   <style>
-    :root {
-      /* Ajuste as variáveis de cor conforme desejar */
-      --background: #9c88ff;             /* Fundo do body */
-      --navbar-width: 256px;            /* Largura normal do menu */
-      --navbar-width-min: 80px;         /* Largura colapsada */
-      --navbar-dark-primary: #18283b;   /* Fundo principal do menu */
-      --navbar-dark-secondary: #2c3e50; /* Fundo secundário */
-      --navbar-light-primary: #f5f6fa;  /* Texto claro */
-      --navbar-light-secondary: #8392a5;/* Texto cinza claro */
-    }
-
+    /* =================== RESET / REMOÇÃO DE FUNDO E PADDING =================== */
     html, body {
       margin: 0;
-      background: var(--background);
+      padding: 0;
+      /* Fundo transparente ou branco, como preferir. Vou deixar branco: */
+      background: #fff;
       font-family: Verdana, Geneva, Tahoma, sans-serif;
-      overflow: hidden; /* Evita barra de rolagem caso o menu extrapole */
+      overflow: hidden; /* Se quiser permitir rolagem, remova. */
     }
 
-    /* O #nav-toggle colapsa o menu ao ser marcado */
+    /* =================== NAV-BAR PRINCIPAL =================== */
+    #nav-bar {
+      position: fixed;    /* Fixa no topo/esquerda da tela */
+      top: 0;
+      left: 0;
+      /* Sem arredondar cantos, sem margem */
+      border-radius: 0;
+      margin: 0;
+
+      width: 256px;             /* Largura normal */
+      height: 100vh;            /* Ocupa a altura inteira da tela */
+      background: #18283b;      /* Fundo do menu (navbar-dark-primary) */
+      color: #f5f6fa;           /* Texto claro */
+      display: flex;
+      flex-direction: column;
+      user-select: none;        /* Evita selecionar texto arrastando */
+      overflow: hidden;         /* Conteúdo extra some */
+    }
+
+    /* Checkbox para colapsar a barra */
+    #nav-toggle {
+      display: none;
+    }
+    /* Quando marcado => colapsa */
     #nav-toggle:checked ~ #nav-header {
-      width: calc(var(--navbar-width-min) - 16px);
+      width: 80px; /* Min */
     }
     #nav-toggle:checked ~ #nav-content,
     #nav-toggle:checked ~ #nav-footer {
-      width: var(--navbar-width-min);
+      width: 80px;
     }
     #nav-toggle:checked ~ #nav-header #nav-title {
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.1s;
-    }
-    #nav-toggle:checked ~ #nav-header label[for="nav-toggle"] {
-      left: calc(50% - 8px);
-      transform: translate(-50%);
     }
     #nav-toggle:checked ~ #nav-header #nav-toggle-burger {
-      background: var(--navbar-light-primary);
-    }
-    #nav-toggle:checked
-      ~ #nav-header
-      #nav-toggle-burger:before,
-    #nav-toggle:checked
-      ~ #nav-header
-      #nav-toggle-burger::after {
-      width: 16px;
-      background: var(--navbar-light-secondary);
-      transform: translate(0, 0) rotate(0deg);
+      background: #f5f6fa;
     }
     #nav-toggle:checked ~ #nav-content .nav-button span {
       opacity: 0;
-      transition: opacity 0.1s;
-    }
-    #nav-toggle:checked ~ #nav-content .nav-button .fas {
-      min-width: calc(100% - 16px);
     }
     #nav-toggle:checked ~ #nav-footer #nav-footer-avatar {
-      margin-left: 0;
       left: 50%;
       transform: translate(-50%);
     }
-    #nav-toggle:checked ~ #nav-footer #nav-footer-titlebox,
-    #nav-toggle:checked ~ #nav-footer label[for="nav-footer-toggle"] {
+    #nav-toggle:checked ~ #nav-footer #nav-footer-titlebox {
       opacity: 0;
-      transition: opacity 0.1s;
       pointer-events: none;
     }
 
-    /* NAV-BAR CONTAINER */
-    #nav-bar {
-      position: absolute;
-      left: 1vw;
-      top: 1vw;
-      height: calc(100% - 2vw);
-      background: var(--navbar-dark-primary);
-      border-radius: 16px;
-      display: flex;
-      flex-direction: column;
-      color: var(--navbar-light-primary);
-      overflow: hidden;
-      user-select: none; /* Evita seleção de texto arrastando */
-    }
-    #nav-bar hr {
-      margin: 0;
-      position: relative;
-      left: 16px;
-      width: calc(100% - 32px);
-      border: none;
-      border-top: solid 1px var(--navbar-dark-secondary);
-    }
-    #nav-bar a {
-      color: inherit;
-      text-decoration: inherit;
-    }
-    #nav-bar input[type="checkbox"] {
-      display: none;
-    }
-
-    /* HEADER (TOPO) */
+    /* HEADER DO NAV */
     #nav-header {
       position: relative;
-      width: var(--navbar-width);
-      left: 16px;
-      width: calc(var(--navbar-width) - 16px);
-      min-height: 80px;
-      background: var(--navbar-dark-primary);
-      border-radius: 16px;
-      z-index: 2;
+      width: 256px;
+      height: 80px;
+      background: #18283b; /* Mesmo do container */
+      transition: width 0.2s;
       display: flex;
       align-items: center;
-      transition: width 0.2s;
     }
-    #nav-header hr {
-      position: absolute;
-      bottom: 0;
-    }
+    /* Título do nav */
     #nav-title {
+      margin-left: 16px;
       font-size: 1.4rem;
-      transition: opacity 1s;
+      color: #f5f6fa;
+      text-decoration: none;
+      transition: opacity 0.2s;
     }
+
+    /* Botão hamburguer */
     label[for="nav-toggle"] {
       position: absolute;
       right: 0;
       width: 3rem;
       height: 100%;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       cursor: pointer;
     }
-    /* Botão hamburguer */
     #nav-toggle-burger {
-      position: relative;
       width: 16px;
       height: 2px;
-      background: var(--navbar-dark-primary);
+      background: #18283b;
       border-radius: 99px;
-      transition: background 0.2s;
+      position: relative;
+      transition: 0.2s;
     }
     #nav-toggle-burger:before,
     #nav-toggle-burger:after {
       content: "";
       position: absolute;
-      top: -6px;
       width: 10px;
       height: 2px;
-      background: var(--navbar-light-primary);
+      background: #f5f6fa;
       border-radius: 99px;
-      transform: translate(2px, 8px) rotate(30deg);
       transition: 0.2s;
+    }
+    #nav-toggle-burger:before {
+      top: -6px;
+      transform: translate(2px, 8px) rotate(30deg);
     }
     #nav-toggle-burger:after {
       top: 6px;
       transform: translate(2px, -8px) rotate(-30deg);
     }
 
-    /* CONTEÚDO (itens do menu) */
+    /* CONTEÚDO DO MENU (links) */
     #nav-content {
-      margin: -16px 0;
-      padding: 16px 0;
       position: relative;
+      width: 256px;
       flex: 1;
-      width: var(--navbar-width);
-      background: var(--navbar-dark-primary);
-      box-shadow: 0 0 0 16px var(--navbar-dark-primary);
-      direction: rtl; /* "truque" para o highlight se mover no :hover */
-      overflow-x: hidden;
+      background: #18283b;
       transition: width 0.2s;
+      overflow-x: hidden;
     }
+
+    /* Scrollbar oculta ou custom? Se quiser permitir rolagem grande. */
     #nav-content::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+      width: 6px;
     }
     #nav-content::-webkit-scrollbar-thumb {
       border-radius: 99px;
-      background-color: #d62929;
+      background-color: #555;
     }
 
-    /* BLOCO DE DESTAQUE QUE SE MOVE AO HOVER */
+    /* Destaque que se move no hover */
     #nav-content-highlight {
       position: absolute;
-      left: 16px;
+      left: 0; /* encosta na borda */
       top: -70px;
-      width: calc(100% - 16px);
+      width: 4px; /* Em vez de retângulo, pode ser uma faixinha fina */
       height: 54px;
-      background: var(--background);
-      background-attachment: fixed;
-      border-radius: 16px 0 0 16px;
+      background: #9c88ff;
       transition: top 0.2s;
       z-index: 0;
     }
-    #nav-content-highlight:before,
-    #nav-content-highlight:after {
-      content: "";
-      position: absolute;
-      right: 0;
-      bottom: 100%;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      box-shadow: 16px 16px var(--background);
-    }
-    #nav-content-highlight:after {
-      top: 100%;
-      box-shadow: 16px -16px var(--background);
-    }
 
-    /*
-      Cada item do menu é .nav-button.
-      AGORA SÃO <a> COM LINKS DE VERDADE.
-    */
+    /* Links do menu */
     .nav-button {
-      position: relative;
-      margin-left: 16px;
-      height: 54px;
       display: flex;
       align-items: center;
-      color: var(--navbar-light-secondary);
-      direction: ltr; /* retorna normal */
+      height: 54px;
+      color: #8392a5; /* cinza claro */
+      text-decoration: none;
       cursor: pointer;
+      padding: 0 16px;
+      position: relative;
       z-index: 1;
       transition: color 0.2s;
     }
     .nav-button span {
-      transition: opacity 1s;
+      margin-left: 8px;
+      transition: 0.2s;
     }
     .nav-button .fas {
-      transition: min-width 0.2s;
-      min-width: 3rem;
+      width: 20px;
       text-align: center;
+    }
+    /* HOVER => muda cor e move highlight (via nth-of-type) */
+    .nav-button:hover {
+      color: #f5f6fa;
     }
 
     /*
-      Hover => movemos #nav-content-highlight via nth-of-type
-      Precisamos contar 1,2,3,... sem quebrar nos <hr>.
-      Então a contagem ignora <hr>. Ajustar se inserir/remover itens.
+      .nav-button:nth-of-type(X):hover ~ #nav-content-highlight { top: ... }
+      Precisamos enumerar manualmente se quisermos mover exato.
+      Caso vá redimensionar, lembre de ajustar os valores.
     */
     .nav-button:nth-of-type(1):hover ~ #nav-content-highlight {
       top: 16px;
@@ -284,115 +227,100 @@
       top: 610px;
     }
 
-    /* ESTADO "ACTIVE" (quando a URL atual bate com o link) */
-    /* Faremos no JS => .active */
+    /* "ACTIVE" => coloração especial + highlight fixo */
     .nav-button.active {
-      color: var(--navbar-light-primary) !important; /* cor do texto */
-      background-color: #34495e; /* leve destaque */
+      color: #fff;
+      background: #34495e; /* Exemplo */
     }
 
-    /* FOOTER DO MENU (Expansível via #nav-footer-toggle) */
+    /* FOOTER (opcional) */
+    #nav-footer-toggle {
+      display: none;
+    }
     #nav-footer {
       position: relative;
-      width: var(--navbar-width);
+      width: 256px;
       height: 54px;
-      background: var(--navbar-dark-secondary);
-      border-radius: 16px;
+      background: #2c3e50;
+      transition: width 0.2s, height 0.2s;
       display: flex;
       flex-direction: column;
-      z-index: 2;
-      transition: width 0.2s, height 0.2s;
     }
     #nav-footer-heading {
       position: relative;
-      width: 100%;
-      height: 54px;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
+      height: 54px;
     }
     #nav-footer-avatar {
-      position: relative;
-      margin: 11px 0 11px 16px;
-      left: 0;
+      margin-left: 16px;
       width: 32px;
       height: 32px;
       border-radius: 50%;
       overflow: hidden;
-      transform: translate(0);
       transition: 0.2s;
     }
     #nav-footer-avatar img {
-      height: 100%;
+      width: 100%;
+      height: auto;
     }
     #nav-footer-titlebox {
-      position: relative;
-      margin-left: 16px;
-      width: 10px;
-      display: flex;
-      flex-direction: column;
-      transition: opacity 1s;
-    }
-    #nav-footer-subtitle {
-      color: var(--navbar-light-secondary);
-      font-size: 0.6rem;
-    }
-    #nav-footer-toggle:checked + #nav-footer {
-      height: 30%;
-      min-height: 54px;
-    }
-    #nav-footer-toggle:checked + #nav-footer label[for="nav-footer-toggle"] {
-      transform: rotate(180deg);
+      margin-left: 8px;
+      transition: opacity 0.2s;
     }
     label[for="nav-footer-toggle"] {
       position: absolute;
       right: 0;
       width: 3rem;
-      height: 100%;
+      height: 54px;
       display: flex;
       align-items: center;
+      justify-content: center;
       cursor: pointer;
-      transition: transform 0.2s, opacity 0.2s;
+      transition: transform 0.2s;
+    }
+    label[for="nav-footer-toggle"] i {
+      color: #f5f6fa;
+    }
+    #nav-footer-toggle:checked + #nav-footer {
+      height: 30%; /* Expande */
+      min-height: 54px;
+    }
+    #nav-footer-toggle:checked + #nav-footer label[for="nav-footer-toggle"] {
+      transform: rotate(180deg);
     }
     #nav-footer-content {
-      margin: 0 16px 16px 16px;
-      border-top: solid 1px var(--navbar-light-secondary);
-      padding: 16px 0;
-      color: var(--navbar-light-secondary);
+      flex: 1;
+      border-top: 1px solid #8392a5;
+      color: #8392a5;
       font-size: 0.8rem;
+      padding: 8px 16px;
       overflow: auto;
-    }
-    #nav-footer-content::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    #nav-footer-content::-webkit-scrollbar-thumb {
-      border-radius: 99px;
-      background-color: #d62929;
     }
   </style>
 </head>
 <body>
 
-<!-- NAV-BAR -->
+<!-- NAV-BAR COM TUDO -->
 <div id="nav-bar">
-
-  <!-- Checkbox para colapsar a barra -->
+  <!-- Checkbox p/ colapsar -->
   <input id="nav-toggle" type="checkbox" />
 
-  <!-- HEADER DO NAV -->
+  <!-- HEADER -->
   <div id="nav-header">
-    <a id="nav-title" href="#" target="_blank">
+    <a id="nav-title" href="#">
       Magic<i class="fab fa-codepen"></i>Travel
     </a>
+    <!-- Botão hamburguer -->
     <label for="nav-toggle">
       <span id="nav-toggle-burger"></span>
     </label>
-    <hr />
   </div>
 
-  <!-- CONTEÚDO (itens do menu). Substituímos <div class="nav-button"> por <a class="nav-button" href="..."> -->
+  <!-- CONTEÚDO (LINKS) -->
   <div id="nav-content">
-
+    <!-- Precisamos enumerar items para mover highlight no hover -->
     <a class="nav-button" href="https://business.magictraveltur.com/">
       <i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
     </a>
@@ -408,9 +336,6 @@
     <a class="nav-button" href="https://business.magictraveltur.com/ranking.html">
       <i class="fas fa-medal"></i><span>Ranking</span>
     </a>
-
-    <hr />
-
     <a class="nav-button" href="https://business.magictraveltur.com/voucher">
       <i class="fas fa-ticket-alt"></i><span>Voucher</span>
     </a>
@@ -426,9 +351,6 @@
     <a class="nav-button" href="icons-feather.html">
       <i class="fas fa-icons"></i><span>Icons</span>
     </a>
-
-    <hr />
-
     <a class="nav-button" href="charts-chartjs.html">
       <i class="fas fa-chart-pie"></i><span>Charts</span>
     </a>
@@ -436,73 +358,88 @@
       <i class="fas fa-map-marked-alt"></i><span>Maps</span>
     </a>
 
-    <!-- Destaque que se move no hover -->
+    <!-- Barra fina de destaque -->
     <div id="nav-content-highlight"></div>
   </div>
 
-  <!-- Checkbox para expandir o footer -->
+  <!-- Checkbox p/ expandir Footer -->
   <input id="nav-footer-toggle" type="checkbox" />
 
-  <!-- RODAPÉ (avatar e info) -->
+  <!-- RODAPÉ (opc) -->
   <div id="nav-footer">
     <div id="nav-footer-heading">
       <div id="nav-footer-avatar">
         <img src="https://gravatar.com/avatar/4474ca42d303761c2901fa819c4f2547" />
       </div>
       <div id="nav-footer-titlebox">
-        <a id="nav-footer-title" href="#" target="_blank">Admin</a>
-        <span id="nav-footer-subtitle">Magic Travel</span>
+        <div style="color:#f5f6fa;">Admin</div>
+        <div style="font-size:0.7rem;">Magic Travel</div>
       </div>
-      <label for="nav-footer-toggle">
-        <i class="fas fa-caret-up"></i>
-      </label>
+      <label for="nav-footer-toggle"><i class="fas fa-caret-up"></i></label>
     </div>
     <div id="nav-footer-content">
-      Texto de perfil, biografia ou outras informações adicionais do usuário.
-      Esta área é rolável quando expandida.
+      Informações extras do usuário, rolagem se expandir.
     </div>
   </div>
 </div>
 
-<!-- SCRIPT: define "active" e posiciona highlight se tiver item ativo -->
+<!-- SCRIPT: "Active" super flexível -->
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    // Captura a URL atual (remoção de parâmetros, #, barra final)
-    let currentUrl = window.location.href.split("?")[0].split("#")[0].replace(/\/$/, "");
-    console.log("URL atual =>", currentUrl);
+    // 1) Captura URL atual (remoção de protocolo, domínio, ? e #, trailing slash, e "www")
+    function unifyUrl(url) {
+      try {
+        // Tenta construir URL (em browsers modernos)
+        let tmp = new URL(url);
+        // Remove protocolo e dominio => fica o pathname
+        let path = tmp.pathname.toLowerCase();
+        // Remove barra final
+        path = path.replace(/\/$/, "");
+        return path;
+      } catch(e) {
+        // Se não for parseável, faz fallback
+        return url.replace(/^(https?:\/\/)?(www\.)?[^/]+/i, "").toLowerCase().replace(/\/$/, "");
+      }
+    }
 
-    // Seleciona todos os links
-    const links = document.querySelectorAll("#nav-content .nav-button");
-    // Precisamos da mesma lista para saber qual o nth-of-type do item ativo
+    function isMatch(u1, u2) {
+      // Se um contiver o outro (bidirecional), retorna true
+      // Assim fica "super permissivo".
+      return u1.includes(u2) || u2.includes(u1);
+    }
+
+    let current = unifyUrl(window.location.href);
+    console.log("URL atual =>", current);
+
+    let links = document.querySelectorAll("#nav-content .nav-button");
+    // Array com as posições do highlight p/ cada item (1..12)
     let highlightPositions = [
-      16, 70, 124, 178, 232,  /* 1..5 */
-      286, 340, 394, 448, 502,/* 6..10 */
-      556, 610                 /* 11..12 */
+      16, 70, 124, 178, 232,
+      286, 340, 394, 448, 502,
+      556, 610
     ];
-
     let highlight = document.getElementById("nav-content-highlight");
+
     let foundActive = false;
 
     links.forEach((link, index) => {
-      // Normaliza link.href
-      let linkUrl = link.href.split("?")[0].split("#")[0].replace(/\/$/, "");
+      let linkUrl = unifyUrl(link.href);
+      console.log("Comparando link =>", linkUrl);
 
-      // Se a URL atual "bate" ou "contém" -> .active
-      // Se quiser exato, use (currentUrl === linkUrl)
-      if (currentUrl.includes(linkUrl)) {
-        console.log("Ativando =>", linkUrl);
+      if (isMatch(current, linkUrl)) {
+        // Marca como ativo
+        console.log(">>> ATIVO =>", linkUrl);
         link.classList.add("active");
         foundActive = true;
-
-        // Ajusta a posição do highlight para esse item
-        if (highlightPositions[index] !== undefined) {
+        // Move highlight
+        if (highlightPositions[index] != null) {
           highlight.style.top = highlightPositions[index] + "px";
         }
       }
     });
 
     if (!foundActive) {
-      console.warn("Nenhum link ativo. Ajuste a lógica de comparação se necessário.");
+      console.warn("Nenhum link ativo. Ajuste a lógica se necessário.");
     }
   });
 </script>
