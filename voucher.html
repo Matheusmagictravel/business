@@ -1,49 +1,56 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Página de Voucher - Edição PDF (Disney)</title>
+  <meta charset="UTF-8">
+  <title>Sobrepor Todas as Páginas (Front-End) - com Sidebar</title>
   <style>
-    /* ==============================
-       CSS PARA A PÁGINA DE VOUCHER
-       ============================== */
+    /* =============================
+       Layout geral com sidebar
+       ============================= */
     #voucher-page-container {
       display: flex;
       flex-direction: row;
       font-family: Arial, sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
     }
 
-    /* SIDEBAR */
     #sidebar-container {
       width: 250px;
-      min-height: 100vh;
       border-right: 1px solid #ccc;
     }
     #sidebar-frame {
       width: 100%;
-      height: 100%;
+      height: 100vh;
       border: none;
     }
 
-    /* CONTEÚDO PRINCIPAL */
+    /* ============================
+       Conteúdo principal
+       ============================ */
     #main-content {
       flex: 1;
       padding: 20px;
     }
 
-    .voucher-form-container {
+    /* ============================
+       Container do formulário
+       ============================ */
+    .overlay-form-container {
       max-width: 600px;
-      margin: 0 auto 40px auto;
+      margin: 0 auto;
       background: #f9f9f9;
       border: 1px solid #ccc;
       padding: 20px;
       border-radius: 5px;
     }
-    .voucher-form-container h2 {
-      margin-top: 0;
-      margin-bottom: 20px;
+
+    .overlay-form-container h2 {
       text-align: center;
+      margin-top: 0;
     }
+
     .form-group {
       margin-bottom: 15px;
     }
@@ -52,7 +59,6 @@
       font-weight: bold;
       margin-bottom: 5px;
     }
-    .form-group select,
     .form-group input[type="file"] {
       width: 100%;
       padding: 8px;
@@ -61,7 +67,7 @@
       border-radius: 3px;
     }
 
-    #convertButton {
+    #mergeButton {
       display: inline-block;
       background-color: #007bff;
       color: #fff;
@@ -71,367 +77,173 @@
       cursor: pointer;
       font-size: 16px;
     }
-    #convertButton:hover {
+    #mergeButton:hover {
       background-color: #0056b3;
     }
 
-    /* LISTA DE ALTERAÇÕES RECENTES */
-    #recentChangesContainer {
-      max-width: 600px;
-      margin: 0 auto;
-    }
-    #recentChangesContainer h3 {
-      margin-bottom: 15px;
-      text-align: center;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-bottom: 20px;
-    }
-    table thead tr {
-      background-color: #007bff;
-      color: #fff;
-    }
-    table th,
-    table td {
-      text-align: left;
-      padding: 8px;
-      border: 1px solid #ccc;
-    }
-    table tbody tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
-    .download-link {
-      color: #007bff;
-      text-decoration: none;
+    /* Link de download */
+    #downloadLink {
+      display: inline-block;
+      margin-top: 15px;
       font-weight: bold;
+      text-decoration: none;
+      color: #007bff;
     }
-    .download-link:hover {
+    #downloadLink:hover {
       text-decoration: underline;
+    }
+
+    /* Mensagem de erro/sucesso */
+    #resultMessage {
+      margin-top: 15px;
+      font-weight: bold;
+      display: none;
     }
   </style>
 </head>
 <body>
   <div id="voucher-page-container">
-    <!-- 
-      =================================================
-      CONTAINER DO SIDEBAR - IMPORTANDO O ARQUIVO EXTERNO
-      =================================================
-    -->
+    <!-- SIDEBAR -->
     <div id="sidebar-container">
       <iframe src="sidebar.html" id="sidebar-frame"></iframe>
     </div>
 
-    <!-- 
-      =============================
-      CONTEÚDO PRINCIPAL DA PÁGINA
-      =============================
-    -->
+    <!-- CONTEÚDO PRINCIPAL -->
     <div id="main-content">
-      <!-- FORMULÁRIO -->
-      <div class="voucher-form-container">
-        <h2>Voucher PDF - Edição Disney</h2>
-        <form id="voucherForm">
-          <!-- Selecionar qual voucher -->
-          <div class="form-group">
-            <label for="voucherType">Selecione qual voucher deseja editar:</label>
-            <select id="voucherType" name="voucherType" required>
-              <option value="">-- Selecione --</option>
-              <option value="Disney">Disney</option>
-              <option value="Universal">Universal</option>
-              <option value="SeaWorld">SeaWorld</option>
-              <option value="Hospedagem">Hospedagem</option>
-            </select>
-          </div>
+      <div class="overlay-form-container">
+        <h2>Sobrepor PDFs (todas as páginas)</h2>
 
-          <!-- Anexar o PDF (original) -->
-          <div class="form-group">
-            <label for="pdfFile">Anexar PDF (original):</label>
-            <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" required />
-          </div>
+        <div class="form-group">
+          <label for="basePdfFile">PDF Base:</label>
+          <input type="file" id="basePdfFile" accept="application/pdf" />
+        </div>
 
-          <!-- Botão de Converter -->
-          <button type="button" id="convertButton">Converter</button>
-        </form>
-      </div>
+        <div class="form-group">
+          <label for="overlayPdfFile">PDF Overlay:</label>
+          <input type="file" id="overlayPdfFile" accept="application/pdf" />
+        </div>
 
-      <!-- LISTA DAS ALTERAÇÕES RECENTES -->
-      <div id="recentChangesContainer">
-        <h3>Alterações Recentes</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Data/Hora</th>
-              <th>Categoria</th>
-              <th>Download</th>
-            </tr>
-          </thead>
-          <tbody id="recentChangesBody">
-            <!-- Aqui entram as linhas com as alterações recentes -->
-          </tbody>
-        </table>
+        <button id="mergeButton">Mesclar (Todas as Páginas)</button>
+        <a id="downloadLink" href="#" download="PdfSobreposto_TodasPaginas.pdf" style="display:none;">
+          Baixar PDF Final
+        </a>
+
+        <div id="resultMessage"></div>
       </div>
     </div>
   </div>
 
-  <!-- Biblioteca PDF-Lib via CDN (para sobrepor imagens) -->
+  <!-- PDF-Lib (CDN) -->
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 
   <script>
     /*
-      ======================================================================================
-       1) Ao clicar em "Converter", o front-end:
-          - Lê o PDF original (input file).
-          - Se "Disney", sobrepõe as imagens do JSON "disneyVoucherConfig" usando PDF-Lib.
-          - Gera o PDF final (Blob).
-          - Envia esse Blob para "upload_voucher.php" (como se fosse 'pdfFile'),
-            junto com a categoria (Disney, etc).
-       2) "upload_voucher.php" salva em 'voucher_log' (file_path, category, etc).
-       3) Chamamos "list_vouchers.php" para exibir as últimas alterações na tabela.
-      ======================================================================================
+      =============================================================================
+      Exemplo que sobrepõe TODAS as páginas do PDF Overlay em TODAS as páginas
+      correspondentes do PDF Base (índice a índice), via PDF-Lib no Front-End.
+      Inclui sidebar.html via iframe, conforme seu padrão anterior.
+      =============================================================================
     */
 
-    // URLs dos endpoints
-    // AJUSTE para o local real dos seus scripts no HostGator
-    const UPLOAD_URL = "https://business.magictraveltur.com/upload_voucher.php";
-    const LIST_URL   = "https://business.magictraveltur.com/list_vouchers.php";
-
-    // JSON do "Disney" com links diretos (export=download) do Google Drive
-    const disneyVoucherConfig = {
-      "url": "nao tem URL",
-      "async": false,
-      "encrypt": false,
-      "inline": true,
-      "annotations": [],
-      "images": [
-        {
-          "url": "https://drive.usercontent.google.com/u/0/uc?id=17Hky5mKw9IbCtOm57ZPjKLB-a2yxzVv6&export=download",
-          "x": 178,
-          "y": 31,
-          "width": 350,
-          "height": 26,
-          "pages": "0",
-          "keepAspectRatio": true
-        },
-        {
-          "url": "https://drive.usercontent.google.com/u/0/uc?id=1eWUvk94Hr6nKMShzdzDpCQVDdiO0AfQc&export=download",
-          "x": 66,
-          "y": 47,
-          "width": 171,
-          "height": 47,
-          "pages": "0",
-          "keepAspectRatio": true
-        }
-      ],
-      "fields": []
-    };
-
     // Referências
-    const voucherTypeSelect   = document.getElementById('voucherType');
-    const pdfFileInput        = document.getElementById('pdfFile');
-    const convertButton       = document.getElementById('convertButton');
-    const recentChangesBody   = document.getElementById('recentChangesBody');
+    const basePdfFileInput    = document.getElementById('basePdfFile');
+    const overlayPdfFileInput = document.getElementById('overlayPdfFile');
+    const mergeButton         = document.getElementById('mergeButton');
+    const downloadLink        = document.getElementById('downloadLink');
+    const resultMessage       = document.getElementById('resultMessage');
 
-    // Ao carregar a página, buscar lista de vouchers do BD
-    window.addEventListener('DOMContentLoaded', () => {
-      loadRecentChanges();
-    });
-
-    // -------------------------------------------------------------------------
-    // FUNÇÃO para buscar e renderizar as últimas alterações
-    // -------------------------------------------------------------------------
-    async function loadRecentChanges() {
-      try {
-        const response = await fetch(LIST_URL);
-        if (!response.ok) {
-          throw new Error("Erro ao buscar lista de vouchers");
-        }
-        const data = await response.json(); 
-        // data = array de objetos: [ {id, category, file_path, created_at, downloadURL}, ... ]
-
-        // Exibir só os 10 últimos (caso o back-end não limite)
-        const maxItems = 10;
-        const lastItems = data.slice(-maxItems);
-
-        renderRecentChanges(lastItems);
-
-      } catch (error) {
-        console.error("Erro loadRecentChanges():", error);
-      }
-    }
-
-    // -------------------------------------------------------------------------
-    // FUNÇÃO para renderizar a tabela
-    // -------------------------------------------------------------------------
-    function renderRecentChanges(records) {
-      recentChangesBody.innerHTML = '';
-
-      records.forEach(item => {
-        const row = document.createElement('tr');
-
-        const idTd       = document.createElement('td');
-        const dateTd     = document.createElement('td');
-        const categoryTd = document.createElement('td');
-        const downloadTd = document.createElement('td');
-
-        idTd.textContent       = item.id;
-        dateTd.textContent     = item.created_at; // ou formate se preferir
-        categoryTd.textContent = item.category;
-
-        // Link de download
-        const link = document.createElement('a');
-        link.href = item.downloadURL;
-        link.textContent = "Download";
-        link.classList.add('download-link');
-        link.setAttribute('target', '_blank'); 
-        link.setAttribute('download', "VoucherEditado.pdf");
-
-        downloadTd.appendChild(link);
-
-        row.appendChild(idTd);
-        row.appendChild(dateTd);
-        row.appendChild(categoryTd);
-        row.appendChild(downloadTd);
-
-        recentChangesBody.appendChild(row);
-      });
-    }
-
-    // -------------------------------------------------------------------------
-    // LEITURA DE ARQUIVO (File -> ArrayBuffer)
-    // -------------------------------------------------------------------------
+    // Helper: Ler File -> ArrayBuffer
     function fileToArrayBuffer(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = evt => resolve(evt.target.result);
+        reader.onload = e => resolve(e.target.result);
         reader.onerror = err => reject(err);
         reader.readAsArrayBuffer(file);
       });
     }
 
-    // -------------------------------------------------------------------------
-    // BAIXAR IMAGEM (URL) -> ArrayBuffer
-    // -------------------------------------------------------------------------
-    async function fetchImageAsBytes(url) {
-      const resp = await fetch(url);
-      if (!resp.ok) {
-        throw new Error("Erro ao buscar imagem: " + url);
-      }
-      return await resp.arrayBuffer();
+    // Exibir erro
+    function showError(msg) {
+      resultMessage.textContent = msg;
+      resultMessage.style.display = "block";
+      resultMessage.style.color = "red";
     }
 
-    // -------------------------------------------------------------------------
-    // MERGE PDF COM AS IMAGENS DISNEY (PDF-Lib)
-    // -------------------------------------------------------------------------
-    async function mergePDFWithDisney(originalPdfBytes) {
-      const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
+    // Clique no botão "Mesclar"
+    mergeButton.addEventListener('click', async () => {
+      // Esconde mensagens e link antes de iniciar
+      resultMessage.style.display = "none";
+      downloadLink.style.display = "none";
 
-      for (const imgCfg of disneyVoucherConfig.images) {
-        const imgBytes = await fetchImageAsBytes(imgCfg.url);
+      // Obter arquivos
+      const baseFile = basePdfFileInput.files[0];
+      const overlayFile = overlayPdfFileInput.files[0];
 
-        // Tenta PNG -> fallback JPG
-        let embeddedImg;
-        try {
-          embeddedImg = await pdfDoc.embedPng(imgBytes);
-        } catch {
-          embeddedImg = await pdfDoc.embedJpg(imgBytes);
-        }
-
-        const pageIndex = parseInt(imgCfg.pages, 10) || 0;
-        if (pageIndex < 0 || pageIndex >= pdfDoc.getPageCount()) {
-          console.warn("Página inválida:", pageIndex);
-          continue;
-        }
-        const page = pdfDoc.getPage(pageIndex);
-
-        const x = imgCfg.x || 0;
-        const y = imgCfg.y || 0;
-        const w = imgCfg.width || embeddedImg.width;
-        const h = imgCfg.height || embeddedImg.height;
-
-        page.drawImage(embeddedImg, {
-          x: x,
-          y: y,
-          width: w,
-          height: h
-        });
-      }
-
-      return await pdfDoc.save(); // retorna Uint8Array
-    }
-
-    // -------------------------------------------------------------------------
-    // FUNÇÃO para subir o PDF final ao servidor
-    // -------------------------------------------------------------------------
-    async function uploadFinalPDF(pdfBytes, category) {
-      // Monta um Blob e um FormData
-      const blob = new Blob([pdfBytes], { type: "application/pdf" });
-      const formData = new FormData();
-
-      // O back-end espera "pdfFile" e "voucherType" (ajuste se necessário)
-      formData.append("pdfFile", blob, "VoucherEditado.pdf");
-      formData.append("voucherType", category);
-
-      const response = await fetch(UPLOAD_URL, {
-        method: "POST",
-        body: formData
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || "Falha no upload_voucher.php");
-      }
-
-      const result = await response.json();
-      if (!result.success) {
-        throw new Error(result.error || "Falha ao salvar PDF no servidor");
-      }
-
-      // Retornamos o "downloadURL" e etc. (se o back-end fornecer)
-      return result;
-    }
-
-    // -------------------------------------------------------------------------
-    // EVENTO "CLICK" NO BOTÃO "Converter"
-    // -------------------------------------------------------------------------
-    convertButton.addEventListener('click', async () => {
-      const selectedCategory = voucherTypeSelect.value;
-      const file = pdfFileInput.files[0];
-
-      if (!selectedCategory) {
-        alert("Selecione uma categoria de voucher.");
-        return;
-      }
-      if (!file) {
-        alert("Selecione um PDF original.");
+      if (!baseFile || !overlayFile) {
+        showError("Selecione o PDF Base e o PDF Overlay.");
         return;
       }
 
       try {
-        // 1) Ler PDF original
-        const originalPdfBytes = await fileToArrayBuffer(file);
+        // Ler bytes de ambos os arquivos
+        const basePdfBytes = await fileToArrayBuffer(baseFile);
+        const overlayPdfBytes = await fileToArrayBuffer(overlayFile);
 
-        let finalPdfBytes = originalPdfBytes; // Por padrão, sem edição
-        // 2) Se for "Disney", aplicamos as imagens do config
-        if (selectedCategory === "Disney") {
-          finalPdfBytes = await mergePDFWithDisney(originalPdfBytes);
+        // Carrega no PDF-Lib
+        const basePdfDoc = await PDFLib.PDFDocument.load(basePdfBytes);
+        const overlayPdfDoc = await PDFLib.PDFDocument.load(overlayPdfBytes);
+
+        const basePageCount    = basePdfDoc.getPageCount();
+        const overlayPageCount = overlayPdfDoc.getPageCount();
+
+        // Determina até onde vamos sobrepor
+        const pagesToOverlay = Math.min(basePageCount, overlayPageCount);
+
+        // Copiamos as páginas do overlay de uma só vez
+        // Exemplo: se pagesToOverlay=5, copia [0,1,2,3,4]
+        const overlayPages = await basePdfDoc.copyPages(
+          overlayPdfDoc,
+          Array.from({ length: pagesToOverlay }, (_, i) => i)
+        );
+
+        // Agora, para cada página i, desenha overlayPages[i] em basePages[i]
+        for (let i = 0; i < pagesToOverlay; i++) {
+          const basePage = basePdfDoc.getPage(i);
+          const overlayPage = overlayPages[i];
+
+          // Tamanho da página base
+          const { width: baseWidth, height: baseHeight } = basePage.getSize();
+          // Tamanho da página overlay
+          const { width: overlayWidth, height: overlayHeight } = overlayPage.getSize();
+
+          // Escala para caber
+          const scale = Math.min(baseWidth / overlayWidth, baseHeight / overlayHeight);
+
+          const newWidth  = overlayWidth * scale;
+          const newHeight = overlayHeight * scale;
+
+          // Desenha a página overlay no canto inferior
+          basePage.drawPage(overlayPage, {
+            x: 0,
+            y: 0,
+            width: newWidth,
+            height: newHeight
+          });
         }
-        // Se quiser, poderia fazer if (selectedCategory === "Universal") { ... } etc.
 
-        // 3) Enviar PDF resultante ao servidor (upload_voucher.php)
-        const result = await uploadFinalPDF(finalPdfBytes, selectedCategory);
+        // Salva o PDF resultante
+        const mergedPdfBytes = await basePdfDoc.save();
 
-        // 4) Exibir feedback ao usuário
-        alert("PDF salvo com sucesso! Categoria: " + selectedCategory);
+        // Cria Blob e link de download
+        const mergedBlob = new Blob([mergedPdfBytes], { type: "application/pdf" });
+        const blobUrl = URL.createObjectURL(mergedBlob);
 
-        // 5) Atualizar lista de vouchers
-        loadRecentChanges();
+        downloadLink.href = blobUrl;
+        downloadLink.style.display = "inline-block";
 
       } catch (error) {
         console.error(error);
-        alert("Erro na conversão ou upload: " + error.message);
+        showError("Erro ao mesclar PDFs: " + error.message);
       }
     });
   </script>
