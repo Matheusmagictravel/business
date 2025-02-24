@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- Código completo com as alterações solicitadas -->
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
@@ -31,7 +30,7 @@
     /* SIDEBAR BASE */
     .sidebar {
       position: fixed;
-      width: 270px;
+      width: 260px;
       margin: 16px;
       border-radius: 16px;
       background: #151A2D;
@@ -120,7 +119,6 @@
     .sidebar.collapsed .sidebar-nav .nav-link {
       border-radius: 12px;
     }
-
     .sidebar .sidebar-nav .nav-link .nav-label {
       transition: opacity 0.3s ease;
     }
@@ -207,7 +205,6 @@
       .sidebar-header .menu-toggler span {
         font-size: 1.3rem;
       }
-
       .sidebar .sidebar-nav .nav-list {
         padding: 0 10px;
       }
@@ -233,7 +230,6 @@
     <!-- Sidebar header -->
     <header class="sidebar-header">
       <a href="#" class="header-logo">
-        <!-- Caminho para sua logo -->
         <img src="https://www.magictraveltur.com/wp-content/uploads/2025/01/Logo-Branca.png" alt="Magic Travel - Logo">
       </a>
       <button class="toggler sidebar-toggler">
@@ -247,7 +243,6 @@
     <nav class="sidebar-nav">
       <!-- Primary top nav -->
       <ul class="nav-list primary-nav">
-        <!-- Mantido Dashboard -->
         <li class="nav-item">
           <a href="https://business.magictraveltur.com/" class="nav-link">
             <span class="nav-icon material-symbols-rounded">dashboard</span>
@@ -255,8 +250,6 @@
           </a>
           <span class="nav-tooltip">Dashboard</span>
         </li>
-
-        <!-- Substituído Calendar por Pedidos -->
         <li class="nav-item">
           <a href="https://business.magictraveltur.com/pages-orders.html" class="nav-link">
             <span class="nav-icon material-symbols-rounded">calendar_today</span>
@@ -264,8 +257,6 @@
           </a>
           <span class="nav-tooltip">Pedidos</span>
         </li>
-
-        <!-- Substituído Notifications por Nova Venda -->
         <li class="nav-item">
           <a href="https://business.magictraveltur.com/loti.html" class="nav-link">
             <span class="nav-icon material-symbols-rounded">notifications</span>
@@ -273,8 +264,6 @@
           </a>
           <span class="nav-tooltip">Nova Venda</span>
         </li>
-
-        <!-- Substituído Team por Financeiro -->
         <li class="nav-item">
           <a href="https://business.magictraveltur.com/finance.html" class="nav-link">
             <span class="nav-icon material-symbols-rounded">group</span>
@@ -282,8 +271,6 @@
           </a>
           <span class="nav-tooltip">Financeiro</span>
         </li>
-
-        <!-- Substituído Analytics por Performance -->
         <li class="nav-item">
           <a href="https://business.magictraveltur.com/ranking.html" class="nav-link">
             <span class="nav-icon material-symbols-rounded">insert_chart</span>
@@ -291,8 +278,6 @@
           </a>
           <span class="nav-tooltip">Performance</span>
         </li>
-
-        <!-- Substituído Bookmarks por Voucher -->
         <li class="nav-item">
           <a href="https://business.magictraveltur.com/voucher.html" class="nav-link">
             <span class="nav-icon material-symbols-rounded">star</span>
@@ -300,8 +285,6 @@
           </a>
           <span class="nav-tooltip">Voucher</span>
         </li>
-
-        <!-- Mantido Settings -->
         <li class="nav-item">
           <a href="#" class="nav-link">
             <span class="nav-icon material-symbols-rounded">settings</span>
@@ -333,11 +316,11 @@
 
   <!-- JS Unificado -->
   <script>
+  document.addEventListener("DOMContentLoaded", function() {
     const sidebar = document.querySelector(".sidebar");
     const sidebarToggler = document.querySelector(".sidebar-toggler");
     const menuToggler = document.querySelector(".menu-toggler");
 
-    // Certifique-se que esses valores de altura combinem com o CSS
     let collapsedSidebarHeight = "56px";
     let fullSidebarHeight = "calc(100vh - 32px)";
 
@@ -348,7 +331,6 @@
 
     // Função para mudar altura da sidebar e texto do toggler
     const toggleMenu = (isMenuActive) => {
-      // Se "menu-active", setamos a altura para scrollHeight
       sidebar.style.height = isMenuActive ? `${sidebar.scrollHeight}px` : collapsedSidebarHeight;
       menuToggler.querySelector("span").innerText = isMenuActive ? "close" : "menu";
     };
@@ -368,7 +350,7 @@
         toggleMenu(sidebar.classList.contains("menu-active"));
       }
     });
+  });
   </script>
-
 </body>
 </html>
