@@ -2,560 +2,551 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Voucher PDF - Edição</title>
+  <title>Página de Voucher - Edição PDF</title>
   <style>
-    /* RESET BÁSICO */
-    * {
+    /* =========================
+       ESTILO TECNOLÓGICO E MINIMALISTA
+       ========================= */
+    html, body {
       margin: 0;
       padding: 0;
+      font-family: "Arial", sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      height: 100%; /* Permite ocupar tela inteira */
+    }
+
+    /* Container principal ocupa a tela toda em flex (sidebar + conteúdo) */
+    #voucher-page-container {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      height: 100vh; /* Ocupa a altura total da viewport */
+      overflow: hidden; /* Evita rolagem horizontal se ultrapassar */
+    }
+
+    /* SIDEBAR: fixa à esquerda, altura total */
+    #sidebar-container {
+      width: 250px;
+      background-color: #fff;
+      border-right: 1px solid #ccc;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+      box-sizing: border-box;
+      overflow: hidden;
+    }
+    #sidebar-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    /* ÁREA PRINCIPAL */
+    #main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+      overflow-y: auto; /* Rolagem vertical se exceder */
       box-sizing: border-box;
     }
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      color: #333;
-    }
 
-    /* CONTAINER PRINCIPAL (LARGO, CENTRALIZADO) */
-    .main-container {
-      max-width: 1200px; /* layout amplo */
-      margin: 0 auto;
+    /* CONTAINER DO FORMULÁRIO */
+    .voucher-form-container {
+      max-width: 600px;
+      margin: 0 auto 40px auto;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       padding: 20px;
     }
-
-    /* TÍTULO GERAL DA PÁGINA */
-    .page-title {
-      font-size: 26px;
-      font-weight: bold;
-      margin-bottom: 20px;
+    .voucher-form-container h2 {
+      margin: 0 0 20px 0;
       text-align: center;
+      font-size: 20px;
       color: #444;
     }
 
-    /* =========================================
-       SEÇÃO: FORMULÁRIO DE VOUCHER
-       ========================================= */
-    .voucher-section {
-      background: #fff;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 30px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .voucher-section h2 {
-      font-size: 20px;
+    .form-group {
       margin-bottom: 15px;
-      text-align: center;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 5px;
       color: #333;
     }
-    .voucher-form-group {
-      margin-bottom: 20px;
-    }
-    .voucher-form-group label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 6px;
-      color: #555;
-    }
-    .voucher-select {
+    .form-group select,
+    .form-group input[type="file"] {
       width: 100%;
-      padding: 8px;
+      padding: 10px;
+      box-sizing: border-box;
       border: 1px solid #ccc;
       border-radius: 4px;
+      font-size: 14px;
+      outline: none;
+    }
+    .form-group select:focus,
+    .form-group input[type="file"]:focus {
+      border-color: #007bff;
     }
 
-    /* ÁREA DE UPLOAD MINIMALISTA */
-    #dropArea {
-      border: 2px dashed #ccc;
-      border-radius: 6px;
-      padding: 30px;
-      text-align: center;
-      transition: border-color 0.3s;
-      cursor: pointer;
-      margin-top: 5px;
-    }
-    #dropArea:hover {
-      border-color: #999;
-    }
-    #dropArea p {
-      margin: 8px 0;
-      color: #666;
-    }
-    #pdfFileInput {
-      display: none; /* Oculto, pois usamos a div clicável */
-    }
-    .convert-button {
+    #convertButton {
       display: inline-block;
       background-color: #007bff;
       color: #fff;
-      padding: 10px 20px;
+      padding: 12px 24px;
       border: none;
       border-radius: 4px;
       cursor: pointer;
       font-size: 16px;
-      font-weight: bold;
       transition: background-color 0.3s;
     }
-    .convert-button:hover {
+    #convertButton:hover {
       background-color: #0056b3;
     }
 
-    /* =========================================
-       SEÇÃO: ÚLTIMOS VOUCHERS (TABELA)
-       ========================================= */
-    .recent-changes-section {
+    /* CONTAINER DAS ALTERAÇÕES RECENTES */
+    #recentChangesContainer {
+      max-width: 600px;
+      margin: 0 auto;
       background: #fff;
       border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       padding: 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .recent-changes-section h3 {
-      font-size: 18px;
+    #recentChangesContainer h3 {
+      margin-top: 0;
       margin-bottom: 15px;
       text-align: center;
-      color: #333;
+      font-size: 18px;
+      color: #444;
     }
-    .changes-table {
+
+    /* TABELA DE LISTAGEM */
+    table {
       width: 100%;
       border-collapse: collapse;
       margin-bottom: 10px;
       font-size: 14px;
     }
-    .changes-table thead tr {
+    table thead tr {
       background-color: #007bff;
       color: #fff;
     }
-    .changes-table th, .changes-table td {
+    table th,
+    table td {
       text-align: left;
-      padding: 8px;
-      border: 1px solid #ddd;
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
     }
-    .changes-table tbody tr:nth-child(even) {
-      background-color: #f9f9f9;
+    table th {
+      font-weight: 600;
+    }
+    table tbody tr:nth-child(even) {
+      background-color: #fafafa;
     }
     .download-link {
       color: #007bff;
-      font-weight: bold;
       text-decoration: none;
+      font-weight: bold;
+      transition: color 0.2s;
     }
     .download-link:hover {
-      text-decoration: underline;
+      color: #0056b3;
     }
-    /* Controles de Paginação */
-    .pagination-controls {
+
+    /* PAGINAÇÃO */
+    #paginationControls {
       display: flex;
       align-items: center;
       justify-content: center;
       margin-top: 10px;
     }
-    .pagination-controls button {
+    #paginationControls button {
       background-color: #007bff;
       color: #fff;
       border: none;
-      padding: 8px 12px;
+      padding: 8px 14px;
       margin: 0 5px;
       cursor: pointer;
-      border-radius: 3px;
+      border-radius: 4px;
+      font-size: 14px;
       transition: background-color 0.3s;
     }
-    .pagination-controls button:hover {
+    #paginationControls button:hover {
       background-color: #0056b3;
     }
-    .pagination-info {
+    #paginationInfo {
       margin: 0 10px;
       font-weight: bold;
       color: #333;
     }
+
+    /* ROLAGEM PERSONALIZADA NO CONTEÚDO PRINCIPAL (opcional) */
+    #main-content::-webkit-scrollbar {
+      width: 10px;
+    }
+    #main-content::-webkit-scrollbar-track {
+      background: #eee;
+    }
+    #main-content::-webkit-scrollbar-thumb {
+      background-color: #bbb;
+      border-radius: 5px;
+    }
+    #main-content::-webkit-scrollbar-thumb:hover {
+      background-color: #999;
+    }
   </style>
 </head>
 <body>
+  <div id="voucher-page-container">
+    <!-- SIDEBAR (não removida) -->
+    <div id="sidebar-container">
+      <iframe src="sidebar.html" id="sidebar-frame"></iframe>
+    </div>
 
-<div class="main-container">
-  <!-- TÍTULO DA PÁGINA -->
-  <h1 class="page-title">Voucher PDF - Edição</h1>
+    <!-- CONTEÚDO PRINCIPAL -->
+    <div id="main-content">
+      <div class="voucher-form-container">
+        <h2>Voucher PDF - Edição</h2>
+        <form id="voucherForm">
+          <div class="form-group">
+            <label for="voucherType">Selecione qual voucher deseja editar:</label>
+            <select id="voucherType" name="voucherType" required>
+              <option value="">-- Selecione --</option>
+              <option value="Disney">Disney</option>
+              <option value="Universal">Universal</option>
+              <option value="SeaWorld">SeaWorld</option>
+              <option value="Hospedagem">Hospedagem</option>
+            </select>
+          </div>
 
-  <!-- SEÇÃO DE EDIÇÃO DE VOUCHER -->
-  <div class="voucher-section">
-    <h2>Editar PDF</h2>
-    <form id="voucherForm">
-      <div class="voucher-form-group">
-        <label for="voucherType">Selecione o tipo de voucher:</label>
-        <select id="voucherType" name="voucherType" class="voucher-select" required>
-          <option value="">-- Selecione --</option>
-          <option value="Disney">Disney</option>
-          <option value="Universal">Universal</option>
-          <option value="SeaWorld">SeaWorld</option>
-          <option value="Hospedagem">Hospedagem</option>
-        </select>
+          <div class="form-group">
+            <label for="pdfFile">Anexar PDF (original):</label>
+            <input type="file" id="pdfFile" name="pdfFile" accept="application/pdf" required />
+          </div>
+
+          <button type="button" id="convertButton">Converter</button>
+        </form>
       </div>
 
-      <!-- Área de Upload estilo "Arraste e Solte" -->
-      <div id="dropArea">
-        <p>Arraste e solte um arquivo PDF</p>
-        <p>ou clique aqui para selecionar do seu computador</p>
-        <input type="file" id="pdfFileInput" accept="application/pdf" required />
+      <div id="recentChangesContainer">
+        <h3>Alterações Recentes</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Data/Hora</th>
+              <th>Categoria</th>
+              <th>Download</th>
+            </tr>
+          </thead>
+          <tbody id="recentChangesBody">
+            <!-- Itens com paginação -->
+          </tbody>
+        </table>
+        <div id="paginationControls">
+          <button id="prevPageBtn">&laquo; Anterior</button>
+          <div id="paginationInfo"></div>
+          <button id="nextPageBtn">Próxima &raquo;</button>
+        </div>
       </div>
-
-      <br>
-      <button type="button" id="convertButton" class="convert-button">Converter e Salvar</button>
-    </form>
-  </div>
-
-  <!-- SEÇÃO: LISTA DE ÚLTIMOS VOUCHERS -->
-  <div class="recent-changes-section" id="recentChangesContainer">
-    <h3>Últimos Vouchers</h3>
-    <table class="changes-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Data/Hora</th>
-          <th>Categoria</th>
-          <th>Download</th>
-        </tr>
-      </thead>
-      <tbody id="recentChangesBody">
-        <!-- Itens com paginação -->
-      </tbody>
-    </table>
-    <div class="pagination-controls">
-      <button id="prevPageBtn">&laquo; Anterior</button>
-      <div id="paginationInfo" class="pagination-info"></div>
-      <button id="nextPageBtn">Próxima &raquo;</button>
     </div>
   </div>
-</div>
 
-<!-- Biblioteca PDF-lib -->
-<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <!-- PDF-Lib -->
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
 
-<script>
-/*  
-   =======================================
-   CONFIGURAÇÕES DE VOUCHER (INSERÇÃO DE IMAGENS)
-   =======================================
-*/
-const disneyVoucherConfig = {
-  images: [
-    {
-      url: "https://business.magictraveltur.com/image/Logofundo.png",
-      left: 66,
-      top: 47,
-      width: 171,
-      height: 47,
-      pages: "0"
-    },
-    {
-      url: "https://business.magictraveltur.com/image/Tarja.png",
-      left: 178,
-      top: 31,
-      width: 350,
-      height: 26,
-      pages: "0"
-    }
-  ]
-};
+  <script>
+    /*
+      ============================================================
+      CONFIGS DE VOUCHERS
+      - "top" e "left" => iremos converter p/ x,y = canto inferior
+      - "pages": "all" ou "0", etc.
+      ============================================================
+    */
 
-const universalVoucherConfig = {
-  images: [
-    {
-      url: "https://business.magictraveltur.com/image/Logofundo.png",
-      left: 352,
-      top: 47,
-      width: 196,
-      height: 44,
-      pages: "all"
-    },
-    {
-      url: "https://business.magictraveltur.com/image/Tarja.png",
-      left: 15.92,
-      top: 504.22,
-      width: 571.74,
-      height: 160.32,
-      pages: "all"
-    }
-  ]
-};
+    // Disney => 1ª página
+    const disneyVoucherConfig = {
+      images: [
+        {
+          url: "https://business.magictraveltur.com/image/Logofundo.png",
+          left: 66,
+          top: 47,
+          width: 171,
+          height: 47,
+          pages: "0"
+        },
+        {
+          url: "https://business.magictraveltur.com/image/Tarja.png",
+          left: 178,
+          top: 31,
+          width: 350,
+          height: 26,
+          pages: "0"
+        }
+      ]
+    };
 
-const seaWorldVoucherConfig = {
-  images: [
-    {
-      url: "https://business.magictraveltur.com/image/Tarja.png",
-      left: 225,
-      top: 644,
-      width: 146,
-      height: 16,
-      pages: "all"
-    },
-    {
-      url: "https://business.magictraveltur.com/image/Logofundo.png",
-      left: 447,
-      top: 51,
-      width: 83,
-      height: 23,
-      pages: "all"
-    }
-  ]
-};
+    // Universal => todas as páginas
+    const universalVoucherConfig = {
+      images: [
+        {
+          url: "https://business.magictraveltur.com/image/Logofundo.png",
+          left: 352,
+          top: 47,
+          width: 196,
+          height: 44,
+          pages: "all"
+        },
+        {
+          url: "https://business.magictraveltur.com/image/Tarja.png",
+          left: 15.92,
+          top: 504.22,
+          width: 571.74,
+          height: 160.32,
+          pages: "all"
+        }
+      ]
+    };
 
-/*  
-   =======================================
-   ENDPOINTS (AJUSTE PARA SEUS SCRIPTS)
-   =======================================
-*/
-const UPLOAD_URL = "https://magictraveltur.com/upload_voucher.php";
-const LIST_URL   = "https://magictraveltur.com/list_vouchers.php"; // retorna JSON
+    // SeaWorld => todas as páginas
+    const seaWorldVoucherConfig = {
+      images: [
+        {
+          url: "https://business.magictraveltur.com/image/Tarja.png",
+          left: 225,
+          top: 644,
+          width: 146,
+          height: 16,
+          pages: "all"
+        },
+        {
+          url: "https://business.magictraveltur.com/image/Logofundo.png",
+          left: 447,
+          top: 51,
+          width: 83,
+          height: 23,
+          pages: "all"
+        }
+      ]
+    };
 
-/*  
-   =======================================
-   DOM: FORMULÁRIO E ÁREA DE UPLOAD
-   =======================================
-*/
-const voucherTypeSelect = document.getElementById("voucherType");
-const pdfFileInput      = document.getElementById("pdfFileInput");
-const convertButton     = document.getElementById("convertButton");
+    // Endpoints
+    const UPLOAD_URL = "https://magictraveltur.com/upload_voucher.php";
+    const LIST_URL   = "https://magictraveltur.com/list_vouchers.php";
 
-// Arraste e Solte
-const dropArea = document.getElementById('dropArea');
-dropArea.addEventListener('click', () => {
-  pdfFileInput.click();
-});
-dropArea.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  dropArea.style.borderColor = '#007bff';
-});
-dropArea.addEventListener('dragleave', () => {
-  dropArea.style.borderColor = '#ccc';
-});
-dropArea.addEventListener('drop', (e) => {
-  e.preventDefault();
-  dropArea.style.borderColor = '#ccc';
-  if (e.dataTransfer.files.length) {
-    const file = e.dataTransfer.files[0];
-    if (file.type === "application/pdf") {
-      pdfFileInput.files = e.dataTransfer.files;
-    } else {
-      alert("Por favor, solte apenas arquivos PDF.");
-    }
-  }
-});
+    // DOM
+    const voucherTypeSelect = document.getElementById('voucherType');
+    const pdfFileInput      = document.getElementById('pdfFile');
+    const convertButton     = document.getElementById('convertButton');
 
-/*  
-   =======================================
-   LOGICA PDF (pdf-lib)
-   =======================================
-*/
-function fileToArrayBuffer(file) {
-  return new Promise((resolve, reject) => {
-    const r = new FileReader();
-    r.onload = e => resolve(e.target.result);
-    r.onerror = e => reject(e);
-    r.readAsArrayBuffer(file);
-  });
-}
-async function fetchImageAsBytes(url) {
-  const resp = await fetch(url);
-  if (!resp.ok) throw new Error("Erro ao buscar imagem: " + url);
-  return await resp.arrayBuffer();
-}
-async function mergePDFWithConfig(originalPdfBytes, config) {
-  const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
-  const totalPages = pdfDoc.getPageCount();
+    // Paginação
+    const recentChangesBody = document.getElementById('recentChangesBody');
+    const prevPageBtn       = document.getElementById('prevPageBtn');
+    const nextPageBtn       = document.getElementById('nextPageBtn');
+    const paginationInfo    = document.getElementById('paginationInfo');
+    let allRecords = [];
+    let currentPage = 1;
+    const pageSize = 10;
 
-  for (const img of config.images) {
-    const imgBytes = await fetchImageAsBytes(img.url);
-    let embeddedImg;
-    try {
-      embeddedImg = await pdfDoc.embedPng(imgBytes);
-    } catch {
-      embeddedImg = await pdfDoc.embedJpg(imgBytes);
-    }
-    if (img.pages === "all") {
-      // Adiciona a TODAS as páginas
-      for (let i = 0; i < totalPages; i++) {
-        const page = pdfDoc.getPage(i);
-        const { height: pageHeight } = page.getSize();
-        const x = img.left ?? 0;
-        const y = pageHeight - (img.top ?? 0) - (img.height ?? embeddedImg.height);
-        page.drawImage(embeddedImg, {
-          x, y,
-          width:  img.width  ?? embeddedImg.width,
-          height: img.height ?? embeddedImg.height
-        });
-      }
-    } else {
-      // Adiciona apenas na página específica (ex: "0")
-      const pageIndex = parseInt(img.pages, 10) || 0;
-      if (pageIndex >= 0 && pageIndex < totalPages) {
-        const page = pdfDoc.getPage(pageIndex);
-        const { height: pageHeight } = page.getSize();
-        const x = img.left ?? 0;
-        const y = pageHeight - (img.top ?? 0) - (img.height ?? embeddedImg.height);
-        page.drawImage(embeddedImg, {
-          x, y,
-          width:  img.width  ?? embeddedImg.width,
-          height: img.height ?? embeddedImg.height
-        });
+    // Carrega a lista
+    async function loadRecentChanges() {
+      try {
+        const resp = await fetch(LIST_URL);
+        if (!resp.ok) throw new Error("Falha ao listar vouchers");
+        const data = await resp.json();
+
+        allRecords = data;
+        currentPage = 1;
+        renderCurrentPage();
+      } catch (error) {
+        console.error("Erro loadRecentChanges:", error);
       }
     }
-  }
-  return pdfDoc.save();
-}
-async function uploadFinalPDF(pdfBytes, category) {
-  const blob = new Blob([pdfBytes], { type: "application/pdf" });
-  const formData = new FormData();
-  formData.append("pdfFile", blob, "VoucherEditado.pdf");
-  formData.append("voucherType", category);
+    function renderCurrentPage() {
+      recentChangesBody.innerHTML = "";
+      const totalPages = Math.ceil(allRecords.length / pageSize);
+      if (currentPage > totalPages) currentPage = totalPages || 1;
 
-  const resp = await fetch(UPLOAD_URL, { method: "POST", body: formData });
-  if (!resp.ok) {
-    const errData = await resp.json().catch(()=>({}));
-    throw new Error(errData.error || "Falha no upload_voucher.php");
-  }
-  const result = await resp.json();
-  if (!result.success) throw new Error(result.error || "Falha ao salvar PDF");
-  return result;
-}
+      const startIndex = (currentPage - 1) * pageSize;
+      const endIndex   = startIndex + pageSize;
+      const pageItems  = allRecords.slice(startIndex, endIndex);
 
-/*  
-   =======================================
-   BOTÃO "CONVERTER" => PROCESSA E SOBE PDF
-   =======================================
-*/
-convertButton.addEventListener('click', async () => {
-  const category = voucherTypeSelect.value;
-  const file     = pdfFileInput.files[0];
-  if (!category) {
-    alert("Selecione uma categoria de voucher!");
-    return;
-  }
-  if (!file) {
-    alert("Selecione ou arraste um arquivo PDF!");
-    return;
-  }
-  try {
-    // Carrega bytes do PDF original
-    const originalPdfBytes = await fileToArrayBuffer(file);
+      pageItems.forEach(item => {
+        const row = document.createElement('tr');
+        const idTd       = document.createElement('td');
+        const dateTd     = document.createElement('td');
+        const categoryTd = document.createElement('td');
+        const downloadTd = document.createElement('td');
 
-    // Seleciona a config de imagens
-    let config;
-    if (category === "Disney") {
-      config = disneyVoucherConfig;
-    } else if (category === "Universal") {
-      config = universalVoucherConfig;
-    } else if (category === "SeaWorld") {
-      config = seaWorldVoucherConfig;
-    } else {
-      // Hospedagem => sem inserir imagens
-      config = { images: [] };
+        idTd.textContent       = item.id;
+        dateTd.textContent     = item.created_at;
+        categoryTd.textContent = item.category;
+
+        const link = document.createElement('a');
+        link.href = item.downloadURL;
+        link.textContent = "Download";
+        link.classList.add('download-link');
+        link.target = "_blank";
+        link.setAttribute('download', "VoucherEditado.pdf");
+
+        downloadTd.appendChild(link);
+
+        row.appendChild(idTd);
+        row.appendChild(dateTd);
+        row.appendChild(categoryTd);
+        row.appendChild(downloadTd);
+        recentChangesBody.appendChild(row);
+      });
+
+      paginationInfo.textContent = `Página ${currentPage} de ${totalPages || 1}`;
+      prevPageBtn.disabled = (currentPage <= 1);
+      nextPageBtn.disabled = (currentPage >= totalPages);
+    }
+    prevPageBtn.addEventListener('click', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        renderCurrentPage();
+      }
+    });
+    nextPageBtn.addEventListener('click', () => {
+      const totalPages = Math.ceil(allRecords.length / pageSize);
+      if (currentPage < totalPages) {
+        currentPage++;
+        renderCurrentPage();
+      }
+    });
+
+    // Ler PDF
+    function fileToArrayBuffer(file) {
+      return new Promise((resolve, reject) => {
+        const r = new FileReader();
+        r.onload = e => resolve(e.target.result);
+        r.onerror = e => reject(e);
+        r.readAsArrayBuffer(file);
+      });
     }
 
-    // Mescla imagens no PDF (pdf-lib)
-    const finalPdfBytes = await mergePDFWithConfig(originalPdfBytes, config);
+    // fetchImage
+    async function fetchImageAsBytes(url) {
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error("Erro ao buscar imagem: " + url);
+      return await resp.arrayBuffer();
+    }
 
-    // Upload do PDF final para o servidor
-    await uploadFinalPDF(finalPdfBytes, category);
+    // Mesclar (conversão top->y)
+    async function mergePDFWithConfig(originalPdfBytes, config) {
+      const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
+      const totalPages = pdfDoc.getPageCount();
 
-    alert("PDF salvo com sucesso! Voucher: " + category);
+      for (const img of config.images) {
+        const imgBytes = await fetchImageAsBytes(img.url);
+        let embeddedImg;
+        try { 
+          embeddedImg = await pdfDoc.embedPng(imgBytes);
+        } catch {
+          embeddedImg = await pdfDoc.embedJpg(imgBytes);
+        }
 
-    // Recarrega lista de vouchers
-    loadRecentChanges();
-  } catch (err) {
-    console.error(err);
-    alert("Erro: " + err.message);
-  }
-});
+        if (img.pages === "all") {
+          // Aplica a todas as páginas
+          for (let i = 0; i < totalPages; i++) {
+            const page = pdfDoc.getPage(i);
+            const { width: pageWidth, height: pageHeight } = page.getSize();
 
-/*  
-   =======================================
-   LISTA DE ÚLTIMOS VOUCHERS (PAGINADA)
-   =======================================
-*/
-let allRecords   = [];
-let currentPage  = 1;
-const pageSize   = 10;
+            const left = img.left ?? 0;
+            const top  = img.top  ?? 0;
+            const w    = img.width  ?? embeddedImg.width;
+            const h    = img.height ?? embeddedImg.height;
 
-const recentChangesBody = document.getElementById('recentChangesBody');
-const prevPageBtn       = document.getElementById('prevPageBtn');
-const nextPageBtn       = document.getElementById('nextPageBtn');
-const paginationInfo    = document.getElementById('paginationInfo');
+            const x = left;
+            const y = pageHeight - top - h;
+            page.drawImage(embeddedImg, { x, y, width: w, height: h });
+          }
+        } else {
+          // Aplica somente na página indexada
+          const pageIndex = parseInt(img.pages, 10) || 0;
+          if (pageIndex >= 0 && pageIndex < totalPages) {
+            const page = pdfDoc.getPage(pageIndex);
+            const { width: pageWidth, height: pageHeight } = page.getSize();
 
-async function loadRecentChanges() {
-  try {
-    const resp = await fetch(LIST_URL);
-    if (!resp.ok) throw new Error("Falha ao listar vouchers");
-    const data = await resp.json();
-    allRecords  = data;
-    currentPage = 1;
-    renderCurrentPage();
-  } catch (error) {
-    console.error("Erro loadRecentChanges:", error);
-  }
-}
+            const left = img.left ?? 0;
+            const top  = img.top  ?? 0;
+            const w    = img.width  ?? embeddedImg.width;
+            const h    = img.height ?? embeddedImg.height;
 
-function renderCurrentPage() {
-  recentChangesBody.innerHTML = "";
-  const totalPages = Math.ceil(allRecords.length / pageSize);
-  if (currentPage > totalPages) currentPage = totalPages || 1;
+            const x = left;
+            const y = pageHeight - top - h;
+            page.drawImage(embeddedImg, { x, y, width: w, height: h });
+          }
+        }
+      }
 
-  const startIndex = (currentPage - 1) * pageSize;
-  const endIndex   = startIndex + pageSize;
-  const pageItems  = allRecords.slice(startIndex, endIndex);
+      return pdfDoc.save();
+    }
 
-  pageItems.forEach(item => {
-    const row = document.createElement('tr');
+    // upload PDF
+    async function uploadFinalPDF(pdfBytes, category) {
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const formData = new FormData();
+      formData.append("pdfFile", blob, "VoucherEditado.pdf");
+      formData.append("voucherType", category);
 
-    const idTd       = document.createElement('td');
-    const dateTd     = document.createElement('td');
-    const categoryTd = document.createElement('td');
-    const downloadTd = document.createElement('td');
+      const resp = await fetch(UPLOAD_URL, { method: "POST", body: formData });
+      if (!resp.ok) {
+        const errData = await resp.json().catch(()=>({}));
+        throw new Error(errData.error || "Falha no upload_voucher.php");
+      }
+      const result = await resp.json();
+      if (!result.success) throw new Error(result.error || "Falha ao salvar PDF");
+      return result;
+    }
 
-    idTd.textContent       = item.id;
-    dateTd.textContent     = item.created_at;  // Exemplo: "2025-02-21 14:35"
-    categoryTd.textContent = item.category;
+    // Botão "Converter"
+    convertButton.addEventListener('click', async () => {
+      const category = voucherTypeSelect.value;
+      const file = pdfFileInput.files[0];
+      if (!category) { alert("Selecione uma categoria!"); return; }
+      if (!file) { alert("Selecione um arquivo PDF!"); return; }
 
-    // Link para download
-    const link = document.createElement('a');
-    link.href        = item.downloadURL;
-    link.textContent = "Download";
-    link.classList.add('download-link');
-    link.target      = "_blank";
-    link.setAttribute('download', "VoucherEditado.pdf");
-    downloadTd.appendChild(link);
+      try {
+        const originalPdfBytes = await fileToArrayBuffer(file);
 
-    row.appendChild(idTd);
-    row.appendChild(dateTd);
-    row.appendChild(categoryTd);
-    row.appendChild(downloadTd);
-    recentChangesBody.appendChild(row);
-  });
+        // Seleciona config
+        let config;
+        if (category === "Disney") {
+          config = disneyVoucherConfig;
+        } else if (category === "Universal") {
+          config = universalVoucherConfig;
+        } else if (category === "SeaWorld") {
+          config = seaWorldVoucherConfig;
+        } else {
+          // Hospedagem => sem manipulação
+          config = { images: [] };
+        }
 
-  paginationInfo.textContent = `Página ${currentPage} de ${totalPages || 1}`;
-  prevPageBtn.disabled = (currentPage <= 1);
-  nextPageBtn.disabled = (currentPage >= totalPages);
-}
+        // Mescla
+        const finalPdfBytes = await mergePDFWithConfig(originalPdfBytes, config);
 
-prevPageBtn.addEventListener('click', () => {
-  if (currentPage > 1) {
-    currentPage--;
-    renderCurrentPage();
-  }
-});
-nextPageBtn.addEventListener('click', () => {
-  const totalPages = Math.ceil(allRecords.length / pageSize);
-  if (currentPage < totalPages) {
-    currentPage++;
-    renderCurrentPage();
-  }
-});
+        // Sobe pro servidor
+        const result = await uploadFinalPDF(finalPdfBytes, category);
 
-/*  
-   =======================================
-   AO CARREGAR A PÁGINA
-   =======================================
-*/
-window.addEventListener('DOMContentLoaded', () => {
-  loadRecentChanges();
-});
-</script>
+        alert("PDF salvo com sucesso! Voucher: " + category);
+
+        // Recarrega lista
+        loadRecentChanges();
+      } catch (err) {
+        console.error(err);
+        alert("Erro: " + err.message);
+      }
+    });
+
+    // Carrega ao abrir
+    window.addEventListener('DOMContentLoaded', () => {
+      loadRecentChanges();
+    });
+  </script>
 </body>
 </html>
