@@ -1,448 +1,375 @@
 <!DOCTYPE html>
+<!-- Código completo com as alterações solicitadas -->
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <title>Magic Travel - Navbar Pura CSS, Sem Fundo e Active Flexível</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sidebar Menu | Magic Travel</title>
 
-  <!-- Ícones do Font Awesome -->
+  <!-- Fonte de ícones (Material Symbols) -->
   <link
     rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0"
   />
 
+  <!-- CSS Unificado -->
   <style>
-    /* =================== RESET / REMOÇÃO DE FUNDO E PADDING =================== */
-    html, body {
+    /* Importando Google Fonts - Poppins */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+    * {
       margin: 0;
       padding: 0;
-      /* Fundo transparente ou branco, como preferir. Vou deixar branco: */
-      background: #fff;
-      font-family: Verdana, Geneva, Tahoma, sans-serif;
-      overflow: hidden; /* Se quiser permitir rolagem, remova. */
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
     }
 
-    /* =================== NAV-BAR PRINCIPAL =================== */
-    #nav-bar {
-      position: fixed;    /* Fixa no topo/esquerda da tela */
-      top: 0;
-      left: 0;
-      /* Sem arredondar cantos, sem margem */
-      border-radius: 0;
-      margin: 0;
+    body {
+      min-height: 100vh;
+      background: linear-gradient(#F1FAFF, #CBE4FF);
+    }
 
-      width: 256px;             /* Largura normal */
-      height: 100vh;            /* Ocupa a altura inteira da tela */
-      background: #18283b;      /* Fundo do menu (navbar-dark-primary) */
-      color: #f5f6fa;           /* Texto claro */
+    /* SIDEBAR BASE */
+    .sidebar {
+      position: fixed;
+      width: 270px;
+      margin: 16px;
+      border-radius: 16px;
+      background: #151A2D;
+      height: calc(100vh - 32px);
+      transition: all 0.4s ease;
+      overflow: hidden; /* Em telas grandes, se quiser rolagem interna, remova */
+    }
+    .sidebar.collapsed {
+      width: 85px;
+    }
+
+    /* SIDEBAR HEADER */
+    .sidebar .sidebar-header {
       display: flex;
-      flex-direction: column;
-      user-select: none;        /* Evita selecionar texto arrastando */
-      overflow: hidden;         /* Conteúdo extra some */
-    }
-
-    /* Checkbox para colapsar a barra */
-    #nav-toggle {
-      display: none;
-    }
-    /* Quando marcado => colapsa */
-    #nav-toggle:checked ~ #nav-header {
-      width: 80px; /* Min */
-    }
-    #nav-toggle:checked ~ #nav-content,
-    #nav-toggle:checked ~ #nav-footer {
-      width: 80px;
-    }
-    #nav-toggle:checked ~ #nav-header #nav-title {
-      opacity: 0;
-      pointer-events: none;
-    }
-    #nav-toggle:checked ~ #nav-header #nav-toggle-burger {
-      background: #f5f6fa;
-    }
-    #nav-toggle:checked ~ #nav-content .nav-button span {
-      opacity: 0;
-    }
-    #nav-toggle:checked ~ #nav-footer #nav-footer-avatar {
-      left: 50%;
-      transform: translate(-50%);
-    }
-    #nav-toggle:checked ~ #nav-footer #nav-footer-titlebox {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* HEADER DO NAV */
-    #nav-header {
       position: relative;
-      width: 256px;
-      height: 80px;
-      background: #18283b; /* Mesmo do container */
-      transition: width 0.2s;
-      display: flex;
+      padding: 25px 20px;
       align-items: center;
+      justify-content: space-between;
     }
-    /* Título do nav */
-    #nav-title {
-      margin-left: 16px;
-      font-size: 1.4rem;
-      color: #f5f6fa;
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-
-    /* Botão hamburguer */
-    label[for="nav-toggle"] {
-      position: absolute;
-      right: 0;
-      width: 3rem;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-    }
-    #nav-toggle-burger {
-      width: 16px;
-      height: 2px;
-      background: #18283b;
-      border-radius: 99px;
-      position: relative;
-      transition: 0.2s;
-    }
-    #nav-toggle-burger:before,
-    #nav-toggle-burger:after {
-      content: "";
-      position: absolute;
-      width: 10px;
-      height: 2px;
-      background: #f5f6fa;
-      border-radius: 99px;
-      transition: 0.2s;
-    }
-    #nav-toggle-burger:before {
-      top: -6px;
-      transform: translate(2px, 8px) rotate(30deg);
-    }
-    #nav-toggle-burger:after {
-      top: 6px;
-      transform: translate(2px, -8px) rotate(-30deg);
-    }
-
-    /* CONTEÚDO DO MENU (links) */
-    #nav-content {
-      position: relative;
-      width: 256px;
-      flex: 1;
-      background: #18283b;
-      transition: width 0.2s;
-      overflow-x: hidden;
-    }
-
-    /* Scrollbar oculta ou custom? Se quiser permitir rolagem grande. */
-    #nav-content::-webkit-scrollbar {
-      width: 6px;
-    }
-    #nav-content::-webkit-scrollbar-thumb {
-      border-radius: 99px;
-      background-color: #555;
-    }
-
-    /* Destaque que se move no hover */
-    #nav-content-highlight {
-      position: absolute;
-      left: 0; /* encosta na borda */
-      top: -70px;
-      width: 4px; /* Em vez de retângulo, pode ser uma faixinha fina */
-      height: 54px;
-      background: #9c88ff;
-      transition: top 0.2s;
-      z-index: 0;
-    }
-
-    /* Links do menu */
-    .nav-button {
-      display: flex;
-      align-items: center;
-      height: 54px;
-      color: #8392a5; /* cinza claro */
-      text-decoration: none;
-      cursor: pointer;
-      padding: 0 16px;
-      position: relative;
-      z-index: 1;
-      transition: color 0.2s;
-    }
-    .nav-button span {
-      margin-left: 8px;
-      transition: 0.2s;
-    }
-    .nav-button .fas {
-      width: 20px;
-      text-align: center;
-    }
-    /* HOVER => muda cor e move highlight (via nth-of-type) */
-    .nav-button:hover {
-      color: #f5f6fa;
-    }
-
-    /*
-      .nav-button:nth-of-type(X):hover ~ #nav-content-highlight { top: ... }
-      Precisamos enumerar manualmente se quisermos mover exato.
-      Caso vá redimensionar, lembre de ajustar os valores.
-    */
-    .nav-button:nth-of-type(1):hover ~ #nav-content-highlight {
-      top: 16px;
-    }
-    .nav-button:nth-of-type(2):hover ~ #nav-content-highlight {
-      top: 70px;
-    }
-    .nav-button:nth-of-type(3):hover ~ #nav-content-highlight {
-      top: 124px;
-    }
-    .nav-button:nth-of-type(4):hover ~ #nav-content-highlight {
-      top: 178px;
-    }
-    .nav-button:nth-of-type(5):hover ~ #nav-content-highlight {
-      top: 232px;
-    }
-    .nav-button:nth-of-type(6):hover ~ #nav-content-highlight {
-      top: 286px;
-    }
-    .nav-button:nth-of-type(7):hover ~ #nav-content-highlight {
-      top: 340px;
-    }
-    .nav-button:nth-of-type(8):hover ~ #nav-content-highlight {
-      top: 394px;
-    }
-    .nav-button:nth-of-type(9):hover ~ #nav-content-highlight {
-      top: 448px;
-    }
-    .nav-button:nth-of-type(10):hover ~ #nav-content-highlight {
-      top: 502px;
-    }
-    .nav-button:nth-of-type(11):hover ~ #nav-content-highlight {
-      top: 556px;
-    }
-    .nav-button:nth-of-type(12):hover ~ #nav-content-highlight {
-      top: 610px;
-    }
-
-    /* "ACTIVE" => coloração especial + highlight fixo */
-    .nav-button.active {
-      color: #fff;
-      background: #34495e; /* Exemplo */
-    }
-
-    /* FOOTER (opcional) */
-    #nav-footer-toggle {
-      display: none;
-    }
-    #nav-footer {
-      position: relative;
-      width: 256px;
-      height: 54px;
-      background: #2c3e50;
-      transition: width 0.2s, height 0.2s;
-      display: flex;
-      flex-direction: column;
-    }
-    #nav-footer-heading {
-      position: relative;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      height: 54px;
-    }
-    #nav-footer-avatar {
-      margin-left: 16px;
-      width: 32px;
-      height: 32px;
+    .sidebar-header .header-logo img {
+      width: 46px;
+      height: 46px;
+      display: block;
+      object-fit: contain;
       border-radius: 50%;
-      overflow: hidden;
-      transition: 0.2s;
     }
-    #nav-footer-avatar img {
-      width: 100%;
-      height: auto;
-    }
-    #nav-footer-titlebox {
-      margin-left: 8px;
-      transition: opacity 0.2s;
-    }
-    label[for="nav-footer-toggle"] {
-      position: absolute;
-      right: 0;
-      width: 3rem;
-      height: 54px;
+    .sidebar-header .toggler {
+      height: 35px;
+      width: 35px;
+      color: #151A2D;
+      border: none;
+      cursor: pointer;
       display: flex;
+      background: #fff;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      transition: transform 0.2s;
+      border-radius: 8px;
+      transition: 0.4s ease;
     }
-    label[for="nav-footer-toggle"] i {
-      color: #f5f6fa;
+    .sidebar-header .sidebar-toggler {
+      position: absolute;
+      right: 20px;
     }
-    #nav-footer-toggle:checked + #nav-footer {
-      height: 30%; /* Expande */
-      min-height: 54px;
+    .sidebar-header .menu-toggler {
+      display: none;
     }
-    #nav-footer-toggle:checked + #nav-footer label[for="nav-footer-toggle"] {
+    .sidebar.collapsed .sidebar-header .toggler {
+      transform: translate(-4px, 65px);
+    }
+    .sidebar-header .toggler:hover {
+      background: #dde4fb;
+    }
+    .sidebar-header .toggler span {
+      font-size: 1.75rem;
+      transition: 0.4s ease;
+    }
+    .sidebar.collapsed .sidebar-header .toggler span {
       transform: rotate(180deg);
     }
-    #nav-footer-content {
-      flex: 1;
-      border-top: 1px solid #8392a5;
-      color: #8392a5;
-      font-size: 0.8rem;
-      padding: 8px 16px;
-      overflow: auto;
+
+    /* SIDEBAR NAV */
+    .sidebar-nav .nav-list {
+      list-style: none;
+      display: flex;
+      gap: 4px;
+      padding: 0 15px;
+      flex-direction: column;
+      transform: translateY(15px);
+      transition: 0.4s ease;
+    }
+    .sidebar.collapsed .sidebar-nav .primary-nav {
+      transform: translateY(65px);
+    }
+
+    .sidebar-nav .nav-link {
+      color: #fff;
+      display: flex;
+      gap: 12px;
+      white-space: nowrap;
+      border-radius: 8px;
+      padding: 12px 15px;
+      align-items: center;
+      text-decoration: none;
+      transition: 0.4s ease;
+    }
+    .sidebar.collapsed .sidebar-nav .nav-link {
+      border-radius: 12px;
+    }
+
+    .sidebar .sidebar-nav .nav-link .nav-label {
+      transition: opacity 0.3s ease;
+    }
+    .sidebar.collapsed .sidebar-nav .nav-link .nav-label {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .sidebar-nav .nav-link:hover {
+      color: #151A2D;
+      background: #fff;
+    }
+    .sidebar-nav .nav-item {
+      position: relative;
+    }
+
+    /* NAV TOOLTIP (quando sidebar colapsada) */
+    .sidebar-nav .nav-tooltip {
+      position: absolute;
+      top: -10px;
+      opacity: 0;
+      color: #151A2D;
+      display: none;
+      pointer-events: none;
+      padding: 6px 12px;
+      border-radius: 8px;
+      white-space: nowrap;
+      background: #fff;
+      left: calc(100% + 25px);
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+      transition: 0s;
+    }
+    .sidebar.collapsed .sidebar-nav .nav-tooltip {
+      display: block;
+    }
+    .sidebar-nav .nav-item:hover .nav-tooltip {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(50%);
+      transition: all 0.4s ease;
+    }
+
+    .sidebar-nav .secondary-nav {
+      position: absolute;
+      bottom: 30px;
+      width: 100%;
+    }
+
+    /* RESPONSIVO PARA TELAS MENORES */
+    @media (max-width: 1024px) {
+      .sidebar {
+        height: 56px;
+        margin: 13px;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        width: calc(100% - 26px);
+        max-height: calc(100vh - 26px);
+      }
+      .sidebar.menu-active {
+        overflow-y: auto;
+      }
+      .sidebar .sidebar-header {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        border-radius: 16px;
+        background: #151A2D;
+        padding: 8px 10px;
+      }
+      .sidebar-header .header-logo img {
+        width: 40px;
+        height: 40px;
+      }
+      .sidebar-header .sidebar-toggler,
+      .sidebar-nav .nav-item:hover .nav-tooltip {
+        display: none;
+      }
+
+      .sidebar-header .menu-toggler {
+        display: flex;
+        height: 30px;
+        width: 30px;
+      }
+      .sidebar-header .menu-toggler span {
+        font-size: 1.3rem;
+      }
+
+      .sidebar .sidebar-nav .nav-list {
+        padding: 0 10px;
+      }
+      .sidebar-nav .nav-link {
+        gap: 10px;
+        padding: 10px;
+        font-size: 0.94rem;
+      }
+      .sidebar-nav .nav-link .nav-icon {
+        font-size: 1.37rem;
+      }
+      .sidebar-nav .secondary-nav {
+        position: relative;
+        bottom: 0;
+        margin: 40px 0 30px;
+      }
     }
   </style>
 </head>
 <body>
 
-<!-- NAV-BAR COM TUDO -->
-<div id="nav-bar">
-  <!-- Checkbox p/ colapsar -->
-  <input id="nav-toggle" type="checkbox" />
+  <aside class="sidebar">
+    <!-- Sidebar header -->
+    <header class="sidebar-header">
+      <a href="#" class="header-logo">
+        <!-- Caminho para sua logo -->
+        <img src="logo.png" alt="Magic Travel - Logo">
+      </a>
+      <button class="toggler sidebar-toggler">
+        <span class="material-symbols-rounded">chevron_left</span>
+      </button>
+      <button class="toggler menu-toggler">
+        <span class="material-symbols-rounded">menu</span>
+      </button>
+    </header>
 
-  <!-- HEADER -->
-  <div id="nav-header">
-    <a id="nav-title" href="#">
-      Magic<i class="fab fa-codepen"></i>Travel
-    </a>
-    <!-- Botão hamburguer -->
-    <label for="nav-toggle">
-      <span id="nav-toggle-burger"></span>
-    </label>
-  </div>
+    <nav class="sidebar-nav">
+      <!-- Primary top nav -->
+      <ul class="nav-list primary-nav">
+        <!-- Mantido Dashboard -->
+        <li class="nav-item">
+          <a href="https://business.magictraveltur.com/" class="nav-link">
+            <span class="nav-icon material-symbols-rounded">dashboard</span>
+            <span class="nav-label">Dashboard</span>
+          </a>
+          <span class="nav-tooltip">Dashboard</span>
+        </li>
 
-  <!-- CONTEÚDO (LINKS) -->
-  <div id="nav-content">
-    <!-- Precisamos enumerar items para mover highlight no hover -->
-    <a class="nav-button" href="https://business.magictraveltur.com/">
-      <i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
-    </a>
-    <a class="nav-button" href="https://business.magictraveltur.com/pages-orders.html">
-      <i class="fas fa-shopping-cart"></i><span>Pedidos</span>
-    </a>
-    <a class="nav-button" href="https://business.magictraveltur.com/loti.html">
-      <i class="fas fa-cash-register"></i><span>Cadastrar Venda</span>
-    </a>
-    <a class="nav-button" href="https://business.magictraveltur.com/finance.html">
-      <i class="fas fa-dollar-sign"></i><span>Financeiro</span>
-    </a>
-    <a class="nav-button" href="https://business.magictraveltur.com/ranking.html">
-      <i class="fas fa-medal"></i><span>Ranking</span>
-    </a>
-    <a class="nav-button" href="https://business.magictraveltur.com/voucher">
-      <i class="fas fa-ticket-alt"></i><span>Voucher</span>
-    </a>
-    <a class="nav-button" href="ui-forms.html">
-      <i class="fas fa-file-alt"></i><span>Forms</span>
-    </a>
-    <a class="nav-button" href="ui-cards.html">
-      <i class="fas fa-th-large"></i><span>Cards</span>
-    </a>
-    <a class="nav-button" href="ui-typography.html">
-      <i class="fas fa-font"></i><span>Typography</span>
-    </a>
-    <a class="nav-button" href="icons-feather.html">
-      <i class="fas fa-icons"></i><span>Icons</span>
-    </a>
-    <a class="nav-button" href="charts-chartjs.html">
-      <i class="fas fa-chart-pie"></i><span>Charts</span>
-    </a>
-    <a class="nav-button" href="maps-google.html">
-      <i class="fas fa-map-marked-alt"></i><span>Maps</span>
-    </a>
+        <!-- Substituído Calendar por Pedidos -->
+        <li class="nav-item">
+          <a href="https://business.magictraveltur.com/pages-orders.html" class="nav-link">
+            <span class="nav-icon material-symbols-rounded">calendar_today</span>
+            <span class="nav-label">Pedidos</span>
+          </a>
+          <span class="nav-tooltip">Pedidos</span>
+        </li>
 
-    <!-- Barra fina de destaque -->
-    <div id="nav-content-highlight"></div>
-  </div>
+        <!-- Substituído Notifications por Nova Venda -->
+        <li class="nav-item">
+          <a href="https://business.magictraveltur.com/loti.html" class="nav-link">
+            <span class="nav-icon material-symbols-rounded">notifications</span>
+            <span class="nav-label">Nova Venda</span>
+          </a>
+          <span class="nav-tooltip">Nova Venda</span>
+        </li>
 
-  <!-- Checkbox p/ expandir Footer -->
-  <input id="nav-footer-toggle" type="checkbox" />
+        <!-- Substituído Team por Financeiro -->
+        <li class="nav-item">
+          <a href="https://business.magictraveltur.com/finance.html" class="nav-link">
+            <span class="nav-icon material-symbols-rounded">group</span>
+            <span class="nav-label">Financeiro</span>
+          </a>
+          <span class="nav-tooltip">Financeiro</span>
+        </li>
 
-  <!-- RODAPÉ (opc) -->
-  <div id="nav-footer">
-    <div id="nav-footer-heading">
-      <div id="nav-footer-avatar">
-        <img src="https://gravatar.com/avatar/4474ca42d303761c2901fa819c4f2547" />
-      </div>
-      <div id="nav-footer-titlebox">
-        <div style="color:#f5f6fa;">Admin</div>
-        <div style="font-size:0.7rem;">Magic Travel</div>
-      </div>
-      <label for="nav-footer-toggle"><i class="fas fa-caret-up"></i></label>
-    </div>
-    <div id="nav-footer-content">
-      Informações extras do usuário, rolagem se expandir.
-    </div>
-  </div>
-</div>
+        <!-- Substituído Analytics por Performance -->
+        <li class="nav-item">
+          <a href="https://business.magictraveltur.com/ranking.html" class="nav-link">
+            <span class="nav-icon material-symbols-rounded">insert_chart</span>
+            <span class="nav-label">Performance</span>
+          </a>
+          <span class="nav-tooltip">Performance</span>
+        </li>
 
-<!-- SCRIPT: "Active" super flexível -->
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    // 1) Captura URL atual (remoção de protocolo, domínio, ? e #, trailing slash, e "www")
-    function unifyUrl(url) {
-      try {
-        // Tenta construir URL (em browsers modernos)
-        let tmp = new URL(url);
-        // Remove protocolo e dominio => fica o pathname
-        let path = tmp.pathname.toLowerCase();
-        // Remove barra final
-        path = path.replace(/\/$/, "");
-        return path;
-      } catch(e) {
-        // Se não for parseável, faz fallback
-        return url.replace(/^(https?:\/\/)?(www\.)?[^/]+/i, "").toLowerCase().replace(/\/$/, "");
-      }
-    }
+        <!-- Substituído Bookmarks por Voucher -->
+        <li class="nav-item">
+          <a href="https://business.magictraveltur.com/voucher.html" class="nav-link">
+            <span class="nav-icon material-symbols-rounded">star</span>
+            <span class="nav-label">Voucher</span>
+          </a>
+          <span class="nav-tooltip">Voucher</span>
+        </li>
 
-    function isMatch(u1, u2) {
-      // Se um contiver o outro (bidirecional), retorna true
-      // Assim fica "super permissivo".
-      return u1.includes(u2) || u2.includes(u1);
-    }
+        <!-- Mantido Settings -->
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <span class="nav-icon material-symbols-rounded">settings</span>
+            <span class="nav-label">Settings</span>
+          </a>
+          <span class="nav-tooltip">Settings</span>
+        </li>
+      </ul>
 
-    let current = unifyUrl(window.location.href);
-    console.log("URL atual =>", current);
+      <!-- Secondary bottom nav -->
+      <ul class="nav-list secondary-nav">
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <span class="nav-icon material-symbols-rounded">account_circle</span>
+            <span class="nav-label">Profile</span>
+          </a>
+          <span class="nav-tooltip">Profile</span>
+        </li>
+        <li class="nav-item">
+          <a href="#" class="nav-link">
+            <span class="nav-icon material-symbols-rounded">logout</span>
+            <span class="nav-label">Logout</span>
+          </a>
+          <span class="nav-tooltip">Logout</span>
+        </li>
+      </ul>
+    </nav>
+  </aside>
 
-    let links = document.querySelectorAll("#nav-content .nav-button");
-    // Array com as posições do highlight p/ cada item (1..12)
-    let highlightPositions = [
-      16, 70, 124, 178, 232,
-      286, 340, 394, 448, 502,
-      556, 610
-    ];
-    let highlight = document.getElementById("nav-content-highlight");
+  <!-- JS Unificado -->
+  <script>
+    const sidebar = document.querySelector(".sidebar");
+    const sidebarToggler = document.querySelector(".sidebar-toggler");
+    const menuToggler = document.querySelector(".menu-toggler");
 
-    let foundActive = false;
+    // Certifique-se que esses valores de altura combinem com o CSS
+    let collapsedSidebarHeight = "56px";
+    let fullSidebarHeight = "calc(100vh - 32px)";
 
-    links.forEach((link, index) => {
-      let linkUrl = unifyUrl(link.href);
-      console.log("Comparando link =>", linkUrl);
-
-      if (isMatch(current, linkUrl)) {
-        // Marca como ativo
-        console.log(">>> ATIVO =>", linkUrl);
-        link.classList.add("active");
-        foundActive = true;
-        // Move highlight
-        if (highlightPositions[index] != null) {
-          highlight.style.top = highlightPositions[index] + "px";
-        }
-      }
+    // Toggle sidebar's collapsed state
+    sidebarToggler.addEventListener("click", () => {
+      sidebar.classList.toggle("collapsed");
     });
 
-    if (!foundActive) {
-      console.warn("Nenhum link ativo. Ajuste a lógica se necessário.");
-    }
-  });
-</script>
+    // Função para mudar altura da sidebar e texto do toggler
+    const toggleMenu = (isMenuActive) => {
+      // Se "menu-active", setamos a altura para scrollHeight
+      sidebar.style.height = isMenuActive ? `${sidebar.scrollHeight}px` : collapsedSidebarHeight;
+      menuToggler.querySelector("span").innerText = isMenuActive ? "close" : "menu";
+    };
+
+    // Toggle menu-active class e ajusta altura
+    menuToggler.addEventListener("click", () => {
+      toggleMenu(sidebar.classList.toggle("menu-active"));
+    });
+
+    // Ajusta altura ao redimensionar janela
+    window.addEventListener("resize", () => {
+      if (window.innerWidth >= 1024) {
+        sidebar.style.height = fullSidebarHeight;
+      } else {
+        sidebar.classList.remove("collapsed");
+        sidebar.style.height = "auto";
+        toggleMenu(sidebar.classList.contains("menu-active"));
+      }
+    });
+  </script>
 
 </body>
 </html>
