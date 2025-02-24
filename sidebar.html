@@ -3,170 +3,187 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Sidebar Apple-like com Active</title>
+  <title>Magic Travel - Minimal Sidebar Apple-Like</title>
 
-  <!-- Fonte minimalista (Inter) para simular um estilo “Apple-like” -->
+  <!-- Fonte minimalista (Inter) -->
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap"
     rel="stylesheet"
   />
 
   <style>
-    /* ================== RESET ================== */
+    /* ==================== RESET BÁSICO ==================== */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    /* ================== LAYOUT GERAL ================== */
     body {
       display: flex;
-      height: 100vh;
+      flex-direction: column;
+      min-height: 100vh;
       font-family: 'Inter', sans-serif;
-      background-color: #f5f5f7; /* Tom clarinho, estilo Apple */
+      background: #f5f5f7; /* Cor clara, no estilo Apple */
       color: #333;
-      overflow: hidden; /* Evita rolagem horizontal */
+      overflow-x: hidden; /* Sem rolagem horizontal */
     }
 
-    /* Container principal (engloba sidebar e conteúdo) */
-    .container {
+    .page-container {
       display: flex;
       flex: 1;
     }
 
-    /* ================== SIDEBAR ================== */
-    .sidebar {
-      width: 220px;
-      background-color: #ffffff; /* Fundo branco */
-      border-right: 1px solid #dadada; /* Linha sutil de separação */
-      display: flex;
-      flex-direction: column;
-      overflow-y: auto;
-      transition: width 0.2s ease;
+    /* ==================== SIDEBAR ==================== */
+    /* ID para a sidebar */
+    #mySidebar {
+      width: 240px;
+      background-color: #fff;
+      border-right: 1px solid #dadada; /* Linha discreta à direita */
+      transition: margin-left 0.3s ease-in-out;
+      position: relative;
+      z-index: 999; /* Para ficar acima do conteúdo ao colapsar em mobile */
+    }
+    /* Estilo colapsado (some para a esquerda) */
+    #mySidebar.collapsed {
+      margin-left: -240px;
     }
 
-    /* Branding (topo) */
+    .sidebar-content {
+      display: flex;
+      flex-direction: column;
+      height: 100vh; /* Para ocupar a tela toda */
+      overflow-y: auto;
+    }
+
+    /* BRANDING (LOGO + BOTÃO TOGGLE) */
     .sidebar-brand {
       display: flex;
       align-items: center;
-      padding: 1rem;
+      justify-content: space-between;
+      padding: 0.75rem 1rem; /* Menor espaçamento, texto pequeno */
       border-bottom: 1px solid #dadada;
     }
     .sidebar-brand img {
-      height: 24px;
+      height: 18px; /* Logo menor */
       margin-right: 0.5rem;
     }
     .sidebar-brand h1 {
       font-size: 14px;
       font-weight: 500;
-      color: #333;
       margin: 0;
+      color: #333;
     }
 
-    /* Lista de navegação */
+    /* Botão toggle minimalista */
+    .sidebar-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #666;
+      font-size: 1.2rem;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .sidebar-toggle:hover {
+      color: #000;
+    }
+
+    /* ==================== LISTA DE NAVEGAÇÃO ==================== */
     .sidebar-nav {
       list-style: none;
-      padding: 0;
       margin: 0;
-      flex: 1;
+      padding: 0;
+      flex: 1; /* Ocupa o espaço restante */
       display: flex;
       flex-direction: column;
     }
 
-    /* Títulos de seção (ex: Dados, Ferramentes...) */
+    /* Título de seção */
     .sidebar-header {
-      font-size: 11px;
-      font-weight: 500;
+      font-size: 10px; /* BEM pequeno */
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
       color: #999;
-      margin-top: 1rem;
-      margin-bottom: 0.25rem;
-      padding-left: 1rem;
+      letter-spacing: 0.5px;
+      margin: 1rem 0 0.25rem 1rem;
     }
 
-    /* Cada item do menu */
-    .sidebar-item {}
+    /* ITEM DE MENU */
+    .sidebar-item { }
 
-    /* Link do menu */
+    /* LINK DE MENU */
     .sidebar-link {
       display: flex;
       align-items: center;
-      font-size: 13px;
+      font-size: 12px; /* Texto pequeno */
       color: #555;
       text-decoration: none;
-      padding: 0.45rem 1rem;
-      transition: background 0.15s ease;
+      padding: 0.5rem 1rem;
+      transition: background 0.2s;
     }
     .sidebar-link:hover {
       background-color: #f2f2f2;
+      color: #111;
     }
 
-    /* Ícones (Feather) menores */
+    /* ÍCONE FEATHER PEQUENO */
     .sidebar-link i {
-      width: 16px;
-      height: 16px;
+      width: 14px; /* Ícone pequeno */
+      height: 14px;
       stroke-width: 2;
       margin-right: 0.5rem;
       color: #777;
       flex-shrink: 0;
     }
 
-    /* Estado ACTIVE (item destacado) */
+    /* ACTIVE GERAL */
     .sidebar-item.active > .sidebar-link {
       background-color: #e2e2e6;
       color: #111;
-      font-weight: 500; /* Destaque um pouco maior */
+      font-weight: 500;
     }
     .sidebar-item.active > .sidebar-link i {
       color: #111;
     }
 
-    /* ================== CONTEÚDO ================== */
+    /* ==================== CONTEÚDO PRINCIPAL ==================== */
     .main-content {
       flex: 1;
-      background-color: #f5f5f7;
-      padding: 2rem;
-      overflow-y: auto;
+      padding: 1.5rem;
+      overflow-y: auto; /* Conteúdo rolável */
+      transition: margin-left 0.3s ease-in-out;
     }
-    .main-content h1 {
-      font-size: 1.25rem;
-      margin-bottom: 0.5rem;
+    /* Quando sidebar está colapsada, este ajusta a margem se quiser */
+    #mySidebar.collapsed ~ .main-content {
+      margin-left: 0;
     }
 
-    /* Scrollbars suaves (opcional) */
-    ::-webkit-scrollbar {
-      width: 6px;
+    /* ==================== SCROLLBAR PERSONALIZADA ==================== */
+    .sidebar-content::-webkit-scrollbar {
+      width: 5px;
     }
-    ::-webkit-scrollbar-track {
-      background: #f5f5f7;
+    .sidebar-content::-webkit-scrollbar-track {
+      background: #fff;
     }
-    ::-webkit-scrollbar-thumb {
+    .sidebar-content::-webkit-scrollbar-thumb {
       background-color: #ccc;
       border-radius: 3px;
     }
 
-    /* ================== RESPONSIVO (EXEMPLO) ================== */
+    /* ==================== RESPONSIVIDADE ==================== */
     @media (max-width: 768px) {
-      .sidebar {
-        width: 60px; /* Colapsa a sidebar no mobile */
+      #mySidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
       }
-      .sidebar-brand {
-        justify-content: center;
-      }
-      .sidebar-brand h1 {
-        display: none; /* Some o texto da marca */
-      }
-      .sidebar-header {
-        display: none;
-      }
-      .sidebar-link {
-        justify-content: center;
-        padding: 0.6rem 0;
-      }
-      .sidebar-link span {
-        display: none; /* Some o texto do link, deixa só o ícone */
+      /* Ao expandir a sidebar no mobile, o conteúdo desloca? */
+      #mySidebar:not(.collapsed) ~ .main-content {
+        margin-left: 240px;
       }
     }
   </style>
@@ -175,123 +192,148 @@
   <script src="https://unpkg.com/feather-icons"></script>
 </head>
 <body>
-  <div class="container">
+  <!-- CONTAINER PRINCIPAL -->
+  <div class="page-container">
     <!-- SIDEBAR -->
-    <nav class="sidebar" id="appleSidebar">
-      <div class="sidebar-brand">
-        <img
-          src="https://www.magictraveltur.com/wp-content/uploads/2024/11/Escrita-_-Branco.png"
-          alt="Magic Travel"
-          style="filter: invert(0%); /* Ajuste se precisar escurecer ou clarear */"
-        />
-        <h1>Magic Travel</h1>
+    <nav id="mySidebar">
+      <div class="sidebar-content">
+        <!-- Brand -->
+        <div class="sidebar-brand">
+          <div style="display: flex; align-items:center;">
+            <img
+              src="https://www.magictraveltur.com/wp-content/uploads/2024/11/Escrita-_-Branco.png"
+              alt="Magic Travel"
+              style="filter: invert(0%);"
+            />
+            <h1>Magic Travel</h1>
+          </div>
+          <button class="sidebar-toggle" id="sidebarToggle">
+            <i data-feather="menu"></i>
+          </button>
+        </div>
+
+        <!-- Navegação -->
+        <ul class="sidebar-nav">
+          <li class="sidebar-header">Dados</li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="https://business.magictraveltur.com/">
+              <i data-feather="sliders"></i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="https://business.magictraveltur.com/pages-orders.html">
+              <i data-feather="user"></i>
+              <span>Pedidos</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="https://business.magictraveltur.com/loti.html">
+              <i data-feather="bar-chart-2"></i>
+              <span>Cadastrar Venda</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="https://business.magictraveltur.com/finance.html">
+              <i data-feather="user-plus"></i>
+              <span>Financeiro</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="https://business.magictraveltur.com/ranking.html">
+              <i data-feather="book"></i>
+              <span>Ranking</span>
+            </a>
+          </li>
+
+          <li class="sidebar-header">Ferramentes</li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="https://business.magictraveltur.com/voucher">
+              <i data-feather="square"></i>
+              <span>Voucher</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="ui-forms.html">
+              <i data-feather="check-square"></i>
+              <span>Forms</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="ui-cards.html">
+              <i data-feather="grid"></i>
+              <span>Cards</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="ui-typography.html">
+              <i data-feather="align-left"></i>
+              <span>Typography</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="icons-feather.html">
+              <i data-feather="coffee"></i>
+              <span>Icons</span>
+            </a>
+          </li>
+
+          <li class="sidebar-header">Plugins &amp; Addons</li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="charts-chartjs.html">
+              <i data-feather="bar-chart-2"></i>
+              <span>Charts</span>
+            </a>
+          </li>
+
+          <li class="sidebar-item">
+            <a class="sidebar-link" href="maps-google.html">
+              <i data-feather="map"></i>
+              <span>Maps</span>
+            </a>
+          </li>
+        </ul>
       </div>
-
-      <ul class="sidebar-nav">
-        <li class="sidebar-header">Dados</li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="https://business.magictraveltur.com/">
-            <i data-feather="sliders"></i>
-            <span>Dashboard</span>
-          </a>
-        </li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="https://business.magictraveltur.com/pages-orders.html">
-            <i data-feather="user"></i>
-            <span>Pedidos</span>
-          </a>
-        </li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="https://business.magictraveltur.com/loti.html">
-            <i data-feather="bar-chart-2"></i>
-            <span>Cadastrar Venda</span>
-          </a>
-        </li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="https://business.magictraveltur.com/finance.html">
-            <i data-feather="user-plus"></i>
-            <span>Financeiro</span>
-          </a>
-        </li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="https://business.magictraveltur.com/ranking.html">
-            <i data-feather="book"></i>
-            <span>Ranking</span>
-          </a>
-        </li>
-
-        <li class="sidebar-header">Ferramentes</li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="/voucher">
-            <i data-feather="square"></i>
-            <span>Voucher</span>
-          </a>
-        </li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="ui-forms.html">
-            <i data-feather="check-square"></i>
-            <span>Forms</span>
-          </a>
-        </li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="ui-cards.html">
-            <i data-feather="grid"></i>
-            <span>Cards</span>
-          </a>
-        </li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="ui-typography.html">
-            <i data-feather="align-left"></i>
-            <span>Typography</span>
-          </a>
-        </li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="icons-feather.html">
-            <i data-feather="coffee"></i>
-            <span>Icons</span>
-          </a>
-        </li>
-
-        <li class="sidebar-header">Plugins &amp; Addons</li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="charts-chartjs.html">
-            <i data-feather="bar-chart-2"></i>
-            <span>Charts</span>
-          </a>
-        </li>
-        <li class="sidebar-item">
-          <a class="sidebar-link" href="maps-google.html">
-            <i data-feather="map"></i>
-            <span>Maps</span>
-          </a>
-        </li>
-      </ul>
     </nav>
+    <!-- /SIDEBAR -->
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+      <h1>Exemplo de Conteúdo</h1>
+      <p>Sidebar minimalista, texto pequeno, ícones pequenos. Active é baseado na URL atual.</p>
+    </div>
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      // Substitui <i data-feather="..."> por SVG
+      // Substitui <i data-feather="..."> pelos ícones SVG
       feather.replace();
 
-      // Captura a URL atual, removendo barra final
+      // ============ LÓGICA DE "ACTIVE" ============
+      // Normaliza a URL atual (removendo ? e # e barra final)
       let currentUrl = window.location.href.split("?")[0].split("#")[0].replace(/\/$/, "");
-      console.log(">>> URL atual:", currentUrl);
+      console.log(">>> URL Atual:", currentUrl);
 
       let foundActive = false;
 
-      // Itera sobre cada .sidebar-item
-      document.querySelectorAll("#appleSidebar .sidebar-item").forEach((item) => {
-        const link = item.querySelector(".sidebar-link");
-        if (link) {
-          // Normaliza a URL do link
-          let linkUrl = link.href.split("?")[0].split("#")[0].replace(/\/$/, "");
+      document.querySelectorAll("#mySidebar .sidebar-item").forEach((item) => {
+        const linkEl = item.querySelector(".sidebar-link");
+        if (linkEl) {
+          let linkUrl = linkEl.href.split("?")[0].split("#")[0].replace(/\/$/, "");
+          console.log("Comparando:", linkUrl);
 
-          console.log("... comparando link:", linkUrl);
-
-          // Ajuste a condição:
-          // - Se quiser que seja EXATO, use (currentUrl === linkUrl)
-          // - Se quiser "contém", use includes
+          // Condição: se a URL atual == link ou "contains"
           if (currentUrl === linkUrl || currentUrl.includes(linkUrl)) {
             console.log(">>> Ativado:", linkUrl);
             item.classList.add("active");
@@ -301,8 +343,16 @@
       });
 
       if (!foundActive) {
-        console.warn("Nenhum link foi ativado. Ajuste a lógica se necessário.");
+        console.warn("Nenhum link ativado. Ajuste a comparação se precisar.");
       }
+
+      // ============ BOTÃO DE COLAPSAR ============
+      const sidebar = document.getElementById("mySidebar");
+      const toggleBtn = document.getElementById("sidebarToggle");
+
+      toggleBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("collapsed");
+      });
     });
   </script>
 </body>
