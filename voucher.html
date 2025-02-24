@@ -223,7 +223,7 @@
 </head>
 <body>
   <div id="voucher-page-container">
-    <!-- SIDEBAR (intacta) -->
+    <!-- SIDEBAR (referenciada via iframe) -->
     <div id="sidebar-container">
       <iframe src="sidebar.html" id="sidebar-frame"></iframe>
     </div>
@@ -283,7 +283,7 @@
     </div>
   </div>
 
-  <!-- PDF-Lib E SCRIPT ORIGINAL -->
+  <!-- PDF-Lib E SCRIPT DE LÓGICA -->
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
   <script>
     /*
@@ -376,7 +376,7 @@
     let currentPage = 1;
     const pageSize = 10;
 
-    // Carrega a lista
+    // Carrega a lista de alterações recentes
     async function loadRecentChanges() {
       try {
         const resp = await fetch(LIST_URL);
@@ -536,7 +536,6 @@
         }
 
         const finalPdfBytes = await mergePDFWithConfig(originalPdfBytes, config);
-
         await uploadFinalPDF(finalPdfBytes, category);
 
         alert("PDF salvo com sucesso! Voucher: " + category);
@@ -547,9 +546,31 @@
       }
     });
 
-    // Carrega ao iniciar
+    // Carrega lista inicial ao abrir
     window.addEventListener('DOMContentLoaded', () => {
       loadRecentChanges();
+    });
+  </script>
+
+  <!-- SCRIPT PARA MARCAR O LINK "VOUCHER" COMO ATIVO NA SIDEBAR -->
+  <script>
+    // Assim que o iframe carregar...
+    const sidebarFrame = document.getElementById('sidebar-frame');
+    sidebarFrame.addEventListener('load', function() {
+      try {
+        // Obtem o documento interno do iframe
+        const sidebarDoc = sidebarFrame.contentDocument || sidebarFrame.contentWindow.document;
+
+        // Localiza o link do "Voucher" dentro da sidebar
+        const voucherLink = sidebarDoc.querySelector('a.nav-link[href="https://business.magictraveltur.com/voucher.html"]');
+
+        // Se existir, adiciona a classe "active" para destacar
+        if (voucherLink) {
+          voucherLink.classList.add('active');
+        }
+      } catch (error) {
+        console.error("Erro ao marcar link ativo na sidebar:", error);
+      }
     });
   </script>
 </body>
