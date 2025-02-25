@@ -39,7 +39,8 @@
       margin: 0;
       background-color: #f4f4f9;
       color: #333;
-      /* #sidebar-container e .order-details como irmãos diretos de <body> */
+      /* Importante: #sidebar-container e .order-details
+         são irmãos diretos dentro do <body>. */
     }
 
     /************************************************************
@@ -55,8 +56,9 @@
       color: #fff;
       overflow-y: auto;
       box-shadow: 3px 0 6px rgba(0, 0, 0, 0.2);
-      transition: background-color 0.3s, height 0.3s ease;
+      transition: height 0.3s ease;
     }
+
     .sidebar-loading {
       padding: 20px;
       text-align: center;
@@ -64,13 +66,13 @@
       color: #ccc;
     }
 
-    /* Classe .collapsed */
+    /* Quando colapsa a sidebar */
     #sidebar-container.collapsed {
       height: 56px;
       overflow: hidden;
     }
 
-    /* Empurrar conteúdo quando colapsa */
+    /* Empurrar conteúdo quando colapsada */
     #sidebar-container.collapsed ~ .order-details {
       margin-left: 56px;
       width: calc(100% - 56px);
@@ -87,9 +89,10 @@
       background-color: #ffffff;
       border-radius: 8px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      min-height: 100vh; /* Ocupe a tela */
+      min-height: 100vh; /* ocupar a tela */
       transition: all 0.3s ease-in-out;
     }
+
     .order-details h1 {
       font-size: 24px;
       font-weight: bold;
@@ -109,6 +112,7 @@
       color: #ff6f61;
       margin-bottom: 20px;
     }
+
     .back-button {
       background-color: #ff6f61;
       color: #fff;
@@ -167,6 +171,7 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
+
     /* Arredondar cantos */
     .emissao-tabela thead th:first-child {
       border-top-left-radius: 12px;
@@ -201,6 +206,7 @@
       background-color: #17a37a;
       transform: scale(1.05);
     }
+
     @keyframes fadeIn {
       0% {
         opacity: 0;
@@ -211,12 +217,14 @@
         transform: translateY(0);
       }
     }
+
     .button-container {
       display: flex;
       gap: 10px;
       justify-content: center;
       margin-top: 10px;
     }
+
     .delete-row-button {
       background-color: transparent;
       border: none;
@@ -492,11 +500,11 @@
         const sidebarDiv  = document.getElementById('sidebar-container');
         sidebarDiv.innerHTML = sidebarHTML;
 
-        // Se quiser ativar link "pedidos"
+        // Se quiser ativar o link "pedidos"
         const pedidosLink = sidebarDiv.querySelector('[data-menu="pedidos"]');
         if (pedidosLink) pedidosLink.classList.add('active');
 
-        // Inicializa toggle
+        // Inicializar toggle
         inicializarSidebarToggle();
       } catch (err) {
         console.error(err);
@@ -505,7 +513,7 @@
     }
 
     /************************************************************
-     * 2) INICIALIZAR O TOGGLER (COLAPSE)
+     * 2) INICIALIZAR O TOGGLER (COLLAPSE)
      ************************************************************/
     function inicializarSidebarToggle() {
       const sidebar        = document.getElementById('sidebar-container');
@@ -516,7 +524,7 @@
       const collapsedHeight = '56px';
       const fullHeight      = 'calc(100vh - 32px)';
 
-      // Clique no botão principal
+      // Clique no botão principal (sidebar-toggler)
       sidebarToggler.addEventListener('click', () => {
         sidebar.classList.toggle('collapsed');
       });
@@ -527,7 +535,7 @@
         menuToggler.querySelector('span').innerText = isMenuActive ? 'close' : 'menu';
       };
 
-      // Botão "menu" (telas pequenas)
+      // Botão "menu" (em telas menores)
       menuToggler.addEventListener('click', () => {
         toggleMenu(sidebar.classList.toggle('menu-active'));
       });
@@ -564,7 +572,7 @@
         return;
       }
       try {
-        // Ajuste se a URL da sua API for diferente
+        // Ajuste a URL da API de pedidos se precisar
         const url = `https://www.magictraveltur.com/api_pedidos.php?id_pedido=${pedidoId}`;
         const resp = await fetch(url, { credentials: 'include' });
         if (!resp.ok) throw new Error(`Erro ao buscar pedido: ${resp.status}`);
@@ -580,7 +588,7 @@
 
         document.getElementById('pedido-id').textContent = pedidoId;
 
-        // Preenche Informações do Pedido
+        // Preenche "Informações do Pedido"
         document.getElementById('order-info').innerHTML = `
           <tr>
             <td>
@@ -601,7 +609,7 @@
           </tr>
         `;
 
-        // Preenche Informações do Cliente
+        // Preenche "Informações do Cliente"
         document.getElementById('customer-info').innerHTML = `
           <tr>
             <td>${pedido.nome_comprador || ''}</td>
@@ -613,7 +621,7 @@
           </tr>
         `;
 
-        // Financeiras
+        // Financeiras (1)
         document.getElementById('financial-info').innerHTML = `
           <tr>
             <td>${pedido.gateway || '<input type="text" placeholder="Gateway">'}</td>
@@ -624,6 +632,8 @@
             <td>${pedido.cambio_dia || '<input type="number" placeholder="Câmbio do Dia">'}</td>
           </tr>
         `;
+
+        // Financeiras (2)
         document.getElementById('financial-info-2').innerHTML = `
           <tr>
             <td>${pedido.valor_comissao ? 'R$ ' + parseFloat(pedido.valor_comissao).toFixed(2) : '<input type="number" placeholder="Valor Comissão">'}</td>
@@ -654,7 +664,7 @@
           </tr>
         `;
 
-        // Carregar a Planilha
+        // Carrega Planilha
         await loadPlanilhaPedido();
       } catch (err) {
         console.error(err);
@@ -663,7 +673,7 @@
     }
 
     /************************************************************
-     * 4) CARREGAR PLANILHA
+     * 4) CARREGAR PLANILHA (api_planilhas.php)
      ************************************************************/
     window.planilhasEmMemoria = [];
 
@@ -672,7 +682,6 @@
       if (!pedidoId) return;
 
       try {
-        // Ajuste a URL da sua API
         const url = `https://magictraveltur.com/api_planilhas.php?id_pedido=${pedidoId}&v=${Date.now()}`;
         const resp = await fetch(url, {
           cache: 'no-store',
@@ -697,7 +706,7 @@
 
         montarEmissao(planilhas);
 
-        // Recalcular ao editar
+        // Listeners de recálculo
         document
           .querySelectorAll('#spreadsheet-info input, #spreadsheet-info select')
           .forEach(el => el.addEventListener('input', calcularValoresPlanilha));
@@ -709,8 +718,8 @@
     }
 
     function montarPlanilhaPrincipal(planilhas) {
-      const container = document.getElementById('spreadsheet-info');
-      container.innerHTML = '';
+      const cont = document.getElementById('spreadsheet-info');
+      cont.innerHTML = '';
 
       planilhas.forEach(linha => {
         const row = `
@@ -739,16 +748,16 @@
             </td>
           </tr>
         `;
-        container.insertAdjacentHTML('beforeend', row);
+        cont.insertAdjacentHTML('beforeend', row);
       });
     }
 
     function montarEmissao(planilhas) {
-      const emissionContainer = document.getElementById('emission-info');
-      emissionContainer.innerHTML = '';
+      const emissionCont = document.getElementById('emission-info');
+      emissionCont.innerHTML = '';
 
       if (!planilhas.length) {
-        emissionContainer.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma informação disponível</td></tr>';
+        emissionCont.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma informação disponível</td></tr>';
         return;
       }
 
@@ -772,12 +781,12 @@
             </td>
           </tr>
         `;
-        emissionContainer.insertAdjacentHTML('beforeend', row);
+        emissionCont.insertAdjacentHTML('beforeend', row);
       });
     }
 
     function addNewRow() {
-      const container = document.getElementById('spreadsheet-info');
+      const cont = document.getElementById('spreadsheet-info');
       const row = `
         <tr>
           <td><input type="text" name="produto"></td>
@@ -804,17 +813,17 @@
           </td>
         </tr>
       `;
-      container.insertAdjacentHTML('beforeend', row);
+      cont.insertAdjacentHTML('beforeend', row);
 
-      // Adicionar listeners de recálculo
-      container.querySelectorAll('input, select').forEach(el => {
+      // Escuta de recálculo
+      cont.querySelectorAll('input, select').forEach(el => {
         el.removeEventListener('input', calcularValoresPlanilha);
         el.addEventListener('input', calcularValoresPlanilha);
       });
     }
 
     async function deleteRow(button) {
-      const row = button.closest('tr');
+      const row        = button.closest('tr');
       const planilhaId = row.getAttribute('data-planilha-id');
       if (!planilhaId) {
         // Linha nova
@@ -879,14 +888,14 @@
         const margem     = parseFloat(linha.querySelector('input[name="margem"]')?.value) || 0;
         const taxa       = parseFloat(linha.querySelector('input[name="taxa"]')?.value) || 0;
 
-        // Cálculos
+        // Cálculo
         const totalUsd = (netDollar + lobista) * quantidade;
         const netBrl   = totalUsd * dolarMagic;
         const totalPix = netBrl / (1 - (margem / 100));
         const total10x = totalPix / (1 - (taxa / 100));
 
         if (!produto || !data) {
-          alert('Campos obrigatórios (produto e data) não preenchidos em alguma linha.');
+          alert('Campos obrigatórios (produto e data) não preenchidos.');
           return;
         }
 
@@ -911,7 +920,6 @@
         if (!planilhaId) {
           novos.push(objLinha);
         } else {
-          // Atualiza
           const original = window.planilhasEmMemoria.find(p => p.id == planilhaId);
           if (!original) {
             novos.push(objLinha);
@@ -1077,7 +1085,7 @@
 
     function updateDolarMagic() {
       const dolarCambio = parseFloat(document.getElementById('dolar-cambio').value) || 0;
-      // Fator de ajuste, se houver
+      // Ajuste esse fator conforme desejar
       const dolarMagic  = (dolarCambio * 1.0098).toFixed(2);
       document.getElementById('dolar-magic').textContent = dolarMagic;
       calcularValoresPlanilha();
@@ -1087,10 +1095,10 @@
      * 8) INICIAR
      ************************************************************/
     document.addEventListener('DOMContentLoaded', () => {
-      // 1) Carrega a sidebar
+      // 1) Carregar sidebar
       loadSidebar();
 
-      // 2) Carrega detalhes do pedido
+      // 2) Carregar dados do pedido
       loadOrderDetails();
 
       // 3) Listeners
