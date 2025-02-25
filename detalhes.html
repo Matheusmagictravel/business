@@ -1,9 +1,6 @@
 <?php
 /**************************************************************
  * 1) Incluir 'auth.php'
- *    Se 'auth.php' estiver na raiz do site, use:
- *    include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
- *    ou ajuste conforme a sua estrutura de diretórios.
  **************************************************************/
 include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 ?>
@@ -34,9 +31,9 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
   />
 
   <style>
-    /* -------------------------------------------------------------------
-       RESET & BASE
-    ------------------------------------------------------------------- */
+    /********************************************************
+     * RESET & BASE
+     ********************************************************/
     * {
       margin: 0;
       padding: 0;
@@ -46,81 +43,18 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       font-family: "Montserrat", sans-serif;
       background-color: #f4f4f9;
       color: #333;
-      display: flex;
+      display: flex;           /* para facilitar layout com sidebar */
       flex-direction: column;
       min-height: 100vh;
     }
-    /* Remove decorações de links */
     a {
       text-decoration: none;
       color: inherit;
     }
 
-    /* -------------------------------------------------------------------
-       SIDEBAR - Responsiva e com toggle
-    ------------------------------------------------------------------- */
-    /* 
-       - Usaremos a class .sidebar para estilizar, 
-         e #sidebar-container como "container" fixo da sidebar. 
-       - A sidebar começa com largura fixa em desktop, 
-         mas poderá “colapsar” ou se esconder em telas menores. 
-    */
-    #sidebar-container.sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 260px;                  /* Largura normal (desktop) */
-      background-color: #0d112d;
-      color: #fff;
-      box-shadow: 3px 0 6px rgba(0, 0, 0, 0.2);
-      overflow-y: auto;
-      transition: width 0.3s ease, background-color 0.3s;
-      z-index: 999;
-    }
-    #sidebar-container.sidebar:hover {
-      background-color: #2b3947;
-    }
-
-    /* Quando a sidebar está "colapsada" (por exemplo no botão) */
-    #sidebar-container.sidebar.collapsed {
-      width: 60px;
-    }
-
-    /* 
-       Para telas menores, podemos usar a sidebar em “menu lateral” que fica 
-       escondida fora do viewport e entra com toggle.
-    */
-    @media (max-width: 992px) {
-      #sidebar-container.sidebar {
-        position: fixed;
-        left: -260px;  /* Esconde a sidebar fora da tela */
-        width: 260px;
-      }
-      /* Quando adicionamos uma classe de "menu ativo", ela aparece */
-      #sidebar-container.sidebar.menu-active {
-        left: 0;
-      }
-    }
-
-    /* Indicador de “Carregando” */
-    .sidebar-loading {
-      padding: 20px;
-      text-align: center;
-      font-size: 14px;
-      color: #ccc;
-    }
-
-    /* Se dentro do sidebar existir algum menu, ul/li, etc. 
-       Exemplo de highlight pro item "Pedidos" */
-    #sidebar-container a.active {
-      background-color: #1cbb8c !important;
-      color: #fff !important;
-    }
-
-    /* -------------------------------------------------------------------
-       BOTÕES DE TOGGLE (sidebar-toggler / menu-toggler)
-    ------------------------------------------------------------------- */
+    /********************************************************
+     * BOTÕES DE TOGGLE (fixos no topo)
+     ********************************************************/
     .sidebar-toggler,
     .menu-toggler {
       position: fixed;
@@ -129,7 +63,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       border: none;
       padding: 8px 12px;
       cursor: pointer;
-      z-index: 1000; /* Ficar acima da sidebar */
+      z-index: 1000;      /* ficar acima da sidebar */
       font-size: 18px;
       border-radius: 4px;
       display: flex;
@@ -137,28 +71,79 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       gap: 4px;
     }
 
-    /* Botão de "abrir/fechar" completamente (desktop) */
+    /* Botão p/ colapsar no desktop (fica à esquerda) */
     .sidebar-toggler {
       left: 10px;
     }
-    /* Botão de "menu" (mobile) */
+
+    /* Botão hamburguer (mobile), à direita, inicialmente escondido no desktop */
     .menu-toggler {
       right: 10px;
-      display: none; /* Desktop: escondido */
+      display: none;
     }
 
-    /* Em telas menores mostramos o menu-toggler */
     @media (max-width: 992px) {
       .menu-toggler {
-        display: flex;
+        display: flex;  /* exibe no mobile */
       }
     }
 
-    /* -------------------------------------------------------------------
-       CONTEÚDO PRINCIPAL - Order Details
-    ------------------------------------------------------------------- */
+    /********************************************************
+     * SIDEBAR RESPONSIVA
+     ********************************************************/
+    #sidebar-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 260px;
+      background-color: #0d112d;
+      color: #fff;
+      box-shadow: 3px 0 6px rgba(0, 0, 0, 0.2);
+      overflow-y: auto;
+      transition: width 0.3s ease, left 0.3s ease;
+      z-index: 999;
+    }
+
+    /* Hover (opcional) */
+    #sidebar-container:hover {
+      background-color: #2b3947;
+    }
+
+    /* Classe "collapsed" => sidebar encolhe no desktop */
+    #sidebar-container.collapsed {
+      width: 60px;       /* fica estreita */
+    }
+
+    /* Para mobile, a sidebar inicialmente fica fora da tela (left: -260px) */
+    @media (max-width: 992px) {
+      #sidebar-container {
+        left: -260px;
+      }
+      #sidebar-container.menu-active {
+        left: 0; /* quando menu ativo, aparece */
+      }
+      /* E não usamos "collapsed" no mobile, pois colapsar é outro conceito */
+    }
+
+    .sidebar-loading {
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #ccc;
+    }
+
+    /* Exemplo de "link ativo" dentro do sidebar */
+    #sidebar-container a.active {
+      background-color: #1cbb8c !important;
+      color: #fff !important;
+    }
+
+    /********************************************************
+     * CONTEÚDO PRINCIPAL (order-details)
+     ********************************************************/
     .order-details {
-      margin-left: 260px;    /* Espaço para a sidebar (desktop) */
+      margin-left: 260px;                  /* espaço para sidebar no desktop */
       padding: 40px;
       width: calc(100% - 260px);
       background-color: #ffffff;
@@ -170,13 +155,13 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       flex-direction: column;
     }
 
-    /* Quando a sidebar estiver colapsada no desktop, reduzimos a margem */
-    #sidebar-container.sidebar.collapsed ~ .order-details {
+    /* Se sidebar estiver colapsada no desktop => margem menor */
+    #sidebar-container.collapsed ~ .order-details {
       margin-left: 60px;
       width: calc(100% - 60px);
     }
 
-    /* Em telas menores, não deixamos esse margin-left fixo */
+    /* Em telas menores, a sidebar é “mobile” => deixar o conteúdo 100% */
     @media (max-width: 992px) {
       .order-details {
         margin-left: 0;
@@ -187,9 +172,13 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     .order-details h1 {
       font-size: 24px;
       font-weight: bold;
-      margin: 0 0 10px;
+      margin-bottom: 10px;
       color: #4a4a4a;
-      text-align: left;
+    }
+    .order-details p {
+      font-size: 16px;
+      color: #ff6f61;
+      margin: 0 0 20px;
     }
     .order-details h3 {
       font-size: 24px;
@@ -198,12 +187,6 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       color: #4a4a4a;
       animation: fadeIn 1.2s ease-in-out;
       text-align: center;
-    }
-    .order-details p {
-      font-size: 16px;
-      color: #ff6f61;
-      margin: 0 0 20px;
-      text-align: left;
     }
 
     .back-button {
@@ -226,9 +209,20 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       color: white;
     }
 
-    /* -------------------------------------------------------------------
-       TABELAS
-    ------------------------------------------------------------------- */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /********************************************************
+     * TABELAS (emissao-tabela)
+     ********************************************************/
     .emissao-tabela {
       width: 100%;
       border-collapse: collapse;
@@ -237,7 +231,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       overflow: hidden;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       table-layout: fixed;
-      animation: fadeIn 1.8s ease-in-out; /* suave fade-in */
+      animation: fadeIn 1.8s ease-in-out;
     }
     .emissao-tabela thead th {
       text-align: center;
@@ -265,7 +259,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-    /* Arredondar cantos da tabela */
+    /* Arredondar cantos */
     .emissao-tabela thead th:first-child {
       border-top-left-radius: 12px;
     }
@@ -278,7 +272,8 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     .emissao-tabela tbody tr:last-child td:last-child {
       border-bottom-right-radius: 12px;
     }
-    /* Ajustar fontes em telas bem pequenas */
+
+    /* Ajustar fonte em telas bem pequenas */
     @media (max-width: 480px) {
       .emissao-tabela th,
       .emissao-tabela td {
@@ -292,7 +287,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       flex-direction: column;
     }
 
-    /* Ajustes de largura de colunas na planilha do pedido */
+    /* Ajuste de largura das colunas (opcional) */
     .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(1)  { width: 14%; }
     .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(2)  { width: 10%; }
     .section.planilha-pedido table.emissao-tabela:nth-of-type(2) thead th:nth-child(3)  { width: 8%; }
@@ -321,16 +316,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       background-color: #17a37a;
       transform: scale(1.05);
     }
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
+
     .button-container {
       display: flex;
       gap: 10px;
@@ -363,25 +349,23 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
   </style>
 </head>
-
 <body>
+
   <!-- BOTÕES DE TOGGLE -->
-  <!-- Botão para "colapsar" a sidebar no desktop -->
   <button class="sidebar-toggler">
+    <!-- Pode trocar o ícone à vontade -->
     <i class="bi bi-layout-sidebar-inset"></i>
-    <!-- ou <i class="fas fa-bars"></i> / etc. -->
   </button>
-  <!-- Botão para "abrir" a sidebar em telas menores (hamburger) -->
   <button class="menu-toggler">
     <span>menu</span>
   </button>
 
-  <!-- Sidebar -->
-  <div id="sidebar-container" class="sidebar">
+  <!-- SIDEBAR -->
+  <div id="sidebar-container">
     <div class="sidebar-loading">Carregando...</div>
   </div>
 
-  <!-- Conteúdo principal -->
+  <!-- CONTEÚDO PRINCIPAL -->
   <div class="order-details">
     <a href="pages-orders.html" class="back-button">Voltar para Página de Pedidos</a>
     <h1>Detalhes do Pedido</h1>
@@ -577,9 +561,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
   <!-- JS do Bootstrap (Bundle) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 
-  <!-- -----------------------------------------------------------------
-       SCRIPT PRINCIPAL - Carregamento da Sidebar, Pedidos, Planilha etc.
-  ------------------------------------------------------------------- -->
+  <!-- SCRIPT PRINCIPAL - Carregamento e lógicas do pedido/planilha -->
   <script>
     /************************************************************
      *  VARIÁVEIS E OBJETOS GLOBAIS
@@ -589,7 +571,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     document.addEventListener('DOMContentLoaded', () => {
       if (document.getElementById('sidebar-container')) {
         loadSidebar().then(() => {
-          // Após carregar a sidebar, podemos ativar o item "Pedidos":
+          // Ativar item "Pedidos" na sidebar
           const pedidoLink = document.querySelector('#sidebar-container a[href="pages-orders.html"]');
           if (pedidoLink) {
             pedidoLink.classList.add('active');
@@ -624,7 +606,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
      ************************************************************/
     async function loadSidebar() {
       try {
-        // Se a sidebar exigir cookie de sessão, usar { credentials: 'include' }
+        // Ajuste o caminho se necessário (fetch de sidebar.html)
         const response = await fetch('sidebar.html', {
           credentials: 'include'
         });
@@ -660,7 +642,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
         let pedido;
         if (Array.isArray(pedidos)) {
           if (pedidos.length === 0) {
-            throw new Error(`Erro ao buscar detalhes do pedido. Nenhum pedido encontrado.`);
+            throw new Error(`Nenhum pedido encontrado para ID: ${pedidoId}.`);
           }
           pedido = pedidos[0];
         } else {
@@ -738,7 +720,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
             <td>${pedido.observacoes_financeiras || '<input type="text" placeholder="Observações Financeiras">'}</td>
           </tr>`;
 
-        // Carrega a planilha
+        // Carregar planilha
         await loadPlanilhaPedido();
       } catch (error) {
         console.error("Erro ao carregar detalhes do pedido:", error);
@@ -777,7 +759,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
         montarEmissao(planilhas);
 
-        // Listeners para recalcular valores
+        // Recalcular valores ao mudar inputs
         document.querySelectorAll("#spreadsheet-info input, #spreadsheet-info select").forEach((el) => {
           el.addEventListener("input", calcularValoresPlanilha);
         });
@@ -843,11 +825,11 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
             <td><input type="text" name="fornecedor"    value="${item.fornecedor || ''}"></td>
             <td>
               <select name="status">
-                <option value="Aguardando Emissão" ${item.status === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
-                <option value="⁠Emissão Bloqueada" ${item.status === "⁠Emissão Bloqueada" ? "selected" : ""}>⁠Emissão Bloqueada</option>
-                <option value="⁠Emitido – Não Pago" ${item.status === "⁠Emitido – Não Pago" ? "selected" : ""}>⁠Emitido – Não Pago</option>
-                <option value="Emitido TIF" ${item.status === "Emitido TIF" ? "selected" : ""}>Emitido TIF</option>
-                <option value="Concluído" ${item.status === "Concluído" ? "selected" : ""}>Concluído</option>
+                <option value="Aguardando Emissão"    ${item.status === "Aguardando Emissão" ? "selected" : ""}>Aguardando Emissão</option>
+                <option value="⁠Emissão Bloqueada"    ${item.status === "⁠Emissão Bloqueada" ? "selected" : ""}>⁠Emissão Bloqueada</option>
+                <option value="⁠Emitido – Não Pago"   ${item.status === "⁠Emitido – Não Pago" ? "selected" : ""}>⁠Emitido – Não Pago</option>
+                <option value="Emitido TIF"           ${item.status === "Emitido TIF" ? "selected" : ""}>Emitido TIF</option>
+                <option value="Concluído"             ${item.status === "Concluído" ? "selected" : ""}>Concluído</option>
               </select>
             </td>
           </tr>
@@ -898,6 +880,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       const planilhaId = row.getAttribute("data-planilha-id");
 
       if (!planilhaId) {
+        // Linha não salva ainda
         if (confirm("Linha ainda não salva no banco. Remover mesmo assim?")) {
           row.remove();
           calcularValoresPlanilha();
@@ -933,6 +916,9 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       }
     }
 
+    /************************************************************
+     *  SALVAR PLANILHA (POST/PUT)
+     ************************************************************/
     async function salvarPlanilha() {
       const pedidoId = document.getElementById("pedido-id").textContent;
       if (!pedidoId) {
@@ -963,6 +949,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
         const totalPix = netBrl / (1 - (margem / 100));
         const total10x = totalPix / (1 - (taxa / 100));
 
+        // Campos básicos
         if (!produto || !data) {
           alert("Campos obrigatórios (produto e data) não foram preenchidos em uma linha.");
           return;
@@ -987,27 +974,30 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
         };
 
         if (!planilhaId) {
+          // Novo registro
           novos.push(objLinha);
         } else {
+          // Já existe, faremos PUT
           const original = window.planilhasEmMemoria.find(p => p.id == planilhaId);
           if (!original) {
+            // Se não achar, tratamos como novo
             novos.push(objLinha);
           } else {
             const atualizado = { ...original };
-            atualizado.produto = produto;
-            atualizado.data = data;
-            atualizado.idade = idade;
-            atualizado.net_usd = netDollar;
-            atualizado.lobista = lobista;
-            atualizado.quantidade = quantidade;
-            atualizado.total_usd = totalUsd;
-            atualizado.net_brl = netBrl;
-            atualizado.margem = margem;
-            atualizado.total_pix = totalPix;
-            atualizado.taxa = taxa;
-            atualizado.total_10x = total10x;
+            atualizado.produto      = produto;
+            atualizado.data         = data;
+            atualizado.idade        = idade;
+            atualizado.net_usd      = netDollar;
+            atualizado.lobista      = lobista;
+            atualizado.quantidade   = quantidade;
+            atualizado.total_usd    = totalUsd;
+            atualizado.net_brl      = netBrl;
+            atualizado.margem       = margem;
+            atualizado.total_pix    = totalPix;
+            atualizado.taxa         = taxa;
+            atualizado.total_10x    = total10x;
             atualizado.dolar_cambio = dolarCambio;
-            atualizado.dolar_magic = dolarMagic;
+            atualizado.dolar_magic  = dolarMagic;
 
             existentes.push(atualizado);
           }
@@ -1015,6 +1005,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       }
 
       try {
+        // POST p/ novas linhas
         if (novos.length > 0) {
           const resPost = await fetch("https://magictraveltur.com/api_planilhas.php", {
             method: "POST",
@@ -1028,6 +1019,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
           }
         }
 
+        // PUT p/ registros existentes
         if (existentes.length > 0) {
           const resPut = await fetch("https://magictraveltur.com/api_planilhas.php", {
             method: "PUT",
@@ -1054,15 +1046,17 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       }
     }
 
+    /************************************************************
+     *  SALVAR EMISSÃO (PUT)
+     ************************************************************/
     async function salvarEmissao() {
       const pedidoId = document.getElementById("pedido-id").textContent;
-      const emissionRows = document.querySelectorAll("#emission-info tr");
-
       if (!pedidoId) {
         alert("ID do pedido não encontrado para Emissão.");
         return;
       }
 
+      const emissionRows = document.querySelectorAll("#emission-info tr");
       const updates = [];
 
       emissionRows.forEach((row) => {
@@ -1074,14 +1068,14 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
         const dataPagamento = row.querySelector('input[name="dataPagamento"]')?.value || null;
         const identificador = row.querySelector('input[name="identificador"]')?.value || "";
-        const fornecedor = row.querySelector('input[name="fornecedor"]')?.value || "";
-        const status = row.querySelector('select[name="status"]')?.value || "";
+        const fornecedor    = row.querySelector('input[name="fornecedor"]')?.value || "";
+        const status        = row.querySelector('select[name="status"]')?.value || "";
 
         const objPUT = { ...original };
         objPUT.data_pagamento = dataPagamento;
-        objPUT.identificador = identificador;
-        objPUT.fornecedor = fornecedor;
-        objPUT.status = status;
+        objPUT.identificador  = identificador;
+        objPUT.fornecedor     = fornecedor;
+        objPUT.status         = status;
 
         updates.push(objPUT);
       });
@@ -1111,26 +1105,29 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       }
     }
 
+    /************************************************************
+     *  CÁLCULOS
+     ************************************************************/
     function calcularValoresPlanilha() {
       const dolarMagic = parseFloat(document.getElementById("dolar-magic").textContent) || 0;
       const rows = document.querySelectorAll("#spreadsheet-info tr");
 
       rows.forEach((row) => {
-        const netDollar = parseFloat(row.querySelector('input[name="netDollar"]')?.value) || 0;
-        const lobista = parseFloat(row.querySelector('input[name="lobista"]')?.value) || 0;
+        const netDollar  = parseFloat(row.querySelector('input[name="netDollar"]')?.value) || 0;
+        const lobista    = parseFloat(row.querySelector('input[name="lobista"]')?.value) || 0;
         const quantidade = parseInt(row.querySelector('input[name="quantidade"]')?.value) || 0;
-        const margemVal = parseFloat(row.querySelector('input[name="margem"]')?.value) / 100 || 0;
-        const taxaVal = parseFloat(row.querySelector('input[name="taxa"]')?.value) / 100 || 0;
+        const margemVal  = parseFloat(row.querySelector('input[name="margem"]')?.value) / 100 || 0;
+        const taxaVal    = parseFloat(row.querySelector('input[name="taxa"]')?.value) / 100 || 0;
 
         const totalDollar = (netDollar + lobista) * quantidade;
-        const netReal = totalDollar * dolarMagic;
-        const totalPix = netReal / (1 - margemVal);
-        const total10x = totalPix / (1 - taxaVal);
+        const netReal     = totalDollar * dolarMagic;
+        const totalPix    = netReal / (1 - margemVal);
+        const total10x    = totalPix / (1 - taxaVal);
 
         row.querySelector('td[name="totalDollar"]').textContent = totalDollar.toFixed(2);
-        row.querySelector('td[name="netReal"]').textContent = netReal.toFixed(2);
-        row.querySelector('td[name="totalPix"]').textContent = totalPix.toFixed(2);
-        row.querySelector('td[name="total10x"]').textContent = total10x.toFixed(2);
+        row.querySelector('td[name="netReal"]').textContent     = netReal.toFixed(2);
+        row.querySelector('td[name="totalPix"]').textContent    = totalPix.toFixed(2);
+        row.querySelector('td[name="total10x"]').textContent    = total10x.toFixed(2);
       });
 
       calcularResumo();
@@ -1138,21 +1135,21 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
     function calcularResumo() {
       let totalDollar = 0;
-      let totalReal = 0;
-      let totalPix = 0;
-      let total10x = 0;
+      let totalReal   = 0;
+      let totalPix    = 0;
+      let total10x    = 0;
 
       document.querySelectorAll("#spreadsheet-info tr").forEach((row) => {
         totalDollar += parseFloat(row.querySelector('td[name="totalDollar"]')?.textContent) || 0;
-        totalReal   += parseFloat(row.querySelector('td[name="netReal"]')?.textContent) || 0;
-        totalPix    += parseFloat(row.querySelector('td[name="totalPix"]')?.textContent) || 0;
-        total10x    += parseFloat(row.querySelector('td[name="total10x"]')?.textContent) || 0;
+        totalReal   += parseFloat(row.querySelector('td[name="netReal"]').textContent)     || 0;
+        totalPix    += parseFloat(row.querySelector('td[name="totalPix"]').textContent)    || 0;
+        total10x    += parseFloat(row.querySelector('td[name="total10x"]').textContent)    || 0;
       });
 
       document.getElementById("resumo-total-dollar").textContent = totalDollar.toFixed(2);
-      document.getElementById("resumo-net-real").textContent = totalReal.toFixed(2);
-      document.getElementById("resumo-total-pix").textContent = totalPix.toFixed(2);
-      document.getElementById("resumo-total-10x").textContent = total10x.toFixed(2);
+      document.getElementById("resumo-net-real").textContent      = totalReal.toFixed(2);
+      document.getElementById("resumo-total-pix").textContent     = totalPix.toFixed(2);
+      document.getElementById("resumo-total-10x").textContent     = total10x.toFixed(2);
     }
 
     function updateDolarMagic() {
@@ -1164,47 +1161,42 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     }
   </script>
 
-  <!-- -----------------------------------------------------------------
-       SCRIPT DE TOGGLE DA SIDEBAR (Pedido no enunciado)
-  ------------------------------------------------------------------- -->
+  <!-- SCRIPT DE TOGGLE DA SIDEBAR -->
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      const sidebar = document.querySelector(".sidebar");
+      const sidebar = document.querySelector("#sidebar-container");
       const sidebarToggler = document.querySelector(".sidebar-toggler");
       const menuToggler = document.querySelector(".menu-toggler");
 
-      let collapsedSidebarHeight = "56px";
-      let fullSidebarHeight = "calc(100vh - 32px)";
-
-      // Toggle de "colapsar" a sidebar no desktop
+      // Quando clica no botão de colapsar (desktop), adicionamos/removemos .collapsed
       sidebarToggler.addEventListener("click", () => {
         sidebar.classList.toggle("collapsed");
       });
 
-      // Função para mudar altura da sidebar e texto do toggler (uso em mobile)
+      // Para mobile: alternamos .menu-active (entra e sai da tela)
       const toggleMenu = (isMenuActive) => {
-        // Se estiver "ativo", definimos a altura pela altura do conteúdo:
-        sidebar.style.height = isMenuActive ? `${sidebar.scrollHeight}px` : collapsedSidebarHeight;
+        // só mudamos o texto do botão: "menu" <-> "close"
         menuToggler.querySelector("span").innerText = isMenuActive ? "close" : "menu";
       };
 
-      // Toggle de "abrir/fechar" menu em mobile
       menuToggler.addEventListener("click", () => {
         toggleMenu(sidebar.classList.toggle("menu-active"));
       });
 
-      // Ajusta altura ao redimensionar janela
+      // Ajusta altura ao redimensionar janela (opcional)
       window.addEventListener("resize", () => {
-        if (window.innerWidth >= 1024) {
-          sidebar.style.height = fullSidebarHeight;
+        if (window.innerWidth >= 992) {
+          // Em desktop, deixamos a sidebar sempre a altura total
+          sidebar.style.height = "100vh";
         } else {
-          // Quando volta para mobile, tira colapse e ajusta com base no menu-active
+          // Em mobile, removemos .collapsed
           sidebar.classList.remove("collapsed");
-          sidebar.style.height = "auto";
+          // e ajustamos o .menu-active conforme estado
           toggleMenu(sidebar.classList.contains("menu-active"));
         }
       });
     });
   </script>
+
 </body>
 </html>
