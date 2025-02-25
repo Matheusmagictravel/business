@@ -1,29 +1,34 @@
-<?php
-/**************************************************************
- * 1) Incluir 'auth.php'
- *    Ajuste o caminho conforme a estrutura do seu projeto
- **************************************************************/
-include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
-?>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Detalhes do Pedido - Magic Travel" />
   <title>Detalhes do Pedido - Magic Travel</title>
 
   <!-- CSS do Bootstrap -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet" />
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
 
   <!-- Bootstrap Icons (opcional) -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css" />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css"
+  />
 
   <!-- Font Awesome (opcional) -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+  <link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    rel="stylesheet"
+  />
 
   <!-- Google Fonts (Montserrat) -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
 
   <style>
     /************************************************************
@@ -34,6 +39,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       margin: 0;
       background-color: #f4f4f9;
       color: #333;
+      /* Importante: #sidebar-container e .order-details no mesmo nível do <body>. */
     }
 
     /************************************************************
@@ -45,70 +51,30 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       top: 0;
       left: 0;
       height: 100%;
-      background-color: #0d112d; /* cor de fundo */
+      background-color: #0d112d;
       color: #fff;
       overflow-y: auto;
       box-shadow: 3px 0 6px rgba(0, 0, 0, 0.2);
       transition: background-color 0.3s, height 0.3s ease;
     }
-    /* Texto "Carregando..." (se quisesse buscar de outro lugar) */
     .sidebar-loading {
       padding: 20px;
       text-align: center;
       font-size: 14px;
       color: #ccc;
     }
-    /* Botão / top bar dentro da sidebar (exemplo) */
-    .sidebar-topbar {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 8px 16px;
-      background-color: #222e3c;
-    }
-    .sidebar-topbar button {
-      color: white;
-      background-color: transparent;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    .sidebar-topbar button:hover {
-      opacity: 0.8;
-    }
 
-    /* Colapsada */
+    /* Classe .collapsed */
     #sidebar-container.collapsed {
-      height: 56px; 
+      height: 56px;
       overflow: hidden;
     }
 
-    /* Empurrar conteúdo ao colapsar */
+    /* Empurrar conteúdo quando colapsa */
     #sidebar-container.collapsed ~ .order-details {
       margin-left: 56px;
       width: calc(100% - 56px);
       transition: all 0.3s ease;
-    }
-
-    /* Exemplo de navegação na sidebar */
-    .sidebar-nav {
-      list-style: none;
-      margin: 0;
-      padding: 16px;
-    }
-    .sidebar-nav li {
-      margin: 8px 0;
-      cursor: pointer;
-    }
-    .sidebar-nav li:hover {
-      background-color: #1c1f3b;
-      border-radius: 4px;
-      padding-left: 5px;
-    }
-    .sidebar-nav li.active {
-      background-color: #ff6f61;
-      border-radius: 4px;
-      padding-left: 5px;
     }
 
     /************************************************************
@@ -121,16 +87,14 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       background-color: #ffffff;
       border-radius: 8px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      min-height: 100vh;
+      min-height: 100vh; /* ocupa a tela toda */
       transition: all 0.3s ease-in-out;
     }
-
     .order-details h1 {
       font-size: 24px;
       font-weight: bold;
-      margin: 0 0 10px;
+      margin-bottom: 10px;
       color: #4a4a4a;
-      text-align: left;
     }
     .order-details h3 {
       font-size: 24px;
@@ -143,8 +107,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     .order-details p {
       font-size: 16px;
       color: #ff6f61;
-      margin: 0 0 20px;
-      text-align: left;
+      margin-bottom: 20px;
     }
 
     .back-button {
@@ -157,10 +120,9 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       font-weight: bold;
       cursor: pointer;
       text-decoration: none;
-      display: inline-block;
       margin-bottom: 20px;
-      transition: background-color 0.3s ease;
       margin-right: auto;
+      transition: background-color 0.3s ease;
     }
     .back-button:hover {
       background-color: #dc3545;
@@ -177,7 +139,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      table-layout: fixed;
+      table-layout: fixed; /* fixar colunas */
       animation: fadeIn 1.8s ease-in-out;
     }
     .emissao-tabela thead th {
@@ -206,6 +168,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       border: 1px solid #ccc;
       border-radius: 4px;
     }
+
     /* Arredondar cantos */
     .emissao-tabela thead th:first-child {
       border-top-left-radius: 12px;
@@ -227,7 +190,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
     .add-row-button {
       background-color: #1cbb8c;
-      color: white;
+      color: #fff;
       padding: 12px 24px;
       border: none;
       border-radius: 8px;
@@ -240,7 +203,6 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       background-color: #17a37a;
       transform: scale(1.05);
     }
-
     @keyframes fadeIn {
       0% {
         opacity: 0;
@@ -251,16 +213,13 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
         transform: translateY(0);
       }
     }
-
     .button-container {
       display: flex;
       gap: 10px;
       justify-content: center;
       margin-top: 10px;
     }
-
     .delete-row-button {
-      position: relative;
       background-color: transparent;
       border: none;
       cursor: pointer;
@@ -287,6 +246,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
      * RESPONSIVIDADE
      ************************************************************/
     @media (max-width: 1024px) {
+      /* Sidebar vira width 100% e conteúdo abaixo */
       #sidebar-container {
         position: relative;
         width: 100%;
@@ -324,24 +284,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 <body>
   <!-- SIDEBAR -->
   <div id="sidebar-container">
-    <!-- Topbar com botões -->
-    <div class="sidebar-topbar">
-      <!-- Botão de colapsar a sidebar -->
-      <button class="sidebar-toggler">
-        <i class="bi bi-list"></i>
-      </button>
-      <!-- Botão de "menu" (para telas pequenas) -->
-      <button class="menu-toggler">
-        <span>menu</span>
-      </button>
-    </div>
-
-    <!-- Navegação (exemplo) -->
-    <ul class="sidebar-nav">
-      <li data-menu="home">Home</li>
-      <li data-menu="pedidos">Pedidos</li> <!-- Será ativado pelo JS -->
-      <li>Outro Item</li>
-    </ul>
+    <div class="sidebar-loading">Carregando...</div>
   </div>
 
   <!-- CONTEÚDO PRINCIPAL -->
@@ -350,7 +293,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     <h1>Detalhes do Pedido</h1>
     <p>ID do Pedido: <span id="pedido-id">Carregando...</span></p>
 
-    <!-- Informações do Pedido -->
+    <!-- INFORMAÇÕES DO PEDIDO -->
     <div class="section">
       <h3>Informações do Pedido</h3>
       <table class="emissao-tabela">
@@ -368,7 +311,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
     <hr class="hr3">
 
-    <!-- Informações do Cliente -->
+    <!-- INFORMAÇÕES DO CLIENTE -->
     <div class="section">
       <h3>Informações do Cliente</h3>
       <table class="emissao-tabela">
@@ -388,7 +331,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
     <hr class="hr3">
 
-    <!-- Informações Financeiras -->
+    <!-- INFORMAÇÕES FINANCEIRAS -->
     <div class="section">
       <h3>Informações Financeiras</h3>
       <table class="emissao-tabela">
@@ -422,7 +365,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
     <hr class="hr3">
 
-    <!-- Informações Comerciais -->
+    <!-- INFORMAÇÕES COMERCIAIS -->
     <div class="section">
       <h3>Informações Comerciais</h3>
       <table class="emissao-tabela">
@@ -440,7 +383,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
     <hr class="hr3">
 
-    <!-- Informações Adicionais -->
+    <!-- INFORMAÇÕES ADICIONAIS -->
     <div class="section">
       <h3>Informações Adicionais</h3>
       <table class="emissao-tabela">
@@ -456,11 +399,10 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
     <hr class="hr3">
 
-    <!-- Planilha do Pedido -->
+    <!-- PLANILHA DO PEDIDO -->
     <div class="section planilha-pedido">
       <h3>Planilha do Pedido</h3>
-
-      <!-- Primeira linha: Câmbio -->
+      <!-- Linha: Câmbio -->
       <table class="emissao-tabela">
         <thead>
           <tr>
@@ -476,7 +418,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
         </tbody>
       </table>
 
-      <!-- Segunda Linha: Tabela Completa -->
+      <!-- Tabela Principal -->
       <table class="emissao-tabela">
         <thead>
           <tr>
@@ -516,7 +458,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
     <hr class="hr3">
 
-    <!-- Emissão -->
+    <!-- EMISSÃO -->
     <div class="section">
       <h3>Emissão</h3>
       <table class="emissao-tabela">
@@ -540,52 +482,59 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
   <!-- JS do Bootstrap (Bundle) -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 
-  <!-- SEU SCRIPT (NO MESMO ARQUIVO) -->
   <script>
     /************************************************************
-     * OBTER ID DO PEDIDO E FORMATAR DATA
+     * 1) CARREGAR SIDEBAR (fetch do sidebar.html)
      ************************************************************/
-    function getPedidoId() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('pedido') || 'Não informado';
-    }
-    function formatDate(dateString) {
-      if (!dateString) return '';
-      const d = new Date(dateString);
-      if (isNaN(d)) return '';
-      return d.toLocaleDateString('pt-BR');
+    async function loadSidebar() {
+      try {
+        const resp = await fetch('sidebar.html', { credentials: 'include' });
+        if (!resp.ok) throw new Error('Erro ao carregar sidebar.html');
+        const sidebarHTML = await resp.text();
+        const sidebarDiv = document.getElementById('sidebar-container');
+        sidebarDiv.innerHTML = sidebarHTML;
+
+        // Ativar link "pedidos"
+        const pedidosLink = sidebarDiv.querySelector('[data-menu="pedidos"]');
+        if (pedidosLink) pedidosLink.classList.add('active');
+
+        // Inicializar toggler
+        inicializarSidebarToggle();
+      } catch (err) {
+        console.error(err);
+        document.getElementById('sidebar-container').innerHTML = '<p>Erro ao carregar a sidebar.</p>';
+      }
     }
 
     /************************************************************
-     * INICIALIZAR SIDEBAR TOGGLER
+     * 2) INICIALIZAR O TOGGLER (COLAPSE)
      ************************************************************/
-    function inicializarSidebarToggler() {
+    function inicializarSidebarToggle() {
       const sidebar        = document.getElementById('sidebar-container');
       const sidebarToggler = document.querySelector('.sidebar-toggler');
       const menuToggler    = document.querySelector('.menu-toggler');
-
       if (!sidebar || !sidebarToggler || !menuToggler) return;
 
       const collapsedHeight = '56px';
       const fullHeight      = 'calc(100vh - 32px)';
 
-      // Clique p/ colapsar
+      // Botão principal (abre/fecha sidebar)
       sidebarToggler.addEventListener('click', () => {
         sidebar.classList.toggle('collapsed');
       });
 
-      // Ajustar altura e texto do menu
+      // Função para trocar altura e texto do menu
       const toggleMenu = (isMenuActive) => {
         sidebar.style.height = isMenuActive ? `${sidebar.scrollHeight}px` : collapsedHeight;
         menuToggler.querySelector('span').innerText = isMenuActive ? 'close' : 'menu';
       };
 
-      // Clique no "menu" (telas pequenas)
+      // Botão "menu" (em telas pequenas)
       menuToggler.addEventListener('click', () => {
         toggleMenu(sidebar.classList.toggle('menu-active'));
       });
 
-      // Redimensionar
+      // Ao redimensionar
       window.addEventListener('resize', () => {
         if (window.innerWidth >= 1024) {
           sidebar.style.height = fullHeight;
@@ -598,27 +547,42 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     }
 
     /************************************************************
-     * CARREGAR DETALHES DO PEDIDO
+     * 3) CARREGAR DADOS DO PEDIDO
      ************************************************************/
+    function getPedidoId() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('pedido') || 'Não informado';
+    }
+    function formatDate(dateString) {
+      if (!dateString) return '';
+      const d = new Date(dateString);
+      return isNaN(d) ? '' : d.toLocaleDateString('pt-BR');
+    }
+
     async function loadOrderDetails() {
       const pedidoId = getPedidoId();
       if (pedidoId === 'Não informado') {
-        alert('ID do pedido não informado!');
+        alert('ID do pedido não informado.');
         return;
       }
-
       try {
-        const apiUrl = `https://www.magictraveltur.com/api_pedidos.php?id_pedido=${pedidoId}`;
-        const resp = await fetch(apiUrl, { credentials: 'include' });
-        if (!resp.ok) throw new Error('Erro ao buscar pedido: ' + resp.status);
-        const json = await resp.json();
+        // Ajuste a URL da sua API de pedidos, se necessário
+        const url = `https://www.magictraveltur.com/api_pedidos.php?id_pedido=${pedidoId}`;
+        const resp = await fetch(url, { credentials: 'include' });
+        if (!resp.ok) throw new Error(`Erro ao buscar pedido: ${resp.status}`);
+        const data = await resp.json();
 
-        const pedido = Array.isArray(json) ? json[0] : json;
-        if (!pedido) throw new Error('Nenhum pedido encontrado.');
+        let pedido;
+        if (Array.isArray(data)) {
+          if (!data.length) throw new Error('Nenhum pedido encontrado.');
+          pedido = data[0];
+        } else {
+          pedido = data;
+        }
 
         document.getElementById('pedido-id').textContent = pedidoId;
 
-        // Montar "Informações do Pedido"
+        // Preenche "Informações do Pedido"
         document.getElementById('order-info').innerHTML = `
           <tr>
             <td>
@@ -639,7 +603,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
           </tr>
         `;
 
-        // Cliente
+        // Preenche "Informações do Cliente"
         document.getElementById('customer-info').innerHTML = `
           <tr>
             <td>${pedido.nome_comprador || ''}</td>
@@ -651,7 +615,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
           </tr>
         `;
 
-        // Financeiro (1)
+        // Financeiras (1)
         document.getElementById('financial-info').innerHTML = `
           <tr>
             <td>${pedido.gateway || '<input type="text" placeholder="Gateway">'}</td>
@@ -662,7 +626,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
             <td>${pedido.cambio_dia || '<input type="number" placeholder="Câmbio do Dia">'}</td>
           </tr>
         `;
-        // Financeiro (2)
+        // Financeiras (2)
         document.getElementById('financial-info-2').innerHTML = `
           <tr>
             <td>${pedido.valor_comissao ? 'R$ ' + parseFloat(pedido.valor_comissao).toFixed(2) : '<input type="number" placeholder="Valor Comissão">'}</td>
@@ -693,20 +657,17 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
           </tr>
         `;
 
-        // Carregar planilha
+        // Carregar Planilha
         await loadPlanilhaPedido();
-      } catch (error) {
-        console.error(error);
-        alert('Erro ao carregar pedido: ' + error.message);
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao carregar pedido: ' + err.message);
       }
     }
 
     /************************************************************
-     * PLANILHA, EMISSÃO, SALVAR, etc. (mesmo código)
+     * 4) CARREGAR PLANILHA
      ************************************************************/
-    // [IGUAL AO QUE DEMONSTRAMOS ANTERIORMENTE...]
-    // -- Começaremos de zero para ficar COMPLETO --
-
     window.planilhasEmMemoria = [];
 
     async function loadPlanilhaPedido() {
@@ -715,10 +676,12 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
       try {
         const url = `https://magictraveltur.com/api_planilhas.php?id_pedido=${pedidoId}&v=${Date.now()}`;
-        const resp = await fetch(url, { cache: 'no-store', credentials: 'include' });
-        if (!resp.ok) {
-          throw new Error('Erro ao buscar planilhas: ' + resp.status);
-        }
+        const resp = await fetch(url, {
+          cache: 'no-store',
+          credentials: 'include'
+        });
+        if (!resp.ok) throw new Error(`Erro ao buscar planilhas: ${resp.status}`);
+
         const planilhas = await resp.json();
         window.planilhasEmMemoria = planilhas || [];
 
@@ -736,10 +699,9 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
         montarEmissao(planilhas);
 
-        // Adicionar listeners p/ recalcular
-        document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select').forEach(el => {
-          el.addEventListener('input', calcularValoresPlanilha);
-        });
+        // Recalcular ao editar
+        document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select')
+          .forEach(el => el.addEventListener('input', calcularValoresPlanilha));
         calcularValoresPlanilha();
       } catch (err) {
         console.error(err);
@@ -748,8 +710,8 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     }
 
     function montarPlanilhaPrincipal(planilhas) {
-      const container = document.getElementById('spreadsheet-info');
-      container.innerHTML = '';
+      const cont = document.getElementById('spreadsheet-info');
+      cont.innerHTML = '';
 
       planilhas.forEach(linha => {
         const row = `
@@ -778,18 +740,19 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
             </td>
           </tr>
         `;
-        container.insertAdjacentHTML('beforeend', row);
+        cont.insertAdjacentHTML('beforeend', row);
       });
     }
 
     function montarEmissao(planilhas) {
-      const emissionContainer = document.getElementById('emission-info');
-      emissionContainer.innerHTML = '';
+      const emissionCont = document.getElementById('emission-info');
+      emissionCont.innerHTML = '';
 
       if (!planilhas.length) {
-        emissionContainer.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma informação disponível</td></tr>';
+        emissionCont.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma informação disponível</td></tr>';
         return;
       }
+
       planilhas.forEach(item => {
         const row = `
           <tr data-planilha-id="${item.id}">
@@ -810,12 +773,12 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
             </td>
           </tr>
         `;
-        emissionContainer.insertAdjacentHTML('beforeend', row);
+        emissionCont.insertAdjacentHTML('beforeend', row);
       });
     }
 
     function addNewRow() {
-      const container = document.getElementById('spreadsheet-info');
+      const cont = document.getElementById('spreadsheet-info');
       const row = `
         <tr>
           <td><input type="text" name="produto"></td>
@@ -842,10 +805,10 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
           </td>
         </tr>
       `;
-      container.insertAdjacentHTML('beforeend', row);
+      cont.insertAdjacentHTML('beforeend', row);
 
-      // Listeners p/ recálculo
-      container.querySelectorAll('input, select').forEach(el => {
+      // Recalcular ao editar novos campos
+      cont.querySelectorAll('input, select').forEach(el => {
         el.removeEventListener('input', calcularValoresPlanilha);
         el.addEventListener('input', calcularValoresPlanilha);
       });
@@ -856,7 +819,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
       const planilhaId = row.getAttribute('data-planilha-id');
       if (!planilhaId) {
         // Linha não salva
-        if (confirm('Linha ainda não salva. Remover mesmo assim?')) {
+        if (confirm('Linha não salva. Remover assim mesmo?')) {
           row.remove();
           calcularValoresPlanilha();
         }
@@ -891,7 +854,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     }
 
     /************************************************************
-     * SALVAR PLANILHA
+     * 5) SALVAR PLANILHA (POST/PUT)
      ************************************************************/
     async function salvarPlanilha() {
       const pedidoId = document.getElementById('pedido-id').textContent;
@@ -899,10 +862,9 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
         alert('ID do pedido não encontrado.');
         return;
       }
-
-      const linhas     = document.querySelectorAll('#spreadsheet-info tr');
-      const dolarCambio= parseFloat(document.getElementById('dolar-cambio').value) || 0;
-      const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
+      const dolarCambio = parseFloat(document.getElementById('dolar-cambio').value) || 0;
+      const dolarMagic  = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
+      const linhas      = document.querySelectorAll('#spreadsheet-info tr');
 
       const novos      = [];
       const existentes = [];
@@ -918,14 +880,13 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
         const margem     = parseFloat(linha.querySelector('input[name="margem"]')?.value) || 0;
         const taxa       = parseFloat(linha.querySelector('input[name="taxa"]')?.value) || 0;
 
-        // Cálculos
         const totalUsd = (netDollar + lobista) * quantidade;
         const netBrl   = totalUsd * dolarMagic;
         const totalPix = netBrl / (1 - (margem / 100));
         const total10x = totalPix / (1 - (taxa / 100));
 
         if (!produto || !data) {
-          alert('Campos obrigatórios (produto, data) não preenchidos em alguma linha.');
+          alert('Campos obrigatórios (produto e data) não preenchidos numa linha.');
           return;
         }
 
@@ -948,14 +909,15 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
         };
 
         if (!planilhaId) {
-          // Novo
+          // Linha nova
           novos.push(obj);
         } else {
-          // Atualização
           const original = window.planilhasEmMemoria.find(p => p.id == planilhaId);
           if (!original) {
+            // Não está em memória, trata como novo
             novos.push(obj);
           } else {
+            // Atualiza
             const atualizado = { ...original };
             atualizado.produto      = produto;
             atualizado.data         = data;
@@ -983,7 +945,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify(novos),
+            body: JSON.stringify(novos)
           });
           if (!resPost.ok) {
             const txtErr = await resPost.text();
@@ -996,19 +958,17 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
-            body: JSON.stringify(existentes),
+            body: JSON.stringify(existentes)
           });
           if (!resPut.ok) {
             const txtErr = await resPut.text();
             throw new Error('Erro no PUT: ' + txtErr);
           }
         }
-
         if (novos.length === 0 && existentes.length === 0) {
           alert('Nenhuma linha para salvar.');
           return;
         }
-
         alert('Planilha salva com sucesso!');
         await loadPlanilhaPedido();
       } catch (err) {
@@ -1018,21 +978,21 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     }
 
     /************************************************************
-     * SALVAR EMISSÃO
+     * 6) SALVAR EMISSÃO (PUT)
      ************************************************************/
     async function salvarEmissao() {
-      const pedidoId = document.getElementById('pedido-id').textContent;
+      const pedidoId     = document.getElementById('pedido-id').textContent;
+      const emissionRows = document.querySelectorAll('#emission-info tr');
       if (!pedidoId) {
         alert('ID do pedido não encontrado para Emissão.');
         return;
       }
 
-      const emissionRows = document.querySelectorAll('#emission-info tr');
       const updates = [];
-
       emissionRows.forEach(row => {
         const planilhaId = row.getAttribute('data-planilha-id');
         if (!planilhaId) return;
+
         const original = window.planilhasEmMemoria.find(p => p.id == planilhaId);
         if (!original) return;
 
@@ -1059,7 +1019,7 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
-          body: JSON.stringify(updates),
+          body: JSON.stringify(updates)
         });
         if (!resPut.ok) {
           const txtErr = await resPut.text();
@@ -1074,12 +1034,11 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
     }
 
     /************************************************************
-     * CÁLCULOS DA PLANILHA
+     * 7) CÁLCULOS DA PLANILHA
      ************************************************************/
     function calcularValoresPlanilha() {
       const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
       const rows = document.querySelectorAll('#spreadsheet-info tr');
-
       rows.forEach(row => {
         const netDollar  = parseFloat(row.querySelector('input[name="netDollar"]')?.value) || 0;
         const lobista    = parseFloat(row.querySelector('input[name="lobista"]')?.value) || 0;
@@ -1097,7 +1056,6 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
         row.querySelector('td[name="totalPix"]').textContent    = totalPix.toFixed(2);
         row.querySelector('td[name="total10x"]').textContent    = total10x.toFixed(2);
       });
-
       calcularResumo();
     }
 
@@ -1117,32 +1075,25 @@ include $_SERVER['DOCUMENT_ROOT'] . '/auth.php';
 
     function updateDolarMagic() {
       const dolarCambio = parseFloat(document.getElementById('dolar-cambio').value) || 0;
-      // Exemplo de multiplicador
+      // Fator exemplo
       const dolarMagic  = (dolarCambio * 1.0098).toFixed(2);
       document.getElementById('dolar-magic').textContent = dolarMagic;
       calcularValoresPlanilha();
     }
 
     /************************************************************
-     * 9) INICIAR TUDO QUANDO O DOM CARREGAR
+     * 8) INICIAR
      ************************************************************/
     document.addEventListener('DOMContentLoaded', () => {
-      // Se quisesse carregar sidebar externa, bastaria remover a parte
-      // inline e usar fetch. Mas aqui está TUDO no mesmo arquivo.
+      // 1) Carrega a sidebar
+      loadSidebar();
 
-      // Inicia toggler (temos no HTML .sidebar-toggler e .menu-toggler)
-      inicializarSidebarToggler();
-
-      // Carrega dados do pedido
+      // 2) Carrega o pedido
       loadOrderDetails();
 
-      // Listeners
+      // 3) Listeners p/ câmbio e adicionar linha
       document.getElementById('dolar-cambio').addEventListener('input', updateDolarMagic);
       document.getElementById('add-row-button').addEventListener('click', addNewRow);
-
-      // Ativar "pedidos" no menu
-      const pedidosLink = document.querySelector('[data-menu="pedidos"]');
-      if (pedidosLink) pedidosLink.classList.add('active');
     });
   </script>
 </body>
