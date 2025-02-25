@@ -39,7 +39,7 @@
       margin: 0;
       background-color: #f4f4f9;
       color: #333;
-      /* Importante: #sidebar-container e .order-details no mesmo nível do <body>. */
+      /* #sidebar-container e .order-details como irmãos diretos de <body> */
     }
 
     /************************************************************
@@ -87,7 +87,7 @@
       background-color: #ffffff;
       border-radius: 8px;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      min-height: 100vh; /* ocupa a tela toda */
+      min-height: 100vh; /* Ocupe a tela */
       transition: all 0.3s ease-in-out;
     }
     .order-details h1 {
@@ -109,7 +109,6 @@
       color: #ff6f61;
       margin-bottom: 20px;
     }
-
     .back-button {
       background-color: #ff6f61;
       color: #fff;
@@ -130,7 +129,7 @@
     }
 
     /************************************************************
-     * TABELAS ( .emissao-tabela )
+     * TABELAS (.emissao-tabela)
      ************************************************************/
     .emissao-tabela {
       width: 100%;
@@ -139,7 +138,7 @@
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      table-layout: fixed; /* fixar colunas */
+      table-layout: fixed;
       animation: fadeIn 1.8s ease-in-out;
     }
     .emissao-tabela thead th {
@@ -168,7 +167,6 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-
     /* Arredondar cantos */
     .emissao-tabela thead th:first-child {
       border-top-left-radius: 12px;
@@ -246,7 +244,6 @@
      * RESPONSIVIDADE
      ************************************************************/
     @media (max-width: 1024px) {
-      /* Sidebar vira width 100% e conteúdo abaixo */
       #sidebar-container {
         position: relative;
         width: 100%;
@@ -402,7 +399,8 @@
     <!-- PLANILHA DO PEDIDO -->
     <div class="section planilha-pedido">
       <h3>Planilha do Pedido</h3>
-      <!-- Linha: Câmbio -->
+
+      <!-- Primeira linha: Câmbio -->
       <table class="emissao-tabela">
         <thead>
           <tr>
@@ -418,7 +416,7 @@
         </tbody>
       </table>
 
-      <!-- Tabela Principal -->
+      <!-- Tabela principal -->
       <table class="emissao-tabela">
         <thead>
           <tr>
@@ -484,21 +482,21 @@
 
   <script>
     /************************************************************
-     * 1) CARREGAR SIDEBAR (fetch do sidebar.html)
+     * 1) CARREGAR SIDEBAR
      ************************************************************/
     async function loadSidebar() {
       try {
         const resp = await fetch('sidebar.html', { credentials: 'include' });
         if (!resp.ok) throw new Error('Erro ao carregar sidebar.html');
         const sidebarHTML = await resp.text();
-        const sidebarDiv = document.getElementById('sidebar-container');
+        const sidebarDiv  = document.getElementById('sidebar-container');
         sidebarDiv.innerHTML = sidebarHTML;
 
-        // Ativar link "pedidos"
+        // Se quiser ativar link "pedidos"
         const pedidosLink = sidebarDiv.querySelector('[data-menu="pedidos"]');
         if (pedidosLink) pedidosLink.classList.add('active');
 
-        // Inicializar toggler
+        // Inicializa toggle
         inicializarSidebarToggle();
       } catch (err) {
         console.error(err);
@@ -518,23 +516,23 @@
       const collapsedHeight = '56px';
       const fullHeight      = 'calc(100vh - 32px)';
 
-      // Botão principal (abre/fecha sidebar)
+      // Clique no botão principal
       sidebarToggler.addEventListener('click', () => {
         sidebar.classList.toggle('collapsed');
       });
 
-      // Função para trocar altura e texto do menu
+      // Função p/ trocar altura e texto do menu
       const toggleMenu = (isMenuActive) => {
         sidebar.style.height = isMenuActive ? `${sidebar.scrollHeight}px` : collapsedHeight;
         menuToggler.querySelector('span').innerText = isMenuActive ? 'close' : 'menu';
       };
 
-      // Botão "menu" (em telas pequenas)
+      // Botão "menu" (telas pequenas)
       menuToggler.addEventListener('click', () => {
         toggleMenu(sidebar.classList.toggle('menu-active'));
       });
 
-      // Ao redimensionar
+      // Redimensionar
       window.addEventListener('resize', () => {
         if (window.innerWidth >= 1024) {
           sidebar.style.height = fullHeight;
@@ -566,7 +564,7 @@
         return;
       }
       try {
-        // Ajuste a URL da sua API de pedidos, se necessário
+        // Ajuste se a URL da sua API for diferente
         const url = `https://www.magictraveltur.com/api_pedidos.php?id_pedido=${pedidoId}`;
         const resp = await fetch(url, { credentials: 'include' });
         if (!resp.ok) throw new Error(`Erro ao buscar pedido: ${resp.status}`);
@@ -582,7 +580,7 @@
 
         document.getElementById('pedido-id').textContent = pedidoId;
 
-        // Preenche "Informações do Pedido"
+        // Preenche Informações do Pedido
         document.getElementById('order-info').innerHTML = `
           <tr>
             <td>
@@ -603,7 +601,7 @@
           </tr>
         `;
 
-        // Preenche "Informações do Cliente"
+        // Preenche Informações do Cliente
         document.getElementById('customer-info').innerHTML = `
           <tr>
             <td>${pedido.nome_comprador || ''}</td>
@@ -615,7 +613,7 @@
           </tr>
         `;
 
-        // Financeiras (1)
+        // Financeiras
         document.getElementById('financial-info').innerHTML = `
           <tr>
             <td>${pedido.gateway || '<input type="text" placeholder="Gateway">'}</td>
@@ -626,7 +624,6 @@
             <td>${pedido.cambio_dia || '<input type="number" placeholder="Câmbio do Dia">'}</td>
           </tr>
         `;
-        // Financeiras (2)
         document.getElementById('financial-info-2').innerHTML = `
           <tr>
             <td>${pedido.valor_comissao ? 'R$ ' + parseFloat(pedido.valor_comissao).toFixed(2) : '<input type="number" placeholder="Valor Comissão">'}</td>
@@ -657,7 +654,7 @@
           </tr>
         `;
 
-        // Carregar Planilha
+        // Carregar a Planilha
         await loadPlanilhaPedido();
       } catch (err) {
         console.error(err);
@@ -675,6 +672,7 @@
       if (!pedidoId) return;
 
       try {
+        // Ajuste a URL da sua API
         const url = `https://magictraveltur.com/api_planilhas.php?id_pedido=${pedidoId}&v=${Date.now()}`;
         const resp = await fetch(url, {
           cache: 'no-store',
@@ -700,7 +698,8 @@
         montarEmissao(planilhas);
 
         // Recalcular ao editar
-        document.querySelectorAll('#spreadsheet-info input, #spreadsheet-info select')
+        document
+          .querySelectorAll('#spreadsheet-info input, #spreadsheet-info select')
           .forEach(el => el.addEventListener('input', calcularValoresPlanilha));
         calcularValoresPlanilha();
       } catch (err) {
@@ -710,8 +709,8 @@
     }
 
     function montarPlanilhaPrincipal(planilhas) {
-      const cont = document.getElementById('spreadsheet-info');
-      cont.innerHTML = '';
+      const container = document.getElementById('spreadsheet-info');
+      container.innerHTML = '';
 
       planilhas.forEach(linha => {
         const row = `
@@ -740,16 +739,16 @@
             </td>
           </tr>
         `;
-        cont.insertAdjacentHTML('beforeend', row);
+        container.insertAdjacentHTML('beforeend', row);
       });
     }
 
     function montarEmissao(planilhas) {
-      const emissionCont = document.getElementById('emission-info');
-      emissionCont.innerHTML = '';
+      const emissionContainer = document.getElementById('emission-info');
+      emissionContainer.innerHTML = '';
 
       if (!planilhas.length) {
-        emissionCont.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma informação disponível</td></tr>';
+        emissionContainer.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma informação disponível</td></tr>';
         return;
       }
 
@@ -773,12 +772,12 @@
             </td>
           </tr>
         `;
-        emissionCont.insertAdjacentHTML('beforeend', row);
+        emissionContainer.insertAdjacentHTML('beforeend', row);
       });
     }
 
     function addNewRow() {
-      const cont = document.getElementById('spreadsheet-info');
+      const container = document.getElementById('spreadsheet-info');
       const row = `
         <tr>
           <td><input type="text" name="produto"></td>
@@ -805,10 +804,10 @@
           </td>
         </tr>
       `;
-      cont.insertAdjacentHTML('beforeend', row);
+      container.insertAdjacentHTML('beforeend', row);
 
-      // Recalcular ao editar novos campos
-      cont.querySelectorAll('input, select').forEach(el => {
+      // Adicionar listeners de recálculo
+      container.querySelectorAll('input, select').forEach(el => {
         el.removeEventListener('input', calcularValoresPlanilha);
         el.addEventListener('input', calcularValoresPlanilha);
       });
@@ -818,7 +817,7 @@
       const row = button.closest('tr');
       const planilhaId = row.getAttribute('data-planilha-id');
       if (!planilhaId) {
-        // Linha não salva
+        // Linha nova
         if (confirm('Linha não salva. Remover assim mesmo?')) {
           row.remove();
           calcularValoresPlanilha();
@@ -854,7 +853,7 @@
     }
 
     /************************************************************
-     * 5) SALVAR PLANILHA (POST/PUT)
+     * 5) SALVAR PLANILHA
      ************************************************************/
     async function salvarPlanilha() {
       const pedidoId = document.getElementById('pedido-id').textContent;
@@ -862,9 +861,9 @@
         alert('ID do pedido não encontrado.');
         return;
       }
-      const dolarCambio = parseFloat(document.getElementById('dolar-cambio').value) || 0;
-      const dolarMagic  = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
-      const linhas      = document.querySelectorAll('#spreadsheet-info tr');
+      const dolarCambio= parseFloat(document.getElementById('dolar-cambio').value) || 0;
+      const dolarMagic = parseFloat(document.getElementById('dolar-magic').textContent) || 0;
+      const linhas     = document.querySelectorAll('#spreadsheet-info tr');
 
       const novos      = [];
       const existentes = [];
@@ -880,17 +879,18 @@
         const margem     = parseFloat(linha.querySelector('input[name="margem"]')?.value) || 0;
         const taxa       = parseFloat(linha.querySelector('input[name="taxa"]')?.value) || 0;
 
+        // Cálculos
         const totalUsd = (netDollar + lobista) * quantidade;
         const netBrl   = totalUsd * dolarMagic;
         const totalPix = netBrl / (1 - (margem / 100));
         const total10x = totalPix / (1 - (taxa / 100));
 
         if (!produto || !data) {
-          alert('Campos obrigatórios (produto e data) não preenchidos numa linha.');
+          alert('Campos obrigatórios (produto e data) não preenchidos em alguma linha.');
           return;
         }
 
-        const obj = {
+        const objLinha = {
           id_pedido:    pedidoId,
           produto,
           data,
@@ -909,15 +909,13 @@
         };
 
         if (!planilhaId) {
-          // Linha nova
-          novos.push(obj);
+          novos.push(objLinha);
         } else {
+          // Atualiza
           const original = window.planilhasEmMemoria.find(p => p.id == planilhaId);
           if (!original) {
-            // Não está em memória, trata como novo
-            novos.push(obj);
+            novos.push(objLinha);
           } else {
-            // Atualiza
             const atualizado = { ...original };
             atualizado.produto      = produto;
             atualizado.data         = data;
@@ -933,6 +931,7 @@
             atualizado.total_10x    = total10x;
             atualizado.dolar_cambio = dolarCambio;
             atualizado.dolar_magic  = dolarMagic;
+
             existentes.push(atualizado);
           }
         }
@@ -965,6 +964,7 @@
             throw new Error('Erro no PUT: ' + txtErr);
           }
         }
+
         if (novos.length === 0 && existentes.length === 0) {
           alert('Nenhuma linha para salvar.');
           return;
@@ -978,11 +978,12 @@
     }
 
     /************************************************************
-     * 6) SALVAR EMISSÃO (PUT)
+     * 6) SALVAR EMISSÃO
      ************************************************************/
     async function salvarEmissao() {
       const pedidoId     = document.getElementById('pedido-id').textContent;
       const emissionRows = document.querySelectorAll('#emission-info tr');
+
       if (!pedidoId) {
         alert('ID do pedido não encontrado para Emissão.');
         return;
@@ -1006,6 +1007,7 @@
         objPUT.identificador  = identificador;
         objPUT.fornecedor     = fornecedor;
         objPUT.status         = status;
+
         updates.push(objPUT);
       });
 
@@ -1075,7 +1077,7 @@
 
     function updateDolarMagic() {
       const dolarCambio = parseFloat(document.getElementById('dolar-cambio').value) || 0;
-      // Fator exemplo
+      // Fator de ajuste, se houver
       const dolarMagic  = (dolarCambio * 1.0098).toFixed(2);
       document.getElementById('dolar-magic').textContent = dolarMagic;
       calcularValoresPlanilha();
@@ -1088,10 +1090,10 @@
       // 1) Carrega a sidebar
       loadSidebar();
 
-      // 2) Carrega o pedido
+      // 2) Carrega detalhes do pedido
       loadOrderDetails();
 
-      // 3) Listeners p/ câmbio e adicionar linha
+      // 3) Listeners
       document.getElementById('dolar-cambio').addEventListener('input', updateDolarMagic);
       document.getElementById('add-row-button').addEventListener('click', addNewRow);
     });
