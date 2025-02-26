@@ -1,233 +1,2899 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
+  <title>Organized JSON Page</title>
   <style>
-    /* [Início] -- Estilos locais para não conflitar com o resto da página */
-    #hotelbeds-organizer-container {
+    /* 
+      To avoid conflicts, we prefix all our styles with 
+      #json-page-container or .json-page-container
+    */
+    #json-page-container {
       font-family: Arial, sans-serif;
-      margin: 20px;
+      margin: 20px auto;
+      max-width: 1200px;
       color: #333;
     }
-    #hotelbeds-organizer-container h2 {
-      margin-top: 30px;
-      font-size: 1.2rem;
-      color: #0066c0;
+
+    #json-page-container h1, 
+    #json-page-container h2, 
+    #json-page-container h3,
+    #json-page-container h4 {
+      margin: 0;
+      padding: 0;
     }
-    #hotelbeds-organizer-container table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-bottom: 30px;
-    }
-    #hotelbeds-organizer-container th,
-    #hotelbeds-organizer-container td {
+
+    #json-page-container .header-section {
       border: 1px solid #ccc;
-      padding: 8px;
-      font-size: 0.9rem;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      background: #f8f8f8;
     }
-    #hotelbeds-organizer-container th {
-      background: #f5f5f5;
+
+    #json-page-container .header-section h1 {
+      font-size: 20px;
+      margin-bottom: 10px;
     }
-    .room-name {
+
+    #json-page-container .meta-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    #json-page-container .meta-box {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+
+    /* Activity cards styling */
+    #json-page-container .activities-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    #json-page-container .activity-card {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 15px;
+      background: #fff;
+    }
+
+    #json-page-container .activity-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+
+    #json-page-container .activity-header h2 {
+      font-size: 18px;
+      margin-bottom: 5px;
+    }
+
+    #json-page-container .activity-code {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    #json-page-container .activity-type {
+      font-size: 14px;
+      color: #999;
+    }
+
+    #json-page-container .activity-body {
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    #json-page-container .activity-body .currency-row,
+    #json-page-container .activity-body .country-row,
+    #json-page-container .activity-body .amounts-row {
+      margin-bottom: 10px;
+    }
+
+    #json-page-container .activity-body .title-label {
       font-weight: bold;
-      color: #444;
     }
-    .rate-info {
-      margin-left: 20px;
-      font-size: 0.85rem;
+
+    /* Image gallery */
+    #json-page-container .image-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
     }
-    .rate-info strong {
-      color: #555;
+
+    #json-page-container .image-gallery img {
+      max-width: 120px;
+      height: auto;
+      border-radius: 4px;
+      border: 1px solid #ccc;
     }
-    /* [Fim] -- Estilos locais */
+
+    /* Make the activity details collapsible for large data:
+       We'll use <details> and <summary> for sections 
+    */
+    #json-page-container .activity-sections details {
+      margin-bottom: 10px;
+      background: #f9f9f9;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      padding: 6px 10px;
+    }
+
+    #json-page-container .activity-sections summary {
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    /* Simple responsive layout tweak */
+    @media (max-width: 768px) {
+      #json-page-container .meta-info {
+        flex-direction: column;
+      }
+    }
   </style>
 </head>
 <body>
 
-<div id="hotelbeds-organizer-container">
-  <h1>Organizador de Resultado Hotelbeds</h1>
+<div id="json-page-container">
   
-  <div id="hotelsData">
-    <!-- Aqui o JS vai inserir o HTML estruturado -->
-  </div>
+  <!-- Container where we'll inject the organized layout -->
+  <div class="header-section" id="mainHeader"></div>
+  
+  <div class="activities-container" id="activitiesList"></div>
+  
 </div>
-
 <script>
-/* 
-   Substitua o objeto abaixo (responseData) pelo JSON EXATO 
-   que você recebeu da API (pode colar a resposta integral).
-*/
-const responseData = {
-  "auditData": {
-    "processTime": "99",
-    "timestamp": "2025-02-25 21:42:47.395",
-    /* ... resto do auditData ... */
-  },
-  "hotels": {
-    "hotels": [
-      /* 
-         === AQUI VAI sua lista de hoteis ===
-         "code", "name", "destinationCode", "rooms", "rates" etc. 
-      */
-      
-      /* EXEMPLO (trecho encurtado) */
+{
+    "operationId": "16655ab02d1d10a6",
+    "pagination": {
+      "itemsPerPage": 10,
+      "page": 3,
+      "totalItems": 29
+    },
+    "auditData": {
+      "processTime": 0.175,
+      "time": "2025-02-27T00:34:14.510Z",
+      "serverId": "blank",
+      "environment": "blank"
+    },
+    "activities": [
       {
-        "code": 13204,
-        "name": "Eurostars Winter Haven",
-        "categoryCode": "4EST",
-        "zoneName": "Miami Beach",
-        "rooms": [
+        "code": "E-U10-WONDEROUT",
+        "type": "TICKET",
+        "countryCode": "US",
+        "source": "ATLAS",
+        "name": "WonderWorks Outta Control Dinner Show",
+        "currency": "EUR",
+        "modalities": [
           {
-            "code": "ROO.PR",
-            "name": "Habitación PROMO",
-            "rates": [
+            "code": "323865837#OUTDINNER",
+            "name": "Outta Control Dinner Show",
+            "rateCode": "STANDARD",
+            "freeCancellation": false,
+            "duration": {
+              "value": 1.0,
+              "metric": "DAYS"
+            },
+            "amountsFrom": [
               {
-                "rateKey": "20250321|20250322|W|235|13204|ROO.PR|...",
-                "rateClass": "NOR",
-                "net": "104.02",
-                "boardName": "SOLO HABITACIÓN",
-                "paymentType": "AT_WEB",
-                "cancellationPolicies": [
-                  { "amount": "104.02", "from": "2025-03-13T22:59:00-04:00" }
+                "paxType": "ADULT",
+                "ageFrom": 13,
+                "ageTo": 999,
+                "amount": 33.38,
+                "boxOfficeAmount": 38.39,
+                "mandatoryApplyAmount": false
+              },
+              {
+                "paxType": "CHILD",
+                "ageFrom": 0,
+                "ageTo": 3,
+                "amount": 0.00,
+                "boxOfficeAmount": 0.00,
+                "mandatoryApplyAmount": false
+              },
+              {
+                "paxType": "CHILD",
+                "ageFrom": 4,
+                "ageTo": 12,
+                "amount": 23.72,
+                "boxOfficeAmount": 29.06,
+                "mandatoryApplyAmount": false
+              }
+            ],
+            "cancellationPolicies": [
+              {
+                "dateFrom": "2025-02-26T23:59:00.000Z",
+                "amount": 33.3800
+              }
+            ],
+            "uniqueIdentifier": "323865837"
+          },
+          {
+            "code": "1692079346#VIPCOMBO",
+            "name": "VIP Combo Ticket",
+            "rateCode": "STANDARD",
+            "freeCancellation": false,
+            "duration": {
+              "value": 1.0,
+              "metric": "DAYS"
+            },
+            "amountsFrom": [
+              {
+                "paxType": "ADULT",
+                "ageFrom": 13,
+                "ageTo": 999,
+                "amount": 58.66,
+                "boxOfficeAmount": 67.46,
+                "mandatoryApplyAmount": false
+              },
+              {
+                "paxType": "CHILD",
+                "ageFrom": 0,
+                "ageTo": 3,
+                "amount": 0.00,
+                "boxOfficeAmount": 0.00,
+                "mandatoryApplyAmount": false
+              },
+              {
+                "paxType": "CHILD",
+                "ageFrom": 4,
+                "ageTo": 12,
+                "amount": 43.32,
+                "boxOfficeAmount": 49.82,
+                "mandatoryApplyAmount": false
+              }
+            ],
+            "cancellationPolicies": [
+              {
+                "dateFrom": "2025-02-26T23:59:00.000Z",
+                "amount": 58.6600
+              }
+            ],
+            "uniqueIdentifier": "1692079346"
+          }
+        ],
+        "content": {
+          "name": "WonderWorks Outta Control Dinner Show",
+          "detailedInfo": [],
+          "featureGroups": [
+            {
+              "groupCode": "DRINKS",
+              "excluded": [
+                {
+                  "featureType": "DRINKSNOT",
+                  "description": "Wine"
+                }
+              ]
+            },
+            {
+              "groupCode": "TICKET",
+              "included": [
+                {
+                  "featureType": "ADMISSIONSINCL",
+                  "description": "Tickets"
+                }
+              ]
+            }
+          ],
+          "importantInfo": [
+            "Height restrictions apply for some attractions. "
+          ],
+          "location": {
+            "endPoints": [
+              {
+                "type": "Same",
+                "description": "Same as Starting Point"
+              }
+            ],
+            "startingPoints": [
+              {
+                "type": "Meeting Point",
+                "meetingPoint": {
+                  "type": "ADDRESS",
+                  "geolocation": {
+                    "latitude": 28.433638,
+                    "longitude": -81.471648
+                  },
+                  "address": "9067 International Drive",
+                  "country": {
+                    "code": "US",
+                    "name": "United States",
+                    "destinations": [
+                      {
+                        "code": "MCO",
+                        "name": "Orlando Area - Florida - FL"
+                      }
+                    ]
+                  },
+                  "city": "Orlando",
+                  "zip": "32819",
+                  "description": "9067 International Drive"
+                }
+              }
+            ]
+          },
+          "media": {
+            "images": [
+              {
+                "visualizationOrder": 1,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/S/DSC_3005.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/XL/DSC_3005.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/B/DSC_3005.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/LPP/DSC_3005.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/L/DSC_3005.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/M/DSC_3005.jpg",
+                    "sizeType": "MEDIUM"
+                  }
                 ]
               },
               {
-                "rateKey": "20250321|20250322|W|235|13204|ROO.PR|...",
-                "rateClass": "NOR",
-                "net": "156.03",
-                "boardName": "ALOJAMIENTO Y DESAYUNO",
-                "paymentType": "AT_WEB"
+                "visualizationOrder": 2,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/S/DSC_3204.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/XL/DSC_3204.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/B/DSC_3204.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/LPP/DSC_3204.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/L/DSC_3204.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/M/DSC_3204.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 3,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/S/DSC_3381_4.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/XL/DSC_3381_4.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/B/DSC_3381_4.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/LPP/DSC_3381_4.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/L/DSC_3381_4.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/M/DSC_3381_4.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 4,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/S/DSC_3562.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/XL/DSC_3562.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/B/DSC_3562.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/LPP/DSC_3562.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/L/DSC_3562.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/M/DSC_3562.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 5,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/S/DSC_3695.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/XL/DSC_3695.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/B/DSC_3695.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/LPP/DSC_3695.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/L/DSC_3695.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/44723/ENG/M/DSC_3695.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
               }
-              /* ... */
             ]
+          },
+          "redeemInfo": {
+            "type": "PRINTED",
+            "directEntrance": false,
+            "comments": [
+              {
+                "description": "Printed Voucher. Print and bring the voucher to enjoy the activity. "
+              }
+            ]
+          },
+          "routes": [],
+          "scheduling": {},
+          "segmentationGroups": [
+            {
+              "code": 16,
+              "name": "Services",
+              "segments": [
+                {
+                  "code": 956,
+                  "name": "Safe2Stay"
+                }
+              ]
+            },
+            {
+              "code": 1,
+              "name": "Categories",
+              "segments": [
+                {
+                  "code": 3,
+                  "name": "Tickets & Attraction Passes"
+                }
+              ]
+            }
+          ],
+          "activityFactsheetType": "ATTRACCTIONS",
+          "activityCode": "E-U10-WONDEROUT",
+          "modalityCode": "OUTDINNER",
+          "modalityName": "Outta Control Dinner Show",
+          "contentId": "44723",
+          "description": "Take your seat for one of the best-kept secrets in Orlando.  This show is seriously entertaining and funny – magic with a twist! Be wowed by a mixture of amazing magic, impersonations, and high-energy improvisational comedy to thoroughly entertain audiences of all ages.<br />\n<br />\nExpect to be impressed at this interactive, entertaining and hilariously funny dinner show. A one-of-a-kind entertainment experience with non-stop audience participation. The crowds don’t just watch the show, they become part of it.<br />\n<br />\nMinds will be read, predictions will come true, and audience members’ personal items will vanish and re-appear.<br />\n<br />\n<strong>Outta Control Dinner Show </strong><br />\nIncludes unlimited fresh hand-tossed pizza, salad, dessert, soda, beer and wine.<br />\nSchedule: Daily at 6pm and 8pm to select evenings.<br />\n<br />\n<strong>VIP Combo Ticket</strong><br />\nIncludes ALL WonderWorks exhibits, the 4-D Theater, the Glow-In-The-Dark Ropes Course, Unlimited Laser Tag Games and a seat to the Best Show.<br />\nSchedule: From 9am to Midnight (12am)",
+          "lastUpdate": "2024-08-28",
+          "summary": "<strong>Don’t miss the best show that Orlando has to offer. Enjoy non-stop laughter and food at WonderWork’s Outta Control Dinner Show! </strong>",
+          "advancedTips": [],
+          "countries": [
+            {
+              "code": "US",
+              "name": "United States",
+              "destinations": [
+                {
+                  "code": "MCO",
+                  "name": "Orlando Area - Florida - FL"
+                }
+              ]
+            }
+          ],
+          "highligths": [
+            "A side-splitting evening for the whole family",
+            "Quench your thirst with unlimited drinks",
+            "Enjoy a belly-busting amount of mouth-watering hand-tossed pizza"
+          ],
+          "language": "en"
+        },
+        "order": 21,
+        "amountsFrom": [
+          {
+            "paxType": "ADULT",
+            "ageFrom": 13,
+            "ageTo": 999,
+            "amount": 33.38,
+            "boxOfficeAmount": 38.39,
+            "mandatoryApplyAmount": false
+          },
+          {
+            "paxType": "CHILD",
+            "ageFrom": 0,
+            "ageTo": 3,
+            "amount": 0.00,
+            "boxOfficeAmount": 0.00,
+            "mandatoryApplyAmount": false
+          },
+          {
+            "paxType": "CHILD",
+            "ageFrom": 4,
+            "ageTo": 12,
+            "amount": 23.72,
+            "boxOfficeAmount": 29.06,
+            "mandatoryApplyAmount": false
           }
-          /* ... */
         ],
-        "minRate": "104.02",
-        "maxRate": "293.34",
-        "currency": "EUR"
+        "currencyName": "Euro",
+        "country": {
+          "code": "US",
+          "name": "United States",
+          "destinations": [
+            {
+              "code": "MCO",
+              "name": "Orlando Area - Florida - FL"
+            }
+          ]
+        }
       },
       {
-        "code": 89413,
-        "name": "Penguin Hotel",
-        /* ... etc ... */
-      }
-      /* ... e assim por diante ... */
-    ],
-    "checkIn": "2025-03-21",
-    "total": 2,
-    "checkOut": "2025-03-22"
-  }
-};
-
-/* ---------- LÓGICA PARA ORGANIZAR E EXIBIR ---------- */
-function renderHotelsData(data) {
-  const container = document.getElementById('hotelsData');
-  // Limpa antes de começar
-  container.innerHTML = '';
-
-  // Verifica se veio no formato esperado
-  if (!data || !data.hotels || !data.hotels.hotels) {
-    container.innerHTML = '<p>Dados de hotéis não encontrados!</p>';
-    return;
-  }
-
-  const hotelsArray = data.hotels.hotels; // array de hotéis
-  hotelsArray.forEach((hotel) => {
-    const { code, name, categoryCode, zoneName, minRate, maxRate, currency, rooms } = hotel;
-
-    // Cria um título para cada hotel
-    const hotelTitle = document.createElement('h2');
-    hotelTitle.textContent = `Hotel: ${name} (code: ${code})`;
-    container.appendChild(hotelTitle);
-
-    // Informações resumidas do hotel
-    const summary = document.createElement('p');
-    summary.innerHTML = `
-      Categoria: <strong>${categoryCode || 'N/A'}</strong><br/>
-      Local: <strong>${zoneName || 'N/A'}</strong><br/>
-      Faixa de Preços: <strong>${minRate || '?'} - ${maxRate || '?'} ${currency || ''}</strong>
-    `;
-    container.appendChild(summary);
-
-    // Se tiver rooms, exibir em tabela
-    if (Array.isArray(rooms) && rooms.length > 0) {
-      const table = document.createElement('table');
-
-      // Cabeçalho da tabela
-      const thead = document.createElement('thead');
-      thead.innerHTML = `
-        <tr>
-          <th>Código do Quarto</th>
-          <th>Nome do Quarto</th>
-          <th>Tarifas</th>
-        </tr>
-      `;
-      table.appendChild(thead);
-
-      const tbody = document.createElement('tbody');
-
-      rooms.forEach((room) => {
-        const { code: roomCode, name: roomName, rates } = room;
-        const tr = document.createElement('tr');
-
-        // Coluna 1: Código do quarto
-        const tdCode = document.createElement('td');
-        tdCode.textContent = roomCode || '';
-        tr.appendChild(tdCode);
-
-        // Coluna 2: Nome do quarto
-        const tdName = document.createElement('td');
-        tdName.innerHTML = `<span class="room-name">${roomName || ''}</span>`;
-        tr.appendChild(tdName);
-
-        // Coluna 3: Tarifas (podem ser várias)
-        const tdRates = document.createElement('td');
-        if (Array.isArray(rates) && rates.length > 0) {
-          rates.forEach((rate) => {
-            const divRate = document.createElement('div');
-            divRate.className = 'rate-info';
-            divRate.innerHTML = `
-              <strong>rateKey:</strong> ${rate.rateKey}<br/>
-              <strong>Classe:</strong> ${rate.rateClass}<br/>
-              <strong>Valor líquido (net):</strong> ${rate.net} ${currency || ''}<br/>
-              <strong>Plano:</strong> ${rate.boardName || ''}<br/>
-              <strong>Pagamento:</strong> ${rate.paymentType || ''}<br/>
-            `;
-
-            // Se tiver cancel policies, exibir
-            if (rate.cancellationPolicies && rate.cancellationPolicies.length > 0) {
-              divRate.innerHTML += `<strong>Cancelamento:</strong><br/>`;
-              rate.cancellationPolicies.forEach((pol) => {
-                divRate.innerHTML += `&emsp;- Multa: ${pol.amount} desde ${pol.from}<br/>`;
-              });
+        "code": "E-U10-A0SENO0056",
+        "type": "TICKET",
+        "countryCode": "US",
+        "source": "ATLAS",
+        "name": "Old Town Kissimmee - Attraction + Ferris Wheel + Dinner",
+        "currency": "EUR",
+        "modalities": [
+          {
+            "code": "1693196972#ATTRACTION",
+            "name": "2 Attractions",
+            "rateCode": "STANDARD",
+            "freeCancellation": false,
+            "duration": {
+              "value": 1.0,
+              "metric": "DAYS"
+            },
+            "amountsFrom": [
+              {
+                "paxType": "ADULT",
+                "ageFrom": 0,
+                "ageTo": 999,
+                "amount": 24.96,
+                "boxOfficeAmount": 29.24,
+                "mandatoryApplyAmount": false
+              }
+            ],
+            "cancellationPolicies": [
+              {
+                "dateFrom": "2025-05-27T00:00:00.000Z",
+                "amount": 24.9600
+              }
+            ],
+            "uniqueIdentifier": "1693196972"
+          }
+        ],
+        "content": {
+          "name": "Old Town Kissimmee - Attraction + Ferris Wheel + Dinner",
+          "detailedInfo": [],
+          "featureGroups": [
+            {
+              "groupCode": "UNKNOWN",
+              "excluded": [
+                {
+                  "featureType": "OTHERNOT",
+                  "description": "Audioguide"
+                }
+              ]
+            },
+            {
+              "groupCode": "MEAL",
+              "included": [
+                {
+                  "featureType": "FOODINCL",
+                  "description": "Meal"
+                }
+              ]
             }
-
-            divRate.innerHTML += '<hr style="margin: 8px 0;" />';
-            tdRates.appendChild(divRate);
-          });
-        } else {
-          tdRates.textContent = 'Sem tarifas';
+          ],
+          "location": {
+            "endPoints": [
+              {
+                "type": "Same",
+                "description": "Same as Starting Point"
+              }
+            ],
+            "startingPoints": [
+              {
+                "type": "Attraction",
+                "meetingPoint": {
+                  "type": "ADDRESS",
+                  "country": {
+                    "code": "US",
+                    "name": "United States",
+                    "destinations": [
+                      {
+                        "code": "MCO",
+                        "name": "Orlando Area - Florida - FL"
+                      }
+                    ]
+                  },
+                  "description": "Old Town Kissimmee - Attraction + Ferris Wheel + Dinner"
+                }
+              }
+            ]
+          },
+          "media": {
+            "images": [
+              {
+                "visualizationOrder": 1,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/S/old%20town.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/XL/old%20town.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/B/old%20town.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/LPP/old%20town.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/L/old%20town.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/M/old%20town.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 2,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/S/old%20town%202.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/XL/old%20town%202.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/B/old%20town%202.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/LPP/old%20town%202.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/L/old%20town%202.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/M/old%20town%202.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 3,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/S/old%20town%203.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/XL/old%20town%203.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/B/old%20town%203.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/LPP/old%20town%203.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/L/old%20town%203.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/M/old%20town%203.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 4,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/S/old%20town%204.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/XL/old%20town%204.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/B/old%20town%204.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/LPP/old%20town%204.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/L/old%20town%204.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/52892/ENG/M/old%20town%204.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              }
+            ]
+          },
+          "redeemInfo": {
+            "type": "PRINTED",
+            "directEntrance": false,
+            "comments": [
+              {
+                "description": "Printed Voucher. Print and bring the voucher to enjoy the activity. "
+              }
+            ]
+          },
+          "routes": [],
+          "scheduling": {
+            "opened": [
+              {
+                "from": "2020-03-01",
+                "to": "2020-12-31",
+                "openingTime": "09:00",
+                "closeTime": "22:00",
+                "lastAdmissionTime": "00:00",
+                "weekDays": []
+              }
+            ]
+          },
+          "segmentationGroups": [
+            {
+              "code": 2,
+              "name": "Daytime",
+              "segments": [
+                {
+                  "code": 814,
+                  "name": "Evening"
+                },
+                {
+                  "code": 773,
+                  "name": "Morning"
+                },
+                {
+                  "code": 774,
+                  "name": "Afternoon"
+                }
+              ]
+            },
+            {
+              "code": 1,
+              "name": "Categories",
+              "segments": [
+                {
+                  "code": 3,
+                  "name": "Tickets & Attraction Passes"
+                }
+              ]
+            }
+          ],
+          "activityFactsheetType": "ACTIVITIES",
+          "activityCode": "E-U10-A0SENO0056",
+          "modalityCode": "ATTRACTION",
+          "modalityName": "2 Attractions",
+          "contentId": "52892",
+          "description": "<p><strong>An unforgettable family experience featuring a unique collection of shops, dining options, rides and family friendly attractions.</strong></p><p><br></p><p>Old Town is the recreation of a classic Florida town featuring historical architecture and distinctive storefronts. We are a step back when times were a little simpler, the pace more realistic and the memories just as magical as any other Orlando attraction.</p><p><br></p><p>Located on 192 in Kissimmee and just minutes from Disney, Universal, Sea World and International Drive, Old Town is a unique 18-acre walking featuring over 70 unique and affordable shops, restaurants, bars, rides and family friendly attractions. Relax as you stroll down our beautiful, tree-lined brick streets and discover why Old Town has become a beloved family tradition for over 30 years.</p><p><br></p><p><strong>Old Town is the perfect destination for an afternoon or night of fun with friends and family</strong>. Included in your Old Town Package, choose to test your fears at Mortem Manor Haunted Attraction is now nightly Wednesday – Sunday. With two stories, state-of-the-art animatronics/props and live actors, this new haunted house is sure to scare the living yell out of you. </p><p>Enjoy the view soaring over Highway 192 is Old Town’s Ferris Wheel. Come and take a spin on this custom made ride from Italy featuring 18 gondolas that seat six each. As you reach the top take in spectacular views of Kissimmee and nearby Orlando attractions from over 85 feet in the air. Once the sun goes down watch a festive display of colorful lights illuminate the night sky.</p><p>Dinner voucher is provided at A&amp;W, known for its All-American food, features a signature hamburger, they also offer: Chicken, Hot dogs, Great sides like fries, onion rings, and amazing cheese curds &amp; Sweets and treats.</p><p><br></p><p>Old Town is more than your average shopping experience. We are host to weekly events including America’s longest running weekly car show and cruise every Saturday. Step back in time and experience a car show like no other with hundreds of classic cars followed by our Saturday Nite Classic Car Cruise starting at 8:30 pm.</p><p><br></p><p> We invite you to enjoy the simple pleasures of classic American fun.</p><p><br></p><p> What's included: Mortern Manor, 1 Ride on the Ferris Wheel and A&amp;W Combo Meal Deal.</p>",
+          "lastUpdate": "2024-01-25",
+          "advancedTips": [],
+          "countries": [
+            {
+              "code": "US",
+              "name": "United States",
+              "destinations": [
+                {
+                  "code": "MCO",
+                  "name": "Orlando Area - Florida - FL"
+                }
+              ]
+            }
+          ],
+          "highligths": [],
+          "language": "en"
+        },
+        "order": 22,
+        "amountsFrom": [
+          {
+            "paxType": "ADULT",
+            "ageFrom": 0,
+            "ageTo": 999,
+            "amount": 24.96,
+            "boxOfficeAmount": 29.24,
+            "mandatoryApplyAmount": false
+          }
+        ],
+        "currencyName": "Euro",
+        "country": {
+          "code": "US",
+          "name": "United States",
+          "destinations": [
+            {
+              "code": "MCO",
+              "name": "Orlando Area - Florida - FL"
+            }
+          ]
         }
-        tr.appendChild(tdRates);
-
-        tbody.appendChild(tr);
-      });
-
-      table.appendChild(tbody);
-      container.appendChild(table);
-    } else {
-      // Se não tiver rooms
-      const noRooms = document.createElement('p');
-      noRooms.textContent = 'Não há quartos ou tarifas disponíveis.';
-      container.appendChild(noRooms);
-    }
-  });
-}
-
-// Chama a função para organizar/exibir
-renderHotelsData(responseData);
+      },
+      {
+        "code": "E-U10-WILDPARSAF",
+        "type": "TICKET",
+        "countryCode": "US",
+        "source": "ATLAS",
+        "name": "Wild Florida Drive-thru Wildlife Safari Park ",
+        "currency": "EUR",
+        "modalities": [
+          {
+            "code": "1798226509#WILDPARSAF",
+            "name": "Tour",
+            "rateCode": "STANDARD",
+            "freeCancellation": false,
+            "duration": {
+              "value": 1.0,
+              "metric": "DAYS"
+            },
+            "amountsFrom": [
+              {
+                "paxType": "ADULT",
+                "ageFrom": 13,
+                "ageTo": 999,
+                "amount": 30.41,
+                "boxOfficeAmount": 35.62,
+                "mandatoryApplyAmount": true
+              },
+              {
+                "paxType": "CHILD",
+                "ageFrom": 0,
+                "ageTo": 2,
+                "amount": 0.00,
+                "boxOfficeAmount": 0.00,
+                "mandatoryApplyAmount": true
+              },
+              {
+                "paxType": "CHILD",
+                "ageFrom": 3,
+                "ageTo": 12,
+                "amount": 21.46,
+                "boxOfficeAmount": 25.15,
+                "mandatoryApplyAmount": true
+              }
+            ],
+            "cancellationPolicies": [
+              {
+                "dateFrom": "2025-05-25T00:00:00.000Z",
+                "amount": 30.4100
+              }
+            ],
+            "uniqueIdentifier": "1798226509"
+          }
+        ],
+        "content": {
+          "name": "Wild Florida Drive-thru Wildlife Safari Park ",
+          "detailedInfo": [],
+          "featureGroups": [
+            {
+              "groupCode": "TICKET",
+              "included": [
+                {
+                  "featureType": "ADMISSIONSINCL",
+                  "description": "Tickets"
+                }
+              ]
+            }
+          ],
+          "location": {
+            "endPoints": [
+              {
+                "type": "Same",
+                "description": "Same as Starting Point"
+              }
+            ],
+            "startingPoints": [
+              {
+                "type": "Attraction",
+                "meetingPoint": {
+                  "type": "ADDRESS",
+                  "geolocation": {
+                    "latitude": 28.084298,
+                    "longitude": -81.302921
+                  },
+                  "address": "3301 Lake Cypress Road",
+                  "country": {
+                    "code": "US",
+                    "name": "United States",
+                    "destinations": [
+                      {
+                        "code": "MCO",
+                        "name": "Orlando Area - Florida - FL"
+                      }
+                    ]
+                  },
+                  "city": "Kenansville",
+                  "description": "3301 Lake Cypress Road"
+                }
+              }
+            ]
+          },
+          "media": {
+            "images": [
+              {
+                "visualizationOrder": 1,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/S/32488_3.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/XL/32488_3.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/B/32488_3.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/LPP/32488_3.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/L/32488_3.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/M/32488_3.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 2,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/S/32488_1.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/XL/32488_1.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/B/32488_1.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/LPP/32488_1.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/L/32488_1.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/M/32488_1.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 3,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/S/32488_2.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/XL/32488_2.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/B/32488_2.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/LPP/32488_2.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/L/32488_2.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/M/32488_2.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 4,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/S/uQY4CNMg.jpeg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/XL/uQY4CNMg.jpeg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/B/uQY4CNMg.jpeg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/LPP/uQY4CNMg.jpeg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/L/uQY4CNMg.jpeg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/M/uQY4CNMg.jpeg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 5,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/S/Z9IwxyGw.jpeg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/XL/Z9IwxyGw.jpeg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/B/Z9IwxyGw.jpeg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/LPP/Z9IwxyGw.jpeg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/L/Z9IwxyGw.jpeg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/M/Z9IwxyGw.jpeg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 6,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/S/dWk3EamQ.jpeg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/XL/dWk3EamQ.jpeg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/B/dWk3EamQ.jpeg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/LPP/dWk3EamQ.jpeg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/L/dWk3EamQ.jpeg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/M/dWk3EamQ.jpeg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 7,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/S/yX4sU3-g.jpeg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/XL/yX4sU3-g.jpeg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/B/yX4sU3-g.jpeg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/LPP/yX4sU3-g.jpeg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/L/yX4sU3-g.jpeg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/M/yX4sU3-g.jpeg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 8,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/S/XQHZzGQg.jpeg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/XL/XQHZzGQg.jpeg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/B/XQHZzGQg.jpeg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/LPP/XQHZzGQg.jpeg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/L/XQHZzGQg.jpeg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/M/XQHZzGQg.jpeg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 9,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/S/KGkFyXDQ.jpeg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/XL/KGkFyXDQ.jpeg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/B/KGkFyXDQ.jpeg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/LPP/KGkFyXDQ.jpeg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/L/KGkFyXDQ.jpeg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/32488/ENG/M/KGkFyXDQ.jpeg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              }
+            ]
+          },
+          "redeemInfo": {
+            "type": "PRINTED",
+            "directEntrance": false,
+            "comments": [
+              {
+                "description": "Printed Voucher. Print and bring the voucher to enjoy the activity. "
+              }
+            ]
+          },
+          "routes": [],
+          "scheduling": {
+            "opened": [
+              {
+                "openingTime": "08:00",
+                "closeTime": "17:00",
+                "weekDays": []
+              }
+            ]
+          },
+          "segmentationGroups": [
+            {
+              "code": 3,
+              "name": "Recommended activity for",
+              "segments": [
+                {
+                  "code": 777,
+                  "name": "Couples"
+                },
+                {
+                  "code": 779,
+                  "name": "Senior"
+                },
+                {
+                  "code": 780,
+                  "name": "Youth"
+                },
+                {
+                  "code": 778,
+                  "name": "Families"
+                }
+              ]
+            },
+            {
+              "code": 2,
+              "name": "Daytime",
+              "segments": [
+                {
+                  "code": 771,
+                  "name": "Flexible"
+                }
+              ]
+            },
+            {
+              "code": 1,
+              "name": "Categories",
+              "segments": [
+                {
+                  "code": 9,
+                  "name": "Zoo, Aquarium & Nature"
+                }
+              ]
+            }
+          ],
+          "activityFactsheetType": "ATTRACCTIONS",
+          "activityCode": "E-U10-WILDPARSAF",
+          "modalityCode": "WILDPARSAF",
+          "modalityName": "Tour",
+          "contentId": "32488",
+          "description": "Buckle up for your wildest car ride yet! Travel down gravel paths within our Drive-thru Safari Park and discover more than 100 native and exotic animals roaming freely. During your journey, you’ll have the opportunity to observe a variety of animals often only found around the world. Enjoy identifying species from as far away as the African savanna to others from the deciduous forests of North America, all from the comfort of your own car.<br />\n<br />\nBe an explorer for the day and discover Florida’s native as well as exotic animals and birds from all over the world. Go dizzy with colours at the tropical bird aviary and explore the amazing park full of zebras, turkeys, watusi, zedonk, deer, water buffalo, emu, wild boar, zebu, monster alligators, and so much more. Head along to the tortoise exhibit to see these gentle giants and venture on to the incredible Hawk Swamp boardwalk through a pristine Florida cypress swamp ecosystem. We even have a 500 foot sightseeing dock overlooking the swamp so that you can look over natural Florida.<br />\n<br />\nExpanding across 85 acres of untouched scenic landscapes, this wildlife and safari park presents a unique opportunity to bring you up close and personal with wild animals.<br />\n<br />\n<strong>Languages</strong><br />\nEnglish.<br />\n<br />\n<strong>Others</strong><br />\nWild Florida is closed on Sundays.",
+          "lastUpdate": "2024-06-27",
+          "advancedTips": [],
+          "countries": [
+            {
+              "code": "US",
+              "name": "United States",
+              "destinations": [
+                {
+                  "code": "MCO",
+                  "name": "Orlando Area - Florida - FL"
+                }
+              ]
+            }
+          ],
+          "highligths": [],
+          "language": "en"
+        },
+        "order": 23,
+        "amountsFrom": [
+          {
+            "paxType": "ADULT",
+            "ageFrom": 13,
+            "ageTo": 999,
+            "amount": 30.41,
+            "boxOfficeAmount": 35.62,
+            "mandatoryApplyAmount": true
+          },
+          {
+            "paxType": "CHILD",
+            "ageFrom": 0,
+            "ageTo": 2,
+            "amount": 0.00,
+            "boxOfficeAmount": 0.00,
+            "mandatoryApplyAmount": true
+          },
+          {
+            "paxType": "CHILD",
+            "ageFrom": 3,
+            "ageTo": 12,
+            "amount": 21.46,
+            "boxOfficeAmount": 25.15,
+            "mandatoryApplyAmount": true
+          }
+        ],
+        "currencyName": "Euro",
+        "country": {
+          "code": "US",
+          "name": "United States",
+          "destinations": [
+            {
+              "code": "MCO",
+              "name": "Orlando Area - Florida - FL"
+            }
+          ]
+        }
+      },
+      {
+        "code": "E-U10-A1GMNO0150",
+        "type": "TICKET",
+        "countryCode": "US",
+        "source": "ATLAS",
+        "name": "Wild Florida Gator Park- Ticket",
+        "currency": "EUR",
+        "modalities": [
+          {
+            "code": "972410580#TICKET",
+            "name": "Ticket",
+            "rateCode": "STANDARD",
+            "freeCancellation": false,
+            "duration": {
+              "value": 1.0,
+              "metric": "DAYS"
+            },
+            "amountsFrom": [
+              {
+                "paxType": "ADULT",
+                "ageFrom": 0,
+                "ageTo": 2,
+                "amount": 13.41,
+                "boxOfficeAmount": 15.72,
+                "mandatoryApplyAmount": true
+              },
+              {
+                "paxType": "CHILD",
+                "ageFrom": 3,
+                "ageTo": 12,
+                "amount": 10.73,
+                "boxOfficeAmount": 12.57,
+                "mandatoryApplyAmount": true
+              }
+            ],
+            "cancellationPolicies": [
+              {
+                "dateFrom": "2025-05-25T00:00:00.000Z",
+                "amount": 13.4100
+              }
+            ],
+            "uniqueIdentifier": "972410580"
+          }
+        ],
+        "content": {
+          "name": "Wild Florida Gator Park- Ticket",
+          "detailedInfo": [],
+          "featureGroups": [
+            {
+              "groupCode": "TICKET",
+              "included": [
+                {
+                  "featureType": "ADMISSIONSINCL",
+                  "description": "Tickets"
+                }
+              ]
+            }
+          ],
+          "location": {
+            "endPoints": [
+              {
+                "type": "Same",
+                "description": "Same as Starting Point"
+              }
+            ],
+            "startingPoints": [
+              {
+                "type": "Meeting Point",
+                "meetingPoint": {
+                  "type": "ADDRESS",
+                  "geolocation": {
+                    "latitude": 28.084182,
+                    "longitude": -81.303045
+                  },
+                  "address": "Lake Cypress Rd,3301",
+                  "city": "Florida",
+                  "zip": "34739",
+                  "description": "Wild Florida Airboats & Gator Park"
+                }
+              }
+            ]
+          },
+          "media": {
+            "images": [
+              {
+                "visualizationOrder": 1,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/S/11-Wild%20Florida%20-%20Gator%20Park%20-%20Capybara%20Encounter.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/XL/11-Wild%20Florida%20-%20Gator%20Park%20-%20Capybara%20Encounter.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/B/11-Wild%20Florida%20-%20Gator%20Park%20-%20Capybara%20Encounter.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/LPP/11-Wild%20Florida%20-%20Gator%20Park%20-%20Capybara%20Encounter.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/L/11-Wild%20Florida%20-%20Gator%20Park%20-%20Capybara%20Encounter.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/M/11-Wild%20Florida%20-%20Gator%20Park%20-%20Capybara%20Encounter.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 2,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/S/Aguila.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/XL/Aguila.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/B/Aguila.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/LPP/Aguila.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/L/Aguila.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/M/Aguila.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 3,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/S/Amaestrador%20de%20cocodrilos.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/XL/Amaestrador%20de%20cocodrilos.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/B/Amaestrador%20de%20cocodrilos.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/LPP/Amaestrador%20de%20cocodrilos.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/L/Amaestrador%20de%20cocodrilos.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/M/Amaestrador%20de%20cocodrilos.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 4,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/S/cocodrilo.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/XL/cocodrilo.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/B/cocodrilo.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/LPP/cocodrilo.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/L/cocodrilo.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/M/cocodrilo.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 5,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/S/Cocodrilo2.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/XL/Cocodrilo2.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/B/Cocodrilo2.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/LPP/Cocodrilo2.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/L/Cocodrilo2.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/M/Cocodrilo2.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 6,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/S/ParqueWild.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/XL/ParqueWild.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/B/ParqueWild.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/LPP/ParqueWild.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/L/ParqueWild.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/M/ParqueWild.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 7,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/S/puente%20en%20el%20parque.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/XL/puente%20en%20el%20parque.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/B/puente%20en%20el%20parque.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/LPP/puente%20en%20el%20parque.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/L/puente%20en%20el%20parque.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/M/puente%20en%20el%20parque.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 8,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/S/Parque%2C%20puente%2C%20visitas.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/XL/Parque%2C%20puente%2C%20visitas.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/B/Parque%2C%20puente%2C%20visitas.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/LPP/Parque%2C%20puente%2C%20visitas.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/L/Parque%2C%20puente%2C%20visitas.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/M/Parque%2C%20puente%2C%20visitas.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 9,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/S/Carpinchos%20y%20personas.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/XL/Carpinchos%20y%20personas.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/B/Carpinchos%20y%20personas.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/LPP/Carpinchos%20y%20personas.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/L/Carpinchos%20y%20personas.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62625/ENG/M/Carpinchos%20y%20personas.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              }
+            ]
+          },
+          "redeemInfo": {
+            "type": "PRINTED",
+            "directEntrance": false,
+            "comments": [
+              {
+                "description": "Printed Voucher. Print and bring the voucher to enjoy the activity. "
+              }
+            ]
+          },
+          "routes": [],
+          "scheduling": {},
+          "segmentationGroups": [
+            {
+              "code": 18,
+              "name": "Duration",
+              "segments": [
+                {
+                  "code": 969,
+                  "name": "Over 6 hours"
+                }
+              ]
+            },
+            {
+              "code": 2,
+              "name": "Daytime",
+              "segments": [
+                {
+                  "code": 772,
+                  "name": "Full day"
+                }
+              ]
+            },
+            {
+              "code": 1,
+              "name": "Categories",
+              "segments": [
+                {
+                  "code": 3,
+                  "name": "Tickets & Attraction Passes"
+                }
+              ]
+            }
+          ],
+          "activityFactsheetType": "ATTRACCTIONS",
+          "activityCode": "E-U10-A1GMNO0150",
+          "modalityCode": "TICKET",
+          "modalityName": "Ticket",
+          "contentId": "62625",
+          "description": "<p>Wild Florida’s Alligator Park allows visitors to watch, touch, and even feed native Florida animals, various species of tropical birds, and exotic animals from all over the world.</p><p><br></p><p>Explore our amazing park full of deer, turkeys, bobcats, sloths, crocodiles, monster alligators, and much more!</p><p><br></p><p>Visit the tropical bird aviary, alligator demonstrations, gift shop, and Crusher Show. Discover the Hawk Swamp boardwalk through a pristine Florida cypress swamp ecosystem.</p><p><br></p><p>Groups of all sizes, families, or individuals are welcome. Day or night, we are prepared to offer an adventure you will never forget!</p><p><br></p><p><strong>Duration</strong></p><p>9 hours</p>",
+          "lastUpdate": "2024-06-27",
+          "advancedTips": [],
+          "countries": [
+            {
+              "code": "US",
+              "name": "United States",
+              "destinations": [
+                {
+                  "code": "MIA",
+                  "name": "Miami Area - FL"
+                }
+              ]
+            }
+          ],
+          "highligths": [],
+          "language": "en"
+        },
+        "order": 24,
+        "amountsFrom": [
+          {
+            "paxType": "ADULT",
+            "ageFrom": 0,
+            "ageTo": 2,
+            "amount": 13.41,
+            "boxOfficeAmount": 15.72,
+            "mandatoryApplyAmount": true
+          },
+          {
+            "paxType": "CHILD",
+            "ageFrom": 3,
+            "ageTo": 12,
+            "amount": 10.73,
+            "boxOfficeAmount": 12.57,
+            "mandatoryApplyAmount": true
+          }
+        ],
+        "currencyName": "Euro",
+        "country": {
+          "code": "US",
+          "name": "United States",
+          "destinations": [
+            {
+              "code": "MIA",
+              "name": "Miami Area - FL"
+            }
+          ]
+        }
+      },
+      {
+        "code": "E-U10-A1GMNO0151",
+        "type": "TICKET",
+        "countryCode": "US",
+        "source": "ATLAS",
+        "name": "Visit the Wildlife Safari Park and Enjoy an Airboat Ride",
+        "currency": "EUR",
+        "modalities": [
+          {
+            "code": "550507658#TOUR",
+            "name": "Tour",
+            "rateCode": "STANDARD",
+            "freeCancellation": false,
+            "duration": {
+              "value": 1.0,
+              "metric": "DAYS"
+            },
+            "amountsFrom": [
+              {
+                "paxType": "ADULT",
+                "ageFrom": 0,
+                "ageTo": 2,
+                "amount": 70.66,
+                "boxOfficeAmount": 82.78,
+                "mandatoryApplyAmount": true
+              },
+              {
+                "paxType": "CHILD",
+                "ageFrom": 3,
+                "ageTo": 12,
+                "amount": 45.62,
+                "boxOfficeAmount": 53.44,
+                "mandatoryApplyAmount": true
+              }
+            ],
+            "cancellationPolicies": [
+              {
+                "dateFrom": "2025-05-25T00:00:00.000Z",
+                "amount": 70.6600
+              }
+            ],
+            "uniqueIdentifier": "550507658"
+          },
+          {
+            "code": "2124492127#TOUR30",
+            "name": "Airboat Ride - 30 minutes",
+            "rateCode": "STANDARD",
+            "freeCancellation": false,
+            "duration": {
+              "value": 1.0,
+              "metric": "DAYS"
+            },
+            "amountsFrom": [
+              {
+                "paxType": "ADULT",
+                "ageFrom": 0,
+                "ageTo": 2,
+                "amount": 52.78,
+                "boxOfficeAmount": 61.82,
+                "mandatoryApplyAmount": true
+              },
+              {
+                "paxType": "CHILD",
+                "ageFrom": 3,
+                "ageTo": 12,
+                "amount": 45.62,
+                "boxOfficeAmount": 53.44,
+                "mandatoryApplyAmount": true
+              }
+            ],
+            "cancellationPolicies": [
+              {
+                "dateFrom": "2025-05-25T00:00:00.000Z",
+                "amount": 52.7800
+              }
+            ],
+            "uniqueIdentifier": "2124492127"
+          }
+        ],
+        "content": {
+          "name": "Visit the Wildlife Safari Park and Enjoy an Airboat Ride",
+          "detailedInfo": [],
+          "featureGroups": [
+            {
+              "groupCode": "TICKET",
+              "included": [
+                {
+                  "featureType": "ADMISSIONSINCL",
+                  "description": "Tickets"
+                }
+              ]
+            }
+          ],
+          "location": {
+            "endPoints": [
+              {
+                "type": "Same",
+                "description": "Same as Starting Point"
+              }
+            ],
+            "startingPoints": [
+              {
+                "type": "Meeting Point",
+                "meetingPoint": {
+                  "type": "ADDRESS",
+                  "geolocation": {
+                    "latitude": 28.084182,
+                    "longitude": -81.303045
+                  },
+                  "address": "Lake Cypress Rd,3301",
+                  "city": "Florida",
+                  "zip": "34739",
+                  "description": "Wild Florida Airboats & Gator Park"
+                }
+              }
+            ]
+          },
+          "media": {
+            "images": [
+              {
+                "visualizationOrder": 1,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/S/Zoo.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/XL/Zoo.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/B/Zoo.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/LPP/Zoo.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/L/Zoo.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/M/Zoo.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 2,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/S/Bueyes.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/XL/Bueyes.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/B/Bueyes.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/LPP/Bueyes.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/L/Bueyes.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/M/Bueyes.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 3,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/S/Safari.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/XL/Safari.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/B/Safari.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/LPP/Safari.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/L/Safari.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/M/Safari.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 4,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/S/Alimentando%20jirafas.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/XL/Alimentando%20jirafas.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/B/Alimentando%20jirafas.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/LPP/Alimentando%20jirafas.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/L/Alimentando%20jirafas.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/M/Alimentando%20jirafas.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 5,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/S/Camello.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/XL/Camello.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/B/Camello.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/LPP/Camello.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/L/Camello.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/M/Camello.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 6,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/S/Jeep.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/XL/Jeep.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/B/Jeep.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/LPP/Jeep.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/L/Jeep.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/M/Jeep.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              },
+              {
+                "visualizationOrder": 7,
+                "mimeType": "image/jpeg",
+                "language": "ENG",
+                "urls": [
+                  {
+                    "dpi": 72,
+                    "height": 75,
+                    "width": 100,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/S/Jirafa.jpg",
+                    "sizeType": "SMALL"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/XL/Jirafa.jpg",
+                    "sizeType": "XLARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 480,
+                    "width": 640,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/B/Jirafa.jpg",
+                    "sizeType": "LARGE2"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 768,
+                    "width": 1024,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/LPP/Jirafa.jpg",
+                    "sizeType": "RAW"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 200,
+                    "width": 267,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/L/Jirafa.jpg",
+                    "sizeType": "LARGE"
+                  },
+                  {
+                    "dpi": 72,
+                    "height": 130,
+                    "width": 173,
+                    "resource": "https://media.activitiesbank.com/62626/ENG/M/Jirafa.jpg",
+                    "sizeType": "MEDIUM"
+                  }
+                ]
+              }
+            ]
+          },
+          "redeemInfo": {
+            "type": "PRINTED",
+            "directEntrance": false,
+            "comments": [
+              {
+                "description": "Printed Voucher. Print and bring the voucher to enjoy the activity. "
+              }
+            ]
+          },
+          "routes": [],
+          "scheduling": {},
+          "segmentationGroups": [
+            {
+              "code": 1,
+              "name": "Categories",
+              "segments": [
+                {
+                  "code": 3,
+                  "name": "Tickets & Attraction Passes"
+                }
+              ]
+            }
+          ],
+          "activityFactsheetType": "ATTRACCTIONS",
+          "activityCode": "E-U10-A1GMNO0151",
+          "modalityCode": "TOUR1HR",
+          "modalityName": "Airboat Ride - 1 hour",
+          "contentId": "62626",
+          "description": "<p>Some road trips take you across the country, but ours will take you across continents.</p><p><br></p><p>Buckle up for your wildest car ride yet! Travel down gravel paths within our Drive-thru Safari Park and discover more than 150 native and exotic animals roaming freely. During your journey, you’ll have the opportunity to observe a variety of animals often only found around the world. Enjoy identifying species from as far away as the African savanna to others from the deciduous forests of North America, all from the comfort of your car. (*Please note that your vehicle must have a top and that vehicles like convertibles or motorcycles are not allowed through the Drive-thru Safari.)</p><p><br></p><p>Expanding across 170 acres of untouched scenic landscapes, our wildlife and safari park presents a unique opportunity to bring you up close and personal with wild animals such as giraffes, zebra, eland antelope, scimitar oryx, American bison, mouflon sheep, and more! As you travel down our four-mile “unbeaten path,” you and your family can enjoy an exploration just feet away from animals you normally only see on TV. But the fun you’ll have isn’t confined to your car. Take your adventure to new heights and feed giraffes on our elevated giraffe feeding platform. (Talk about the perfect Facebook profile picture!)</p><p><br></p><p>After you’ve had your “four-wheel-fun” inside our drive-through animal park, stretch those legs inside our Gator Park. Admission to our Gator Park is included in the price of our Drive-thru Safari Park tickets and allows your family to view more than 200 additional animals, as well as enjoy a variety of educational animal shows.</p><p><br></p><p>Meet Crusher, our biggest American alligator (weighing just over 1,000 pounds). During the Crusher Show, you’ll learn more about American alligators and how Crusher stands out from the congregation. Watch a hands-on demonstration with some of our favorite Wild Florida residents during our Exotic Animal Show. Witness the power and speed of the American alligator during our Gator Feeding Show as you learn how strong their bite is along with how high they can jump out of the water.</p><p><br></p><p>Whether you’re a Florida resident or just visiting the Sunshine State, our wildlife safari park will give everyone in your family the opportunity to explore their wild side.</p><p><br></p><p><br></p>",
+          "lastUpdate": "2024-02-19",
+          "advancedTips": [],
+          "countries": [
+            {
+              "code": "US",
+              "name": "United States",
+              "destinations": [
+                {
+                  "code": "MIA",
+                  "name": "Miami Area - FL"
+                }
+              ]
+            }
+          ],
+          "highligths": [],
+          "language": "en"
+        },
+        "order": 25,
+        "amountsFrom": [
+          {
+            "paxType": "ADULT",
+            "ageFrom": 0,
+            "ageTo": 2,
+            "amount": 52.78,
+            "boxOfficeAmount": 61.82,
+            "mandatoryApplyAmount": true
+          },
+          {
+            "paxType": "CHILD",
+            "ageFrom": 3,
+            "ageTo": 12,
+            "amount": 45.62,
+            "boxOfficeAmount": 53.44,
+            "mandatoryApplyAmount": true
+          }
+        ],
+        "currencyName": "Euro",
+        "country": {
+          "code": "US",
+          "name": "United States",
+          "destinations": [
+            {
+              "code": "MIA",
+              "name": "Miami Area - FL"
+            }
+          ]
+        }
+      }
+    ],
+    "summaryLog": "activities=9"
+  }
 </script>
-
 </body>
 </html>
