@@ -5,7 +5,7 @@
   <title>Organized JSON Page</title>
   <style>
     /* 
-      To evitar conflitos, vamos prefixar todos os estilos com 
+      Para evitar conflitos, prefixamos todos os estilos com 
       #json-page-container ou .json-page-container
     */
     #json-page-container {
@@ -111,6 +111,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      margin-top: 10px;
     }
 
     #json-page-container .image-gallery img {
@@ -145,16 +146,16 @@
 <body>
 
 <div id="json-page-container">
-  
-  <!-- Container onde injetaremos o layout organizado -->
+  <!-- Cabeçalho onde mostraremos informação do JSON -->
   <div class="header-section" id="mainHeader"></div>
   
+  <!-- Lista de atividades -->
   <div class="activities-container" id="activitiesList"></div>
-  
 </div>
 
-<!-- Script com o JSON como objeto JavaScript -->
+<!-- Script com o JSON como objeto + renderização -->
 <script>
+  // 1) Nosso objeto data:
   const data = {
     "operationId": "16655ab02d1d10a6",
     "pagination": {
@@ -611,9 +612,9 @@
           "modalityCode": "OUTDINNER",
           "modalityName": "Outta Control Dinner Show",
           "contentId": "44723",
-          "description": "Take your seat for one of the best-kept secrets in Orlando.  This show is seriously entertaining and funny – magic with a twist! Be wowed by a mixture of amazing magic, impersonations, and high-energy improvisational comedy to thoroughly entertain audiences of all ages.<br />\n<br />\nExpect to be impressed at this interactive, entertaining and hilariously funny dinner show. A one-of-a-kind entertainment experience with non-stop audience participation. The crowds don’t just watch the show, they become part of it.<br />\n<br />\nMinds will be read, predictions will come true, and audience members’ personal items will vanish and re-appear.<br />\n<br />\n<strong>Outta Control Dinner Show </strong><br />\nIncludes unlimited fresh hand-tossed pizza, salad, dessert, soda, beer and wine.<br />\nSchedule: Daily at 6pm and 8pm to select evenings.<br />\n<br />\n<strong>VIP Combo Ticket</strong><br />\nIncludes ALL WonderWorks exhibits, the 4-D Theater, the Glow-In-The-Dark Ropes Course, Unlimited Laser Tag Games and a seat to the Best Show.<br />\nSchedule: From 9am to Midnight (12am)",
+          "description": "Take your seat for one of the best-kept secrets in Orlando.  This show is seriously entertaining and funny – magic with a twist! ...",
           "lastUpdate": "2024-08-28",
-          "summary": "<strong>Don’t miss the best show that Orlando has to offer. Enjoy non-stop laughter and food at WonderWork’s Outta Control Dinner Show! </strong>",
+          "summary": "<strong>Don’t miss the best show that Orlando has to offer...</strong>",
           "advancedTips": [],
           "countries": [
             {
@@ -676,6 +677,82 @@
     ],
     "summaryLog": "activities=9"
   };
+
+  // 2) Vamos renderizar no DOM:
+  //    Assim que a página carregar, injetamos o HTML
+  window.addEventListener("DOMContentLoaded", () => {
+    const mainHeaderDiv = document.getElementById("mainHeader");
+    const activitiesListDiv = document.getElementById("activitiesList");
+    
+    // Preenche cabeçalho com dados de pagination, operationId, etc.
+    mainHeaderDiv.innerHTML = `
+      <h1>Operation ID: ${data.operationId}</h1>
+      <div class="meta-info">
+        <div class="meta-box">Page: ${data.pagination.page}</div>
+        <div class="meta-box">Items Per Page: ${data.pagination.itemsPerPage}</div>
+        <div class="meta-box">Total Items: ${data.pagination.totalItems}</div>
+      </div>
+      <p><strong>Summary Log:</strong> ${data.summaryLog}</p>
+    `;
+
+    // Renderizar cada atividade como um card
+    data.activities.forEach((activity) => {
+      // Monta parte do HTML
+      let cardHtml = `
+        <div class="activity-card">
+          <div class="activity-header">
+            <div>
+              <h2>${activity.name}</h2>
+              <div class="activity-code">Code: ${activity.code}</div>
+              <div class="activity-type">Type: ${activity.type}</div>
+            </div>
+            <div style="text-align:right;">
+              <p><strong>Currency:</strong> ${activity.currency}</p>
+              <p><strong>Country:</strong> ${activity.country?.name || ""}</p>
+            </div>
+          </div>
+          <div class="activity-body">
+            <div class="title-label">Description:</div>
+            <div>${activity.content?.description || ""}</div>
+
+            <div class="amounts-row">
+              <span class="title-label">From amounts:</span>
+              <ul>
+                ${activity.amountsFrom?.map(a => `
+                  <li>
+                    PaxType: ${a.paxType}, 
+                    Amount: ${a.amount}, 
+                    BoxOffice: ${a.boxOfficeAmount}
+                  </li>
+                `).join("")}
+              </ul>
+            </div>
+
+            <div class="image-gallery">
+      `;
+
+      // Se houver imagens, vamos mostrar
+      const images = activity.content?.media?.images || [];
+      images.forEach((imgObj) => {
+        // Pegaremos uma das URLs - por ex. a sizeType: "SMALL"
+        // ou a primeira do array
+        if (imgObj.urls?.length) {
+          const url = imgObj.urls[0].resource;
+          cardHtml += `<img src="${url}" alt="image" />`;
+        }
+      });
+
+      cardHtml += `</div> <!-- fim da .image-gallery -->`;
+
+      cardHtml += `
+          </div> <!-- fim da .activity-body -->
+        </div> <!-- fim da .activity-card -->
+      `;
+
+      // Insere no DOM
+      activitiesListDiv.innerHTML += cardHtml;
+    });
+  });
 </script>
 
 </body>
